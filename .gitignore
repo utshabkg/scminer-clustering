@@ -1,0 +1,22 @@
+# data and large outputs stay outside git
+data/
+logs/
+*.h5ad
+*.h5
+*.loom
+*.mtx
+*.mtx.gz
+*.npy
+*.npz
+*.pt
+results/raw/
+
+# python
+__pycache__/
+*.pyc
+.ipynb_checkpoints/
+
+# R
+.Rhistory
+.RData
+.Rproj.user/
