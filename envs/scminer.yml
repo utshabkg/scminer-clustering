@@ -1,0 +1,22 @@
+name: scminer
+channels:
+  - conda-forge
+  - nodefaults
+dependencies:
+  - python=3.11
+  - numpy
+  - scipy
+  - pandas
+  - scikit-learn
+  - scanpy
+  - anndata
+  - h5py
+  - python-igraph
+  - leidenalg
+  - matplotlib
+  - seaborn
+  - psutil
+  - ipykernel
+  - pip
+  - pip:
+      - torch

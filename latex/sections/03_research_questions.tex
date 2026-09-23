@@ -1,0 +1,8 @@
+\section{Research Questions}
+The limitations above lead to three questions. Each one can be answered with experiments we can run this semester.
+
+\textbf{RQ1. Does the advantage of mutual information clustering survive without label information, and what drives that similarity?} We ask whether MICA still outperforms standard pipelines when the number of clusters is chosen by a label-free rule instead of by matching the known answer, and we ask how much of the mutual information between two cells comes from which genes are detected rather than from expression levels, including how sensitive it is to sequencing depth.
+
+\textbf{RQ2. Can mutual information clustering reach atlas scale on one workstation, and what does the approximation cost?} We ask whether the neighbor graph for a dataset of about two million cells can be built in under a day on a single machine, and what the required approximations cost in clustering accuracy and in the recovery of small cell populations.
+
+\textbf{RQ3. Does regulatory driver activity help in interpreting clusters?} We ask whether adding scMINER's inferred drivers, including hidden drivers, to a retrieval-grounded language model produces better cluster descriptions than marker genes alone.

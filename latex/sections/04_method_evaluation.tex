@@ -1,0 +1,56 @@
+\section{Proposed Method and Evaluation}
+Everything will be written in Python. MICA and SJARACNe, the clustering and network tools behind scMINER, already run in Python, and the short R steps of the framework (quality control, normalization, and driver activity) will be rewritten in Python. All experiments will run in a fixed conda environment on a workstation with two 48 GB GPUs, 120 CPU cores, and 754 GB of memory, and all code will live in a shared repository.
+
+We start by reproducing the original method. We will rerun MICA on two datasets from the paper, Zeisel and PBMC14K, and compare our scores with the published ones. Nothing new is added until those numbers line up, since every later claim is measured against this baseline.
+
+\subsection{Data}
+We use single-cell RNA sequencing data for all three course regimes, so results can be compared across data sizes. In each dataset a sample is one cell and a variable is one gene.
+
+\subsubsection{Dataset 1 (ordinary)}
+PBMC14K, 13,605 human blood cells and about 18,000 genes \cite{zheng2017massively}. The cell types were separated with antibodies before sequencing, so the labels do not depend on any clustering method. This is also scMINER's main benchmark, which makes it our reproduction anchor.
+
+\subsubsection{Dataset 2 (large scale)}
+The Allen Brain Cell Atlas whole mouse brain data, about 2.3 million cells from a single 10x v3 chemistry with 32,285 genes \cite{yao2023allen}. Labels come in levels, from 34 classes down to 338 subclasses, which lets us score a partition at more than one granularity.
+
+\subsubsection{Dataset 3 (high dimensional)}
+The Zeisel mouse cortex and hippocampus data, 3,005 cells and 19,972 genes, labeled with major cell classes and 47 subclasses \cite{zeisel2015cell}. It has far more variables than samples.
+
+For each dataset we record the source, variables, preprocessing (quality control, normalization, log transform, gene filtering), and labels. We also keep backups in case a download is impractical, such as the Cao 2020 human fetal atlas for Dataset 2. The Allen labels were produced by a clustering pipeline of the standard kind, which slightly favors the baselines, so we treat comparisons at that scale as directional rather than absolute.
+
+\subsection{Scaling the mutual information graph (RQ2)}
+MICA scores a pair of cells by the normalized distance
+\begin{equation}
+D(i,j) = 1 - \frac{I(C_i; C_j)}{H(C_i, C_j)},
+\end{equation}
+where the genes act as paired samples of two binned variables. This quantity is a true metric \cite{vinh2010information}, which we use below. Our plan has four parts.
+
+\textbf{Binning once.} Each cell is binned a single time into small integer codes and stored with its marginal entropy, so no pair recomputes it.
+
+\textbf{An exact kernel on the GPU.} For a batch of pairs we fill the joint histogram with a counting operation over combined bin indices, which maps well onto a GPU. We will check the result against the authors' function so that our distances match theirs rather than approximate them.
+
+\textbf{Retrieve then rerank.} Comparing all pairs is quadratic and impossible at two million cells. Instead we propose a short candidate list for each cell with cheap methods, nearest neighbors on principal components with FAISS \cite{douze2024faiss} and a hash over the set of detected genes, then rescore only those candidates with the exact kernel. This is the standard retrieve-then-rerank pattern from information retrieval. Because $D$ is a metric, distances to a small set of landmark cells give a lower bound on unseen pairs, so we can report which part of each neighbor list is certified exact instead of merely plausible.
+
+\textbf{Sketch and propagate.} For the full atlas we cluster a sketch of the cells and then assign the rest to the nearest cluster. Sketches will be chosen by farthest-first traversal in the mutual information metric, in the spirit of Hopper \cite{demeo2020hopper}, with geometric sketching \cite{hie2019geosketch} and uniform sampling as comparisons.
+
+\subsection{Choosing the number of clusters without labels (RQ1)}
+We will select partitions with label-free criteria: the silhouette score in the embedding, stability of cluster assignments across subsamples and random seeds, and the shape of the modularity curve across resolutions. Every method, including the baselines, is then scored twice. Once with the oracle setting used in the original paper, which reproduces its protocol, and once with the label-free rule, which reflects real use. The gap between the two is itself a result.
+
+\subsection{What the similarity measures (RQ1 diagnostic)}
+Mutual information between two binned cells splits exactly into a term for co-detection, meaning which genes are seen in both cells, and terms for expression level. We will report the share carried by co-detection across regimes. To test depth sensitivity we thin the counts of each cell to 25, 50, and 75 percent of its reads, then measure how much the neighbor lists and the final clusters change. If depth drives the result, we will test simple repairs such as depth-matched binning, rank-based bins with a separate bin for zeros, and small-sample corrections to the entropy estimate. Each variant keeps the metric property and plugs into MICA without other changes.
+
+\subsection{Driver-grounded interpretation (RQ3)}
+For each cluster we build an evidence bundle with two parts: top marker genes, and the differential activity drivers reported by scMINER, including hidden drivers. Markers are computed on a held-out split of the counts so that the genes we interpret are not the same values that defined the clusters \cite{neufeld2024inference}. The bundle is used to query a retrieval index built over marker databases and literature, namely CellMarker 2.0 \cite{hu2023cellmarker}, PanglaoDB \cite{franzen2019panglaodb}, the Cell Ontology, and a filtered set of PubMed abstracts. An open-weight language model running locally on our GPUs reads the retrieved passages and proposes a cell type name with the sources it used. We compare three query conditions: markers only, drivers only, and both. The markers-only condition reimplements the standard approach \cite{hou2024gpt4} with the same model and index, so the comparison isolates the contribution of driver activity.
+
+\subsection{Baselines}
+For clustering we compare against k-means on principal components, Leiden graph clustering as used in Scanpy \cite{traag2019louvain}, hierarchical clustering where the data is small enough, and the original MICA in both of its modes. At atlas scale we add a GPU-accelerated standard pipeline \cite{dicks2026rapids} and, for the information-theoretic side, a divergence-based large-scale clustering method \cite{baker2021minicore}. For annotation the baseline is the markers-only prompt described above.
+
+\subsection{Metrics}
+Experiments are designed to answer the three questions rather than to rank many algorithms.
+\begin{itemize}
+\item \textbf{Clustering quality.} Adjusted Rand index, adjusted mutual information, and normalized mutual information against the reference labels, reported at each available label level. Adjusted mutual information is included because it behaves better when cluster sizes are unbalanced.
+\item \textbf{Rare populations.} Per-type recall and F1 for the smallest reference types, plus how many reference types are lost after sketching and propagation.
+\item \textbf{Cost.} Wall-clock time, peak host memory, and peak GPU memory for every stage.
+\item \textbf{Graph quality.} Recall of the approximate neighbor lists against brute-force computation on subsets small enough to allow it, and the fraction of neighbors certified exact by the landmark bound.
+\item \textbf{Sensitivity.} Effect of bin count, neighbor count, sketch size, and random seed, with several seeds per setting so we can report spread rather than a single number.
+\item \textbf{Interpretation.} Agreement of proposed names with reference labels using full and partial credit on the Cell Ontology, and the share of cited claims that the retrieved text actually supports.
+\end{itemize}

@@ -20,3 +20,6 @@ __pycache__/
 .Rhistory
 .RData
 .Rproj.user/
+
+# third-party code cloned for reproduction
+external/
