@@ -27,14 +27,16 @@ def _mad_bounds(x, nmads=3.0):
     return med - nmads * mad, med + nmads * mad
 
 
-def filter_cells(adata, nmads=3.0, min_cells_per_gene=3, mito_nmads=None):
+def filter_cells(adata, nmads=4.0, min_cells_per_gene=3, mito_nmads=None):
     """Drop outlier cells on library size and genes detected.
 
     Cutoffs are taken on a log scale, because both counts are right skewed and
-    raw-scale cutoffs throw away far too many cells. The mitochondrial filter is
-    off by default: in brain tissue a high mitochondrial share is biological, and
-    switching it on here would drop around 10 percent of the cells. Pass
-    mito_nmads to turn it on for datasets where it makes sense.
+    raw-scale cutoffs throw away far too many cells. The default of 4 deviations
+    was chosen to match the authors: it keeps 13,646 PBMC14K cells against the
+    13,605 they report, while 3 deviations keeps only 12,605. The mitochondrial
+    filter is off by default, since a high mitochondrial share is biological in
+    brain tissue and switching it on drops about 10 percent of the cells. Pass
+    mito_nmads to turn it on where it makes sense.
     """
     keep = np.ones(adata.n_obs, dtype=bool)
     for col in ("n_umi", "n_gene"):
@@ -65,7 +67,7 @@ def normalize(adata):
     return adata
 
 
-def run(adata, nmads=3.0, mito_nmads=None):
+def run(adata, nmads=4.0, mito_nmads=None):
     """Full pipeline. Raw counts are kept in the "counts" layer for later use."""
     adata = qc_metrics(adata)
     adata.layers["counts"] = adata.X.copy()

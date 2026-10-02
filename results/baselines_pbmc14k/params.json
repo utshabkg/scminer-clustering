@@ -1,0 +1,5 @@
+{
+  "dataset": "pbmc14k",
+  "n_seeds": 3,
+  "true_k": 7
+}

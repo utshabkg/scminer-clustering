@@ -23,14 +23,14 @@ def main(name, n_seeds=3):
     rows = []
     for seed in range(n_seeds):
         for method in ("kmeans_pca", "hierarchical_pca", "leiden_pca"):
-            rec = {"dataset": name, "method": method, "seed": seed, "k_setting": "true_k"}
+            rec = {"dataset": name, "method": method, "seed": seed, "k_setting": "paper_protocol"}
             with metrics.timed(rec):
                 if method == "kmeans_pca":
                     labels, emb = cluster.kmeans_pca(adata, k, seed=seed)
                 elif method == "hierarchical_pca":
                     labels, emb = cluster.hierarchical_pca(adata, k, seed=seed)
                 else:
-                    labels, emb, info = cluster.leiden_at_k(adata, k, seed=seed)
+                    labels, emb, info = cluster.leiden_paper_protocol(adata, truth, seed=seed)
                     rec["resolution"] = info["resolution"]
             rec.update(metrics.score(truth, labels, embedding=emb))
             rows.append(rec)

@@ -1,5 +1,5 @@
 {
   "dataset": "zeisel",
-  "n_seeds": 2,
+  "n_seeds": 3,
   "true_k": 7
 }
