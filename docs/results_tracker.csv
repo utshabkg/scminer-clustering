@@ -72,3 +72,4 @@ baselines_zeisel_hvg2000_seurat_v3,zeisel,kmeans_pca,paper_protocol,2,7,0.830602
 baselines_zeisel_hvg2000_seurat_v3,zeisel,hierarchical_pca,paper_protocol,2,7,0.5527038302827646,0.625687483812033,0.6271075078454867,0.2740189731121063,0.22,1.23,7,,2000.0,seurat_v3,,,,
 baselines_zeisel_hvg2000_seurat_v3,zeisel,leiden_pca,paper_protocol,2,7,0.7944176515004738,0.7447360702655326,0.7456657432972329,0.24090376496315,2.41,1.23,7,0.1,2000.0,seurat_v3,,,,
 reproduction_pbmc14k,pbmc14k,mica,paper_protocol,0,7,0.8535599606980375,0.8714474728621291,0.8715349188679365,,,,7,,,,2.3,40.0,0.853,0.001
+reproduction_zeisel,zeisel,mica,paper_protocol,0,7,0.7025233659213057,0.7528444909405817,0.753684220349379,,,,7,,,,7.0,1.0,0.744,-0.041

@@ -10,7 +10,7 @@ Updated: 2026-10-01
 | Milestone | Due | Tasks done | Percent | State |
 |-----------|-----|------------|---------|-------|
 | M1 software, small data ready | Oct 7 | 6 of 10 | 60% | Both environments work, Zeisel and PBMC14K downloaded and preprocessed, scaffolding in place |
-| M2 reproduce the paper | Oct 14 | 2 of 6 | 40% | PBMC14K reproduced to within 0.001 ARI, Zeisel MICA run still going |
+| M2 reproduce the paper | Oct 14 | 4 of 6 | 67% | Both datasets reproduced within tolerance, baselines done, first results shared |
 | M3 cluster count without labels | Oct 21 | 0 of 4 | 0% | Not started |
 | M4 what the similarity measures, atlas downloaded | Oct 28 | 0 of 5 | 0% | Not started |
 | M5 fast neighbor search | Nov 11 | 0 of 5 | 0% | Not started |
@@ -18,9 +18,26 @@ Updated: 2026-10-01
 | M7 retrieval and drivers | Nov 25 | 0 of 5 | 0% | Not started |
 | M8 paper and slides | Dec 2 | 0 of 4 | 0% | Not started |
 
-Overall: 8 of 43 tasks finished.
+Overall: 10 of 43 tasks finished.
 
-Next three things: finish the Zeisel reproduction (U-9), extend the gene-set comparison to the paper's other benchmark datasets, get GitHub usernames from Laraib and Rhea (U-4).
+Next three things: the label-free rule for choosing the number of clusters (U-12), extend the gene-set comparison to Usoskin, Kolodziejczyk and Klein, get GitHub usernames from Laraib and Rhea (U-4).
+
+---
+
+## 2026-10-01 end of day, Utshab
+
+**Reproduction done on both datasets (U-9).**
+
+| Dataset | MICA, our run | MICA, paper | Gap | Leiden, all genes, same data and rule |
+|---------|---------------|-------------|-----|---------------------------------------|
+| PBMC14K | ARI 0.854, AMI 0.871 | 0.853 | +0.001 | ARI 0.874, AMI 0.899 |
+| Zeisel | ARI 0.703, AMI 0.753 | 0.744 | -0.041 | ARI 0.844, AMI 0.797 |
+
+- Both gaps are inside the 0.05 tolerance we set, so we trust the setup. The Zeisel gap is probably our slightly different cell set (2,987 cells against their 2,903) plus randomness: MICA's small-data mode runs k-means once without a fixed seed, although the paper describes a consensus over 10 runs. That is worth a sentence in the reproduction section.
+- **Cost.** Zeisel took 59 minutes, and 58 of them were the mutual information matrix, computed on a single core even though we asked for 25 workers. PBMC14K took about 20 minutes in the larger-data mode. This is direct evidence for the cost problem behind RQ2.
+- **RQ1 now rests on identical data for both datasets.** A plain Leiden pipeline on all genes beats MICA by 0.02 ARI on PBMC14K and by 0.14 on Zeisel.
+
+Raw MICA output stays on the shared disk side of the repo. The scored rows are in `results/reproduction_zeisel/` and `results/reproduction_pbmc14k/`.
 
 ---
 
@@ -36,7 +53,7 @@ The paper gave every baseline only 2,000 highly variable genes, while MICA uses 
 | 2,000 genes, seurat_v3 method | 0.754 | 0.769 |
 | 2,000 genes, cell_ranger method | 0.578 | 0.691 |
 | 2,000 genes, seurat method | 0.652 | 0.641 |
-| MICA, our run and published | 0.854 and 0.853 | running, and 0.744 |
+| MICA, our run and published | 0.854 and 0.853 | 0.703 and 0.744 |
 
 What this says:
 - With 2,000 genes, under any of the three methods, Leiden falls below MICA on PBMC14K, which matches the paper's story.
@@ -45,7 +62,6 @@ What this says:
 
 What it does not say yet:
 - **Only two datasets.** A paper needs the rest of scMINER's benchmark sets that meet the 500-cell floor: Usoskin, Kolodziejczyk and Klein.
-- **The Zeisel MICA number on our data is still running,** so the Zeisel column compares against the published value for now.
 - **It holds for the graph pipeline only.** k-means and hierarchical clustering move in different directions, and k-means on Zeisel is better with 2,000 genes (0.82) than with all genes (0.52). We must not overclaim it as "all genes always help".
 - **The cluster count is still chosen using the labels**, as in the paper. Choosing it without labels is the next part of RQ1.
 

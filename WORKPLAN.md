@@ -61,9 +61,9 @@ The split below is a proposal. Rhea picks first at the next meeting, as agreed i
 | U-6 | Assemble the PBMC14K dataset and labels | the authors' raw count file and label file | `data/raw/pbmc14k/` | about 13,605 cells with 7 labelled types | Oct 7 | `[x]` |
 | U-7 | Preprocessing code: quality filters, normalization, log transform | raw data | `src/scminer_clust/preprocess.py`, processed files | both datasets processed, counts logged | Oct 7 | `[x]` |
 | U-8 | Scoring code: ARI, AMI, NMI, silhouette, runtime, peak memory, repeated seeds | processed data | `src/scminer_clust/metrics.py` | a run writes `metrics.csv` with a seed column | Oct 14 | `[x]` |
-| U-9 | Reproduce MICA on Zeisel and PBMC14K | processed data | `results/reproduction/metrics.csv` | our ARI is within about 0.05 of the published value, or the gap is explained | Oct 14 | `[~]` |
+| U-9 | Reproduce MICA on Zeisel and PBMC14K | processed data | `results/reproduction/metrics.csv` | our ARI is within about 0.05 of the published value, or the gap is explained | Oct 14 | `[x]` |
 | U-10 | Baselines: k-means on principal components, Leiden, hierarchical | processed data | `results/baselines/metrics.csv` | all three run on both datasets | Oct 14 | `[x]` |
-| U-11 | Export the first results table and figures for the team | results CSVs | `results/` committed | Rhea can build tables from them | Oct 14 | `[ ]` |
+| U-11 | Export the first results table and figures for the team | results CSVs | `results/` committed | Rhea can build tables from them | Oct 14 | `[x]` |
 | U-12 | Rule for choosing the number of clusters without labels | processed data | `src/scminer_clust/selection.py` | the rule picks a number on all methods, no labels used | Oct 21 | `[ ]` |
 | U-13 | Compare oracle setting against the label-free rule for every method | U-12 | `results/rq1_selection/metrics.csv` | one table, both settings, both datasets | Oct 21 | `[ ]` |
 | U-14 | Measure what the similarity captures: detection versus expression, and the depth test | processed data | `results/rq1_diagnostics/` | shares reported, and cluster changes at 25, 50 and 75 percent of counts | Oct 28 | `[ ]` |
@@ -172,3 +172,5 @@ Datasets never go into git. They live on the shared 20 TB disk, and the repo onl
 | Oct 1 | Work order: reproduce, then RQ1, then RQ2, then RQ3 | The cheap processor-only results come first, so we have findings even if the big runs slip |
 | Oct 1 | Data lives on the shared 20 TB disk | Keeps the home disk free |
 | Oct 1 | Ask before long GPU runs | The GPUs are shared with other projects |
+| Oct 1 | Filtering at 4 deviations on a log scale | Matches the paper's cell counts: 13,646 against 13,605 on PBMC14K |
+| Oct 1 | Baselines and MICA both picked with the paper's rule | So the reproduction compares like with like. The label-free rule is added separately for RQ1 |
