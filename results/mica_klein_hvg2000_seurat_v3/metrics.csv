@@ -1,0 +1,4 @@
+dataset,method,seed,k_setting,mica_setting,n_settings_tried,genes,hvg_flavor,n_clusters,n_true_classes,ari,ami,nmi,seconds,n_cells,n_genes
+klein,mica,0,paper_protocol,k=4 seeded,1,2000,seurat_v3,4,4,0.8393085048357195,0.844876109594117,0.8450701435403155,,2717,2000
+klein,mica,1,paper_protocol,k=4 seeded,1,2000,seurat_v3,4,4,0.8393085048357195,0.844876109594117,0.8450701435403155,,2717,2000
+klein,mica,2,paper_protocol,k=4 seeded,1,2000,seurat_v3,4,4,0.8393085048357195,0.8448761095941171,0.8450701435403156,,2717,2000

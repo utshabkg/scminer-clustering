@@ -5,37 +5,87 @@ Utshab adds an entry at the end of each working session. Laraib and Rhea add a l
 
 ## Where we stand
 
-Updated: 2026-10-01. Counts follow the Milestone column in `WORKPLAN.md`.
+Updated: 2026-10-02. Counts follow the Milestone column in `WORKPLAN.md`.
 
 | Milestone | Due | Tasks done | Percent | State |
 |-----------|-----|------------|---------|-------|
-| M1 software, small data ready | Oct 7 | 6 of 8 | 75% | Software works, Zeisel and PBMC14K ready. Waiting on the GitHub invites (U-4) and the Zeisel card (L-1) |
-| M2 reproduce the paper | Oct 14 | 4 of 6 | 67% | Both datasets reproduced within tolerance, baselines done. Left: PBMC14K card (L-2), results summary (R-1) |
-| M3 cluster count without labels | Oct 21 | 0 of 4 | 0% | Not started |
-| M4 what the similarity measures, atlas downloaded | Oct 28 | 0 of 4 | 0% | Not started |
+| M1 software, small data ready | Oct 7 | 6 of 8 | 75% | Software works, data ready. Laraib has joined GitHub. Waiting on Rhea's invite (U-4) and the Zeisel card (L-1) |
+| M2 reproduce the paper | Oct 14 | 6 of 9 | 67% | Five of the paper's 13 benchmark sets run, four reproduce within 0.05. Left: decide on contacting the authors (U-30), PBMC14K card (L-2), results summary (R-1) |
+| M3 cluster count without labels | Oct 21 | 0 of 6 | 0% | Not started. Now also holds the five small benchmark sets (U-27) and uncertainty estimates (U-28) |
+| M4 what the similarity measures, atlas downloaded | Oct 28 | 0 of 5 | 0% | Not started |
 | M5 fast neighbor search | Nov 11 | 0 of 4 | 0% | Not started |
 | M6 full 2.3 million cell run | Nov 18 | 0 of 4 | 0% | Not started |
 | M7 retrieval and drivers | Nov 25 | 0 of 4 | 0% | Not started |
 | M8 paper and slides | Dec 2 | 0 of 3 | 0% | Not started |
 | Every week: notes, plan and progress updates | weekly | | | Start at the Oct 7 meeting (L-7, R-3, R-8) |
 
-Overall: 10 of 40 tasks finished. Three of the 40 repeat every week.
+Overall: 12 of 46 tasks finished. Three of the 46 repeat every week.
 
-Next three things: run MICA on the same 2,000 genes the baselines got, so we know whether the gap comes from the genes or from the method, add Usoskin, Kolodziejczyk and Klein from the paper's benchmark, and the label-free rule for the number of clusters (U-12).
+Next three things: add the paper's five small benchmark sets so we have ten datasets (U-27), estimate how much the numbers move between runs (U-28), and the label-free rule for the number of clusters (U-12).
 
------------|-----|------------|---------|-------|
-| M1 software, small data ready | Oct 7 | 6 of 10 | 60% | Both environments work, Zeisel and PBMC14K downloaded and preprocessed, scaffolding in place |
-| M2 reproduce the paper | Oct 14 | 4 of 6 | 67% | Both datasets reproduced within tolerance, baselines done, first results shared |
-| M3 cluster count without labels | Oct 21 | 0 of 4 | 0% | Not started |
-| M4 what the similarity measures, atlas downloaded | Oct 28 | 0 of 5 | 0% | Not started |
-| M5 fast neighbor search | Nov 11 | 0 of 5 | 0% | Not started |
-| M6 full 2.3 million cell run | Nov 18 | 0 of 4 | 0% | Not started |
-| M7 retrieval and drivers | Nov 25 | 0 of 5 | 0% | Not started |
-| M8 paper and slides | Dec 2 | 0 of 4 | 0% | Not started |
+---
 
-Overall: 10 of 43 tasks finished.
+## 2026-10-02, Utshab
 
-Next three things: the label-free rule for choosing the number of clusters (U-12), extend the gene-set comparison to Usoskin, Kolodziejczyk and Klein, get GitHub usernames from Laraib and Rhea (U-4).
+Ran U-25 (MICA on the same 2,000 genes the baselines got) and U-26 (three more of the paper's benchmark sets: Usoskin, Kolodziejczyk and Klein). Two independent reviews of the code and the claims changed several numbers, and one conclusion from yesterday held only on the first two datasets.
+
+Everything below uses the paper's rule, which looks at the labels twice. Each method is told the true number of cell types, and when several runs give that number, we keep the one that best matches the labels. So these are best-case scores, not what someone would get without labels.
+
+**What the reviews caught, and what we fixed**
+- Our seurat-style gene selection treated our log2 data as natural log, so it picked 19 to 47 percent different genes from the standard method. Fixed in `cluster.select_hvg`, and every run that used it was redone. Leiden barely moved, k-means moved more.
+- The paper's text says the baselines swept Leiden resolution from 0.1 to 4.0 in steps of 0.1, but the authors' own Scanpy code sweeps 0.01 to 2.0 in steps of 0.01. On the old grid Leiden often had no setting that gave the true number of clusters. We now follow the code, so every Leiden sweep has at least one setting with exactly the true number. Leiden still does not find that number by itself: the labels pick the setting.
+- MICA's small-data mode runs k-means once with no fixed seed. `scripts/mica_seeded_kmeans.py` reruns that exact call with three seeds on MICA's saved embedding, so in small-data mode MICA and the baselines both report three draws. Graph mode (PBMC14K, and Zeisel in graph mode) still has one MICA run per setting.
+- Usoskin was released only as reads per million. We recover the read counts and drop 1,218 rows that are DNA repeats, not genes. For Usoskin, Kolodziejczyk and Klein we keep every labelled cell, as the paper did.
+- `score_mica.py` now refuses to score if MICA's cells do not match ours, and `run_mica_job.sh` never mixes old output into a new run.
+
+**Reproduction: MICA against the published scores**
+
+We ran MICA both on the authors' own released input (their Zenodo files) and on our input. The paper has 13 benchmark sets, and these are the five mid-sized ones (622 to 13,605 cells).
+
+| Dataset | Published | MICA, authors' input | MICA, our input | Verdict |
+|---|---|---|---|---|
+| PBMC14K | 0.853 | 0.853 | 0.854 | matches, one run each |
+| Klein | 0.980 | 0.980 | 0.980 | matches |
+| Zeisel | 0.744 | 0.781 graph mode, 0.695 small-data mode | 0.766 and 0.704 | within 0.05 in both modes. The authors' script ran it in graph mode |
+| Usoskin | 0.847 | 0.803 | 0.885 | within 0.05 on both inputs |
+| Kolodziejczyk | 1.000 | 0.727 | 0.721 | not reproduced from the released files |
+
+On Kolodziejczyk, a notebook in the authors' `scMINER_analysis` repo scores their main MICA run at 0.727, the same as our run on their released input. That run used essentially the same values as the release (13,923 genes against 13,698). The same notebook scores some other MICA runs at 1.0, including their parameter sweep. For this dataset the sweep script reads a different file, `Kolod_MICA_input.txt` (704 cells by 13,473 genes). That file is not in the Zenodo release, but it is not hidden either: the script names it, and the original MICA repo uses a file of the same name as its reference input. It has small negative values, so it was transformed in some way we cannot see from the notebook. We do not know which run the paper's 1.0 comes from.
+
+A score near 1.0 is normal for this dataset anyway. On the released input MICA gets 0.99 to 1.00 once it is given 2,000 variable genes, and the paper's own Seurat and Scanpy get 0.992 and 0.996. With all genes, MICA groups 82 of the 2i cells with the a2i cells, and 81 of those come from batch 2. (2i, a2i and lif are the three growth conditions that make up the labels. The batch is the number in each cell's name.) Before we call this a failed reproduction anywhere outside the team, we should ask the authors for that file and how it was made (U-30).
+
+**Gene set against method (RQ1)**
+
+Mean ARI over seeds. Both methods get exactly the same genes, and "all genes" means every gene that survives our filtering. The 2,000-gene columns give the lowest and highest score across the three ways of picking those genes, not run-to-run spread. MICA on Zeisel is in small-data mode here. In the graph mode the authors used, MICA on all genes scores 0.766. Full tables with AMI are in `results/summary_gene_sets.md`.
+
+| Dataset | MICA, all genes | Leiden, all genes | MICA, 2,000 genes (three ways) | Leiden, 2,000 genes (three ways) |
+|---|---|---|---|---|
+| Zeisel | 0.704 | 0.845 | 0.728 to 0.844 | 0.615 to 0.795 |
+| PBMC14K | 0.854 | 0.876 | 0.531 to 0.737 | 0.588 to 0.755 |
+| Usoskin | 0.885 | 0.588 | 0.840 to 0.877 | 0.885 to 0.922 |
+| Kolodziejczyk | 0.721 | 0.562 | 0.988 to 1.000 | 0.996 to 1.000 |
+| Klein | 0.980 | 0.975 | 0.728 to 0.839 | 0.766 to 0.976 |
+
+What this shows:
+- **Which genes a method gets matters about as much as the choice between MICA and Leiden, and often more.** Across the four gene settings, the gap between a method's best and worst score runs from 0.045 (Usoskin) to 0.32 (PBMC14K) for MICA and from 0.21 to 0.44 for Leiden. Given the same genes, the two methods are within 0.05 in 11 of 20 pairings, and the largest gap is 0.30 (Usoskin, all genes). MICA on Usoskin is the clear exception, since its gene set barely mattered there. Fewer genes help on some datasets and hurt on others, so no single gene set is best.
+- **Neither MICA nor Leiden wins everywhere.** With 2,000 genes, Leiden is level with or ahead of MICA on four of five datasets, and MICA is ahead on Zeisel. With all genes, Leiden is ahead on Zeisel (by 0.14 against MICA's small-data mode, 0.08 against the graph mode the authors used) and slightly ahead on PBMC14K (0.02). MICA is ahead on Usoskin and Kolodziejczyk, where Leiden on all genes scores far below Leiden on 2,000 genes (0.59 and 0.56, against 0.89 to 1.00). We do not know why yet. Klein is a tie.
+- **On PBMC14K, MICA's lead mostly goes away once both methods get the same genes.** In our rerun of the paper's setup (MICA on all genes, Leiden on 2,000 genes picked with Scanpy's default method, as in the authors' code), MICA leads by 0.20. The paper itself reported a smaller lead there (0.853 against Scanpy's 0.754). Our run of their baseline scores 0.10 lower than theirs, and we do not know why yet. Given the same genes, Leiden is level with MICA or slightly ahead in all four gene settings on PBMC14K, by 0.003 to 0.057. MICA's PBMC14K numbers are single runs.
+
+**Correction to what I told you on Oct 1.** I wrote that Leiden is ahead of MICA when both get all genes. That holds on Zeisel (by 0.14, or 0.08 against MICA's graph mode) and only just on PBMC14K (0.02). It fails on Usoskin and Kolodziejczyk, where MICA is ahead, and Klein is a tie. With 2,000 matched genes, MICA is ahead on Zeisel. The three points above replace the Oct 1 claim.
+
+**Limits**
+- Five datasets is too few for a significance test.
+- The graph-mode MICA numbers are single runs, and our three small-data MICA seeds only redraw the last k-means step, so MICA's run-to-run spread is understated.
+- Leiden picks the best of up to 200 resolution settings, while MICA gets one k-means run in small-data mode or 40 settings in graph mode. That extra choice is worth up to 0.04 ARI to Leiden, which is as large as several of its leads.
+- Zeisel and Usoskin labels came from the original authors' own clustering, which can favor some methods. Kolodziejczyk's labels partly line up with the batch number in the cell names.
+- In the paper's own numbers, Seurat averages the same ARI as MICA on these five datasets (0.885 each), though Seurat is ahead on Usoskin by 0.09 and MICA on PBMC14K by 0.08. MICA's average lead over Seurat across all 13 datasets comes from the five smallest (124 to 317 cells), where MICA is ahead by 0.01 (Goolam) to 0.41 (Buettner). We have not run those yet.
+
+**Next**
+1. Add those five small sets (Yan, Goolam, Buettner, Pollen, Chung) from the authors' Zenodo inputs, giving ten datasets (U-27).
+2. Measure run-to-run spread with a bootstrap and repeated graph-mode runs (U-28).
+3. The label-free number of clusters (U-12), reusing the saved outputs.
+
+All 247 result rows are in `docs/results_tracker.csv`.
 
 ---
 

@@ -38,7 +38,7 @@ The first task for each of you (L-1, L-7, R-1) is set so we can get moving. Ever
 
 ## Milestones
 
-There are 40 tasks: 24 for Utshab and 8 each for Laraib and Rhea. Three of them (L-7, R-3, R-8) repeat every week, and each of the other 37 belongs to the milestone in its row.
+There are 46 tasks: 30 for Utshab and 8 each for Laraib and Rhea. Three of them (L-7, R-3, R-8) repeat every week, and each of the other 43 belongs to the milestone in its row. U-25 and U-26 were added on Oct 2 to firm up the first finding, and U-27 to U-30 came out of the Oct 2 review.
 
 | ID | By | What is true when it is done |
 |----|----|------------------------------|
@@ -58,7 +58,7 @@ There are 40 tasks: 24 for Utshab and 8 each for Laraib and Rhea. Three of them 
 | U-1 | Fix the main software environment so the GPUs are visible | `envs/scminer.yml` | `envs/scminer.lock.yml` | PyTorch reports the GPUs | Oct 7 | M1 | `[x]` |
 | U-2 | Install the authors' MICA code | their GitHub repo | `envs/mica-legacy.lock.yml` | `mica -h` runs | Oct 7 | M1 | `[x]` |
 | U-3 | Repo scaffolding: code package, run scripts, configs, results folders | plan | `src/`, `scripts/`, `configs/` | a test run writes a results folder | Oct 7 | M1 | `[x]` |
-| U-4 | Add Laraib and Rhea as repo collaborators | their GitHub accounts | GitHub settings | both can open the repo | Oct 7 | M1 | `[~]` invited, waiting for both to accept |
+| U-4 | Add Laraib and Rhea as repo collaborators | their GitHub accounts | GitHub settings | both can open the repo | Oct 7 | M1 | `[~]` Laraib has joined, waiting for Rhea to accept |
 | U-5 | Download the Zeisel dataset and its labels | public source | `data/raw/zeisel/` | 3,005 cells load with labels attached | Oct 7 | M1 | `[x]` |
 | U-6 | Assemble the PBMC14K dataset and labels | the authors' raw count file and label file | `data/raw/pbmc14k/` | about 13,605 cells with 7 labelled types | Oct 7 | M1 | `[x]` |
 | U-7 | Preprocessing code: quality filters, normalization, log transform | raw data | `src/scminer_clust/preprocess.py`, processed files | both datasets processed, counts logged | Oct 7 | M1 | `[x]` |
@@ -79,6 +79,12 @@ There are 40 tasks: 24 for Utshab and 8 each for Laraib and Rhea. Three of them 
 | U-22 | Driver activity in Python, including hidden drivers | PBMC14K clusters | `results/rq3_drivers/` | driver lists per cluster | Nov 25 | M7 | `[ ]` |
 | U-23 | Retrieval and local language model annotation, three query types | U-22 | `results/rq3_rag/` | names and cited sources for every cluster | Nov 25 | M7 | `[ ]` |
 | U-24 | Final figures, method and results writing, repo cleanup | everything | `latex/sections/`, `results/` | a fresh clone reproduces the main table | Dec 2 | M8 | `[ ]` |
+| U-25 | Run MICA on the same 2,000 genes the baselines got, all three selection methods | processed data | `results/mica_*_hvg2000_*/` | a two by two table of method against gene set on every dataset | Oct 14 | M2 | `[x]` |
+| U-26 | Add the rest of the paper's eligible benchmark sets: Usoskin, Kolodziejczyk, Klein | Bioconductor mirror and GEO | `data/raw/`, `results/reproduction_*/`, `results/baselines_*/` | MICA and baselines scored on all five datasets | Oct 14 | M2 | `[x]` |
+| U-27 | Add the paper's five small benchmark sets (Yan, Goolam, Buettner, Pollen, Chung) from the authors' Zenodo inputs, MICA and Leiden at all four gene settings | Zenodo 15040179 | `results/` | ten datasets in the gene-set table | Oct 21 | M3 | `[ ]` |
+| U-28 | Estimate run-to-run spread: paired bootstrap of the ARI and AMI differences, five repeat graph-mode MICA runs on PBMC14K and Zeisel | saved partitions | `results/uncertainty/` | intervals next to every gap in the table | Oct 21 | M3 | `[ ]` |
+| U-29 | Kolodziejczyk side test: does removing the plate effect, or the authors' gene filter, recover ARI 1.0? Report any use of the labels as leakage | released input | `results/kolod_side_test/` | a short note on what recovers the published score | Oct 28 | M4 | `[ ]` |
+| U-30 | Decide whether to ask the scMINER authors for their unreleased Kolodziejczyk input before we describe the non-reproduction anywhere outside the team | R5 evidence in PROGRESS.md | email or a recorded decision | decision recorded in the decision log | Oct 14 | M2 | `[ ]` |
 
 ## Tasks: Laraib
 
@@ -111,7 +117,7 @@ There are 40 tasks: 24 for Utshab and 8 each for Laraib and Rhea. Three of them 
 | Week | Meeting | Milestone | Utshab | Laraib | Rhea |
 |------|---------|-----------|--------|--------|------|
 | Oct 1 to 7 | Oct 7 | M1 | U-1 to U-7 | L-1 | R-1 (start) |
-| Oct 8 to 14 | Oct 14 | M2 | U-8 to U-11 | L-2 | R-1 |
+| Oct 8 to 14 | Oct 14 | M2 | U-8 to U-11, U-25, U-26 | L-2 | R-1 |
 | Oct 15 to 21 | Oct 21 | M3 | U-12, U-13 | L-3 | R-2 |
 | Oct 22 to 28 | Oct 28 | M4 | U-14 to U-16 | L-4 | weekly tasks only |
 | Oct 29 to Nov 4 | Nov 4 | M5 starts | U-17 | L-4 | weekly tasks only |
@@ -178,3 +184,8 @@ Datasets never go into git. They live on the shared 20 TB disk, and the repo onl
 | Oct 1 | Ask before long GPU runs | The GPUs are shared with other projects |
 | Oct 1 | Filtering at 4 deviations on a log scale | Matches the paper's cell counts: 13,646 against 13,605 on PBMC14K |
 | Oct 1 | Baselines and MICA both picked with the paper's rule | So the reproduction compares like with like. The label-free rule is added separately for RQ1 |
+| Oct 2 | Test MICA on 2,000 genes too, and add three more benchmark sets | Leiden on all genes beat MICA on two datasets, and we need to know whether the genes or the method explain it before claiming anything |
+| Oct 2 | Keep every labelled cell for Usoskin, Kolodziejczyk and Klein | The paper's cell counts for these sets equal every labelled cell, so the authors dropped none |
+| Oct 2 | Leiden resolution swept in steps of 0.01, as in the authors' code | The paper's text says 0.1, but that grid often cannot produce the true number of clusters |
+| Oct 2 | Report MICA as three seeded k-means draws on its own embedding | MICA's default is one unseeded draw, while the baselines report three seeds |
+| Oct 2 | Treat Kolodziejczyk as not reproduced from the released files | MICA gets 0.727 on the authors' released input, as does their own notebook. Their 1.0 came from an input they did not release |

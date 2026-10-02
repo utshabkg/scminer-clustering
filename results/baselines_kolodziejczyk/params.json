@@ -1,0 +1,9 @@
+{
+  "dataset": "kolodziejczyk",
+  "n_seeds": 3,
+  "true_k": 3,
+  "n_hvg": null,
+  "hvg_flavor": null,
+  "n_cells": 704,
+  "n_genes_total": 27942
+}

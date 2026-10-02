@@ -8,6 +8,24 @@ N_HVG = None  # set by run scripts; None means use every gene
 HVG_FLAVOR = "seurat"  # "seurat" and "cell_ranger" use log data, "seurat_v3" uses raw counts
 
 
+def select_hvg(adata, n_hvg, flavor):
+    """Names of the n_hvg highly variable genes, picked with the given method.
+
+    Used by both the baselines and the MICA export, so both see exactly the same
+    genes. "seurat" and "cell_ranger" work on the log data, "seurat_v3" on the
+    raw values in the counts layer.
+    """
+    a = adata.copy()
+    # Our matrix is log2(CPM + 1). Without this, the seurat method treats it as
+    # natural log and picks 19 to 47 percent different genes (found in the Oct 2 audit).
+    a.uns["log1p"] = {"base": 2}
+    if flavor == "seurat_v3":
+        sc.pp.highly_variable_genes(a, n_top_genes=n_hvg, flavor="seurat_v3", layer="counts")
+    else:
+        sc.pp.highly_variable_genes(a, n_top_genes=n_hvg, flavor=flavor)
+    return a.var_names[a.var["highly_variable"]].tolist()
+
+
 def pca(adata, n_comps=50, seed=0, n_hvg=None):
     """Principal components on the log normalized matrix, cached in .obsm.
 
@@ -19,11 +37,7 @@ def pca(adata, n_comps=50, seed=0, n_hvg=None):
     if key not in adata.obsm:
         a = adata.copy()
         if n_hvg:
-            if HVG_FLAVOR == "seurat_v3":
-                sc.pp.highly_variable_genes(a, n_top_genes=n_hvg, flavor="seurat_v3", layer="counts")
-            else:
-                sc.pp.highly_variable_genes(a, n_top_genes=n_hvg, flavor=HVG_FLAVOR)
-            a = a[:, a.var["highly_variable"]].copy()
+            a = a[:, select_hvg(adata, n_hvg, HVG_FLAVOR)].copy()
         sc.pp.scale(a, max_value=10)
         sc.tl.pca(a, n_comps=n_comps, svd_solver="arpack", random_state=seed)
         adata.obsm[key] = a.obsm["X_pca"]
@@ -64,7 +78,12 @@ def leiden_pca(adata, resolution=1.0, n_comps=50, n_neighbors=15, seed=0):
     return a.obs["leiden"].to_numpy().astype(str), emb
 
 
-PAPER_RESOLUTIONS = np.round(np.arange(0.1, 4.0 + 1e-9, 0.1), 1)
+# The paper's text says the baselines' Leiden resolution was swept from 0.1 to 4.0
+# in steps of 0.1, but the authors' own Scanpy code (scMINER_analysis,
+# Clustering_HPC/Scanpy/Scanpy_clustering.py) sweeps 0.01 to 2.0 in steps of 0.01.
+# The coarse grid often cannot hit the true number of clusters (found Oct 2), so
+# we follow the code. MICA's own sweep keeps its 0.1 grid, as in the paper.
+PAPER_RESOLUTIONS = np.round(np.arange(0.01, 2.0 + 1e-9, 0.01), 2)
 
 
 def pick_paper_protocol(partitions, truth):
@@ -82,7 +101,11 @@ def pick_paper_protocol(partitions, truth):
         n = len(np.unique(labels))
         scored.append((abs(n - k), -adjusted_rand_score(truth, labels), res, n))
     gap, neg_ari, res, n = min(scored)
-    return res, {"resolution": float(res), "n_clusters": int(n), "hit_true_k": gap == 0}
+    hits = [-s[1] for s in scored if s[0] == 0]
+    # How many settings hit the true count, and their median ARI, show whether the
+    # pick is a best-of-many (an advantage) or the only option.
+    return res, {"resolution": float(res), "n_clusters": int(n), "hit_true_k": gap == 0,
+                 "n_hits": len(hits), "median_ari_of_hits": float(np.median(hits)) if hits else None}
 
 
 def leiden_paper_protocol(adata, truth, n_comps=50, n_neighbors=15, seed=0):

@@ -1,0 +1,9 @@
+{
+  "dataset": "klein",
+  "n_seeds": 3,
+  "true_k": 4,
+  "n_hvg": null,
+  "hvg_flavor": null,
+  "n_cells": 2717,
+  "n_genes_total": 24022
+}

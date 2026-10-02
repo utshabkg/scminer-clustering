@@ -18,10 +18,10 @@ def gene_setting(row):
 
     Older runs were saved before the genes and hvg_flavor columns existed, so a
     blank means all genes, and 2000 with a blank method means the seurat method.
-    MICA always uses every gene.
+    MICA rows without a genes value are the all-gene reproductions.
     """
     genes = row.get("genes")
-    if pd.isna(genes) or str(genes) in ("all", "") or row.get("method") == "mica":
+    if pd.isna(genes) or str(genes) in ("all", ""):
         return "all genes"
     flavor = row.get("hvg_flavor")
     flavor = "seurat" if pd.isna(flavor) or flavor == "" else flavor

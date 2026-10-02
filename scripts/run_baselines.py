@@ -39,7 +39,10 @@ def main(name, n_seeds=3, n_hvg=None):
                 else:
                     labels, emb, info = cluster.leiden_paper_protocol(adata, truth, seed=seed)
                     rec["resolution"] = info["resolution"]
+                    rec["n_resolutions_hit_k"] = info["n_hits"]
+                    rec["median_ari_of_hits"] = info["median_ari_of_hits"]
             rec.update(metrics.score(truth, labels, embedding=emb))
+            rec["n_cells"], rec["n_genes"] = adata.n_obs, (n_hvg or adata.n_vars)
             rows.append(rec)
             print(f"  seed {seed} {method:18s} ARI {rec['ari']:.3f}  AMI {rec['ami']:.3f}  "
                   f"clusters {rec['n_clusters']}  {rec['seconds']}s")
@@ -47,7 +50,9 @@ def main(name, n_seeds=3, n_hvg=None):
     exp = f"baselines_{name}" + (f"_hvg{n_hvg}" if n_hvg else "")
     if n_hvg and cluster.HVG_FLAVOR != "seurat":
         exp += f"_{cluster.HVG_FLAVOR}"
-    d = metrics.write(exp, rows, {"dataset": name, "n_seeds": n_seeds, "true_k": int(k), "n_hvg": n_hvg})
+    d = metrics.write(exp, rows, {"dataset": name, "n_seeds": n_seeds, "true_k": int(k), "n_hvg": n_hvg,
+                                  "hvg_flavor": cluster.HVG_FLAVOR if n_hvg else None,
+                                  "n_cells": adata.n_obs, "n_genes_total": adata.n_vars})
     print(f"wrote {d / 'metrics.csv'}")
     return 0
 

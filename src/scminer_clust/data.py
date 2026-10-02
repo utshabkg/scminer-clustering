@@ -15,10 +15,29 @@ def _read_takane_frame(path):
         names = [x.decode() for x in g["column_names"][:]]
         cols = {}
         for i, name in enumerate(names):
+            if str(i) not in g["data"]:
+                continue  # nested columns (a data frame inside a column) are stored elsewhere and skipped
             v = g[f"data/{i}"][:]
             cols[name] = np.array([x.decode() for x in v]) if v.dtype.kind == "S" else v
         index = [x.decode() for x in g["row_names"][:]]
     return pd.DataFrame(cols, index=index)
+
+
+def _load_takane_sce(d):
+    """Matrix plus cell and gene tables from a Bioconductor scRNAseq download.
+
+    The matrix is stored genes x cells, so it is transposed to cells x genes.
+    """
+    with h5py.File(d / "matrix.h5") as h:
+        g = h["compressed_sparse_matrix"]
+        n_genes, n_cells = (int(x) for x in g["shape"][:])
+        counts = sparse.csc_matrix(
+            (g["data"][:].astype(np.float32), g["indices"][:].astype(np.int32), g["indptr"][:].astype(np.int64)),
+            shape=(n_genes, n_cells),
+        )
+    obs = _read_takane_frame(d / "column_data.h5")
+    var = _read_takane_frame(d / "row_data.h5")
+    return ad.AnnData(X=counts.T.tocsr(), obs=obs, var=var)
 
 
 def load_zeisel() -> ad.AnnData:
@@ -29,17 +48,7 @@ def load_zeisel() -> ad.AnnData:
     dead as of October 2026. Labels: level1class (7 broad types) and level2class
     (47 subtypes), both from the original study.
     """
-    d = RAW / "zeisel"
-    with h5py.File(d / "matrix.h5") as h:
-        g = h["compressed_sparse_matrix"]
-        n_genes, n_cells = (int(x) for x in g["shape"][:])
-        counts = sparse.csc_matrix(
-            (g["data"][:].astype(np.float32), g["indices"][:].astype(np.int32), g["indptr"][:].astype(np.int64)),
-            shape=(n_genes, n_cells),
-        )
-    obs = _read_takane_frame(d / "column_data.h5")
-    var = _read_takane_frame(d / "row_data.h5")
-    adata = ad.AnnData(X=counts.T.tocsr(), obs=obs, var=var)
+    adata = _load_takane_sce(RAW / "zeisel")
     adata.var_names_make_unique()
     adata.obs = adata.obs.rename(columns={"level1class": "label", "level2class": "label_fine"})
     adata.uns["dataset"] = "zeisel"
@@ -79,8 +88,126 @@ def load_pbmc14k() -> ad.AnnData:
     return adata
 
 
-LOADERS = {"zeisel": load_zeisel, "pbmc14k": load_pbmc14k}
+def load_usoskin() -> ad.AnnData:
+    """Usoskin 2015 mouse sensory neurons, the 622 cells scMINER benchmarks on.
+
+    Source: Bioconductor scRNAseq (usoskin-brain-2015), which holds the reads per
+    million released on GEO (GSE59739). We keep the four neuron classes, which give
+    exactly the 622 cells and 4 classes in the paper, and drop non-neuronal cells,
+    outliers, empty wells and doublets. Known quirks, none of which affect
+    clustering: 26 gene names were turned into dates by Excel upstream (March1 to
+    March11, Sept1 to Sept15 appear as numbers like 40969), and the authors' own
+    MICA input stops at 16,383 genes, probably Excel's column limit.
+    """
+    adata = _load_takane_sce(RAW / "usoskin")
+    adata = adata[adata.obs["Level 1"].isin(["NP", "TH", "NF", "PEP"])].copy()
+    # 1,218 rows starting with r_ are RepeatMasker repeats, not genes.
+    adata = adata[:, ~adata.var_names.str.startswith("r_")].copy()
+    # Recover read counts from reads per million. The authors divided by each
+    # cell's total reads (the Reads column), so this is exact for shallow cells and
+    # within half a read for deep ones. Count-based gene selection needs counts.
+    reads = adata.obs["Reads"].to_numpy(dtype=float)
+    adata.X = sparse.csr_matrix(np.round(sparse.diags(reads / 1e6) @ adata.X)).astype(np.float32)
+    adata.X.eliminate_zeros()
+    adata.obs["label"] = adata.obs["Level 1"].to_numpy()
+    adata.obs["label_fine"] = adata.obs["Level 3"].to_numpy()
+    adata.obs["label_level2"] = adata.obs["Level 2"].to_numpy()  # the authors' 8-group labels
+    adata.uns["dataset"] = "usoskin"
+    adata.uns["keep_all_cells"] = True  # the paper used every labelled cell
+    return adata
+
+
+def load_kolodziejczyk() -> ad.AnnData:
+    """Kolodziejczyk 2015 mouse embryonic stem cells in three culture conditions.
+
+    Source: Bioconductor scRNAseq (kolodziejczyk-esc-2015), raw read counts with
+    spike-ins held separately. The labels are the culture condition each cell was
+    grown in (2i, a2i, serum with LIF), so they come from the experiment design,
+    not from clustering. 704 cells and 3 classes, as in the paper.
+    """
+    adata = _load_takane_sce(RAW / "kolodziejczyk")
+    # Genes are Ensembl IDs, so flag the mitochondrial genes by ID instead of name.
+    mt_ids = {f"ENSMUSG000000{n}" for n in range(64336, 64373)} | {"ENSMUSG00000065947"}
+    adata.var["mito"] = adata.var_names.isin(mt_ids)
+    adata.obs["label"] = adata.obs["culture"].to_numpy()
+    adata.obs["label_fine"] = adata.obs["culture"].to_numpy()
+    adata.uns["dataset"] = "kolodziejczyk"
+    adata.uns["keep_all_cells"] = True  # the paper used every labelled cell
+    return adata
+
+
+def load_klein() -> ad.AnnData:
+    """Klein 2015 mouse embryonic stem cells, days 0, 2, 4 and 7 after LIF removal.
+
+    Source: GEO GSE65525, one inDrop UMI count table per day (genes as rows, no
+    header). The label is the day the cell was collected, set by the experiment
+    design. 933 + 303 + 683 + 798 = 2,717 cells and 4 classes, as in the paper.
+    GEO's sample titles say 935, 301, 682 and 799, which also sum to 2,717. We
+    follow the actual file columns, as the SC3 copy the authors used does.
+    """
+    d = RAW / "klein"
+    days = {"d0": "GSM1599494_ES_d0_main", "d2": "GSM1599497_ES_d2_LIFminus",
+            "d4": "GSM1599498_ES_d4_LIFminus", "d7": "GSM1599499_ES_d7_LIFminus"}
+    parts = []
+    for day, stem in days.items():
+        df = pd.read_csv(d / f"{stem}.csv.bz2", header=None, index_col=0)
+        df = df.loc[:, df.notna().any()]  # guard against a trailing empty column
+        a = ad.AnnData(X=sparse.csr_matrix(df.to_numpy(dtype=np.float32).T),
+                       obs=pd.DataFrame(index=[f"{day}_{i}" for i in range(df.shape[1])]),
+                       var=pd.DataFrame(index=df.index.astype(str).rename(None)))
+        a.obs["label"] = day
+        parts.append(a)
+    adata = ad.concat(parts)
+    adata.obs["label_fine"] = adata.obs["label"].to_numpy()
+    adata.var_names_make_unique()
+    adata.uns["dataset"] = "klein"
+    adata.uns["keep_all_cells"] = True  # the paper used every labelled cell
+    return adata
+
+
+LOADERS = {"zeisel": load_zeisel, "pbmc14k": load_pbmc14k, "usoskin": load_usoskin,
+           "kolodziejczyk": load_kolodziejczyk, "klein": load_klein}
 
 
 def load(name: str) -> ad.AnnData:
     return LOADERS[name]()
+
+
+PAPER_INPUTS = {  # Zenodo 15040179 file stem, and the label column the authors scored against
+    "zeisel": "09_Zeisel", "pbmc14k": "10_PBMC14K", "usoskin": "06_Usoskin",
+    "kolodziejczyk": "07_Kolod", "klein": "08_Klein",
+}
+
+
+def load_paper_input(name) -> ad.AnnData:
+    """The authors' own processed MICA input for a benchmark dataset.
+
+    Their Zenodo release (doi 10.5281/zenodo.15040179) has one ExpressionSet per
+    dataset, already filtered and log transformed, which is exactly what they fed
+    to MICA. Running MICA on it separates "our preprocessing differs" from
+    "MICA does not reproduce". The values are used as they are.
+    """
+    import rdata
+
+    o = rdata.conversion.convert(rdata.parser.parse_file(RAW / "paper_inputs" / f"{PAPER_INPUTS[name]}.Processed_eset.rds"))
+    ex = o.assayData["exprs"]
+    if hasattr(ex, "x") and not hasattr(ex, "i"):  # dense dgeMatrix, values stored column by column
+        n_genes, n_cells = (int(x) for x in ex.Dim)
+        X = sparse.csc_matrix(np.asarray(ex.x, dtype=np.float32).reshape(n_cells, n_genes).T)
+        genes, cells = [np.asarray(x).astype(str) for x in ex.Dimnames]
+    elif hasattr(ex, "x"):  # stored as a sparse dgCMatrix
+        n_genes, n_cells = (int(x) for x in ex.Dim)
+        X = sparse.csc_matrix((ex.x.astype(np.float32), ex.i.astype(np.int32), ex.p.astype(np.int64)), shape=(n_genes, n_cells))
+        genes, cells = [np.asarray(x).astype(str) for x in ex.Dimnames]
+    else:  # stored as a dense matrix
+        X = sparse.csc_matrix(np.asarray(ex.values, dtype=np.float32))
+        genes, cells = (np.asarray(ex.coords[d].values).astype(str) for d in ex.dims)
+    pheno = vars(o.phenoData)["data"]
+    pheno.columns = [str(c) for c in pheno.columns]
+    label_col = next(c for c in ("TrueLabel_4group", "TrueLabel", "trueLabel") if c in pheno.columns)
+    adata = ad.AnnData(X=X.T.tocsr(), obs=pd.DataFrame(index=cells), var=pd.DataFrame(index=genes))
+    adata.obs["label"] = pheno[label_col].astype(str).reindex(adata.obs_names).to_numpy()
+    adata.obs["label_fine"] = adata.obs["label"].to_numpy()
+    adata.uns["dataset"] = f"paper_{name}"
+    adata.uns["label_column"] = label_col
+    return adata

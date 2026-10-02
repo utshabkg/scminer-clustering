@@ -1,0 +1,11 @@
+{
+  "dataset": "pbmc14k",
+  "mica_output": "results/reproduction/mica_pbmc14k_hvg2000_cell_ranger",
+  "tag": "hvg2000_cell_ranger",
+  "seeded_draws": 0,
+  "resolution": 2.8,
+  "n_clusters": 7,
+  "hit_true_k": true,
+  "n_hits": 6,
+  "median_ari_of_hits": 0.5299936608822944
+}

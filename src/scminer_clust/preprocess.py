@@ -12,7 +12,7 @@ import scanpy as sc
 
 
 def qc_metrics(adata):
-    mito = adata.var_names.str.startswith(("MT-", "mt-", "Mt-"))
+    mito = adata.var["mito"].to_numpy() if "mito" in adata.var else adata.var_names.str.startswith(("MT-", "mt-", "Mt-"))
     spike = adata.var_names.str.startswith(("ERCC-", "ERCC_"))
     counts = adata.X
     total = np.asarray(counts.sum(axis=1)).ravel()
@@ -42,11 +42,18 @@ def filter_cells(adata, nmads=4.0, min_cells_per_gene=3, mito_nmads=None):
     mito_nmads to turn it on where it makes sense.
     """
     keep = np.ones(adata.n_obs, dtype=bool)
-    for col in ("n_umi", "n_gene"):
+    # For the small gold-standard sets (Usoskin, Kolodziejczyk, Klein) the paper's
+    # cell counts equal every labelled cell, so the authors dropped none, and we
+    # keep them all to reproduce their input. Genes are still filtered.
+    skip_cells = bool(adata.uns.get("keep_all_cells", False))
+    # Data released as reads per million sums to the same total in every cell, so
+    # only the number of detected genes can flag a bad cell.
+    cols = ("n_gene",) if adata.uns.get("units") == "cpm" else ("n_umi", "n_gene")
+    for col in ([] if skip_cells else cols):
         x = np.log10(adata.obs[col].to_numpy().astype(float) + 1)
         lo, hi = _mad_bounds(x, nmads)
         keep &= (x >= lo) & (x <= hi)
-    if mito_nmads is not None and adata.obs["pct_mito"].max() > 0:
+    if mito_nmads is not None and not skip_cells and adata.obs["pct_mito"].max() > 0:
         _, hi = _mad_bounds(adata.obs["pct_mito"].to_numpy(), mito_nmads)
         keep &= adata.obs["pct_mito"].to_numpy() <= hi
     n_before = adata.n_obs
@@ -58,6 +65,7 @@ def filter_cells(adata, nmads=4.0, min_cells_per_gene=3, mito_nmads=None):
         "genes_after": int(adata.n_vars),
         "nmads": nmads,
         "mito_nmads": mito_nmads,
+        "cell_filter": "off, paper used every labelled cell" if skip_cells else "on",
     }
     return adata
 
@@ -67,11 +75,17 @@ def normalize(adata):
     sc.pp.normalize_total(adata, target_sum=1e6)
     adata.X.data = np.log2(adata.X.data + 1) if hasattr(adata.X, "data") else np.log2(adata.X + 1)
     adata.uns["normalization"] = "log2(CPM + 1)"
+    # scanpy's seurat gene selection undoes the log before measuring dispersion,
+    # and assumes natural log unless told otherwise.
+    adata.uns["log1p"] = {"base": 2}
     return adata
 
 
 def run(adata, nmads=4.0, mito_nmads=None):
     """Full pipeline. Raw counts are kept in the "counts" layer for later use."""
+    spike = adata.var_names.str.startswith(("ERCC-", "ERCC_"))
+    if spike.any():  # spike-in controls are not genes, and would distort normalization
+        adata = adata[:, ~spike].copy()
     adata = qc_metrics(adata)
     adata.layers["counts"] = adata.X.copy()
     adata = filter_cells(adata, nmads=nmads, mito_nmads=mito_nmads)

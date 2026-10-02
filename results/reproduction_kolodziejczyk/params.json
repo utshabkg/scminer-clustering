@@ -1,0 +1,11 @@
+{
+  "dataset": "kolodziejczyk",
+  "mica_output": "results/reproduction/mica_kolodziejczyk",
+  "tag": null,
+  "seeded_draws": 3,
+  "resolution": 3.0,
+  "n_clusters": 3,
+  "hit_true_k": true,
+  "n_hits": 1,
+  "median_ari_of_hits": 0.7214078395235116
+}

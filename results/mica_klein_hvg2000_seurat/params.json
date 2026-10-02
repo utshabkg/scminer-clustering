@@ -1,0 +1,11 @@
+{
+  "dataset": "klein",
+  "mica_output": "results/reproduction/mica_klein_hvg2000_seurat",
+  "tag": "hvg2000_seurat",
+  "seeded_draws": 3,
+  "resolution": 4.0,
+  "n_clusters": 4,
+  "hit_true_k": true,
+  "n_hits": 1,
+  "median_ari_of_hits": 0.7932642134172426
+}

@@ -1,0 +1,11 @@
+{
+  "dataset": "usoskin",
+  "mica_output": "results/reproduction/mica_usoskin_hvg2000_seurat_v3",
+  "tag": "hvg2000_seurat_v3",
+  "seeded_draws": 3,
+  "resolution": 4.0,
+  "n_clusters": 4,
+  "hit_true_k": true,
+  "n_hits": 1,
+  "median_ari_of_hits": 0.8751037526058516
+}

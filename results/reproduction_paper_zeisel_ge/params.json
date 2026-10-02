@@ -1,0 +1,11 @@
+{
+  "dataset": "paper_zeisel",
+  "mica_output": "results/reproduction/mica_paper_zeisel_ge",
+  "tag": null,
+  "seeded_draws": 0,
+  "resolution": 3.9,
+  "n_clusters": 7,
+  "hit_true_k": true,
+  "n_hits": 4,
+  "median_ari_of_hits": 0.7199410460924098
+}

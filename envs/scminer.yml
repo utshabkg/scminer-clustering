@@ -20,3 +20,6 @@ dependencies:
   - pip
   - pip:
       - torch
+      - rdata
+      - scikit-misc
+      - tabulate

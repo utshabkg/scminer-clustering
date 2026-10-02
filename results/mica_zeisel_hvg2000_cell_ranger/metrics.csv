@@ -1,0 +1,4 @@
+dataset,method,seed,k_setting,mica_setting,n_settings_tried,genes,hvg_flavor,n_clusters,n_true_classes,ari,ami,nmi,seconds,n_cells,n_genes
+zeisel,mica,0,paper_protocol,k=7 seeded,1,2000,cell_ranger,7,7,0.8053624535865894,0.7757519820963465,0.776527719758958,1514,2987,2000
+zeisel,mica,1,paper_protocol,k=7 seeded,1,2000,cell_ranger,7,7,0.8066672899583328,0.7773801376406528,0.7781504887957305,1514,2987,2000
+zeisel,mica,2,paper_protocol,k=7 seeded,1,2000,cell_ranger,7,7,0.8058857331361071,0.7763274830997279,0.7771014152310045,1514,2987,2000

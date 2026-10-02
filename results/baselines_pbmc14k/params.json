@@ -1,5 +1,9 @@
 {
   "dataset": "pbmc14k",
   "n_seeds": 3,
-  "true_k": 7
+  "true_k": 7,
+  "n_hvg": null,
+  "hvg_flavor": null,
+  "n_cells": 13646,
+  "n_genes_total": 15064
 }

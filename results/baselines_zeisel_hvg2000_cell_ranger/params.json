@@ -2,5 +2,8 @@
   "dataset": "zeisel",
   "n_seeds": 3,
   "true_k": 7,
-  "n_hvg": 2000
+  "n_hvg": 2000,
+  "hvg_flavor": "cell_ranger",
+  "n_cells": 2987,
+  "n_genes_total": 18907
 }
