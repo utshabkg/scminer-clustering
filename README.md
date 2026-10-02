@@ -12,7 +12,7 @@ Team: Utshab Kumar Ghosh (lead), Laraib Khan and Rhea.
 - `results/`: small tables and figures that everyone can browse on GitHub
 - `docs/research/`: literature review and notes
 
-Datasets live outside the repo in `~/data/scminer-clustering/`.
+Datasets live outside the repo, on the lab workstation's shared disk at `/media/20TB/shared/sides_data/43.scMINER-Clustering/`. The `data` link in the repo points there. They are never stored on GitHub.
 
 ## Running jobs
 

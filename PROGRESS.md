@@ -5,10 +5,25 @@ Utshab adds an entry at the end of each working session. Laraib and Rhea add a l
 
 ## Where we stand
 
-Updated: 2026-10-01
+Updated: 2026-10-01. Counts follow the Milestone column in `WORKPLAN.md`.
 
 | Milestone | Due | Tasks done | Percent | State |
 |-----------|-----|------------|---------|-------|
+| M1 software, small data ready | Oct 7 | 6 of 8 | 75% | Software works, Zeisel and PBMC14K ready. Waiting on the GitHub invites (U-4) and the Zeisel card (L-1) |
+| M2 reproduce the paper | Oct 14 | 4 of 6 | 67% | Both datasets reproduced within tolerance, baselines done. Left: PBMC14K card (L-2), results summary (R-1) |
+| M3 cluster count without labels | Oct 21 | 0 of 4 | 0% | Not started |
+| M4 what the similarity measures, atlas downloaded | Oct 28 | 0 of 4 | 0% | Not started |
+| M5 fast neighbor search | Nov 11 | 0 of 4 | 0% | Not started |
+| M6 full 2.3 million cell run | Nov 18 | 0 of 4 | 0% | Not started |
+| M7 retrieval and drivers | Nov 25 | 0 of 4 | 0% | Not started |
+| M8 paper and slides | Dec 2 | 0 of 3 | 0% | Not started |
+| Every week: notes, plan and progress updates | weekly | | | Start at the Oct 7 meeting (L-7, R-3, R-8) |
+
+Overall: 10 of 40 tasks finished. Three of the 40 repeat every week.
+
+Next three things: run MICA on the same 2,000 genes the baselines got, so we know whether the gap comes from the genes or from the method, add Usoskin, Kolodziejczyk and Klein from the paper's benchmark, and the label-free rule for the number of clusters (U-12).
+
+-----------|-----|------------|---------|-------|
 | M1 software, small data ready | Oct 7 | 6 of 10 | 60% | Both environments work, Zeisel and PBMC14K downloaded and preprocessed, scaffolding in place |
 | M2 reproduce the paper | Oct 14 | 4 of 6 | 67% | Both datasets reproduced within tolerance, baselines done, first results shared |
 | M3 cluster count without labels | Oct 21 | 0 of 4 | 0% | Not started |

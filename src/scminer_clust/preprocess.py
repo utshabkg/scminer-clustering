@@ -1,8 +1,11 @@
 """Preprocessing that follows what scMINER does in R, rewritten in Python.
 
-Quality control cutoffs are median +/- 3 MAD, as in scMINER's "auto" mode, then
-counts per million and a log2 transform. No gene selection: MICA uses every gene
-that passes quality control.
+Quality control drops cells whose total counts or genes detected sit more than 4
+median absolute deviations from the median, on a log scale, then keeps genes seen
+in at least 3 cells, then applies counts per million and a log2 transform. scMINER
+uses 3 deviations in its "auto" mode, but on our data 4 matches the cell counts the
+paper reports (see filter_cells). No gene selection: MICA uses every gene that
+passes quality control.
 """
 import numpy as np
 import scanpy as sc
