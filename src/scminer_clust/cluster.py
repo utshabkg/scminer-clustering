@@ -5,6 +5,7 @@ from sklearn.cluster import AgglomerativeClustering, KMeans
 
 
 N_HVG = None  # set by run scripts; None means use every gene
+HVG_FLAVOR = "seurat"  # "seurat" and "cell_ranger" use log data, "seurat_v3" uses raw counts
 
 
 def pca(adata, n_comps=50, seed=0, n_hvg=None):
@@ -14,11 +15,14 @@ def pca(adata, n_comps=50, seed=0, n_hvg=None):
     every baseline on 2,000 of them, so we need this to reproduce their setup.
     """
     n_hvg = n_hvg if n_hvg is not None else N_HVG
-    key = f"X_pca_{n_comps}_{seed}_{n_hvg or 'all'}"
+    key = f"X_pca_{n_comps}_{seed}_{n_hvg or 'all'}_{HVG_FLAVOR if n_hvg else ''}"
     if key not in adata.obsm:
         a = adata.copy()
         if n_hvg:
-            sc.pp.highly_variable_genes(a, n_top_genes=n_hvg, flavor="seurat")
+            if HVG_FLAVOR == "seurat_v3":
+                sc.pp.highly_variable_genes(a, n_top_genes=n_hvg, flavor="seurat_v3", layer="counts")
+            else:
+                sc.pp.highly_variable_genes(a, n_top_genes=n_hvg, flavor=HVG_FLAVOR)
             a = a[:, a.var["highly_variable"]].copy()
         sc.pp.scale(a, max_value=10)
         sc.tl.pca(a, n_comps=n_comps, svd_solver="arpack", random_state=seed)

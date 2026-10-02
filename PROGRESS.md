@@ -20,7 +20,36 @@ Updated: 2026-10-01
 
 Overall: 8 of 43 tasks finished.
 
-Next three things: finish the Zeisel reproduction (U-9), check whether the paper's 2,000-gene baseline setup explains its weaker baseline scores, get GitHub usernames from Laraib and Rhea (U-4).
+Next three things: finish the Zeisel reproduction (U-9), extend the gene-set comparison to the paper's other benchmark datasets, get GitHub usernames from Laraib and Rhea (U-4).
+
+---
+
+## 2026-10-01 night, Utshab
+
+**The paper's baseline setup explains most of MICA's advantage, at least on these two datasets.**
+
+The paper gave every baseline only 2,000 highly variable genes, while MICA uses every gene that passes filtering. We reran Leiden with the paper's setup, using three standard ways of picking those 2,000 genes, and compared it with the all-genes version. Everything else stayed the same: same data, same filtering, same selection rule, three seeds each.
+
+| Leiden on principal components | PBMC14K ARI | Zeisel ARI |
+|---|---|---|
+| All genes, the same input MICA gets | 0.874 | 0.844 |
+| 2,000 genes, seurat_v3 method | 0.754 | 0.769 |
+| 2,000 genes, cell_ranger method | 0.578 | 0.691 |
+| 2,000 genes, seurat method | 0.652 | 0.641 |
+| MICA, our run and published | 0.854 and 0.853 | running, and 0.744 |
+
+What this says:
+- With 2,000 genes, under any of the three methods, Leiden falls below MICA on PBMC14K, which matches the paper's story.
+- Given the same genes MICA uses, Leiden is ahead of MICA.
+- So much of the reported gap comes from the gene set the baselines were given, not from mutual information itself.
+
+What it does not say yet:
+- **Only two datasets.** A paper needs the rest of scMINER's benchmark sets that meet the 500-cell floor: Usoskin, Kolodziejczyk and Klein.
+- **The Zeisel MICA number on our data is still running,** so the Zeisel column compares against the published value for now.
+- **It holds for the graph pipeline only.** k-means and hierarchical clustering move in different directions, and k-means on Zeisel is better with 2,000 genes (0.82) than with all genes (0.52). We must not overclaim it as "all genes always help".
+- **The cluster count is still chosen using the labels**, as in the paper. Choosing it without labels is the next part of RQ1.
+
+All rows are in `results/baselines_*` and `docs/results_tracker.csv`.
 
 ---
 
