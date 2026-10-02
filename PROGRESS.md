@@ -9,8 +9,8 @@ Updated: 2026-10-01
 
 | Milestone | Due | Tasks done | Percent | State |
 |-----------|-----|------------|---------|-------|
-| M1 software, small data ready | Oct 7 | 5 of 10 | 50% | Both environments work, Zeisel downloaded and preprocessed, code scaffolding in place |
-| M2 reproduce the paper | Oct 14 | 2 of 6 | 33% | Scoring code and baselines done on Zeisel, the MICA run is going |
+| M1 software, small data ready | Oct 7 | 6 of 10 | 60% | Both environments work, Zeisel and PBMC14K downloaded and preprocessed, scaffolding in place |
+| M2 reproduce the paper | Oct 14 | 2 of 6 | 40% | PBMC14K reproduced to within 0.001 ARI, Zeisel MICA run still going |
 | M3 cluster count without labels | Oct 21 | 0 of 4 | 0% | Not started |
 | M4 what the similarity measures, atlas downloaded | Oct 28 | 0 of 5 | 0% | Not started |
 | M5 fast neighbor search | Nov 11 | 0 of 5 | 0% | Not started |
@@ -18,9 +18,29 @@ Updated: 2026-10-01
 | M7 retrieval and drivers | Nov 25 | 0 of 5 | 0% | Not started |
 | M8 paper and slides | Dec 2 | 0 of 4 | 0% | Not started |
 
-Overall: 7 of 43 tasks finished.
+Overall: 8 of 43 tasks finished.
 
-Next three things: finish the MICA reproduction run and compare it with the published score (U-9), assemble PBMC14K (U-6), get GitHub usernames from Laraib and Rhea so they can see this repo (U-4).
+Next three things: finish the Zeisel reproduction (U-9), check whether the paper's 2,000-gene baseline setup explains its weaker baseline scores, get GitHub usernames from Laraib and Rhea (U-4).
+
+---
+
+## 2026-10-01 late, Utshab
+
+**The reproduction works.** MICA on PBMC14K gives ARI 0.854 against the 0.853 in the paper.
+
+- **PBMC14K comes from the authors' own matrix.** Their R package ships the raw counts as `pbmc14k_rawCount.rda`, and the `rdata` Python package reads it, so we did not need to rebuild it from 10x files. 14,000 cells by 17,986 genes, exactly as described.
+- **Filtering now matches theirs.** Taking cutoffs at 4 deviations on a log scale keeps 13,646 cells against the 13,605 in the paper. At 3 deviations we kept only 12,605, a thousand short. Zeisel now keeps 2,987 against their 2,903.
+- **Same selection rule as the paper for everything.** Sweep the resolution from 0.1 to 4.0, and among settings that give the true number of types, keep the one with the highest ARI. `pick_paper_protocol` in `src/scminer_clust/cluster.py` does this for both MICA and the baselines.
+
+| Dataset | MICA, our run | MICA, paper | Leiden on principal components, same rule |
+|---------|---------------|-------------|-------------------------------------------|
+| PBMC14K | ARI 0.854, AMI 0.871 | ARI 0.853 | ARI 0.873 to 0.876, AMI 0.899 to 0.900 |
+| Zeisel | still running | ARI 0.744 | ARI 0.843 to 0.844, AMI 0.797 |
+
+**First real finding for RQ1.** On the paper's main dataset, with identical data and the paper's own selection rule, a plain Scanpy-style pipeline scores higher than MICA. One difference could explain why the paper reported weaker baselines: it ran every baseline on 2,000 highly variable genes, while ours uses all genes. That run is going now, and it decides how we frame this.
+
+- **Cost.** MICA on PBMC14K took about 20 minutes here. The mutual information neighbor graph took 9 minutes, the embedding 4 minutes, and the rest was 40 Louvain runs for the sweep.
+- **Repo hygiene.** MICA writes a table and a plot per resolution, 80 files per run, so its raw output stays out of git. The scored result is `results/reproduction_pbmc14k/metrics.csv`.
 
 ---
 

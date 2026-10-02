@@ -1,0 +1,7 @@
+{
+  "dataset": "pbmc14k",
+  "mica_output": "results/reproduction/mica_pbmc14k",
+  "resolution": 2.3,
+  "n_clusters": 7,
+  "hit_true_k": true
+}

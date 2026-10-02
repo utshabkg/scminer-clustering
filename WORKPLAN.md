@@ -58,7 +58,7 @@ The split below is a proposal. Rhea picks first at the next meeting, as agreed i
 | U-3 | Repo scaffolding: code package, run scripts, configs, results folders | plan | `src/`, `scripts/`, `configs/` | a test run writes a results folder | Oct 7 | `[x]` |
 | U-4 | Add Laraib and Rhea as repo collaborators | their GitHub usernames | GitHub settings | both can open the repo | Oct 7 | `[!]` needs usernames |
 | U-5 | Download the Zeisel dataset and its labels | public source | `data/raw/zeisel/` | 3,005 cells load with labels attached | Oct 7 | `[x]` |
-| U-6 | Assemble the PBMC14K dataset and labels | 10x files, scMINER label file | `data/raw/pbmc14k/` | about 13,605 cells with 7 labelled types | Oct 7 | `[ ]` |
+| U-6 | Assemble the PBMC14K dataset and labels | the authors' raw count file and label file | `data/raw/pbmc14k/` | about 13,605 cells with 7 labelled types | Oct 7 | `[x]` |
 | U-7 | Preprocessing code: quality filters, normalization, log transform | raw data | `src/scminer_clust/preprocess.py`, processed files | both datasets processed, counts logged | Oct 7 | `[x]` |
 | U-8 | Scoring code: ARI, AMI, NMI, silhouette, runtime, peak memory, repeated seeds | processed data | `src/scminer_clust/metrics.py` | a run writes `metrics.csv` with a seed column | Oct 14 | `[x]` |
 | U-9 | Reproduce MICA on Zeisel and PBMC14K | processed data | `results/reproduction/metrics.csv` | our ARI is within about 0.05 of the published value, or the gap is explained | Oct 14 | `[~]` |

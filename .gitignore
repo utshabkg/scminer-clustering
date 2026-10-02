@@ -30,3 +30,6 @@ external/
 # build artifacts
 *.egg-info/
 __pycache__/
+
+# raw MICA output (per-resolution tables and plots); scored copies live in results/reproduction_<name>/
+results/reproduction/

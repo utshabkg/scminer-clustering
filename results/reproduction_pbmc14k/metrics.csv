@@ -1,0 +1,2 @@
+dataset,method,seed,k_setting,mica_setting,n_settings_tried,n_clusters,n_true_classes,ari,ami,nmi,published_ari,gap_vs_published
+pbmc14k,mica,0,paper_protocol,2.3,40,7,7,0.8535599606980375,0.8714474728621291,0.8715349188679365,0.853,0.001

@@ -4,11 +4,22 @@ import scanpy as sc
 from sklearn.cluster import AgglomerativeClustering, KMeans
 
 
-def pca(adata, n_comps=50, seed=0):
-    """Principal components on the log normalized matrix, cached in .obsm."""
-    key = f"X_pca_{n_comps}_{seed}"
+N_HVG = None  # set by run scripts; None means use every gene
+
+
+def pca(adata, n_comps=50, seed=0, n_hvg=None):
+    """Principal components on the log normalized matrix, cached in .obsm.
+
+    n_hvg keeps only that many highly variable genes first. The scMINER paper ran
+    every baseline on 2,000 of them, so we need this to reproduce their setup.
+    """
+    n_hvg = n_hvg if n_hvg is not None else N_HVG
+    key = f"X_pca_{n_comps}_{seed}_{n_hvg or 'all'}"
     if key not in adata.obsm:
         a = adata.copy()
+        if n_hvg:
+            sc.pp.highly_variable_genes(a, n_top_genes=n_hvg, flavor="seurat")
+            a = a[:, a.var["highly_variable"]].copy()
         sc.pp.scale(a, max_value=10)
         sc.tl.pca(a, n_comps=n_comps, svd_solver="arpack", random_state=seed)
         adata.obsm[key] = a.obsm["X_pca"]
