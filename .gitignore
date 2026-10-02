@@ -23,3 +23,10 @@ __pycache__/
 
 # third-party code cloned for reproduction
 external/
+
+# the data symlink points to the shared disk
+/data
+
+# build artifacts
+*.egg-info/
+__pycache__/

@@ -1,0 +1,12 @@
+[build-system]
+requires = ["setuptools>=65"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "scminer-clust"
+version = "0.1.0"
+description = "Scaling and evaluating mutual information clustering for single-cell data"
+requires-python = ">=3.10"
+
+[tool.setuptools.packages.find]
+where = ["src"]
