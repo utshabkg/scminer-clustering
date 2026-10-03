@@ -16,9 +16,11 @@ def select_hvg(adata, n_hvg, flavor):
     raw values in the counts layer.
     """
     a = adata.copy()
-    # Our matrix is log2(CPM + 1). Without this, the seurat method treats it as
-    # natural log and picks 19 to 47 percent different genes (found in the Oct 2 audit).
-    a.uns["log1p"] = {"base": 2}
+    # The seurat method undoes the log before measuring dispersion, so it must know
+    # the base. Our own processed data is log2(CPM + 1). The authors' inputs set
+    # their own base in data.load_paper_input. Without this the seurat method picks
+    # 19 to 47 percent different genes (found in the Oct 2 and Oct 3 reviews).
+    a.uns["log1p"] = dict(adata.uns.get("log1p", {"base": 2}))
     if flavor == "seurat_v3":
         sc.pp.highly_variable_genes(a, n_top_genes=n_hvg, flavor="seurat_v3", layer="counts")
     else:

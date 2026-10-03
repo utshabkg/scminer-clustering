@@ -20,7 +20,7 @@ METHODS = {"mica": "MICA", "leiden_pca": "Leiden", "kmeans_pca": "k-means", "hie
 
 def main():
     t = pd.read_csv(REPO / "docs" / "results_tracker.csv")
-    t = t[t["dataset"].isin([f"paper_{d}" for d in ALL10]) & ~t["experiment"].str.endswith("_ge")]
+    t = t[t["dataset"].isin([f"paper_{d}" for d in ALL10]) & ~t["experiment"].str.endswith("_ge") & ~t["experiment"].str.startswith("repeat_")]
     rows = []
     for ds in ALL10:
         for g in sorted(t["gene_setting"].dropna().unique()):

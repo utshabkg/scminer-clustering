@@ -27,7 +27,7 @@ def authors_input_table(t, metric):
                "published Scanpy": pub.loc[ds, f"Scanpy_{metric.upper()}"], "published Seurat": pub.loc[ds, f"Seurat_{metric.upper()}"]}
         for method, label in (("mica", "MICA"), ("leiden_pca", "Leiden")):
             for g in ORDER:
-                sel = t[(t["dataset"] == name) & (t["method"] == method) & (t["gene_setting"] == g) & ~t["experiment"].str.endswith("_ge")]
+                sel = t[(t["dataset"] == name) & (t["method"] == method) & (t["gene_setting"] == g) & ~t["experiment"].str.endswith("_ge") & ~t["experiment"].str.startswith("repeat_")]
                 row[f"{label}, {g}"] = round(sel[metric].mean(), 3) if len(sel) else None
         rows.append(row)
     return pd.DataFrame(rows)
@@ -38,7 +38,8 @@ def main(metric="ari"):
     t = t[t["k_setting"] == "paper_protocol"]
     rows = []
     for ds in DATASETS:
-        paper = t[(t["dataset"] == f"paper_{ds}") & (t["method"] == "mica") & ~t["experiment"].str.endswith("_ge")]
+        paper = t[(t["dataset"] == f"paper_{ds}") & (t["method"] == "mica") & (t["gene_setting"] == "all genes")
+                  & ~t["experiment"].str.endswith("_ge") & ~t["experiment"].str.startswith("repeat_")]
         row = {"dataset": ds, "published MICA": PUBLISHED[ds],
                "MICA, authors' input": round(paper[metric].mean(), 3) if len(paper) else None,
                "authors' gene count": int(paper["n_genes"].iloc[0]) if len(paper) and pd.notna(paper["n_genes"].iloc[0]) else None}
@@ -48,7 +49,7 @@ def main(metric="ari"):
             if len(ge) else None)
         for method, label in (("mica", "MICA"), ("leiden_pca", "Leiden"), ("kmeans_pca", "k-means"), ("hierarchical_pca", "hierarchical")):
             for g in ORDER:
-                sel = t[(t["dataset"] == ds) & (t["method"] == method) & (t["gene_setting"] == g) & ~t["experiment"].str.endswith("_ge")]
+                sel = t[(t["dataset"] == ds) & (t["method"] == method) & (t["gene_setting"] == g) & ~t["experiment"].str.endswith("_ge") & ~t["experiment"].str.startswith("repeat_")]
                 ari = round(sel[metric].mean(), 3) if len(sel) else None
                 # a star marks cells where the method missed the true cluster count, so it
                 # was scored at the wrong number of clusters (Leiden's grid cannot always hit k)

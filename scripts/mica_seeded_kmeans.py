@@ -5,11 +5,12 @@ Usage: python scripts/mica_seeded_kmeans.py results/reproduction/mica_zeisel 7
 MICA's small-data mode saves its embedding (mi_reduced.pkl) and then calls
 sklearn KMeans(n_clusters=k) once with no seed (MICA/mica_mds.py), which keeps the
 best of 10 starts. That often stops short of the best fit: on Yan, Chung,
-Buettner and Usoskin, the published MICA score is exactly the k-means fit with
-the lowest objective, while 10 starts can land on fits scoring 0.1 to 0.26 lower.
-So we run the same call in the same sklearn version with 100 starts, which
-reaches the best fit, and seeds 0, 1 and 2. Cell order comes from MICA's own
-clustering file.
+Buettner and Usoskin, the published MICA score equals the ARI of the k-means fit
+with the lowest objective, while 10 starts can land on fits scoring 0.1 to 0.26
+lower. So we run the same call in the same sklearn version with 100 starts and
+seeds 0, 1 and 2. That reaches a near-best fit, though not always the very best
+(on Pollen the best fit scores 0.980 against the published 0.942). Cell order
+comes from MICA's own clustering file.
 """
 import pickle
 import sys

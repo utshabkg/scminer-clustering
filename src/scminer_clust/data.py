@@ -180,6 +180,9 @@ PAPER_INPUTS = {  # Zenodo 15040179 file stem for each of the paper's ten small 
 }
 
 
+PAPER_LOG_BASE = {"pollen": 10, "buettner": 10, "chung": np.e, "usoskin": np.e}  # all others log2
+
+
 def load_paper_input(name) -> ad.AnnData:
     """The authors' own processed MICA input for a benchmark dataset.
 
@@ -211,12 +214,15 @@ def load_paper_input(name) -> ad.AnnData:
     adata.obs["label_fine"] = adata.obs["label"].to_numpy()
     adata.uns["dataset"] = f"paper_{name}"
     adata.uns["label_column"] = label_col
-    # The authors' MICA inputs are log2 transformed (their files are named
-    # *_MICA.log2.txt). Declare that, and keep an approximate untransformed copy
-    # for count-based gene selection (seurat_v3), which expects raw values.
-    adata.uns["log1p"] = {"base": 2}
+    # The authors' inputs are not all on the same log scale. Checked on Oct 3 by
+    # which base makes each cell's values integer steps or CPM sums: Pollen and
+    # Buettner are log10(x + 1), Chung and Usoskin are ln(x + 1), and the other six
+    # are log2(CPM + 1). Gene selection must know the base, and the approximate
+    # untransformed copy used by count-based selection (seurat_v3) is base**x - 1.
+    base = PAPER_LOG_BASE.get(name, 2)
+    adata.uns["log1p"] = {"base": base}
     counts = adata.X.copy()
-    counts.data = np.power(2.0, counts.data) - 1
+    counts.data = np.power(float(base), counts.data) - 1
     adata.layers["counts"] = counts
     return adata
 

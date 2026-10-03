@@ -1,12 +1,24 @@
 # Resume note (for Claude, after a session limit or a restart)
 
-Last updated: 2026-10-03 10:30 CDT. Read this first, then `PROGRESS.md` and `WORKPLAN.md`.
+Last updated: 2026-10-03 11:30 CDT. Read this first, then `PROGRESS.md` and `WORKPLAN.md`.
 
 The user asked Claude to keep doing Utshab's tasks until something depends on Laraib or Rhea, to stop before any long GPU run and ask first, and to keep going after a session limit resets.
 
 ## Running right now
 
-Nothing long is running. The Allen pilot (U-16) finished overnight and is scored:
+`scm-logbase-fix` runs `scripts/rerun_logbase_fix.sh` (log in `logs/rerun_logbase_fix.log`, ends with RERUN DONE, about an hour).
+
+**Why.** The Oct 3 review found the authors' inputs are not all log2: Pollen and Buettner are log10, Chung and Usoskin are natural log (`PAPER_LOG_BASE` in `src/scminer_clust/data.py`). So their seurat and seurat_v3 gene sets were wrong.
+
+**What it does.** Redoes, for those four datasets and those two methods:
+- the gene exports
+- MICA
+- the baselines
+- the label-free runs
+
+Then it rescores all MICA runs and reruns the bootstrap and every summary. All-gene and cell_ranger runs were not affected.
+
+Earlier work, already done: The Allen pilot (U-16) finished overnight and is scored:
 - MICA graph mode on 100,000 cells: ARI 0.652 at class level, 7.1 h (5.3 h of it the MI neighbor graph), 140 GB peak.
 - Leiden: 0.661 with 2,000 genes and 0.624 with all genes, about 17 min each, 27 and 55 GB peak.
 - Prepare: 7 min, 24 GB.
@@ -15,7 +27,19 @@ U-29 (Kolodziejczyk side test) is done, in `results/kolod_side_test/`. Per-plate
 
 ## Unfinished in-session work
 
-1. **Verification of the Oct 3 claims.** The first attempt died at the 00:50 session limit and was relaunched at 10:15 (run `wf_217dd7e1-06d`). It checks `docs/research/verification/claims_oct3.md` with three agents: numbers, skeptic, code review. If it was lost, rerun it with `docs/research/verification/verify_oct3_workflow.js`. Fix whatever it finds before writing anything up.
+1. **Verification of the Oct 3 claims is done.** Findings are saved in `docs/research/verification/oct3_findings.txt`. Bugs fixed: the log base, and graph-mode repeats leaking into the summaries.
+
+   Wording to use in the write-up:
+   - MICA leads Leiden in 19 of 20 small-dataset settings (Yan seurat is the exception).
+   - 100 restarts give a near-best fit, not always the best. On Pollen the best fit scores 0.980.
+   - Usoskin near-optimal fits span ARI 0.78 to 0.87.
+   - All genes: MICA wins 7, ties Klein, loses Zeisel and PBMC14K. p = 0.027 does not survive correction for four gene settings.
+   - Our Leiden is within 0.035 of the paper's Scanpy on 7 of 10.
+   - The label-free comparison flips with the k range and the embedding used, so it is inconclusive.
+   - Leiden on tiny data is sensitive to the number of PCs (Buettner goes from 0.29 to 0.81 with 10 PCs).
+   - The bootstrap ignores rerun variance and cell dependence, so its intervals are too narrow.
+
+   Recheck every quoted number after the rerun.
 2. **Write-up, not done yet.**
    - Add an Oct 3 entry to PROGRESS.md.
    - Put a note on the Oct 2 entry: MICA small-data numbers changed on Oct 3 with 100 k-means restarts.

@@ -1,0 +1,179 @@
+========================= verify:code
+SUMMARY: Cell alignment is correct everywhere I checked. That covers the bootstrap, the label-free runs, the seeded k-means files, and the order of the node2vec embedding rows. The bootstrap also pairs the right MICA and Leiden runs for every gene setting. The detection-only distance, the co-detection share and the thinning all work as described. I found two real bugs. (1) load_paper_input sets the log base to 2 for every authors' input (data.py line 217), and cluster.select_hvg forces base 2 again (cluster.py line 21). But Pollen is log10(count+1), Buettner is log10 of normalized counts, and Chung and Usoskin are natural log. Their seurat and seurat_v3 gene sets therefore overlap only 1198 to 1646 of 2000 with what those methods pick at the correct base, and their counts layer (2^x - 1) is not counts. The cell_ranger sets, all-gene runs and MICA itself do not depend on the base. Rerunning in memory at the correct base moves some numbers a lot. On Chung with seurat genes, Leiden goes from 0.401 to 0.163 and our MICA rebuild from 0.661 to 0.166. On Pollen with seurat genes, Leiden goes from 0.872 to 0.827. (2) The summary scripts drop graph-mode rows with endswith('_ge'), which misses repeat_paper_zeisel_ge_rep1 to rep5. So Zeisel 'MICA, all genes' (0.746) averages three small-data draws (0.714) with five graph-mode runs. The bootstrap correctly uses 0.714. There is also a third, separate table bug in summarize_gene_sets.py. B3 is false as written for another reason: Yan with seurat genes has Leiden ahead. 
+
+[A1: supported]
+  correction: This holds for Zeisel only. On the authors' Kolodziejczyk and Usoskin inputs, 0.6 and 1.4 percent of random pairs differ from MICA's saved mi_info.pkl by up to 1.2e-5 and 5.3e-5. That is negligible, but it is not 1e-6.
+
+[R1: supported with correction]
+  correction: The Zeisel cell (0.746) mixes small-data and graph-mode runs. With the best k-means fit, small-data MICA gives 0.714 (gap -0.030). That is still within 0.05, so 9 of 10 holds, but the Zeisel number should be 0.714 (small data) or 0.755 to 0.781 (graph mode), not 0.746.
+
+[R2: unclear]
+  correction: The mica_seeded_kmeans.py docstring names Usoskin instead of Goolam. That is wrong, since Usoskin scores 0.835 against 0.847 published. Fix the docstring so it matches R2 and R3.
+
+[R3: unclear]
+  correction: 
+
+[B2: supported with correction]
+  correction: On Pollen, Buettner, Chung and Usoskin, the seurat and seurat_v3 gene sets were picked with the wrong log base. In-memory reruns at the correct base (Leiden plus our MICA rebuild) move the gaps. Chung seurat goes from -0.26 to -0.003, Usoskin seurat_v3 from +0.052 to +0.004, Pollen seurat from -0.07 to -0.115. The seurat and seurat_v3 rows and their p values need a rerun before this claim is reported.
+
+[B3: not supported]
+  correction: Say MICA is ahead in 19 of 20 small-dataset settings, with the CI excluding zero in MICA's favor in 17 and in Leiden's favor in 1 (Yan, seurat). Also, with the correct log base, Chung seurat becomes a near tie (Leiden 0.163, MICA rebuild 0.166). So 'MICA beats all three baselines on Chung in every setting' must be rechecked. On Goolam with seurat genes, hierarchical (0.910) is below MICA (0.914). Only k-means beats MICA in all four settings.
+
+[B4: supported with correction]
+  correction: The Pollen and Buettner inputs are log10, but their seurat genes were picked as if log2. At the correct base, Leiden on Pollen gives 0.827 (paper 0.874) and Buettner 0.302. The close Pollen match is an artifact of the base bug.
+
+[C1: supported with correction]
+  correction: MICA told k includes the mixed Zeisel cell (0.746 instead of 0.714), so it should be 0.818. Rows for the seurat and seurat_v3 genes on the four wrong-base datasets also need a rerun.
+
+[C2: supported with correction]
+  correction: State that mid-sized includes PBMC14K. Without it, the values are 0.851 / 0.840 and 0.681 / 0.536. With the Zeisel fix, told k becomes 0.823 against 0.823, a tie.
+
+[D3: supported]
+  correction: Leiden on thinned data uses one seed, while MICA uses three.
+
+OTHER: HIGH, data.py line 217 to 220 and cluster.py line 21: the log base is hardcoded to 2. I checked by testing which base makes each input's values integer multiples within a cell. Pollen is log10(count+1), with smallest values log10(2), log10(3) and so on. Buettner is log10(normalized+1), Chung is ln(x+1) with x in steps of 0.01, and Usoskin is ln(RPM+1). Yan, Goolam, Kolodziejczyk, Klein, Zeisel and PBMC14K are log2(CPM+1), with row sums of 2^x - 1 equal to 1e6. The wrong base changes the seurat genes (overlap 1231, 1198, 1413 and 1536 of 2000 for Pollen, Buettner, Chung and Usoskin) and the seurat_v3 genes (1258, 1217, 1646 and 1566 of 2000), because seurat_v3 reads layers['counts'] = 2^x - 1. The cell_ranger sets match exactly. Fix: detect or set the base per dataset, and make select_hvg use adata.uns['log1p'] instead of overwriting it. Then rerun the seurat and seurat_v3 exports, MICA runs, baselines, label-free runs and the bootstrap for these four datasets. 
+
+OTHER: MEDIUM, summarize_gene_sets.py line 88 and summarize_label_free.py line 23: the '~endswith("_ge")' filter does not drop repeat_paper_zeisel_ge_rep1 to rep5 (dataset paper_zeisel, method mica, all genes, paper_protocol). Zeisel 'MICA, all genes' in summary_authors_input_ari.csv is (3 x 0.714 + 5 graph-mode runs) / 8 = 0.746, and the label-free told-k value and loss for Zeisel use it too. Filter by mode, or exclude names that start with repeat_. 
+
+OTHER: MEDIUM, summarize_gene_sets.py line 99 to 102: on the our-input table, 'MICA, authors' input' pools every gene setting plus the repeat runs, and 'authors' gene count' takes the first row, which is a 2000-gene run. So summary_gene_sets.md shows Kolodziejczyk 0.927 (all-gene run is 0.727), Klein 0.836 (0.980), PBMC14K 0.794 (0.853), Usoskin 0.863 (0.835), Zeisel 0.769 (0.714), and 2000 genes for all five. Restrict this column to gene_setting == 'all genes' and leave out graph-mode repeats. 
+
+OTHER: LOW: the PBMC14K summary cell averages 6 graph-mode runs, but bootstrap_gaps.py uses only reproduction_paper_pbmc14k (mica_draws 1). The means differ by under 0.001, but the two sources do not use the same runs. 
+
+OTHER: LOW: seurat_v3 on the base-2 authors' inputs runs on CPM (2^x - 1), not raw counts. That is documented as approximate, but it should be stated wherever seurat_v3 results on the authors' inputs are reported. 
+
+OTHER: LOW, summarize_label_free.py line 33: share_at_edge applies the k = 2 or 20 rule to MICA graph-mode runs, whose search range is a resolution sweep. It has no effect on the current numbers. 
+
+OTHER: LOW, diagnostics.knn_overlap: it assumes each cell is its own first neighbor after argsort. Ties at distance 0 could drop a real neighbor. The effect is negligible here. 
+
+OTHER: Checked and fine: bootstrap cell alignment (all partition indexes are strings, set-equal to the h5ad cells, and recomputed ARIs match the table in 39 of 40 cells), MICA and Leiden folder pairing for all four gene settings, graph-mode resolution file lookup (2.6, 0.9, 2.2, 1.8), node2vec node IDs (integers 0 to n-1 sorted numerically, with clustering files in input order, so mica_label_free rows line up), and mi_reduced, clustering and seeded file order. The early all-gene MICA runs (14:41 to 15:48 on Oct 2) match the current authors' inputs. In run_label_free and run_baselines, partitions and labels share adata order. 
+
+========================= verify:numbers
+SUMMARY: I recomputed every number from raw partitions, seeded draws, MICA clustering files, label-free metrics and cached distance matrices. The raw rows are current: all 108 seeded MICA files are exact 100-restart fits, and every label-free MICA and small-set Leiden pick reproduces. Most claims hold. Fixes needed: B3 overstates (Leiden beats MICA on Yan with seurat genes, so 19 of 20, and 18 of 20 intervals exclude zero with 17 in MICA's favour). C2 has two rounding errors (Leiden small silhouette 0.60, mid told k 0.82 against 0.82). R3's lower bound is 0.78. D4 Usoskin is 0.885 against 0.884. The main stale data problem is in the summaries. Graph-mode Zeisel repeat rows leak into the Zeisel all-genes MICA cell (0.746 instead of 0.714) in summary_authors_input and summary_label_free, which makes C1's 0.819 really 0.818 and leaves B1's table and bootstrap out of step. 100 restarts also do not reach the best fit on Pollen or Usoskin. 
+
+[R1: supported with correction]
+  correction: Numbers stand. The premise that 100 restarts reach the best fit is not true on every dataset. On Pollen, 500 single starts find a lower objective (5.505226, ARI 0.980) than any 100-restart seed (5.507808 twice with ARI 0.942, and 5.518647 with ARI 0.969). On Usoskin the three 100-restart seeds stop on three different fits (objective 17.893618, 17.894063, 17.893206). Say with 100 restarts rather than once it reaches its best fit, and name the Zeisel mode.
+
+[R2: supported]
+  correction: None needed. Usoskin and Klein could be added to the list. The docstring of scripts/mica_seeded_kmeans.py names Usoskin instead of Goolam, which is also true but disagrees with this claim's list.
+
+[R3: supported with correction]
+  correction: Span is ARI 0.78 to 0.87 (0.779 to 0.871).
+
+[R4: supported]
+  correction: Numbers stand. Zeisel's spread (0.026) is half the 0.05 tolerance, so stable is a judgement call there. The five Zeisel repeats also leak into the summary tables (see other problems).
+
+[B1: supported with correction]
+  correction: The 8 of 10 counts Klein (gap -0.004) as a MICA win. If Klein is a tie, MICA is ahead on 7, tied on 1 and behind on 2. Two of the nine intervals that exclude zero favour Leiden (Zeisel, PBMC14K). The -0.17 uses Zeisel small-data MICA 0.714, as the bootstrap does. results/summary_authors_input_ari.csv shows 0.746 for that cell, which would give -0.1764 (rounds to -0.18). With graph-mode Zeisel (0.781) the mean is -0.180 and p = 0.0195.
+
+[B2: supported]
+  correction: None. Leiden's three Kolodziejczyk leads are tiny (0.004 to 0.008), so in practice it is closer to MICA ahead on 6, level on 1, behind on 3.
+
+[B3: supported with correction]
+  correction: MICA is ahead of Leiden in 19 of 20 small-dataset cells, not every setting (Leiden wins Yan with seurat genes by 0.081). The 17 of 20 holds only as intervals that exclude zero in MICA's favour (18 of 20 exclude zero). On Goolam, hierarchical beats MICA in 3 of 4 settings.
+
+[B4: supported]
+  correction: Numbers are right. Only three match to about 0.002. Buettner (+0.024) and Zeisel (+0.027) are near, and the remaining five are off by 0.03 to 0.23, so close is fair for three and loose for two.
+
+[C1: supported with correction]
+  correction: MICA told k is 0.818 on clean rows. The 0.819 in results/summary_label_free.md uses Zeisel all genes = 0.746, which pools three small-data rows (0.714) with five graph-mode repeat rows. Conclusions unchanged.
+
+[C2: supported with correction]
+  correction: Leiden by silhouette on the small sets is 0.60, not 0.61. Mid-sized told k is 0.82 against 0.82 (0.823 each on clean rows), not 0.83 against 0.82.
+
+[C3: supported with correction]
+  correction: 27.5 percent is a mean over cells and counts the four PBMC14K graph-mode cells (one resolution pick each, no k range) as zero. Over individual picks it is 29.5 percent, or 33 of 108 = 30.6 percent for the k sweeps alone. State which.
+
+[D1: supported]
+  correction: None. These are on our processed input, not the authors' inputs.
+
+[D2: supported]
+  correction: None. Our processed input.
+
+[D3: supported]
+  correction: Numbers stand. Leiden's Usoskin partition already changes at 50 percent (agreement with full depth 0.58 stored, 0.56 rerun) even though its ARI holds. On Klein, MICA's 20-neighbour overlap with full depth falls to 0.19 at 25 percent while the clusters hold. Kolodziejczyk has a median of 4.1 million counts per cell, so 25 percent still leaves about 1 million.
+
+[D4: supported with correction]
+  correction: Usoskin is 0.885 against 0.884, not 0.885 for both. Also say these runs are on our processed input.
+
+OTHER: Summary contamination. summarize_gene_sets.py and summarize_label_free.py drop experiments ending in _ge, but repeat_paper_zeisel_ge_rep1 to rep5 (graph mode) end in _repN and slip through. So the Zeisel all-genes MICA cell in results/summary_authors_input_ari.csv, summary_authors_input_ami.csv and summary_label_free.csv is (3 x 0.71408 + 0.76264 + 0.76556 + 0.75502 + 0.77972 + 0.76240)/8 = 5.96757/8 = 0.746, a mix of small-data and graph mode. The 23:26 run printed 0.714 for this cell, before the repeats existed. The bootstrap uses 0.714, so B1 and the summary table disagree. The PBMC14K cell also became a mean of 6 runs (0.8533) while the bootstrap uses 1 run. 
+
+OTHER: In results/summary_gene_sets_ari.csv the MICA, authors' input column now averages every paper_ MICA row across all four gene settings plus the repeats (Zeisel 0.771, PBMC14K 0.719, Kolodziejczyk 0.927), so it no longer means what its label says. 
+
+OTHER: Stale files. results/summary_gene_sets.csv (Oct 2 15:52) is a leftover the current script no longer writes, with pre-change numbers (Zeisel MICA authors' input 0.695, Zeisel Leiden 2k seurat 0.646*). The PROGRESS.md Oct 2 entry still reports 10-restart values (Usoskin authors' input 0.803, Zeisel small-data 0.695, our-input Usoskin 0.885 and Zeisel 0.704). Current values are 0.835, 0.714, 0.884 and 0.705. 
+
+OTHER: Two Leiden partitions miss the true k: paper_pbmc14k seurat seed 0 (8 clusters) and paper_pollen cell_ranger seed 1 (10 clusters). This contradicts the PROGRESS.md note that every sweep now has a setting with exactly the true number. 
+
+OTHER: reproduction_paper_{yan,goolam,buettner,pollen,chung} have blank published_ari and gap columns (the scoring log says published None), and scripts/score_mica.py was edited at 23:27, after all reproduction metrics were written (23:03 to 23:26). The ARIs are unaffected (recomputed). The scoring log also prints AMI from MICA's unseeded run next to the seeded ARI (Buettner AMI 0.843 printed, 0.904 stored). 
+
+OTHER: The Usoskin diagnostics process started before the last edit of src/scminer_clust/diagnostics.py (edited 22:36:11, metrics written 22:36:56). Recomputing from the cached matrices with the current code matches every MICA number exactly, and Leiden within 0.004, so the row is not stale in effect. 
+
+OTHER: The docstring of scripts/mica_seeded_kmeans.py says 100 starts reaches the best fit. That is false for Pollen and Usoskin (see R1). 
+
+OTHER: Scratch scripts and outputs for every recomputation are in /tmp/claude-1599031162/-home-ugdf8-coursework-26Fall-Clustering-Algorithms/03c4a410-85dd-436d-8b00-c479892460b0/scratchpad (v1_tables.py to v9_leiden_labelfree.py, km/ npz files). Nothing in the repo or data folders was modified. 
+
+========================= verify:skeptic
+SUMMARY: All 17 claims hold on their numbers, but several need narrower wording. Four need real fixes. B3: MICA leads Leiden in 19 of 20 small-dataset cells, not all 20 (Yan with seurat genes is the exception, scored at the wrong k), and intervals exclude zero in 18, with 17 favoring MICA. R1: 100 restarts do not always reach the best fit. On Pollen the best fit scores 0.980 against the published 0.942, and PBMC14K and Zeisel involve graph mode. C1 to C3: the label-free result flips sign with the k range and with the embedding used to score the silhouette. B4 picks its best matches. The published MICA scores are not a coincidence. They match the lowest-objective k-means fit on five datasets, and a single default run would match all four of Yan, Buettner, Chung and Usoskin only about 0.2 percent of the time. They do not show what the authors ran, and Pollen breaks the pattern. The 100-restart choice raises MICA by up to 0.13 but changes no sign. On Buettner and Chung, Leiden's gap holds under 24 settings, though fewer PCs narrow it a lot on Buettner. The all-genes Wilcoxon (p = 0.027) does not survive correction for four gene settings. I found one table bug: Zeisel's all-genes MICA value in the summaries mixes small-data and graph-mode runs. Scripts and outputs are in /tmp/claude-1599031162/-home-ugdf8-coursework-26Fall-Clustering-Algorithms/03c4a410-85dd-436d-8b00-c479892460b0/scratchpad/skeptic/. 
+
+[A1: supported]
+  correction: Our MICA distance matches the authors' functions on 9,999 random cell pairs from our Zeisel input in both modes (largest difference 5e-8). Say that only one dataset was tested.
+
+[A2: supported]
+  correction: MICA's small-data mode uses D = 1 - I/sqrt(H_x H_y), which is not a metric (it can break the triangle inequality). Graph mode and the paper's Eq. 3 use 1 - I/H(x,y), which is a true metric.
+
+[R1: supported with correction]
+  correction: On the authors' inputs, MICA comes within 0.05 of the published ARI on 9 of 10 datasets: eight small-data sets with the final k-means rerun at 100 restarts, plus PBMC14K in graph mode as released. It matches to three decimals on Yan, Goolam, Buettner, Chung, Klein and PBMC14K. 100 restarts give a near-best fit, not always the best one (not on Pollen, and only 1 of 3 draws on Usoskin). Kolodziejczyk is the exception (0.727 against 1.0).
+
+[R2: supported with correction]
+  correction: On Yan, Buettner, Chung and Usoskin (and Goolam, less tellingly), the published MICA score equals the ARI of the lowest-objective k-means fit on MICA's own embedding. A single default run (10 restarts) lands there only 9 to 38 percent of the time per dataset, so the published numbers probably came from a better-optimized run, but we do not know which. Pollen is the exception: its published 0.942 matches a slightly worse fit, and the best fit scores 0.980.
+
+[R3: supported with correction]
+  correction: On Usoskin, k-means fits within 0.2 percent of the best objective span ARI of about 0.78 to 0.88 (5,000 starts, authors' input).
+
+[R4: supported with correction]
+  correction: Graph-mode MICA's best-of-sweep score is stable across runs: PBMC14K 0.850 to 0.857 and Zeisel (authors' input) 0.755 to 0.781 over six runs each. Each run uses the paper's label-based pick.
+
+[B1: supported with correction]
+  correction: With all genes, MICA beats Leiden on 7 of 10 datasets and Leiden beats MICA on Zeisel and PBMC14K (each interval excludes zero). Klein is a tie. The mean gap is -0.17, Wilcoxon p = 0.027 over 10 datasets. That does not survive correction for the four gene settings, and this is the setting least natural for Leiden.
+
+[B2: supported]
+  correction: Add that Leiden is clearly ahead (interval excludes zero) on 3 datasets in each 2,000-gene setting, so the picture is mixed, not just not significant.
+
+[B3: supported with correction]
+  correction: On the five small datasets MICA leads Leiden in 19 of 20 gene settings (17 with intervals excluding zero). The exception is Yan with 2,000 seurat genes, where Leiden could not reach 8 clusters and was scored at 6. On Buettner and Chung MICA beats all three principal-component baselines in every gene setting, and Leiden stays behind under all 24 settings we tried. On Goolam, k-means beats MICA in every setting and hierarchical in three of four.
+
+[B4: supported with correction]
+  correction: Our Leiden on the authors' input with 2,000 seurat genes lands within 0.035 of the paper's own Scanpy score on 7 of 10 datasets. It is 0.11 to 0.23 higher on Yan, Klein and Chung, so our baseline is not handicapped.
+
+[C1: supported with correction]
+  correction: Under one label-free rule (best silhouette in each method's own embedding, k = 2 to 20), mean ARI is MICA 0.577 and Leiden 0.556, so MICA's 0.13 lead shrinks to 0.02. The sign of that gap changes with the search range and with which embedding scores the silhouette, so the label-free comparison is inconclusive, not a tie.
+
+[C2: supported with correction]
+  correction: Keep the numbers but name the cause. MICA trails on the small datasets because its silhouette keeps rising up to k = 20 there, and it leads on the mid-sized ones because Leiden's silhouette prefers 2 clusters. With a cap of 10 clusters, or a floor of 3, either reversal goes away.
+
+[C3: supported with correction]
+  correction: 27.5 percent of MICA's silhouette choices land on the edge of the range (k = 2 or 20), against 51 percent of Leiden's that land on 2 clusters.
+
+[D1: supported]
+  correction: Add that the share hardly differs between same-type and different-type pairs, and that this is on our processed input.
+
+[D3: supported with correction]
+  correction: Thinning counts to 25 percent barely moves MICA on Zeisel, Kolodziejczyk and Klein. On Usoskin, MICA's ARI falls from 0.885 to 0.57 at 50 percent and 0.27 at 25 percent, while Leiden's falls only at 25 percent. Both methods' Usoskin partitions change a lot at 50 percent, and this is one thinning draw.
+
+OTHER: Table bug: summarize_gene_sets.py and summarize_label_free.py drop graph-mode runs with ~experiment.str.endswith('_ge'), but repeat_paper_zeisel_ge_rep1 to rep5 slip through. So 'MICA, all genes' for Zeisel in summary_authors_input_ari.csv (0.746), and MICA's told-k Zeisel score in summary_label_free, average 3 small-data draws (0.714) with 5 graph-mode runs (0.755 to 0.780). bootstrap_gaps.py uses 0.714, so the two tables disagree on Zeisel. 
+
+OTHER: Leiden never reached the true k on Yan with seurat or cell_ranger genes (scored at 6 and 7 clusters, all seeds), on Pollen cell_ranger seed 1 or on PBMC14K seurat seed 0. With 15 neighbors on 124 cells, Yan's 3-cell oocyte and zygote groups cannot form their own clusters. 
+
+OTHER: Leiden on small data is sensitive to the number of PCs. Going from 50 to 10 PCs lifts Buettner from about 0.29 to as high as 0.81. Leiden on MICA's own MDS embedding scores 0.91 on Buettner with all genes, so most of MICA's Buettner edge comes from the MI and MDS representation. On Chung, Leiden on the MDS embedding stays low (0.16 to 0.60), so there the edge needs k-means at its best fit. 
+
+OTHER: k-means baseline at 100 restarts instead of 10 changes ARI by -0.08 to +0.19 on the small sets (Chung seurat_v3 0.18 to 0.37) and flips no B3 conclusion. MICA's 100-restart advantage is real but modest: up to 0.13 in expected ARI (Chung all genes, Buettner cell_ranger and seurat_v3), about 0.03 on average, with no sign flips against Leiden. 
+
+OTHER: The cell-level bootstrap holds partitions fixed. It ignores rerun variability, the label-based choice of Leiden resolution and of k, and label noise. It also treats cells as independent, though Yan and Goolam cells come from a few embryos and Kolodziejczyk cells from plates, so the intervals are too narrow. MICA's three draws are often the same partition, and PBMC14K has a single MICA run. 
+
+OTHER: The Wilcoxon test uses the paper's own 10 benchmark sets, which the MICA authors chose, so it does not support claims about scRNA-seq data in general. 
+
+OTHER: Label sources do not explain the pattern cleanly. Design or sorting labels: Yan, Goolam, Pollen, Kolodziejczyk, Klein (time points), Buettner (FACS cell-cycle sort) and PBMC14K (sorted populations). Clustering-derived labels: Usoskin and Zeisel. Chung is undocumented, and Supplementary Table 1 lists 5 classes while the input and run script use 4. Leiden's all-genes wins are Zeisel (clustering labels) and PBMC14K (sorted), and at 2,000 genes MICA beats Leiden on Zeisel. Label source is confounded with size: every small set except Chung has design or sorting labels, and both clustering-labeled sets are mid-sized. A 1-D test rules out the idea that Buettner's labels track detected-gene count alone (k-means ARI 0.14). 
+
+OTHER: The paper describes MICA-MDS as a consensus over 10 k-means runs. Released MICA 1.0.0 makes one KMeans(n_clusters=k) call (sklearn 0.24.1 default of 10 starts) unless several dr_dim values are given. 
+
+OTHER: Environment note: several MCP connectors (Gmail, Google Calendar, Google Drive, Asana, Atlassian, ClickUp, Linear, Monday, Notion, Slack) need authorization in claude.ai connector settings or via /mcp before they can be used. They were not needed here. 
+
