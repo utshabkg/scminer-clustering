@@ -1,32 +1,21 @@
 # Resume note (for Claude, after a session limit or a restart)
 
-Last updated: 2026-10-03 13:40 CDT. Read this first, then `PROGRESS.md` and `WORKPLAN.md`.
+Last updated: 2026-10-03 17:50 CDT. Read this first, then `PROGRESS.md` and `WORKPLAN.md`.
 
 The user asked Claude to keep doing Utshab's tasks until something depends on Laraib or Rhea, to stop before any long GPU run and ask first, and to keep going after a session limit resets.
 
-## Running right now (Oct 3, 13:40)
+## Running right now (Oct 3, 17:50)
 
-**`scm-rq2-allen`** runs `scripts/run_rq2_allen.sh`, which is v2 with the sparse exact path. It takes about 2.5 h. The log is `logs/rq2_allen.log` and ends with RQ2 ALLEN DONE. Output goes to `results/rq2_allen_100k/`, and the c=3200 graph is written in MICA format to `data/runs/rq2/allen_100k_corr3200/`. Brute force for the 500 queries is cached in `data/runs/rq2/allen_100k_exact_q500.npz`.
+MICA's own node2vec and Louvain, run on the Allen 100K graphs. This is the last step of U-19 at this size.
+- **`scm-downstream-allen`** runs `scripts/run_downstream_allen.sh`, log `logs/downstream_allen.log`. Done: our corr3200 graph scored ARI 0.602 and AMI 0.819. MICA's own pilot got 0.652 and 0.836. Running now: the same wrapper on MICA's own graph, about 70 min.
+- **`scm-downstream-allen2`** waits for that to finish, then runs a second repeat on both graphs, about 2.3 h. Log `logs/downstream_allen_rep2.log`, ends with DOWNSTREAM ALLEN REP2 DONE.
 
-Everything else is finished:
-- the small sets, Zeisel included
-- PBMC14K v3
-- the PBMC14K downstream runs
+**How to read the result.**
+- If MICA's graph gives about 0.65 through our wrapper in both repeats while ours stays near 0.60, the graph costs ARI at this size, even though its recall is higher (94.6% against 90.3%). That would fit the hub and Klein findings.
+- If both graphs vary by about 0.05, it is run-to-run noise.
+- Write whichever holds into the Allen paragraph of PROGRESS.md. It currently ends with "MICA's own later steps on our graph are running now". Then commit, push, and report to Utshab.
 
-The U-19 section in the PROGRESS.md Oct 3 entry is written and pushed in 3df88c4. It covers the PBMC14K table, MICA downstream 0.853 against 0.852, the Allen query sweep, the failures, the hubs and the caveats.
-
-**When Allen finishes:**
-1. Replace "The full timed build at that size is running now." in PROGRESS.md with the measured times and the Leiden numbers.
-2. Run MICA's own downstream on the Allen graph. In mica-legacy: `python scripts/mica_downstream.py data/runs/rq2/allen_100k_corr3200 data/runs/rq2/downstream_allen_100k_corr3200_rep1 8`. It takes about 80 min, about 40 for node2vec and 40 for Louvain. Then score it in scminer: `python scripts/score_downstream.py allen_100k <run_dir> corr3200 rq2_downstream_allen_100k_corr3200_rep1`. Compare with MICA's 0.652, which is in `results/pilot_mica_allen_100k`.
-3. Commit and push. Then tell Utshab the results and ask about two things:
-   - GPU time for U-18
-   - whether to add a hubness-reduction task
-
-**Measured on Allen so far:**
-- Dense brute force took 1,832 s per 500 cells and sparse took 767 s.
-- MICA HNSW recall is 0.903 in 5.2 h.
-- Correlation recall: 200 gives 0.558, 400 gives 0.710, 800 gives 0.823, 1600 gives 0.898 and 3200 gives 0.946.
-- Codes are 17.6% nonzero.
+The rest of U-19 is written in PROGRESS.md and pushed in 4a8811c. That covers the Allen table: HNSW 90.3% in 5.2 h, correlation 1,600 at 89.8% in 1.1 h, and correlation 3,200 at 94.6% in 2.2 h.
 
 ## Done on Oct 3 (all pushed except as noted)
 

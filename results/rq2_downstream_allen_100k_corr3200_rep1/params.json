@@ -1,0 +1,9 @@
+{
+  "run_dir": "data/runs/rq2/downstream_allen_100k_corr3200_rep1",
+  "graph": "corr3200",
+  "resolution": 2.5,
+  "n_clusters": 34,
+  "hit_true_k": true,
+  "n_hits": 2,
+  "median_ari_of_hits": 0.6011885033710063
+}
