@@ -1,0 +1,5 @@
+{
+  "dataset": "paper_pollen",
+  "mica_output": "results/reproduction/mica_paper_pollen_hvg2000_seurat",
+  "tag": "hvg2000_seurat"
+}

@@ -20,8 +20,9 @@ import pandas as pd
 from scminer_clust import cluster, metrics
 from scminer_clust.paths import PROCESSED
 
-PUBLISHED_ARI = {"zeisel": 0.744, "pbmc14k": 0.853, "usoskin": 0.847,  # scMINER Source Data,
-                 "kolodziejczyk": 1.0, "klein": 0.98}                     # per dataset
+# The paper's own per-dataset scores, from the authors' Benchmark_ARI_metrics files
+PUBLISHED_ARI = pd.read_csv(Path(__file__).resolve().parents[1] / "docs" / "published_scores.csv",
+                            index_col="dataset")["MICA_ARI"].to_dict()
 
 
 def _fed_genes(name, tag):

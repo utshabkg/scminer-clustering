@@ -13,9 +13,17 @@ import sys
 
 import anndata as ad
 import numpy as np
+import pandas as pd
 
 from scminer_clust import cluster, metrics
-from scminer_clust.paths import PROCESSED
+from scminer_clust.paths import DATA, PROCESSED
+
+
+def exp_name(name, n_hvg):
+    exp = f"baselines_{name}" + (f"_hvg{n_hvg}" if n_hvg else "")
+    if n_hvg and cluster.HVG_FLAVOR != "seurat":
+        exp += f"_{cluster.HVG_FLAVOR}"
+    return exp
 
 
 def main(name, n_seeds=3, n_hvg=None):
@@ -28,7 +36,12 @@ def main(name, n_seeds=3, n_hvg=None):
 
     rows = []
     for seed in range(n_seeds):
-        for method in ("kmeans_pca", "hierarchical_pca", "leiden_pca"):
+        # Ward hierarchical clustering needs a full cell-by-cell matrix, which does
+        # not fit beyond a few tens of thousands of cells, so it is skipped there.
+        methods = ("kmeans_pca", "hierarchical_pca", "leiden_pca") if adata.n_obs <= 20_000 else ("kmeans_pca", "leiden_pca")
+        if seed == 0 and len(methods) == 2:
+            print(f"  skipping hierarchical: {adata.n_obs} cells is too many for a full distance matrix")
+        for method in methods:
             rec = {"dataset": name, "method": method, "seed": seed, "k_setting": "paper_protocol",
                    "genes": n_hvg or "all", "hvg_flavor": cluster.HVG_FLAVOR if n_hvg else ""}
             with metrics.timed(rec):
@@ -42,14 +55,15 @@ def main(name, n_seeds=3, n_hvg=None):
                     rec["n_resolutions_hit_k"] = info["n_hits"]
                     rec["median_ari_of_hits"] = info["median_ari_of_hits"]
             rec.update(metrics.score(truth, labels, embedding=emb))
+            runs = DATA / "runs" / exp_name(name, n_hvg)
+            runs.mkdir(parents=True, exist_ok=True)
+            pd.DataFrame({"label": labels}, index=adata.obs_names).to_csv(runs / f"{method}_seed{seed}.csv")
             rec["n_cells"], rec["n_genes"] = adata.n_obs, (n_hvg or adata.n_vars)
             rows.append(rec)
             print(f"  seed {seed} {method:18s} ARI {rec['ari']:.3f}  AMI {rec['ami']:.3f}  "
                   f"clusters {rec['n_clusters']}  {rec['seconds']}s")
 
-    exp = f"baselines_{name}" + (f"_hvg{n_hvg}" if n_hvg else "")
-    if n_hvg and cluster.HVG_FLAVOR != "seurat":
-        exp += f"_{cluster.HVG_FLAVOR}"
+    exp = exp_name(name, n_hvg)
     d = metrics.write(exp, rows, {"dataset": name, "n_seeds": n_seeds, "true_k": int(k), "n_hvg": n_hvg,
                                   "hvg_flavor": cluster.HVG_FLAVOR if n_hvg else None,
                                   "n_cells": adata.n_obs, "n_genes_total": adata.n_vars})

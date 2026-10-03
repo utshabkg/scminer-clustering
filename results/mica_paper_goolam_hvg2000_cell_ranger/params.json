@@ -1,0 +1,11 @@
+{
+  "dataset": "paper_goolam",
+  "mica_output": "results/reproduction/mica_paper_goolam_hvg2000_cell_ranger",
+  "tag": "hvg2000_cell_ranger",
+  "seeded_draws": 3,
+  "resolution": 5.0,
+  "n_clusters": 5,
+  "hit_true_k": true,
+  "n_hits": 1,
+  "median_ari_of_hits": 0.6874447148644961
+}

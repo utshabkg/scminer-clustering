@@ -16,13 +16,14 @@ log=logs/mica_$run.log
 if [[ -d "$out" ]]; then   # old output would be pooled with the new run when scoring
   mv "$out" "${out}.stale_$(date +%Y%m%d_%H%M%S)"
 fi
-python scripts/export_for_mica.py "$name" > "$log" 2>&1
+input=data/processed/${run}_mica.h5ad   # one input file per run, so parallel repeats never collide
+python scripts/export_for_mica.py "$name" "$input" > "$log" 2>&1
 start=$(date +%s)
 if [[ $mode == ge ]]; then
-  mica ge -i data/processed/${name}_mica.h5ad -o "$out" -minr 0.1 -maxr 4.0 -ss 0.1 -nw 8 >> "$log" 2>&1
+  mica ge -i $input -o "$out" -minr 0.1 -maxr 4.0 -ss 0.1 -nw 8 >> "$log" 2>&1
 else
-  mica mds -i data/processed/${name}_mica.h5ad -o "$out" -nck "$mode" -nw 4 >> "$log" 2>&1
+  mica mds -i $input -o "$out" -nck "$mode" -nw 4 >> "$log" 2>&1
 fi
 echo "WALL_SECONDS $(( $(date +%s) - start ))" >> "$log"
-rm -f data/processed/${name}_mica.h5ad   # the dense copy is only needed for the run
+rm -f $input   # the dense copy is only needed for the run
 echo "done $run"

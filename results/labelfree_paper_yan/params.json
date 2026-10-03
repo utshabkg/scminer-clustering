@@ -1,0 +1,6 @@
+{
+  "dataset": "paper_yan",
+  "rule": "max silhouette over k=2..20 or the resolution sweep",
+  "n_hvg": null,
+  "hvg_flavor": null
+}

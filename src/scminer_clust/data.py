@@ -173,9 +173,10 @@ def load(name: str) -> ad.AnnData:
     return LOADERS[name]()
 
 
-PAPER_INPUTS = {  # Zenodo 15040179 file stem, and the label column the authors scored against
-    "zeisel": "09_Zeisel", "pbmc14k": "10_PBMC14K", "usoskin": "06_Usoskin",
-    "kolodziejczyk": "07_Kolod", "klein": "08_Klein",
+PAPER_INPUTS = {  # Zenodo 15040179 file stem for each of the paper's ten small and mid-sized benchmarks
+    "yan": "01_Yan", "goolam": "02_Goolam", "buettner": "03_Buettner", "pollen": "04_Pollen",
+    "chung": "05_Chung", "usoskin": "06_Usoskin", "kolodziejczyk": "07_Kolod", "klein": "08_Klein",
+    "zeisel": "09_Zeisel", "pbmc14k": "10_PBMC14K",
 }
 
 
@@ -204,10 +205,64 @@ def load_paper_input(name) -> ad.AnnData:
         genes, cells = (np.asarray(ex.coords[d].values).astype(str) for d in ex.dims)
     pheno = vars(o.phenoData)["data"]
     pheno.columns = [str(c) for c in pheno.columns]
-    label_col = next(c for c in ("TrueLabel_4group", "TrueLabel", "trueLabel") if c in pheno.columns)
+    label_col = next(c for c in ("TrueLabel_4group", "TrueLabel", "trueLabel", "true_label") if c in pheno.columns)
     adata = ad.AnnData(X=X.T.tocsr(), obs=pd.DataFrame(index=cells), var=pd.DataFrame(index=genes))
     adata.obs["label"] = pheno[label_col].astype(str).reindex(adata.obs_names).to_numpy()
     adata.obs["label_fine"] = adata.obs["label"].to_numpy()
     adata.uns["dataset"] = f"paper_{name}"
     adata.uns["label_column"] = label_col
+    # The authors' MICA inputs are log2 transformed (their files are named
+    # *_MICA.log2.txt). Declare that, and keep an approximate untransformed copy
+    # for count-based gene selection (seurat_v3), which expects raw values.
+    adata.uns["log1p"] = {"base": 2}
+    counts = adata.X.copy()
+    counts.data = np.power(2.0, counts.data) - 1
+    adata.layers["counts"] = counts
     return adata
+
+
+ALLEN_REGIONS = ["CB", "CTXsp", "HPF", "HY", "Isocortex-1", "Isocortex-2", "MB", "MY", "OLF", "P", "PAL", "STR", "TH"]
+
+
+def load_allen(n_cells=None, seed=0) -> ad.AnnData:
+    """Allen Brain Cell Atlas, whole mouse brain, 10x v3 (Yao et al., Nature 2023).
+
+    About 2.3 million cells by 32,285 genes, raw counts in 13 region files.
+    Labels come from the atlas taxonomy: class (34) is "label", subclass (338) is
+    "label_fine", with supertype and cluster kept too. These labels were made by
+    the atlas team's own clustering, so they are not independent ground truth.
+    n_cells draws a uniform random subset (for pilots) before reading any counts.
+    The atlas was already quality-filtered by its authors, so we keep every cell.
+    """
+    d = RAW / "allen"
+    meta = pd.read_csv(d / "cell_metadata_with_cluster_annotation.csv",
+                       usecols=["cell_label", "feature_matrix_label", "library_method", "class", "subclass", "supertype", "cluster"],
+                       index_col="cell_label")
+    meta = meta[meta["library_method"] == "10Xv3"]
+    if n_cells:
+        meta = meta.sample(n=n_cells, random_state=seed)
+    parts = []
+    for r in ALLEN_REGIONS:
+        want = meta.index[meta["feature_matrix_label"] == f"WMB-10Xv3-{r}"]
+        if len(want) == 0:
+            continue
+        f = ad.read_h5ad(d / f"WMB-10Xv3-{r}-raw.h5ad", backed="r")
+        rows = np.flatnonzero(f.obs_names.isin(want))
+        a = f[rows].to_memory()
+        a.obs = a.obs[[]]
+        parts.append(a)
+        f.file.close()
+    adata = ad.concat(parts)
+    adata.var = parts[0].var[["gene_symbol"]].copy()
+    m = meta.reindex(adata.obs_names)
+    adata.obs["label"] = m["class"].to_numpy()
+    adata.obs["label_fine"] = m["subclass"].to_numpy()
+    adata.obs["supertype"] = m["supertype"].to_numpy()
+    adata.obs["cluster"] = m["cluster"].to_numpy()
+    adata.obs["region"] = m["feature_matrix_label"].str.replace("WMB-10Xv3-", "").to_numpy()
+    adata.uns["dataset"] = "allen" if not n_cells else f"allen_{n_cells // 1000}k"
+    adata.uns["keep_all_cells"] = True
+    return adata
+
+
+LOADERS["allen_100k"] = lambda: load_allen(100_000)

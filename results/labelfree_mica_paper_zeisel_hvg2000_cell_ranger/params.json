@@ -1,0 +1,5 @@
+{
+  "dataset": "paper_zeisel",
+  "mica_output": "results/reproduction/mica_paper_zeisel_hvg2000_cell_ranger",
+  "tag": "hvg2000_cell_ranger"
+}

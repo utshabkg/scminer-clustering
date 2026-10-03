@@ -1,0 +1,9 @@
+{
+  "dataset": "paper_zeisel",
+  "n_seeds": 3,
+  "true_k": 7,
+  "n_hvg": 2000,
+  "hvg_flavor": "seurat",
+  "n_cells": 2903,
+  "n_genes_total": 14890
+}

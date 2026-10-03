@@ -1,0 +1,4 @@
+dataset,method,genes,hvg_flavor,seed,k_setting,mode,silhouette,n_candidates,chosen_setting,n_clusters,n_true_classes,ari,ami,nmi
+kolodziejczyk,mica,2000,cell_ranger,0,silhouette,small-data,0.34007095096684564,19,2,2,3,0.6299697639792958,0.756615688350612,0.7570193751090419
+kolodziejczyk,mica,2000,cell_ranger,1,silhouette,small-data,0.34007095096684564,19,2,2,3,0.6299697639792958,0.756615688350612,0.7570193751090419
+kolodziejczyk,mica,2000,cell_ranger,2,silhouette,small-data,0.34007095096684564,19,2,2,3,0.6299697639792958,0.756615688350612,0.7570193751090419

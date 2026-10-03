@@ -1,0 +1,5 @@
+{
+  "dataset": "usoskin",
+  "mica_output": "results/reproduction/mica_usoskin_hvg2000_seurat",
+  "tag": "hvg2000_seurat"
+}

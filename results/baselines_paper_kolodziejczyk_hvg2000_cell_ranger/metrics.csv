@@ -1,0 +1,10 @@
+dataset,method,seed,k_setting,genes,hvg_flavor,seconds,peak_rss_gb,n_clusters,n_true_classes,ari,ami,nmi,silhouette,n_cells,n_genes,resolution,n_resolutions_hit_k,median_ari_of_hits
+paper_kolodziejczyk,kmeans_pca,0,paper_protocol,2000,cell_ranger,1.26,0.62,3,3,0.9375932182850074,0.9184126941255584,0.9186293874750969,0.16268020868301392,704,2000,,,
+paper_kolodziejczyk,hierarchical_pca,0,paper_protocol,2000,cell_ranger,0.06,0.62,3,3,0.964753044412996,0.9458818185662717,0.9460259772324401,0.15426653623580933,704,2000,,,
+paper_kolodziejczyk,leiden_pca,0,paper_protocol,2000,cell_ranger,27.87,0.62,3,3,1.0,1.0,1.0,0.15062856674194336,704,2000,0.02,18.0,1.0
+paper_kolodziejczyk,kmeans_pca,1,paper_protocol,2000,cell_ranger,0.83,0.77,3,3,0.9414031774233269,0.922001349699789,0.9222085782700266,0.15676507353782654,704,2000,,,
+paper_kolodziejczyk,hierarchical_pca,1,paper_protocol,2000,cell_ranger,0.04,0.77,3,3,0.964753044412996,0.9458818185662717,0.9460259772324401,0.15426653623580933,704,2000,,,
+paper_kolodziejczyk,leiden_pca,1,paper_protocol,2000,cell_ranger,5.08,0.77,3,3,1.0,1.0,1.0,0.15062856674194336,704,2000,0.02,18.0,1.0
+paper_kolodziejczyk,kmeans_pca,2,paper_protocol,2000,cell_ranger,0.35,0.78,3,3,0.9414031774233269,0.9220013496997891,0.9222085782700267,0.15676507353782654,704,2000,,,
+paper_kolodziejczyk,hierarchical_pca,2,paper_protocol,2000,cell_ranger,0.02,0.78,3,3,0.964753044412996,0.9458818185662717,0.9460259772324401,0.15426653623580933,704,2000,,,
+paper_kolodziejczyk,leiden_pca,2,paper_protocol,2000,cell_ranger,4.73,0.78,3,3,1.0,1.0,1.0,0.15062856674194336,704,2000,0.02,18.0,1.0

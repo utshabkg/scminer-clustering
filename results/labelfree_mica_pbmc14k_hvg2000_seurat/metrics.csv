@@ -1,0 +1,3 @@
+dataset,method,genes,hvg_flavor,seed,k_setting,mode,silhouette,n_candidates,chosen_setting,n_clusters,n_true_classes,ari,ami,nmi
+pbmc14k,mica,2000,seurat,0,silhouette,graph,0.3441812803507732,40.0,3.7,5,7,0.5726312602396428,0.7348757225948513,0.7350097844395601
+pbmc14k,mica,2000,seurat,0,default_resolution_1.8,graph,,,,7,7,0.6465553769979578,0.7262315083017798,0.7264200878716837

@@ -1,0 +1,9 @@
+{
+  "dataset": "paper_pbmc14k",
+  "n_seeds": 3,
+  "true_k": 7,
+  "n_hvg": 2000,
+  "hvg_flavor": "seurat",
+  "n_cells": 13605,
+  "n_genes_total": 8846
+}

@@ -1,0 +1,9 @@
+{
+  "dataset": "paper_yan",
+  "n_seeds": 3,
+  "true_k": 8,
+  "n_hvg": 2000,
+  "hvg_flavor": "seurat",
+  "n_cells": 124,
+  "n_genes_total": 20286
+}

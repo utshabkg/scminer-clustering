@@ -1,0 +1,4 @@
+dataset,method,genes,hvg_flavor,seed,k_setting,mode,silhouette,n_candidates,chosen_setting,n_clusters,n_true_classes,ari,ami,nmi
+klein,mica,2000,seurat_v3,0,silhouette,small-data,0.3892992498079033,19,4,4,4,0.8393085048357195,0.844876109594117,0.8450701435403155
+klein,mica,2000,seurat_v3,1,silhouette,small-data,0.3892992498079033,19,4,4,4,0.8393085048357195,0.8448761095941171,0.8450701435403156
+klein,mica,2000,seurat_v3,2,silhouette,small-data,0.3892992498079034,19,4,4,4,0.8393085048357195,0.844876109594117,0.8450701435403155

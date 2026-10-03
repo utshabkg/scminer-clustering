@@ -1,0 +1,4 @@
+dataset,method,genes,hvg_flavor,seed,k_setting,mode,silhouette,n_candidates,chosen_setting,n_clusters,n_true_classes,ari,ami,nmi
+kolodziejczyk,mica,all,,0,silhouette,small-data,0.2731288417296644,19,9,9,3,0.48649453065107334,0.6943912091581614,0.6967474310453952
+kolodziejczyk,mica,all,,1,silhouette,small-data,0.25910546980427707,19,8,8,3,0.525911120642783,0.7211664979758204,0.7231237852956498
+kolodziejczyk,mica,all,,2,silhouette,small-data,0.2726317590547509,19,9,9,3,0.4874824370938451,0.6946644953115678,0.6970195753452652

@@ -17,7 +17,7 @@ from scipy import sparse
 PROCESSED = Path(__file__).resolve().parents[1] / "data" / "processed"
 
 
-def main(name):
+def main(name, out=None):
     exch = PROCESSED / f"{name}_exchange"
     X = sparse.load_npz(exch / "X.npz")
     cells = (exch / "cells.txt").read_text().splitlines()
@@ -29,11 +29,11 @@ def main(name):
         obs=labels.loc[cells],
         var=pd.DataFrame(index=genes),
     )
-    out = PROCESSED / f"{name}_mica.h5ad"
+    out = Path(out) if out else PROCESSED / f"{name}_mica.h5ad"
     adata.write(out)
     print(f"wrote {out}: {adata.shape[0]} cells x {adata.shape[1]} genes, anndata {anndata.__version__}")
     return 0
 
 
 if __name__ == "__main__":
-    sys.exit(main(sys.argv[1]))
+    sys.exit(main(sys.argv[1], sys.argv[2] if len(sys.argv) > 2 else None))

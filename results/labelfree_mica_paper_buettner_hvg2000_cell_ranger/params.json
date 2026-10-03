@@ -1,0 +1,5 @@
+{
+  "dataset": "paper_buettner",
+  "mica_output": "results/reproduction/mica_paper_buettner_hvg2000_cell_ranger",
+  "tag": "hvg2000_cell_ranger"
+}

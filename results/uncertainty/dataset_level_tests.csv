@@ -1,0 +1,9 @@
+gene_setting,metric,n_datasets,mean_gap,median_gap,leiden_ahead,ci_excludes_zero,wilcoxon_p
+all genes,ari,10,-0.1732,-0.1561,2,9,0.02734375
+all genes,ami,10,-0.1305,-0.098,2,9,0.01953125
+2000 genes (seurat),ari,10,-0.1041,-0.0387,4,8,0.275390625
+2000 genes (seurat),ami,10,-0.0795,-0.0378,4,7,0.193359375
+2000 genes (cell_ranger),ari,10,-0.1302,-0.0678,4,9,0.083984375
+2000 genes (cell_ranger),ami,10,-0.112,-0.0552,4,8,0.16015625
+2000 genes (seurat_v3),ari,10,-0.096,-0.0487,4,7,0.193359375
+2000 genes (seurat_v3),ami,10,-0.0795,-0.039,4,6,0.193359375

@@ -13,7 +13,24 @@ from scminer_clust.paths import REPO, RESULTS
 
 ORDER = ["all genes", "2000 genes (seurat)", "2000 genes (cell_ranger)", "2000 genes (seurat_v3)"]
 DATASETS = ["zeisel", "pbmc14k", "usoskin", "kolodziejczyk", "klein"]
+ALL10 = ["yan", "goolam", "buettner", "pollen", "chung", "usoskin", "kolodziejczyk", "klein", "zeisel", "pbmc14k"]
 PUBLISHED = {"zeisel": 0.744, "pbmc14k": 0.853, "usoskin": 0.847, "kolodziejczyk": 1.0, "klein": 0.98}
+
+
+def authors_input_table(t, metric):
+    """Both methods on the authors' own processed input, for all ten benchmark sets."""
+    pub = pd.read_csv(REPO / "docs" / "published_scores.csv").set_index("dataset")
+    rows = []
+    for ds in ALL10:
+        name = f"paper_{ds}"
+        row = {"dataset": ds, "cells": int(pub.loc[ds, "n_cells"]), "published MICA": pub.loc[ds, f"MICA_{metric.upper()}"],
+               "published Scanpy": pub.loc[ds, f"Scanpy_{metric.upper()}"], "published Seurat": pub.loc[ds, f"Seurat_{metric.upper()}"]}
+        for method, label in (("mica", "MICA"), ("leiden_pca", "Leiden")):
+            for g in ORDER:
+                sel = t[(t["dataset"] == name) & (t["method"] == method) & (t["gene_setting"] == g) & ~t["experiment"].str.endswith("_ge")]
+                row[f"{label}, {g}"] = round(sel[metric].mean(), 3) if len(sel) else None
+        rows.append(row)
+    return pd.DataFrame(rows)
 
 
 def main(metric="ari"):
@@ -48,8 +65,15 @@ def main(metric="ari"):
     note = (f"\nAll cells are the mean {metric.upper()} over seeds under the paper's selection rule (true number of clusters). "
             "A star means at least one seed could not produce the true number of clusters and was scored at the closest count. "
             "Published values are ARI.\n")
-    print(f"=== {metric.upper()}"); print(md.to_string(index=False))
-    return f"## {metric.upper()}\n\n" + md.to_markdown(index=False) + "\n" + note
+    print(f"=== {metric.upper()}, our input"); print(md.to_string(index=False))
+    a = authors_input_table(t, metric)
+    a.to_csv(RESULTS / f"summary_authors_input_{metric}.csv", index=False)
+    am = a.rename(columns=lambda c: c.replace("2000 genes ", "2k ").replace("all genes", "all"))
+    print(f"=== {metric.upper()}, authors' input"); print(am.to_string(index=False))
+    note2 = (f"\nBoth methods on the authors' own processed input (Zenodo 15040179), where all genes means every gene in "
+             "that input. MICA in small-data mode except PBMC14K, which is graph mode. Published columns are the paper's own numbers.\n")
+    return (f"## {metric.upper()}, our input (five datasets)\n\n" + md.to_markdown(index=False) + "\n" + note
+            + f"\n## {metric.upper()}, the authors' input (ten datasets)\n\n" + am.to_markdown(index=False) + "\n" + note2)
 
 
 if __name__ == "__main__":

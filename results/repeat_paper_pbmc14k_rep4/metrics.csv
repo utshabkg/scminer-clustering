@@ -1,0 +1,2 @@
+dataset,method,seed,k_setting,mica_setting,n_settings_tried,genes,hvg_flavor,n_clusters,n_true_classes,ari,ami,nmi,seconds,published_ari,gap_vs_published,n_cells,n_genes
+paper_pbmc14k,mica,0,paper_protocol,2.4,40,all,,7,7,0.8509063751834001,0.8716384405993035,0.8717260615547924,1739,0.853,-0.002,13605,8846

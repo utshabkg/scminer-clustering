@@ -1,0 +1,11 @@
+{
+  "dataset": "paper_pbmc14k",
+  "mica_output": "results/reproduction/mica_paper_pbmc14k_hvg2000_seurat",
+  "tag": "hvg2000_seurat",
+  "seeded_draws": 0,
+  "resolution": 0.9,
+  "n_clusters": 7,
+  "hit_true_k": true,
+  "n_hits": 2,
+  "median_ari_of_hits": 0.6858260606706458
+}

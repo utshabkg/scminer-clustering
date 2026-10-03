@@ -1,0 +1,11 @@
+{
+  "dataset": "paper_pbmc14k",
+  "mica_output": "results/reproduction/mica_paper_pbmc14k_rep1",
+  "tag": null,
+  "seeded_draws": 0,
+  "resolution": 2.6,
+  "n_clusters": 7,
+  "hit_true_k": true,
+  "n_hits": 22,
+  "median_ari_of_hits": 0.8460246144136336
+}

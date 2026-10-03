@@ -1,0 +1,6 @@
+{
+  "dataset": "paper_usoskin",
+  "rule": "max silhouette over k=2..20 or the resolution sweep",
+  "n_hvg": 2000,
+  "hvg_flavor": "seurat"
+}

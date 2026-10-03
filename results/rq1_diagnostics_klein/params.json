@@ -1,0 +1,10 @@
+{
+  "dataset": "klein",
+  "fractions": [
+    0.75,
+    0.5,
+    0.25
+  ],
+  "pairs": 19998,
+  "pipeline": "our MICA distance, MDS 19 dims, k-means at true k, seeds 0-2"
+}

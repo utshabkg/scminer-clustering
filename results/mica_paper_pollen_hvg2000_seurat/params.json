@@ -1,0 +1,11 @@
+{
+  "dataset": "paper_pollen",
+  "mica_output": "results/reproduction/mica_paper_pollen_hvg2000_seurat",
+  "tag": "hvg2000_seurat",
+  "seeded_draws": 3,
+  "resolution": 11.0,
+  "n_clusters": 11,
+  "hit_true_k": true,
+  "n_hits": 1,
+  "median_ari_of_hits": 0.9418979476855714
+}

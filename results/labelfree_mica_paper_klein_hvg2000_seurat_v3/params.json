@@ -1,0 +1,5 @@
+{
+  "dataset": "paper_klein",
+  "mica_output": "results/reproduction/mica_paper_klein_hvg2000_seurat_v3",
+  "tag": "hvg2000_seurat_v3"
+}

@@ -1,0 +1,5 @@
+{
+  "dataset": "zeisel",
+  "mica_output": "results/reproduction/mica_zeisel_hvg2000_seurat",
+  "tag": "hvg2000_seurat"
+}

@@ -1,0 +1,9 @@
+{
+  "dataset": "allen_100k",
+  "n_seeds": 1,
+  "true_k": 34,
+  "n_hvg": 2000,
+  "hvg_flavor": "seurat_v3",
+  "n_cells": 100000,
+  "n_genes_total": 28536
+}

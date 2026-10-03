@@ -1,0 +1,4 @@
+dataset,method,genes,hvg_flavor,seed,k_setting,mode,silhouette,n_candidates,chosen_setting,n_clusters,n_true_classes,ari,ami,nmi
+paper_chung,mica,all,,0,silhouette,small-data,0.3271784050487217,19,10,10,4,0.5571730999204886,0.7431084826434047,0.7502382790114637
+paper_chung,mica,all,,1,silhouette,small-data,0.32717840504872175,19,10,10,4,0.5571730999204886,0.7431084826434047,0.7502382790114637
+paper_chung,mica,all,,2,silhouette,small-data,0.3271784050487217,19,10,10,4,0.5571730999204886,0.7431084826434047,0.7502382790114637

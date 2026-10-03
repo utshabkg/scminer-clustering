@@ -1,0 +1,5 @@
+{
+  "dataset": "pbmc14k",
+  "mica_output": "results/reproduction/mica_pbmc14k_hvg2000_seurat",
+  "tag": "hvg2000_seurat"
+}

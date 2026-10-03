@@ -1,0 +1,11 @@
+{
+  "dataset": "paper_zeisel",
+  "mica_output": "results/reproduction/mica_paper_zeisel_hvg2000_cell_ranger",
+  "tag": "hvg2000_cell_ranger",
+  "seeded_draws": 3,
+  "resolution": 7.0,
+  "n_clusters": 7,
+  "hit_true_k": true,
+  "n_hits": 1,
+  "median_ari_of_hits": 0.8089516982215821
+}

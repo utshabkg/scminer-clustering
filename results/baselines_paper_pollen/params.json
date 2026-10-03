@@ -1,0 +1,9 @@
+{
+  "dataset": "paper_pollen",
+  "n_seeds": 3,
+  "true_k": 11,
+  "n_hvg": null,
+  "hvg_flavor": null,
+  "n_cells": 249,
+  "n_genes_total": 6982
+}

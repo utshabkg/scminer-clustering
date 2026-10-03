@@ -1,0 +1,3 @@
+dataset,method,seed,k_setting,genes,hvg_flavor,seconds,peak_rss_gb,n_clusters,n_true_classes,ari,ami,nmi,silhouette,n_cells,n_genes,resolution,n_resolutions_hit_k,median_ari_of_hits
+allen_100k,kmeans_pca,0,paper_protocol,all,,215.99,54.58,34,34,0.4309070629688741,0.7094116694136504,0.7099242246545078,0.2827518880367279,100000,28536,,,
+allen_100k,leiden_pca,0,paper_protocol,all,,956.48,54.58,34,34,0.6242627090598968,0.8394435488487303,0.8397404663108028,0.27204376459121704,100000,28536,0.39,5.0,0.5719673581360136

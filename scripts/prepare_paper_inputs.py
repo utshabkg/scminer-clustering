@@ -24,6 +24,8 @@ def main():
         (exch / "cells.txt").write_text("\n".join(a.obs_names))
         (exch / "genes.txt").write_text("\n".join(a.var_names))
         a.obs[["label", "label_fine"]].to_csv(exch / "labels.csv")
+        # the processed file is what the baselines and gene selection read
+        assert a.obs["label"].notna().all() and not a.obs["label"].isin(["nan", "None"]).any(), out
         print(f"{out}: {a.n_obs} cells x {a.n_vars} genes, {a.obs.label.nunique()} classes from {a.uns['label_column']}")
     return 0
 

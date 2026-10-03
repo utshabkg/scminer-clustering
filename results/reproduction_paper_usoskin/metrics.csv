@@ -1,4 +1,4 @@
 dataset,method,seed,k_setting,mica_setting,n_settings_tried,genes,hvg_flavor,n_clusters,n_true_classes,ari,ami,nmi,seconds,published_ari,gap_vs_published,n_cells,n_genes
-paper_usoskin,mica,0,paper_protocol,k=4 seeded,1,all,,4,4,0.8127668125833762,0.7772051365939182,0.7784202917596739,219,0.847,-0.044,622,16383
-paper_usoskin,mica,1,paper_protocol,k=4 seeded,1,all,,4,4,0.7985732277111481,0.769583823184534,0.7708399241563548,219,0.847,-0.044,622,16383
-paper_usoskin,mica,2,paper_protocol,k=4 seeded,1,all,,4,4,0.7985732277111481,0.769583823184534,0.7708399241563548,219,0.847,-0.044,622,16383
+paper_usoskin,mica,0,paper_protocol,k=4 seeded,1,all,,4,4,0.8441937965098153,0.8015846934357483,0.8026700266849036,219,0.847,-0.012,622,16383
+paper_usoskin,mica,1,paper_protocol,k=4 seeded,1,all,,4,4,0.8127668125833762,0.7772051365939182,0.7784202917596739,219,0.847,-0.012,622,16383
+paper_usoskin,mica,2,paper_protocol,k=4 seeded,1,all,,4,4,0.8467985255244205,0.8034550894432032,0.804530407060726,219,0.847,-0.012,622,16383

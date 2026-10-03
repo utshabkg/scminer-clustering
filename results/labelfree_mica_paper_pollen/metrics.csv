@@ -1,0 +1,4 @@
+dataset,method,genes,hvg_flavor,seed,k_setting,mode,silhouette,n_candidates,chosen_setting,n_clusters,n_true_classes,ari,ami,nmi
+paper_pollen,mica,all,,0,silhouette,small-data,0.5466845976348158,19,18,18,11,0.8960631265760955,0.9133835829691876,0.9261230430730105
+paper_pollen,mica,all,,1,silhouette,small-data,0.5428629071738985,19,17,17,11,0.897962808741704,0.911922976527453,0.9240970671083829
+paper_pollen,mica,all,,2,silhouette,small-data,0.5422590353020361,19,19,19,11,0.8769761594001171,0.8995701725634322,0.9146999093845809

@@ -1,0 +1,9 @@
+{
+  "dataset": "paper_klein",
+  "n_seeds": 3,
+  "true_k": 4,
+  "n_hvg": 2000,
+  "hvg_flavor": "cell_ranger",
+  "n_cells": 2717,
+  "n_genes_total": 24175
+}

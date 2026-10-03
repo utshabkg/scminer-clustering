@@ -1,0 +1,4 @@
+dataset,method,seed,k_setting,mica_setting,n_settings_tried,genes,hvg_flavor,n_clusters,n_true_classes,ari,ami,nmi,seconds,published_ari,gap_vs_published,n_cells,n_genes
+paper_goolam,mica,0,paper_protocol,k=5 seeded,1,all,,5,5,0.5439312405449491,0.7054558022915282,0.7209998808078308,46,,,124,23571
+paper_goolam,mica,1,paper_protocol,k=5 seeded,1,all,,5,5,0.5439312405449491,0.7054558022915282,0.7209998808078308,46,,,124,23571
+paper_goolam,mica,2,paper_protocol,k=5 seeded,1,all,,5,5,0.5439312405449491,0.705455802291528,0.7209998808078307,46,,,124,23571
