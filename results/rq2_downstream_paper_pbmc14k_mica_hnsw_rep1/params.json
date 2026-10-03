@@ -1,0 +1,9 @@
+{
+  "run_dir": "data/runs/rq2/downstream_paper_pbmc14k_mica_hnsw_rep1",
+  "graph": "mica_hnsw",
+  "resolution": 1.6,
+  "n_clusters": 7,
+  "hit_true_k": true,
+  "n_hits": 18,
+  "median_ari_of_hits": 0.8421548285856596
+}

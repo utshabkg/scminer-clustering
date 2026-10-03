@@ -5,13 +5,40 @@
   "query_seed": 0,
   "distance": "graph mode 1 - I/H(x,y)",
   "check_max_diff_vs_mica": 9.519145948155838e-07,
-  "brute_force_seconds_for_queries": 69.9,
+  "refine": "neighbors of neighbors, first 20 of the first 20",
+  "pipelines": [
+    [
+      "pca + detected",
+      200,
+      2
+    ],
+    [
+      "correlation",
+      200,
+      2
+    ],
+    [
+      "correlation",
+      400,
+      0
+    ],
+    [
+      "correlation",
+      800,
+      0
+    ],
+    [
+      "correlation",
+      1600,
+      0
+    ]
+  ],
   "leiden_fast": {
-    "resolution": 1.57,
+    "resolution": 1.59,
     "n_clusters": 7,
     "hit_true_k": true,
-    "n_hits": 22,
-    "median_ari_of_hits": 0.5918655816497921
+    "n_hits": 1,
+    "median_ari_of_hits": 0.6454855598775584
   },
   "leiden_mica": {
     "resolution": 1.58,

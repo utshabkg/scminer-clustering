@@ -25,19 +25,49 @@ BLOCK = 512  # cells per joint-histogram block, keeps memory near BLOCK x genes 
 
 
 class MICodes:
-    """Cells binned once, with marginal entropies, ready for exact pair scoring."""
+    """Cells binned once, with marginal entropies, ready for exact pair scoring.
 
-    def __init__(self, X, bins=None, rule="floor"):
+    With sparse=True (the default when under half the codes are nonzero), the
+    joint histogram of cells i and j is built only from the genes where j's code
+    is nonzero. The column for j's code 0 then follows from i's own bin counts,
+    so the result is exact, and the cost scales with j's nonzero genes instead of
+    all genes. On 10x data about 6 percent of codes are nonzero.
+    """
+
+    def __init__(self, X, bins=None, rule="floor", sparse_codes=None):
         X = np.asarray(X)
         self.bins = bins or mi.n_bins(X.shape[1])
         self.codes = mi.bin_codes(X, self.bins, rule)
         self.h = mi.marginal_entropy(self.codes, self.bins)
+        self.n_genes = self.codes.shape[1]
+        if sparse_codes is None:
+            sparse_codes = (self.codes > 0).mean() < 0.5
+        self.sparse = bool(sparse_codes)
+        if self.sparse:
+            self.csr = sparse.csr_matrix(self.codes)
+            self.csr.eliminate_zeros()
+            self.counts = np.stack([np.bincount(r, minlength=self.bins) for r in self.codes]).astype(np.int64)
+
+    def _joint_entropy_sparse(self, i, js):
+        b = self.bins
+        ci = self.codes[i].astype(np.int64)
+        sub = self.csr[js]
+        rows = np.repeat(np.arange(len(js)), np.diff(sub.indptr))
+        comb = rows * b * b + ci[sub.indices] * b + sub.data.astype(np.int64)
+        A = np.bincount(comb, minlength=len(js) * b * b).reshape(len(js), b, b)
+        A[:, :, 0] = self.counts[i][None, :] - A[:, :, 1:].sum(axis=2)  # genes where j's code is 0
+        return mi._entropy_from_counts(A.reshape(len(js), b * b), self.n_genes)
 
     def dist(self, i, js):
         """Exact graph-mode distance from cell i to the cells js."""
         js = np.asarray(js)
-        hij = np.concatenate([mi.joint_entropy(self.codes[i], self.codes[js[s:s + BLOCK]], self.bins)
-                              for s in range(0, len(js), BLOCK)]) if len(js) else np.empty(0)
+        if not len(js):
+            return np.empty(0)
+        if self.sparse:
+            hij = np.concatenate([self._joint_entropy_sparse(i, js[s:s + 4 * BLOCK]) for s in range(0, len(js), 4 * BLOCK)])
+        else:
+            hij = np.concatenate([mi.joint_entropy(self.codes[i], self.codes[js[s:s + BLOCK]], self.bins)
+                                  for s in range(0, len(js), BLOCK)])
         return 1 - (self.h[i] + self.h[js] - hij) / hij
 
 
@@ -100,6 +130,24 @@ def refine(codes, idx, k, fan=20, workers=1):
         cand.append(np.unique(np.concatenate([idx[i], two[two != i]])))
     new_idx, new_dst = rerank(codes, cand, k, workers=workers)
     return new_idx, new_dst, n_scored(cand)
+
+
+def write_mica_edgelist(idx, dst, out_dir, cell_names):
+    """Write neighbor lists as MICA writes its graph: each undirected pair once, cell, neighbor, distance."""
+    from pathlib import Path
+
+    n, k = idx.shape
+    i = np.repeat(np.arange(n), k)
+    j, d = idx.ravel(), dst.ravel()
+    lo, hi = np.minimum(i, j), np.maximum(i, j)
+    _, keep = np.unique(lo * n + hi, return_index=True)
+    out = Path(out_dir)
+    out.mkdir(parents=True, exist_ok=True)
+    with open(out / "edgelist.txt", "w") as f:
+        for a, b, w in zip(i[keep], j[keep], d[keep]):
+            f.write(f"{a}\t{b}\t{w}\n")
+    (out / "cells.txt").write_text("\n".join(map(str, cell_names)) + "\n")
+    return len(keep)
 
 
 def union(*lists):

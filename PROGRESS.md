@@ -92,16 +92,38 @@ All 13 raw region files are downloaded (97 GB, listed in `docs/allen_files.csv`)
 
 Scaled up to all 2.3 million cells, MICA would need about 7 to 8 days and about 3.2 TB of memory. The machine has 754 GB, so MICA as shipped cannot run the whole atlas here. The working is in `docs/allen_pilot.md`.
 
-**Fast neighbor search, first numbers (U-19, in progress)**
+**Fast neighbor search (U-19, CPU prototype, in progress)**
 
-The idea is to propose a few hundred likely neighbors per cell with something cheap, then compute the exact mutual information only for those. Each cell needs its 80 nearest neighbors, as in MICA. We compare against the exact answer from all pairs. To see whether the clusters change, we run Leiden on both graphs. This stands in for MICA's own node2vec and Louvain steps.
+MICA's graph mode needs each cell's 79 nearest neighbors under its mutual information distance. Its HNSW search for them is the slowest step by far, 5.3 of the 7.1 hours on the Allen pilot. The idea is to propose candidates with something cheap, then compute the exact distance only for those. We check against brute force on 500 random cells, and against the graph MICA itself built and saved. Our distance matches the weights in MICA's saved graphs to 1e-6.
 
-| Dataset | Cells | Candidates scored per cell | True neighbors found | Share of all pairs scored | Leiden ARI, exact graph and fast graph |
-|---|---|---|---|---|---|
-| Usoskin | 622 | 310 | 97.5% | 50% | 0.588 and 0.558 |
-| Kolodziejczyk | 704 | 272 | 99.3% | 39% | 0.680 and 0.683 |
+*What works: correlation over all genes as the cheap step.* It is one matrix multiply, with no PCA. On PBMC14K (13,605 cells):
 
-Candidates picked by shared detected genes beat nearest neighbors on principal components, and the two lists merged beat both. We also tried to prove a cell's list exact using distances to 64 reference cells. That works for under 10 percent of cells, so we are dropping it. These two datasets are too small to show a real saving. Klein and Zeisel are running now. Tables in `results/rq2_graph_*/`.
+| Method | True neighbors found | Time for all cells (8 workers) |
+|---|---|---|
+| Brute force, every pair | 100% | about 35 min |
+| MICA's own HNSW search | 97.3% | 15 min |
+| Correlation, 400 candidates per cell | 90.4% | 1.0 min |
+| Correlation, 800 candidates | 97.4% | 2.4 min |
+| Correlation, 1,600 candidates | 99.6% | 4.7 min |
+
+Then we fed each graph to MICA's own later steps (node2vec, then Louvain), twice each. Our 800-candidate graph gives ARI 0.853 both times, and MICA's own graph gives 0.852 both times. So on PBMC14K the fast graph is about six times quicker to build and leaves MICA's result unchanged.
+
+On the Allen pilot (100,000 cells) the gap to brute force is much bigger. Brute force would take about 100 hours, and MICA's HNSW finds 90.3% of the true neighbors in 5.2 hours. Correlation finds 89.8% with 1,600 candidates per cell and 94.6% with 3,200. The full timed build at that size is running now.
+
+*What did not work.*
+- Candidates from 50 principal components. On PBMC14K, 400 of them find only 33% of the true neighbors. Shared detected genes find 72%.
+- Rounds of neighbors of neighbors (the NN-descent idea). They level off at 86 to 88% on PBMC14K.
+- Adding the graph's hub cells to every candidate list. More correlation candidates do better for the same cost.
+- Proving a list exact with distances to 64 reference cells. It works for under 10% of cells.
+
+On the four small sets we could compare against every pair. There, 200 candidates each from principal components and from detected genes, merged, find 97 to 99% of neighbors on Usoskin, Kolodziejczyk and Zeisel, but only 74% on Klein. Correlation alone needs 800 candidates on Klein to reach 92%.
+
+*Found along the way.*
+- **A faster exact distance.** Most genes of a cell fall in the lowest bin, so the joint histogram only needs the genes where the other cell is outside it. The result is identical, and it is 7 times faster on PBMC14K and 1.2 to 1.9 times faster on the denser Zeisel and Klein.
+- **The mutual information graph has strong hubs.** On PBMC14K, the top 1% of cells take 23% of all exact neighbor slots. Their links join cells of the same type only 42% of the time, against 76% for other links. On Klein, the median cell is a neighbor of only 7 others while the biggest hub is a neighbor of 868.
+- **Leiden on the raw neighbor graph is a poor stand-in for MICA.** On PBMC14K it scores 0.64 on either graph, against MICA's 0.85. On Klein, Leiden on the exact graph scores 0.59, while approximate graphs that miss many true neighbors score up to 0.98. So finding every true neighbor is not by itself the goal. Removing hub effects might help clustering. That would be a new task, so it is a decision for the team.
+
+*Caveats.* Recall is measured on 500 random cells. For MICA we count each cell's 79 closest links in its saved graph, which can only flatter MICA. Our code is numpy and MICA's search is compiled, both on 8 workers of a shared machine. The PBMC14K times and the 100-hour brute force estimate use the plain exact distance, from before the faster one was added. The number of candidates needed grows with dataset size (800 at 13,605 cells, about 3,200 at 100,000), so the full atlas will likely need the GPU version (U-18). Tables in `results/rq2_graph_*/`, `results/rq2_large_paper_pbmc14k/` and `results/rq2_downstream_*/`.
 
 **Limits**
 - The bootstrap resamples cells only. It ignores run-to-run variation and the fact that cells are not independent, so its intervals are too narrow.
@@ -110,7 +132,7 @@ Candidates picked by shared detected genes beat nearest neighbors on principal c
 - The ten datasets are the paper's choice, and five of them have fewer than 320 cells.
 
 **Next**
-1. Finish U-19 on Klein and Zeisel, then try PBMC14K (13,605 cells), where the saving should start to show.
+1. Finish the timed U-19 build on the Allen pilot, then run MICA's own later steps on that graph and compare with its 0.652.
 2. The GPU distance (U-18) needs GPU time. I will ask before using the GPUs.
 3. U-30: whether to write to the authors about the Kolodziejczyk input. That is Utshab's call.
 

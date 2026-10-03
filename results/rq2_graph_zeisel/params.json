@@ -1,0 +1,17 @@
+{
+  "dataset": "zeisel",
+  "k": 80,
+  "distance": "graph mode 1 - I/H(x,y)",
+  "exact_graph_leiden": {
+    "resolution": 0.81,
+    "n_clusters": 7,
+    "hit_true_k": true,
+    "n_hits": 21,
+    "median_ari_of_hits": 0.6184122446722764
+  },
+  "candidate_sizes": [
+    100,
+    200,
+    400
+  ]
+}

@@ -1,0 +1,2 @@
+dataset,method,graph,k_setting,mica_setting,n_settings_tried,seed,n_clusters,n_true_classes,ari,ami,nmi,seconds_downstream
+paper_pbmc14k,mica_downstream,mica_hnsw,paper_protocol,1.6,40,0,7,7,0.8518509665203775,0.8701401608615195,0.8702287621630436,349.1

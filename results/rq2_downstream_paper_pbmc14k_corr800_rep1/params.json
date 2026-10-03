@@ -1,0 +1,9 @@
+{
+  "run_dir": "data/runs/rq2/downstream_paper_pbmc14k_corr800_rep1",
+  "graph": "corr800",
+  "resolution": 1.7,
+  "n_clusters": 7,
+  "hit_true_k": true,
+  "n_hits": 19,
+  "median_ari_of_hits": 0.8440258381420558
+}
