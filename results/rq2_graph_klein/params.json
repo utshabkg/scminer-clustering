@@ -1,0 +1,17 @@
+{
+  "dataset": "klein",
+  "k": 80,
+  "distance": "graph mode 1 - I/H(x,y)",
+  "exact_graph_leiden": {
+    "resolution": 0.69,
+    "n_clusters": 4,
+    "hit_true_k": true,
+    "n_hits": 37,
+    "median_ari_of_hits": 0.5891239191310789
+  },
+  "candidate_sizes": [
+    100,
+    200,
+    400
+  ]
+}

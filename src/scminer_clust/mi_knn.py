@@ -13,11 +13,15 @@ certified exact when every non-candidate's lower bound already exceeds the
 distance of its k-th neighbor. This CPU version is for small datasets; the GPU
 version (U-18) will reuse the same logic.
 """
+import multiprocessing as mp
+
 import numpy as np
 from scipy import sparse
 from sklearn.neighbors import NearestNeighbors
 
 from . import mi
+
+BLOCK = 512  # cells per joint-histogram block, keeps memory near BLOCK x genes x 8 bytes
 
 
 class MICodes:
@@ -32,23 +36,70 @@ class MICodes:
     def dist(self, i, js):
         """Exact graph-mode distance from cell i to the cells js."""
         js = np.asarray(js)
-        hij = mi.joint_entropy(self.codes[i], self.codes[js], self.bins)
+        hij = np.concatenate([mi.joint_entropy(self.codes[i], self.codes[js[s:s + BLOCK]], self.bins)
+                              for s in range(0, len(js), BLOCK)]) if len(js) else np.empty(0)
         return 1 - (self.h[i] + self.h[js] - hij) / hij
 
 
-def candidates_pca(emb, c):
+def candidates_pca(emb, c, rows=None):
+    """The c nearest cells on principal components, for every cell or only `rows`."""
+    q = np.arange(len(emb)) if rows is None else np.asarray(rows)
     nn = NearestNeighbors(n_neighbors=c + 1).fit(emb)
-    return nn.kneighbors(emb, return_distance=False)[:, 1:]
+    idx = nn.kneighbors(emb[q], return_distance=False)
+    return np.stack([r[r != i][:c] for r, i in zip(idx, q)])
 
 
-def candidates_detected(X, c):
-    """Top c cells by Jaccard overlap of detected genes. Dense n x n, so small data only."""
+def candidates_detected(X, c, rows=None, block=1000):
+    """Top c cells by Jaccard overlap of detected genes, a block of query cells at a time."""
     B = sparse.csr_matrix((np.asarray(X) > 0).astype(np.float32))
-    inter = (B @ B.T).toarray()
     size = np.asarray(B.sum(axis=1)).ravel()
-    jac = inter / (size[:, None] + size[None, :] - inter)
-    np.fill_diagonal(jac, -1)
-    return np.argsort(-jac, axis=1)[:, :c]
+    q = np.arange(B.shape[0]) if rows is None else np.asarray(rows)
+    out = np.empty((len(q), c), dtype=np.int64)
+    for s in range(0, len(q), block):
+        r = q[s:s + block]
+        inter = (B[r] @ B.T).toarray()
+        jac = inter / (size[r][:, None] + size[None, :] - inter)
+        jac[np.arange(len(r)), r] = -1
+        top = np.argpartition(-jac, c, axis=1)[:, :c]
+        order = np.argsort(-np.take_along_axis(jac, top, axis=1), axis=1)
+        out[s:s + block] = np.take_along_axis(top, order, axis=1)
+    return out
+
+
+def candidates_correlation(X, c, rows=None, block=2000):
+    """Top c cells by Pearson correlation over all genes, a block of query cells at a time.
+
+    No dimension reduction: on PBMC14K, 50 principal components lose most of the
+    neighbor structure MICA sees, while plain correlation keeps much of it.
+    """
+    Z = np.asarray(X, dtype=np.float32)
+    Z = Z - Z.mean(axis=1, keepdims=True)
+    Z /= np.linalg.norm(Z, axis=1, keepdims=True) + 1e-12
+    q = np.arange(Z.shape[0]) if rows is None else np.asarray(rows)
+    out = np.empty((len(q), c), dtype=np.int64)
+    for s in range(0, len(q), block):
+        r = q[s:s + block]
+        sim = Z[r] @ Z.T
+        sim[np.arange(len(r)), r] = -np.inf
+        top = np.argpartition(-sim, c, axis=1)[:, :c]
+        order = np.argsort(-np.take_along_axis(sim, top, axis=1), axis=1)
+        out[s:s + block] = np.take_along_axis(top, order, axis=1)
+    return out
+
+
+def refine(codes, idx, k, fan=20, workers=1):
+    """One round of neighbors of neighbors (as in NN-descent), rescored exactly.
+
+    Each cell's new candidates are its current list plus the first `fan` neighbors
+    of each of its first `fan` neighbors. Returns the new lists and how many were scored.
+    """
+    n = idx.shape[0]
+    cand = []
+    for i in range(n):
+        two = idx[idx[i, :fan], :fan].ravel()
+        cand.append(np.unique(np.concatenate([idx[i], two[two != i]])))
+    new_idx, new_dst = rerank(codes, cand, k, workers=workers)
+    return new_idx, new_dst, n_scored(cand)
 
 
 def union(*lists):
@@ -56,17 +107,41 @@ def union(*lists):
     return [np.unique(np.concatenate(rows)) for rows in zip(*lists)]
 
 
-def rerank(codes, cand, k):
-    """Score every candidate exactly and keep the k closest. cand is an array or a list of rows."""
-    n = len(cand)
-    idx = np.empty((n, k), dtype=np.int64)
-    dst = np.empty((n, k))
-    for i in range(n):
-        ci = np.asarray(cand[i])
-        d = codes.dist(i, ci)
-        o = np.argsort(d)[:k]
-        idx[i], dst[i] = ci[o], d[o]
-    return idx, dst
+_SHARED = {}  # set before forking, so worker processes share the codes without copying
+
+
+def _top_k(task):
+    i, js, k = task
+    d = _SHARED["codes"].dist(i, js)
+    o = np.argsort(d)[:k]
+    return js[o], d[o]
+
+
+def _run(codes, tasks, workers):
+    if workers <= 1:
+        _SHARED["codes"] = codes
+        return [_top_k(t) for t in tasks]
+    _SHARED["codes"] = codes
+    with mp.get_context("fork").Pool(workers) as pool:
+        return pool.map(_top_k, tasks, chunksize=max(1, len(tasks) // (workers * 8)))
+
+
+def rerank(codes, cand, k, rows=None, workers=1):
+    """Score every candidate exactly and keep the k closest.
+
+    cand is an array or a list of rows, one per cell in `rows` (all cells if None).
+    """
+    q = np.arange(len(cand)) if rows is None else np.asarray(rows)
+    res = _run(codes, [(int(i), np.asarray(c), k) for i, c in zip(q, cand)], workers)
+    return np.stack([r[0] for r in res]), np.stack([r[1] for r in res])
+
+
+def exact_knn(codes, rows, k, workers=1):
+    """Brute force: each query cell against every other cell."""
+    n = codes.codes.shape[0]
+    allc = np.arange(n)
+    res = _run(codes, [(int(i), allc[allc != i], k) for i in rows], workers)
+    return np.stack([r[0] for r in res]), np.stack([r[1] for r in res])
 
 
 def n_scored(cand):
@@ -80,8 +155,8 @@ def knn_graph(idx, dst):
     return W.maximum(W.T)
 
 
-def leiden_on_graph(W, truth, seed=0):
-    """Leiden on a given graph, swept and picked by the paper's rule.
+def leiden_on_graph(W, truth, seed=0, resolutions=None):
+    """Leiden on a given graph, swept and picked by the paper's rule (or over `resolutions`).
 
     A stand-in for MICA's node2vec plus Louvain, used only to ask whether an
     approximate graph clusters the same way as the exact one.
@@ -94,7 +169,7 @@ def leiden_on_graph(W, truth, seed=0):
     a = ad.AnnData(obs={"i": np.arange(W.shape[0]).astype(str)})
     a.obs_names = a.obs["i"]
     partitions = {}
-    for res in PAPER_RESOLUTIONS:
+    for res in (PAPER_RESOLUTIONS if resolutions is None else resolutions):
         sc.tl.leiden(a, resolution=float(res), adjacency=W, random_state=seed, flavor="igraph", n_iterations=2, directed=False)
         partitions[float(res)] = a.obs["leiden"].to_numpy().astype(str)
     res, info = pick_paper_protocol(partitions, truth)

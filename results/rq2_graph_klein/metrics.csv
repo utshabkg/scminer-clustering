@@ -1,0 +1,10 @@
+dataset,candidates,c,mean_scored,k,n_cells,recall_at_k,share_of_pairs_scored,certified_exact_share,landmarks,leiden_ari_exact_graph,leiden_ari_this_graph,partition_agreement_same_resolution,hit_true_k,seconds_search,seconds_full_matrix
+klein,pca,100,100.0,80,2717,0.2903,0.0368,0.0,64,0.5896,0.9586,0.5692,True,24.1,571.4
+klein,pca,200,200.0,80,2717,0.4492,0.0736,0.0,64,0.5896,0.9207,0.6053,True,86.9,571.4
+klein,pca,400,400.0,80,2717,0.6133,0.1473,0.0,64,0.5896,0.8374,0.7252,True,188.8,571.4
+klein,detected,100,100.0,80,2717,0.4273,0.0368,0.0,64,0.5896,0.9417,0.275,True,71.1,571.4
+klein,detected,200,200.0,80,2717,0.6013,0.0736,0.0,64,0.5896,0.9626,0.6103,True,135.1,571.4
+klein,detected,400,400.0,80,2717,0.7333,0.1473,0.0004,64,0.5896,0.9576,0.618,True,234.7,571.4
+klein,union,100,187.0,80,2717,0.5908,0.0688,0.0,64,0.5896,0.9758,0.6691,True,124.0,571.4
+klein,union,200,352.9,80,2717,0.7395,0.1299,0.0,64,0.5896,0.9332,0.6836,True,236.3,571.4
+klein,union,400,643.3,80,2717,0.8122,0.2368,0.0011,64,0.5896,0.8406,0.7137,True,431.6,571.4
