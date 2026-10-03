@@ -5,27 +5,122 @@ Utshab adds an entry at the end of each working session. Laraib and Rhea add a l
 
 ## Where we stand
 
-Updated: 2026-10-02. Counts follow the Milestone column in `WORKPLAN.md`.
+Updated: 2026-10-03. Counts follow the Milestone column in `WORKPLAN.md`.
 
 | Milestone | Due | Tasks done | Percent | State |
 |-----------|-----|------------|---------|-------|
 | M1 software, small data ready | Oct 7 | 6 of 8 | 75% | Software works, data ready. Laraib has joined GitHub. Waiting on Rhea's invite (U-4) and the Zeisel card (L-1) |
-| M2 reproduce the paper | Oct 14 | 6 of 9 | 67% | Five of the paper's 13 benchmark sets run, four reproduce within 0.05. Left: decide on contacting the authors (U-30), PBMC14K card (L-2), results summary (R-1) |
-| M3 cluster count without labels | Oct 21 | 0 of 6 | 0% | Not started. Now also holds the five small benchmark sets (U-27) and uncertainty estimates (U-28) |
-| M4 what the similarity measures, atlas downloaded | Oct 28 | 0 of 5 | 0% | Not started |
-| M5 fast neighbor search | Nov 11 | 0 of 4 | 0% | Not started |
+| M2 reproduce the paper | Oct 14 | 6 of 9 | 67% | Ten of the paper's 13 benchmark sets run, nine reproduce within 0.05. Left: decide on contacting the authors (U-30), PBMC14K card (L-2), results summary (R-1) |
+| M3 cluster count without labels | Oct 21 | 4 of 6 | 67% | Label-free choice, the five small sets and the uncertainty estimates are done. Left: Allen card (L-3), paper tables (R-2) |
+| M4 what the similarity measures, atlas downloaded | Oct 28 | 4 of 5 | 80% | Diagnostics, atlas download, 100,000 cell pilot and the Kolodziejczyk side test are done. Left: related work table (L-4) |
+| M5 fast neighbor search | Nov 11 | 1 of 4 | 25% | Our distance matches the authors' (U-17). CPU prototype of the fast neighbor search is running (U-19). The GPU version (U-18) waits for GPU time |
 | M6 full 2.3 million cell run | Nov 18 | 0 of 4 | 0% | Not started |
 | M7 retrieval and drivers | Nov 25 | 0 of 4 | 0% | Not started |
 | M8 paper and slides | Dec 2 | 0 of 3 | 0% | Not started |
 | Every week: notes, plan and progress updates | weekly | | | Start at the Oct 7 meeting (L-7, R-3, R-8) |
 
-Overall: 12 of 46 tasks finished. Three of the 46 repeat every week.
+Overall: 21 of 46 tasks finished. Three of the 46 repeat every week.
 
-Next three things: add the paper's five small benchmark sets so we have ten datasets (U-27), estimate how much the numbers move between runs (U-28), and the label-free rule for the number of clusters (U-12).
+Next three things: finish the CPU neighbor search on larger data (U-19), get GPU time for the GPU distance (U-18), and decide whether to write to the scMINER authors (U-30).
+
+---
+
+## 2026-10-03, Utshab
+
+Finished nine tasks: the label-free choice of cluster count (U-12, U-13), what MICA's similarity measures (U-14), the Allen download and 100,000 cell pilot (U-15, U-16), the test that our distance matches the authors' (U-17), the paper's five small benchmark sets (U-27), uncertainty estimates (U-28) and the Kolodziejczyk side test (U-29). Started the fast neighbor search (U-19). A third review of the claims found one serious bug. It is fixed and rerun, and every number below comes after the fix.
+
+Unless a line says otherwise, scores use the paper's rule: each method is told the true number of cell types, and the labels pick the best run among those that hit it.
+
+**What the review caught, and what we fixed**
+- The authors' released inputs are not all on the same log scale. Pollen and Buettner are log10, Chung and Usoskin are natural log, and the other six are log2. We had read all of them as log2, so for those four datasets the seurat and seurat_v3 gene sets shared only 1,198 to 1,646 of their 2,000 genes with the right ones. Fixed in `data.py`, and every affected run was redone. The all-gene and cell_ranger runs never depended on this.
+- On small data, MICA's last step is k-means, and one k-means run often lands on a worse fit. The published scores match the best fit we can find, so we now rerun that step with 100 restarts. That changed some Oct 2 numbers (a note is added there). 100 restarts get close to the best fit but not always all the way. On Pollen the best fit we found scores 0.980, above the published 0.942.
+- Two summary tables mixed graph-mode repeat runs into the Zeisel small-data cell. Fixed.
+
+**Reproduction on the authors' inputs, ten datasets**
+
+| Dataset | Cells | Published MICA | Our MICA run | Verdict |
+|---|---|---|---|---|
+| Yan | 124 | 0.939 | 0.939 | matches |
+| Goolam | 124 | 0.544 | 0.544 | matches |
+| Buettner | 182 | 0.934 | 0.934 | matches |
+| Pollen | 249 | 0.942 | 0.951 | within 0.05 |
+| Chung | 317 | 0.655 | 0.655 | matches |
+| Usoskin | 622 | 0.847 | 0.835 | within 0.05 |
+| Kolodziejczyk | 704 | 1.000 | 0.727 | not reproduced |
+| Klein | 2,717 | 0.980 | 0.980 | matches |
+| Zeisel | 2,903 | 0.744 | 0.714 small-data mode, 0.755 to 0.781 graph mode (six runs) | within 0.05 |
+| PBMC14K | 13,605 | 0.853 | 0.853, and 0.850 to 0.857 over five repeats | matches |
+
+So nine of ten reproduce within 0.05. Usoskin shows how fragile the exact number is. Its k-means fits that are almost equally good (within 0.2 percent of the best) give ARI anywhere from about 0.78 to 0.88.
+
+On Kolodziejczyk we tested whether removing the plate effect gets MICA to 1.0 (U-29). It does not. Centering each gene within its plate drops MICA to 0.16, or 0.14 with scaling too. So the plate effect does not explain the gap, and the likeliest source is still the input file that was not released (U-30). Details in `results/kolod_side_test/`.
+
+**MICA against Leiden with the same genes (RQ1)**
+
+The gaps come with a bootstrap over cells (1,000 resamples, `results/uncertainty/`).
+- **Five small datasets (124 to 317 cells).** MICA leads in 18 of 20 dataset and gene settings, and in 16 of them the interval is clear of zero. Leiden leads on Yan with seurat genes, by 0.08 with an interval just clear of zero. Chung with seurat genes is a tie (Leiden 0.163, MICA 0.154).
+- **Against all three PCA baselines.** MICA beats every one of them on Buettner in all four gene settings, and on Chung in three of four. On Goolam, k-means beats MICA in every setting.
+- **Leiden on tiny data depends a lot on the number of PCs.** On Buettner, going from 50 PCs to 10 lifts Leiden from about 0.29 to between 0.51 and 0.78, depending on the genes. MICA stays ahead (0.83 to 0.93). On Chung, fewer PCs lift Leiden to at most 0.47. That is still below MICA in three settings, and the seurat setting was already a tie. Details in `results/pc_sensitivity/`.
+- **Five larger datasets (622 to 13,605 cells).** MICA leads in 8 of 20. The gene set decides the winner on Usoskin, Kolodziejczyk and Zeisel. On Klein and PBMC14K, Leiden is level or ahead in every gene setting.
+- **Across the ten datasets.** With all genes MICA is ahead (mean gap 0.17, Wilcoxon p = 0.027), but that does not survive a correction for testing four gene settings. With 2,000 genes p runs from 0.08 to 0.43.
+- **Our baseline is not weaker than the paper's.** Our Leiden with 2,000 seurat genes lands within 0.035 of the paper's own Scanpy score on 7 of 10 datasets. It is higher on Yan (by 0.11) and Klein (0.13) and lower on Pollen (0.05).
+
+**Choosing the number of clusters without labels (U-12, U-13)**
+
+Each method keeps the choice with the best silhouette in its own embedding. That means k from 2 to 20, or its own resolution sweep. Mean ARI over 10 datasets and 4 gene settings:
+
+| Method | Told the true number | Picks by silhouette |
+|---|---|---|
+| MICA | 0.802 | 0.572 |
+| Leiden | 0.680 | 0.542 |
+| hierarchical | 0.605 | 0.397 |
+| k-means | 0.588 | 0.417 |
+
+MICA's lead over Leiden shrinks from 0.12 to 0.03. On the small datasets Leiden comes out ahead (0.576 against 0.481), and on the larger ones MICA does (0.664 against 0.508). The review showed that the result flips when we change the k range or the embedding used for the silhouette, so we call it inconclusive for now. Neither method finds the true number on its own very often: MICA in 5 of 40 cases, Leiden in none. Tables in `results/summary_label_free.md`.
+
+**What MICA's similarity measures (U-14)**
+
+Run on our input for Zeisel, Usoskin, Kolodziejczyk and Klein. Tables in `results/summary_diagnostics.md`.
+- **Detection.** On Zeisel, Kolodziejczyk and Usoskin, 57 to 62 percent of the mutual information between two cells comes from which genes are detected in both. On Klein it is 25 percent. Given detection alone, MICA finds nearly the same clusters on Kolodziejczyk (agreement 0.98) and Zeisel (0.87), but not on Usoskin (0.60) or Klein (0.59).
+- **Sequencing depth.** Keeping only a quarter of the reads barely changes MICA on Klein, Zeisel or Kolodziejczyk. Kolodziejczyk has about 4 million reads per cell, so a quarter is still plenty. Usoskin is the exception. MICA falls from 0.885 to 0.57 at half depth and 0.27 at a quarter. Leiden starts lower there (0.59) and falls less (0.62 and 0.41).
+
+**Allen atlas pilot (U-15, U-16)**
+
+All 13 raw region files are downloaded (97 GB, listed in `docs/allen_files.csv`). On a random 100,000 cells, scored on the 34 classes:
+- MICA reaches ARI 0.652 in 7.1 hours with a 140 GB peak. The mutual information neighbor graph takes 5.3 of those hours.
+- Leiden reaches 0.661 with 2,000 genes and 0.624 with all genes, in 23 to 25 minutes.
+
+Scaled up to all 2.3 million cells, MICA would need about 7 to 8 days and about 3.2 TB of memory. The machine has 754 GB, so MICA as shipped cannot run the whole atlas here. The working is in `docs/allen_pilot.md`.
+
+**Fast neighbor search, first numbers (U-19, in progress)**
+
+The idea is to propose a few hundred likely neighbors per cell with something cheap, then compute the exact mutual information only for those. Each cell needs its 80 nearest neighbors, as in MICA. We compare against the exact answer from all pairs. To see whether the clusters change, we run Leiden on both graphs. This stands in for MICA's own node2vec and Louvain steps.
+
+| Dataset | Cells | Candidates scored per cell | True neighbors found | Share of all pairs scored | Leiden ARI, exact graph and fast graph |
+|---|---|---|---|---|---|
+| Usoskin | 622 | 310 | 97.5% | 50% | 0.588 and 0.558 |
+| Kolodziejczyk | 704 | 272 | 99.3% | 39% | 0.680 and 0.683 |
+
+Candidates picked by shared detected genes beat nearest neighbors on principal components, and the two lists merged beat both. We also tried to prove a cell's list exact using distances to 64 reference cells. That works for under 10 percent of cells, so we are dropping it. These two datasets are too small to show a real saving. Klein and Zeisel are running now. Tables in `results/rq2_graph_*/`.
+
+**Limits**
+- The bootstrap resamples cells only. It ignores run-to-run variation and the fact that cells are not independent, so its intervals are too narrow.
+- Both methods get best-case treatment. Leiden picks the best of up to 200 resolutions using the labels, and graph-mode MICA the best of 40 settings. Small-data MICA is handed the true k, and its k-means keeps the best of 100 restarts, chosen without the labels.
+- Zeisel and Usoskin labels came from the original authors' own clustering, which can favor some methods.
+- The ten datasets are the paper's choice, and five of them have fewer than 320 cells.
+
+**Next**
+1. Finish U-19 on Klein and Zeisel, then try PBMC14K (13,605 cells), where the saving should start to show.
+2. The GPU distance (U-18) needs GPU time. I will ask before using the GPUs.
+3. U-30: whether to write to the authors about the Kolodziejczyk input. That is Utshab's call.
+
+**For the team.** Rhea, for R-1 please use `docs/results_for_pivot.csv` instead of the full tracker. It keeps only the main comparison, one row per run, with plain column names. The full tracker now has 1,556 rows of every kind.
 
 ---
 
 ## 2026-10-02, Utshab
+
+> **Update, Oct 3.** Some small-data MICA numbers below changed on Oct 3. MICA's last step there is k-means, and we now rerun it with 100 restarts instead of 10 (see the Oct 3 entry). On the authors' input, Usoskin moves from 0.803 to 0.835 and Zeisel from 0.695 to 0.714. Current values for every dataset are in `results/summary_gene_sets.md`.
 
 Ran U-25 (MICA on the same 2,000 genes the baselines got) and U-26 (three more of the paper's benchmark sets: Usoskin, Kolodziejczyk and Klein). Two independent reviews of the code and the claims changed several numbers, and one conclusion from yesterday held only on the first two datasets.
 

@@ -1,0 +1,15 @@
+{
+  "datasets": [
+    "buettner",
+    "chung"
+  ],
+  "n_pcs": [
+    5,
+    10,
+    20,
+    30,
+    50
+  ],
+  "seeds": 3,
+  "rule": "paper protocol, resolutions 0.01 to 2.0"
+}

@@ -1,0 +1,17 @@
+{
+  "dataset": "kolodziejczyk",
+  "k": 80,
+  "distance": "graph mode 1 - I/H(x,y)",
+  "exact_graph_leiden": {
+    "resolution": 1.03,
+    "n_clusters": 3,
+    "hit_true_k": true,
+    "n_hits": 59,
+    "median_ari_of_hits": 0.6640488451742863
+  },
+  "candidate_sizes": [
+    100,
+    200,
+    400
+  ]
+}

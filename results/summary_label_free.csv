@@ -35,14 +35,14 @@ buettner,2000 genes (cell_ranger),MICA,3,0.896,0.212,0.685,15.3,0.0,,0.848,0.366
 buettner,2000 genes (cell_ranger),Leiden,3,0.308,0.264,0.043,2.0,,0.281,0.363,0.37
 buettner,2000 genes (cell_ranger),k-means,3,0.428,0.297,0.131,2.0,1.0,,0.445,0.334
 buettner,2000 genes (cell_ranger),hierarchical,3,0.248,0.291,-0.043,2.0,1.0,,0.347,0.328
-buettner,2000 genes (seurat),MICA,3,0.836,0.315,0.521,6.3,0.6666666666666666,,0.787,0.352
-buettner,2000 genes (seurat),Leiden,3,0.301,0.281,0.02,2.0,,0.266,0.343,0.273
-buettner,2000 genes (seurat),k-means,3,0.415,0.318,0.097,2.0,1.0,,0.429,0.353
-buettner,2000 genes (seurat),hierarchical,3,0.391,0.293,0.099,2.0,1.0,,0.465,0.372
-buettner,2000 genes (seurat_v3),MICA,3,0.8,0.308,0.492,4.3,0.6666666666666666,,0.743,0.347
-buettner,2000 genes (seurat_v3),Leiden,3,0.307,0.284,0.023,2.0,,0.235,0.352,0.282
-buettner,2000 genes (seurat_v3),k-means,3,0.398,0.307,0.091,2.0,1.0,,0.409,0.323
-buettner,2000 genes (seurat_v3),hierarchical,3,0.312,0.259,0.053,2.0,1.0,,0.459,0.406
+buettner,2000 genes (seurat),MICA,3,0.826,0.412,0.414,2.0,1.0,,0.767,0.427
+buettner,2000 genes (seurat),Leiden,3,0.302,0.296,0.006,2.0,,0.241,0.327,0.296
+buettner,2000 genes (seurat),k-means,3,0.465,0.309,0.156,2.0,1.0,,0.458,0.344
+buettner,2000 genes (seurat),hierarchical,3,0.28,0.246,0.034,2.0,1.0,,0.418,0.346
+buettner,2000 genes (seurat_v3),MICA,3,0.837,0.435,0.402,2.0,1.0,,0.789,0.462
+buettner,2000 genes (seurat_v3),Leiden,3,0.295,0.331,-0.036,2.0,,0.236,0.348,0.334
+buettner,2000 genes (seurat_v3),k-means,3,0.332,0.333,-0.001,2.0,1.0,,0.378,0.368
+buettner,2000 genes (seurat_v3),hierarchical,3,0.234,0.27,-0.036,2.0,1.0,,0.311,0.278
 buettner,all genes,MICA,3,0.934,0.474,0.46,2.0,1.0,,0.904,0.59
 buettner,all genes,Leiden,3,0.277,0.231,0.046,2.0,,0.233,0.328,0.323
 buettner,all genes,k-means,3,0.396,0.291,0.105,2.0,1.0,,0.4,0.326
@@ -51,14 +51,14 @@ pollen,2000 genes (cell_ranger),MICA,11,0.942,0.878,0.065,19.0,0.666666666666666
 pollen,2000 genes (cell_ranger),Leiden,11,0.837,0.842,-0.005,8.0,,0.826,0.881,0.905
 pollen,2000 genes (cell_ranger),k-means,11,0.906,0.887,0.019,13.7,0.0,,0.911,0.905
 pollen,2000 genes (cell_ranger),hierarchical,11,0.929,0.9,0.028,20.0,1.0,,0.933,0.904
-pollen,2000 genes (seurat),MICA,11,0.942,0.88,0.063,18.7,0.3333333333333333,,0.951,0.902
-pollen,2000 genes (seurat),Leiden,11,0.872,0.838,0.034,8.0,,0.836,0.903,0.897
-pollen,2000 genes (seurat),k-means,11,0.915,0.914,0.001,12.3,0.0,,0.921,0.921
-pollen,2000 genes (seurat),hierarchical,11,0.931,0.924,0.007,13.0,0.0,,0.939,0.935
-pollen,2000 genes (seurat_v3),MICA,11,0.942,0.874,0.068,19.0,0.3333333333333333,,0.951,0.896
-pollen,2000 genes (seurat_v3),Leiden,11,0.877,0.879,-0.003,9.0,,0.836,0.906,0.917
-pollen,2000 genes (seurat_v3),k-means,11,0.907,0.91,-0.004,12.0,0.0,,0.918,0.916
-pollen,2000 genes (seurat_v3),hierarchical,11,0.947,0.937,0.01,14.0,0.0,,0.955,0.946
+pollen,2000 genes (seurat),MICA,11,0.942,0.894,0.048,19.3,0.6666666666666666,,0.951,0.909
+pollen,2000 genes (seurat),Leiden,11,0.827,0.815,0.012,9.0,,0.817,0.878,0.872
+pollen,2000 genes (seurat),k-means,11,0.894,0.918,-0.025,16.7,0.0,,0.917,0.916
+pollen,2000 genes (seurat),hierarchical,11,0.948,0.918,0.03,20.0,1.0,,0.955,0.921
+pollen,2000 genes (seurat_v3),MICA,11,0.942,0.908,0.034,18.0,0.0,,0.95,0.913
+pollen,2000 genes (seurat_v3),Leiden,11,0.868,0.815,0.052,9.0,,0.818,0.895,0.875
+pollen,2000 genes (seurat_v3),k-means,11,0.896,0.916,-0.02,17.0,0.0,,0.916,0.913
+pollen,2000 genes (seurat_v3),hierarchical,11,0.937,0.912,0.025,20.0,1.0,,0.941,0.916
 pollen,all genes,MICA,11,0.951,0.89,0.061,18.0,0.0,,0.959,0.908
 pollen,all genes,Leiden,11,0.858,0.87,-0.012,9.0,,0.865,0.901,0.924
 pollen,all genes,k-means,11,0.881,0.902,-0.021,16.3,0.0,,0.906,0.908
@@ -67,14 +67,14 @@ chung,2000 genes (cell_ranger),MICA,4,0.655,0.554,0.101,9.0,0.0,,0.762,0.732
 chung,2000 genes (cell_ranger),Leiden,4,0.176,0.505,-0.33,7.7,,0.508,0.317,0.643
 chung,2000 genes (cell_ranger),k-means,4,0.121,0.106,0.015,3.0,0.3333333333333333,,0.264,0.201
 chung,2000 genes (cell_ranger),hierarchical,4,0.276,0.009,0.268,2.0,1.0,,0.332,0.052
-chung,2000 genes (seurat),MICA,4,0.658,0.555,0.103,8.0,0.0,,0.72,0.724
-chung,2000 genes (seurat),Leiden,4,0.401,0.44,-0.039,4.7,,0.486,0.499,0.529
-chung,2000 genes (seurat),k-means,4,0.068,0.037,0.031,2.3,0.6666666666666666,,0.151,0.069
-chung,2000 genes (seurat),hierarchical,4,0.01,0.001,0.008,2.0,1.0,,0.039,0.001
-chung,2000 genes (seurat_v3),MICA,4,0.655,0.553,0.101,9.3,0.0,,0.755,0.731
-chung,2000 genes (seurat_v3),Leiden,4,0.307,0.504,-0.196,7.0,,0.533,0.466,0.651
-chung,2000 genes (seurat_v3),k-means,4,0.184,0.019,0.165,2.0,1.0,,0.347,0.078
-chung,2000 genes (seurat_v3),hierarchical,4,0.193,0.009,0.185,2.0,1.0,,0.356,0.052
+chung,2000 genes (seurat),MICA,4,0.154,0.059,0.094,2.0,1.0,,0.321,0.177
+chung,2000 genes (seurat),Leiden,4,0.163,0.241,-0.078,8.0,,0.233,0.248,0.313
+chung,2000 genes (seurat),k-means,4,0.007,0.001,0.006,2.7,0.3333333333333333,,0.023,0.0
+chung,2000 genes (seurat),hierarchical,4,0.007,0.001,0.006,2.0,1.0,,0.035,0.001
+chung,2000 genes (seurat_v3),MICA,4,0.445,0.545,-0.101,9.0,0.0,,0.581,0.714
+chung,2000 genes (seurat_v3),Leiden,4,0.172,0.165,0.007,3.3,,0.507,0.323,0.301
+chung,2000 genes (seurat_v3),k-means,4,0.047,0.022,0.025,2.3,0.6666666666666666,,0.169,0.073
+chung,2000 genes (seurat_v3),hierarchical,4,0.279,0.009,0.27,2.0,1.0,,0.405,0.052
 chung,all genes,MICA,4,0.655,0.557,0.098,10.0,0.0,,0.762,0.743
 chung,all genes,Leiden,4,0.314,0.046,0.268,2.0,,0.567,0.508,0.128
 chung,all genes,k-means,4,0.127,0.158,-0.03,4.0,0.3333333333333333,,0.268,0.271
@@ -83,14 +83,14 @@ usoskin,2000 genes (cell_ranger),MICA,4,0.86,0.798,0.063,5.0,0.0,,0.837,0.789
 usoskin,2000 genes (cell_ranger),Leiden,4,0.905,0.722,0.183,3.3,,0.473,0.867,0.75
 usoskin,2000 genes (cell_ranger),k-means,4,0.599,0.316,0.283,2.0,1.0,,0.659,0.432
 usoskin,2000 genes (cell_ranger),hierarchical,4,0.484,0.314,0.17,2.0,1.0,,0.581,0.429
-usoskin,2000 genes (seurat),MICA,4,0.899,0.898,0.001,4.0,0.0,,0.873,0.872
-usoskin,2000 genes (seurat),Leiden,4,0.892,0.36,0.532,2.0,,0.439,0.846,0.522
-usoskin,2000 genes (seurat),k-means,4,0.562,0.184,0.378,2.0,1.0,,0.592,0.2
-usoskin,2000 genes (seurat),hierarchical,4,0.578,0.254,0.324,2.0,1.0,,0.596,0.351
-usoskin,2000 genes (seurat_v3),MICA,4,0.86,0.86,0.0,4.0,0.0,,0.833,0.833
-usoskin,2000 genes (seurat_v3),Leiden,4,0.912,0.362,0.55,2.0,,0.512,0.871,0.524
-usoskin,2000 genes (seurat_v3),k-means,4,0.565,0.144,0.42,2.0,1.0,,0.608,0.15
-usoskin,2000 genes (seurat_v3),hierarchical,4,0.888,0.356,0.531,2.0,1.0,,0.842,0.513
+usoskin,2000 genes (seurat),MICA,4,0.903,0.903,-0.0,4.0,0.0,,0.853,0.853
+usoskin,2000 genes (seurat),Leiden,4,0.863,0.354,0.509,2.0,,0.589,0.804,0.515
+usoskin,2000 genes (seurat),k-means,4,0.378,0.126,0.252,2.0,1.0,,0.463,0.129
+usoskin,2000 genes (seurat),hierarchical,4,0.411,0.249,0.162,2.0,1.0,,0.463,0.347
+usoskin,2000 genes (seurat_v3),MICA,4,0.903,0.898,0.005,4.0,0.0,,0.872,0.869
+usoskin,2000 genes (seurat_v3),Leiden,4,0.902,0.36,0.542,2.0,,0.45,0.856,0.525
+usoskin,2000 genes (seurat_v3),k-means,4,0.485,0.1,0.385,2.0,1.0,,0.548,0.107
+usoskin,2000 genes (seurat_v3),hierarchical,4,0.626,0.36,0.266,2.0,1.0,,0.692,0.525
 usoskin,all genes,MICA,4,0.835,0.266,0.569,18.0,0.0,,0.794,0.553
 usoskin,all genes,Leiden,4,0.597,0.379,0.218,2.0,,0.407,0.683,0.508
 usoskin,all genes,k-means,4,0.176,0.089,0.087,2.0,1.0,,0.24,0.099
@@ -139,7 +139,7 @@ zeisel,2000 genes (seurat_v3),MICA,7,0.797,0.797,0.0,7.0,0.0,,0.759,0.759
 zeisel,2000 genes (seurat_v3),Leiden,7,0.693,0.689,0.004,9.3,,0.389,0.687,0.672
 zeisel,2000 genes (seurat_v3),k-means,7,0.62,0.53,0.09,6.3,0.0,,0.641,0.578
 zeisel,2000 genes (seurat_v3),hierarchical,7,0.559,0.45,0.109,6.0,0.0,,0.588,0.506
-zeisel,all genes,MICA,7,0.746,0.518,0.228,3.0,0.0,,0.752,0.648
+zeisel,all genes,MICA,7,0.714,0.518,0.196,3.0,0.0,,0.762,0.648
 zeisel,all genes,Leiden,7,0.839,0.367,0.472,2.0,,0.375,0.796,0.467
 zeisel,all genes,k-means,7,0.521,0.364,0.157,2.0,1.0,,0.619,0.459
 zeisel,all genes,hierarchical,7,0.664,0.35,0.313,2.0,1.0,,0.725,0.449
@@ -155,7 +155,7 @@ pbmc14k,2000 genes (seurat_v3),MICA,7,0.703,0.574,0.129,5.0,0.0,0.703,0.792,0.74
 pbmc14k,2000 genes (seurat_v3),Leiden,7,0.729,0.397,0.331,4.0,,0.727,0.793,0.722
 pbmc14k,2000 genes (seurat_v3),k-means,7,0.522,0.094,0.428,2.0,1.0,,0.719,0.327
 pbmc14k,2000 genes (seurat_v3),hierarchical,7,0.664,0.094,0.57,2.0,1.0,,0.776,0.326
-pbmc14k,all genes,MICA,7,0.853,0.623,0.231,5.0,0.0,0.846,0.872,0.783
+pbmc14k,all genes,MICA,7,0.853,0.623,0.23,5.0,0.0,0.846,0.871,0.783
 pbmc14k,all genes,Leiden,7,0.877,0.397,0.481,4.0,,0.862,0.902,0.725
 pbmc14k,all genes,k-means,7,0.444,0.214,0.229,3.0,0.0,,0.657,0.528
 pbmc14k,all genes,hierarchical,7,0.578,0.225,0.353,3.0,0.0,,0.717,0.557

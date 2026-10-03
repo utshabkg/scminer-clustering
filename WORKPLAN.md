@@ -66,14 +66,14 @@ There are 46 tasks: 30 for Utshab and 8 each for Laraib and Rhea. Three of them 
 | U-9 | Reproduce MICA on Zeisel and PBMC14K | processed data | `results/reproduction/metrics.csv` | our ARI is within about 0.05 of the published value, or the gap is explained | Oct 14 | M2 | `[x]` |
 | U-10 | Baselines: k-means on principal components, Leiden, hierarchical | processed data | `results/baselines/metrics.csv` | all three run on both datasets | Oct 14 | M2 | `[x]` |
 | U-11 | Export the first results table and figures for the team | results CSVs | `results/` committed | Rhea can build tables from them | Oct 14 | M2 | `[x]` |
-| U-12 | Rule for choosing the number of clusters without labels | processed data | `src/scminer_clust/selection.py` | the rule picks a number on all methods, no labels used | Oct 21 | M3 | `[ ]` |
-| U-13 | Compare oracle setting against the label-free rule for every method | U-12 | `results/rq1_selection/metrics.csv` | one table, both settings, both datasets | Oct 21 | M3 | `[ ]` |
-| U-14 | Measure what the similarity captures: detection versus expression, and the depth test | processed data | `results/rq1_diagnostics/` | shares reported, and cluster changes at 25, 50 and 75 percent of counts | Oct 28 | M4 | `[ ]` |
-| U-15 | Download the Allen brain atlas | public S3 bucket | `data/raw/allen/` | file list and sizes recorded | Oct 28 | M4 | `[ ]` |
-| U-16 | Preprocess the atlas and run a 100,000 cell timing pilot | U-15 | `results/pilot_100k/` | measured time and memory, extrapolated to 2.3M | Oct 28 | M4 | `[ ]` |
-| U-17 | Our own mutual information distance, proven to match the authors' | their code | `tests/test_mi_matches_mica.py` | matches on 10,000 random cell pairs | Nov 11 | M5 | `[ ]` |
+| U-12 | Rule for choosing the number of clusters without labels | processed data | `src/scminer_clust/selection.py` | the rule picks a number on all methods, no labels used | Oct 21 | M3 | `[x]` |
+| U-13 | Compare oracle setting against the label-free rule for every method | U-12 | `results/summary_label_free.md` | one table, both settings, both datasets | Oct 21 | M3 | `[x]` |
+| U-14 | Measure what the similarity captures: detection versus expression, and the depth test | processed data | `results/rq1_diagnostics/` | shares reported, and cluster changes at 25, 50 and 75 percent of counts | Oct 28 | M4 | `[x]` |
+| U-15 | Download the Allen brain atlas | public S3 bucket | `data/raw/allen/`, list in `docs/allen_files.csv` | file list and sizes recorded | Oct 28 | M4 | `[x]` |
+| U-16 | Preprocess the atlas and run a 100,000 cell timing pilot | U-15 | `docs/allen_pilot.md` | measured time and memory, extrapolated to 2.3M | Oct 28 | M4 | `[x]` |
+| U-17 | Our own mutual information distance, proven to match the authors' | their code | `tests/test_mi_matches_mica.py` | matches on 10,000 random cell pairs | Nov 11 | M5 | `[x]` |
 | U-18 | GPU version of the distance | U-17 | `src/scminer_clust/mi.py` | same numbers as the CPU version, with a speedup recorded | Nov 11 | M5 | `[ ]` |
-| U-19 | Fast neighbor graph: propose candidates cheaply, rescore exactly | U-18 | `results/rq2_graph/` | neighbor recall measured against brute force | Nov 11 | M5 | `[ ]` |
+| U-19 | Fast neighbor graph: propose candidates cheaply, rescore exactly | U-17 (CPU first, U-18 for speed) | `results/rq2_graph_<dataset>/` | neighbor recall measured against brute force | Nov 11 | M5 | `[~]` CPU prototype running on small data |
 | U-20 | Cluster a sketch of the atlas and assign the rest, full 2.3M run | U-19 | `results/rq2_atlas/` | the run finishes within a day and is scored | Nov 18 | M6 | `[ ]` |
 | U-21 | Rare population analysis | U-20 | `results/rq2_atlas/rare_types.csv` | per-type recall, and which types were lost | Nov 18 | M6 | `[ ]` |
 | U-22 | Driver activity in Python, including hidden drivers | PBMC14K clusters | `results/rq3_drivers/` | driver lists per cluster | Nov 25 | M7 | `[ ]` |
@@ -81,9 +81,9 @@ There are 46 tasks: 30 for Utshab and 8 each for Laraib and Rhea. Three of them 
 | U-24 | Final figures, method and results writing, repo cleanup | everything | `latex/sections/`, `results/` | a fresh clone reproduces the main table | Dec 2 | M8 | `[ ]` |
 | U-25 | Run MICA on the same 2,000 genes the baselines got, all three selection methods | processed data | `results/mica_*_hvg2000_*/` | a two by two table of method against gene set on every dataset | Oct 14 | M2 | `[x]` |
 | U-26 | Add the rest of the paper's eligible benchmark sets: Usoskin, Kolodziejczyk, Klein | Bioconductor mirror and GEO | `data/raw/`, `results/reproduction_*/`, `results/baselines_*/` | MICA and baselines scored on all five datasets | Oct 14 | M2 | `[x]` |
-| U-27 | Add the paper's five small benchmark sets (Yan, Goolam, Buettner, Pollen, Chung) from the authors' Zenodo inputs, MICA and Leiden at all four gene settings | Zenodo 15040179 | `results/` | ten datasets in the gene-set table | Oct 21 | M3 | `[ ]` |
-| U-28 | Estimate run-to-run spread: paired bootstrap of the ARI and AMI differences, five repeat graph-mode MICA runs on PBMC14K and Zeisel | saved partitions | `results/uncertainty/` | intervals next to every gap in the table | Oct 21 | M3 | `[ ]` |
-| U-29 | Kolodziejczyk side test: does removing the plate effect, or the authors' gene filter, recover ARI 1.0? Report any use of the labels as leakage | released input | `results/kolod_side_test/` | a short note on what recovers the published score | Oct 28 | M4 | `[ ]` |
+| U-27 | Add the paper's five small benchmark sets (Yan, Goolam, Buettner, Pollen, Chung) from the authors' Zenodo inputs, MICA and Leiden at all four gene settings | Zenodo 15040179 | `results/` | ten datasets in the gene-set table | Oct 21 | M3 | `[x]` |
+| U-28 | Estimate run-to-run spread: paired bootstrap of the ARI and AMI differences, five repeat graph-mode MICA runs on PBMC14K and Zeisel | saved partitions | `results/uncertainty/` | intervals next to every gap in the table | Oct 21 | M3 | `[x]` |
+| U-29 | Kolodziejczyk side test: does removing the plate effect, or the authors' gene filter, recover ARI 1.0? Report any use of the labels as leakage | released input | `results/kolod_side_test/` | a short note on what recovers the published score | Oct 28 | M4 | `[x]` |
 | U-30 | Decide whether to ask the scMINER authors for their unreleased Kolodziejczyk input before we describe the non-reproduction anywhere outside the team | R5 evidence in PROGRESS.md | email or a recorded decision | decision recorded in the decision log | Oct 14 | M2 | `[ ]` |
 
 ## Tasks: Laraib
@@ -103,7 +103,7 @@ There are 46 tasks: 30 for Utshab and 8 each for Laraib and Rhea. Three of them 
 
 | ID | Task | What to do | Output | Done when | Due | Milestone | Status |
 |----|------|-----------|--------|-----------|-----|-----------|--------|
-| R-1 | Results summary | Utshab refreshes `docs/results_tracker.csv` after every run. Download it from GitHub, open it in Excel or Google Sheets, and build a one-page pivot: rows are dataset and gene_setting, columns are method, values are the average of ari. Mark anything that looks odd and bring it to the meeting | `docs/results_summary.xlsx` | every experiment in the tracker appears in the summary, with odd results marked | Oct 14 | M2 | `[ ]` |
+| R-1 | Results summary | Utshab refreshes `docs/results_for_pivot.csv` after every run. It holds only the main comparison, one row per run (the full `docs/results_tracker.csv` has every kind of row and is not meant for this). Download it from GitHub, open it in Excel or Google Sheets, and build a one-page pivot: rows are dataset and gene_setting, columns are method, values are the average of ari. Keep the two inputs (authors' data and our preprocessing) apart, for example with a filter on the input column. Mark anything that looks odd and bring it to the meeting | `docs/results_summary.xlsx` | every experiment in the tracker appears in the summary, with odd results marked | Oct 14 | M2 | `[ ]` |
 | R-2 | Turn results into paper tables | Take the result CSVs and format them as LaTeX tables with captions | `latex/sections/tables/` | tables compile in the draft | Oct 21 | M3 | `[ ]` |
 | R-3 | Keep this plan current | After each meeting, update statuses, the milestone table and the risk list | `WORKPLAN.md` | statuses match reality each week | weekly | every week | `[ ]` |
 | R-4 | Rare population sheets | From the per-cluster counts, work out how many reference cell types survive clustering and which ones vanish, then summarize | `results/rq2_atlas/rare_summary.csv` | summary table with a short written finding | Nov 18 | M6 | `[ ]` |
@@ -149,6 +149,10 @@ scminer-clustering/
   scripts/             one runner per experiment
   configs/             settings for each run, so results can be repeated
   results/<id>/        metrics.csv, params.json, figures
+  results/summary_*.md the main tables, rebuilt after every run
+  docs/results_for_pivot.csv  the main comparison, one row per run (for R-1)
+  docs/results_tracker.csv    every row from every experiment
+  docs/allen_pilot.md  atlas pilot: time, memory, what 2.3 million cells would cost
   docs/dataset_cards/  one page per dataset
   docs/research/       the literature reviews we did before the proposal
   docs/minutes/        meeting notes
@@ -189,3 +193,7 @@ Datasets never go into git. They live on the shared 20 TB disk, and the repo onl
 | Oct 2 | Leiden resolution swept in steps of 0.01, as in the authors' code | The paper's text says 0.1, but that grid often cannot produce the true number of clusters |
 | Oct 2 | Report MICA as three seeded k-means draws on its own embedding | MICA's default is one unseeded draw, while the baselines report three seeds |
 | Oct 2 | Treat Kolodziejczyk as not reproduced from the released files | MICA gets 0.727 on the authors' released input, as does their own notebook. Their 1.0 came from an input they did not release |
+| Oct 3 | Read each of the authors' inputs at its own log base | Pollen and Buettner are log10, Chung and Usoskin natural log, the rest log2. Reading all of them as log2 picked the wrong seurat and seurat_v3 genes |
+| Oct 3 | Rerun MICA's final k-means with 100 restarts | The published scores match the best k-means fit, and one run often misses it by a lot (Usoskin 0.66 against 0.89) |
+| Oct 3 | Call the label-free comparison inconclusive for now | Which method wins flips with the k range and with the embedding used for the silhouette |
+| Oct 3 | Drop the landmark proof of exact neighbor lists | Mutual information distances bunch together, so the bounds prove under 10 percent of lists exact |

@@ -1,0 +1,710 @@
+dataset,input,genes,method,seed,clusters_found,true_clusters,ari,ami,experiment
+buettner,authors' data,2000 HVG cell_ranger,Leiden (Scanpy),0.0,3.0,3.0,0.315,0.372,baselines_paper_buettner_hvg2000_cell_ranger
+buettner,authors' data,2000 HVG cell_ranger,Leiden (Scanpy),1.0,3.0,3.0,0.306,0.359,baselines_paper_buettner_hvg2000_cell_ranger
+buettner,authors' data,2000 HVG cell_ranger,Leiden (Scanpy),2.0,3.0,3.0,0.303,0.357,baselines_paper_buettner_hvg2000_cell_ranger
+buettner,authors' data,2000 HVG cell_ranger,MICA,0.0,3.0,3.0,0.917,0.878,mica_paper_buettner_hvg2000_cell_ranger
+buettner,authors' data,2000 HVG cell_ranger,MICA,1.0,3.0,3.0,0.902,0.852,mica_paper_buettner_hvg2000_cell_ranger
+buettner,authors' data,2000 HVG cell_ranger,MICA,2.0,3.0,3.0,0.87,0.815,mica_paper_buettner_hvg2000_cell_ranger
+buettner,authors' data,2000 HVG cell_ranger,hierarchical,0.0,3.0,3.0,0.248,0.347,baselines_paper_buettner_hvg2000_cell_ranger
+buettner,authors' data,2000 HVG cell_ranger,hierarchical,1.0,3.0,3.0,0.248,0.347,baselines_paper_buettner_hvg2000_cell_ranger
+buettner,authors' data,2000 HVG cell_ranger,hierarchical,2.0,3.0,3.0,0.248,0.347,baselines_paper_buettner_hvg2000_cell_ranger
+buettner,authors' data,2000 HVG cell_ranger,k-means,0.0,3.0,3.0,0.404,0.417,baselines_paper_buettner_hvg2000_cell_ranger
+buettner,authors' data,2000 HVG cell_ranger,k-means,1.0,3.0,3.0,0.481,0.487,baselines_paper_buettner_hvg2000_cell_ranger
+buettner,authors' data,2000 HVG cell_ranger,k-means,2.0,3.0,3.0,0.398,0.429,baselines_paper_buettner_hvg2000_cell_ranger
+buettner,authors' data,2000 HVG seurat,Leiden (Scanpy),0.0,3.0,3.0,0.279,0.341,baselines_paper_buettner_hvg2000
+buettner,authors' data,2000 HVG seurat,Leiden (Scanpy),1.0,3.0,3.0,0.319,0.33,baselines_paper_buettner_hvg2000
+buettner,authors' data,2000 HVG seurat,Leiden (Scanpy),2.0,3.0,3.0,0.307,0.309,baselines_paper_buettner_hvg2000
+buettner,authors' data,2000 HVG seurat,MICA,0.0,3.0,3.0,0.839,0.784,mica_paper_buettner_hvg2000_seurat
+buettner,authors' data,2000 HVG seurat,MICA,1.0,3.0,3.0,0.811,0.743,mica_paper_buettner_hvg2000_seurat
+buettner,authors' data,2000 HVG seurat,MICA,2.0,3.0,3.0,0.827,0.773,mica_paper_buettner_hvg2000_seurat
+buettner,authors' data,2000 HVG seurat,hierarchical,0.0,3.0,3.0,0.28,0.418,baselines_paper_buettner_hvg2000
+buettner,authors' data,2000 HVG seurat,hierarchical,1.0,3.0,3.0,0.28,0.418,baselines_paper_buettner_hvg2000
+buettner,authors' data,2000 HVG seurat,hierarchical,2.0,3.0,3.0,0.28,0.418,baselines_paper_buettner_hvg2000
+buettner,authors' data,2000 HVG seurat,k-means,0.0,3.0,3.0,0.461,0.461,baselines_paper_buettner_hvg2000
+buettner,authors' data,2000 HVG seurat,k-means,1.0,3.0,3.0,0.462,0.447,baselines_paper_buettner_hvg2000
+buettner,authors' data,2000 HVG seurat,k-means,2.0,3.0,3.0,0.472,0.466,baselines_paper_buettner_hvg2000
+buettner,authors' data,2000 HVG seurat_v3,Leiden (Scanpy),0.0,3.0,3.0,0.302,0.379,baselines_paper_buettner_hvg2000_seurat_v3
+buettner,authors' data,2000 HVG seurat_v3,Leiden (Scanpy),1.0,3.0,3.0,0.291,0.361,baselines_paper_buettner_hvg2000_seurat_v3
+buettner,authors' data,2000 HVG seurat_v3,Leiden (Scanpy),2.0,3.0,3.0,0.291,0.303,baselines_paper_buettner_hvg2000_seurat_v3
+buettner,authors' data,2000 HVG seurat_v3,MICA,0.0,3.0,3.0,0.856,0.803,mica_paper_buettner_hvg2000_seurat_v3
+buettner,authors' data,2000 HVG seurat_v3,MICA,1.0,3.0,3.0,0.828,0.782,mica_paper_buettner_hvg2000_seurat_v3
+buettner,authors' data,2000 HVG seurat_v3,MICA,2.0,3.0,3.0,0.828,0.782,mica_paper_buettner_hvg2000_seurat_v3
+buettner,authors' data,2000 HVG seurat_v3,hierarchical,0.0,3.0,3.0,0.234,0.311,baselines_paper_buettner_hvg2000_seurat_v3
+buettner,authors' data,2000 HVG seurat_v3,hierarchical,1.0,3.0,3.0,0.234,0.311,baselines_paper_buettner_hvg2000_seurat_v3
+buettner,authors' data,2000 HVG seurat_v3,hierarchical,2.0,3.0,3.0,0.234,0.311,baselines_paper_buettner_hvg2000_seurat_v3
+buettner,authors' data,2000 HVG seurat_v3,k-means,0.0,3.0,3.0,0.335,0.382,baselines_paper_buettner_hvg2000_seurat_v3
+buettner,authors' data,2000 HVG seurat_v3,k-means,1.0,3.0,3.0,0.328,0.383,baselines_paper_buettner_hvg2000_seurat_v3
+buettner,authors' data,2000 HVG seurat_v3,k-means,2.0,3.0,3.0,0.333,0.37,baselines_paper_buettner_hvg2000_seurat_v3
+buettner,authors' data,all genes,Leiden (Scanpy),0.0,3.0,3.0,0.293,0.343,baselines_paper_buettner
+buettner,authors' data,all genes,Leiden (Scanpy),1.0,3.0,3.0,0.268,0.321,baselines_paper_buettner
+buettner,authors' data,all genes,Leiden (Scanpy),2.0,3.0,3.0,0.268,0.321,baselines_paper_buettner
+buettner,authors' data,all genes,MICA,0.0,3.0,3.0,0.934,0.904,reproduction_paper_buettner
+buettner,authors' data,all genes,MICA,1.0,3.0,3.0,0.934,0.904,reproduction_paper_buettner
+buettner,authors' data,all genes,MICA,2.0,3.0,3.0,0.934,0.904,reproduction_paper_buettner
+buettner,authors' data,all genes,hierarchical,0.0,3.0,3.0,0.604,0.649,baselines_paper_buettner
+buettner,authors' data,all genes,hierarchical,1.0,3.0,3.0,0.604,0.649,baselines_paper_buettner
+buettner,authors' data,all genes,hierarchical,2.0,3.0,3.0,0.604,0.649,baselines_paper_buettner
+buettner,authors' data,all genes,k-means,0.0,3.0,3.0,0.34,0.36,baselines_paper_buettner
+buettner,authors' data,all genes,k-means,1.0,3.0,3.0,0.405,0.407,baselines_paper_buettner
+buettner,authors' data,all genes,k-means,2.0,3.0,3.0,0.441,0.433,baselines_paper_buettner
+chung,authors' data,2000 HVG cell_ranger,Leiden (Scanpy),0.0,4.0,4.0,0.189,0.32,baselines_paper_chung_hvg2000_cell_ranger
+chung,authors' data,2000 HVG cell_ranger,Leiden (Scanpy),1.0,4.0,4.0,0.187,0.315,baselines_paper_chung_hvg2000_cell_ranger
+chung,authors' data,2000 HVG cell_ranger,Leiden (Scanpy),2.0,4.0,4.0,0.151,0.315,baselines_paper_chung_hvg2000_cell_ranger
+chung,authors' data,2000 HVG cell_ranger,MICA,0.0,4.0,4.0,0.655,0.762,mica_paper_chung_hvg2000_cell_ranger
+chung,authors' data,2000 HVG cell_ranger,MICA,1.0,4.0,4.0,0.655,0.762,mica_paper_chung_hvg2000_cell_ranger
+chung,authors' data,2000 HVG cell_ranger,MICA,2.0,4.0,4.0,0.655,0.762,mica_paper_chung_hvg2000_cell_ranger
+chung,authors' data,2000 HVG cell_ranger,hierarchical,0.0,4.0,4.0,0.276,0.332,baselines_paper_chung_hvg2000_cell_ranger
+chung,authors' data,2000 HVG cell_ranger,hierarchical,1.0,4.0,4.0,0.276,0.332,baselines_paper_chung_hvg2000_cell_ranger
+chung,authors' data,2000 HVG cell_ranger,hierarchical,2.0,4.0,4.0,0.276,0.332,baselines_paper_chung_hvg2000_cell_ranger
+chung,authors' data,2000 HVG cell_ranger,k-means,0.0,4.0,4.0,0.217,0.389,baselines_paper_chung_hvg2000_cell_ranger
+chung,authors' data,2000 HVG cell_ranger,k-means,1.0,4.0,4.0,0.161,0.271,baselines_paper_chung_hvg2000_cell_ranger
+chung,authors' data,2000 HVG cell_ranger,k-means,2.0,4.0,4.0,-0.015,0.131,baselines_paper_chung_hvg2000_cell_ranger
+chung,authors' data,2000 HVG seurat,Leiden (Scanpy),0.0,4.0,4.0,0.169,0.218,baselines_paper_chung_hvg2000
+chung,authors' data,2000 HVG seurat,Leiden (Scanpy),1.0,4.0,4.0,0.18,0.256,baselines_paper_chung_hvg2000
+chung,authors' data,2000 HVG seurat,Leiden (Scanpy),2.0,4.0,4.0,0.14,0.271,baselines_paper_chung_hvg2000
+chung,authors' data,2000 HVG seurat,MICA,0.0,4.0,4.0,0.151,0.317,mica_paper_chung_hvg2000_seurat
+chung,authors' data,2000 HVG seurat,MICA,1.0,4.0,4.0,0.16,0.331,mica_paper_chung_hvg2000_seurat
+chung,authors' data,2000 HVG seurat,MICA,2.0,4.0,4.0,0.151,0.317,mica_paper_chung_hvg2000_seurat
+chung,authors' data,2000 HVG seurat,hierarchical,0.0,4.0,4.0,0.007,0.035,baselines_paper_chung_hvg2000
+chung,authors' data,2000 HVG seurat,hierarchical,1.0,4.0,4.0,0.007,0.035,baselines_paper_chung_hvg2000
+chung,authors' data,2000 HVG seurat,hierarchical,2.0,4.0,4.0,0.007,0.035,baselines_paper_chung_hvg2000
+chung,authors' data,2000 HVG seurat,k-means,0.0,4.0,4.0,0.004,0.017,baselines_paper_chung_hvg2000
+chung,authors' data,2000 HVG seurat,k-means,1.0,4.0,4.0,0.016,0.051,baselines_paper_chung_hvg2000
+chung,authors' data,2000 HVG seurat,k-means,2.0,4.0,4.0,-0.0,-0.001,baselines_paper_chung_hvg2000
+chung,authors' data,2000 HVG seurat_v3,Leiden (Scanpy),0.0,4.0,4.0,0.172,0.323,baselines_paper_chung_hvg2000_seurat_v3
+chung,authors' data,2000 HVG seurat_v3,Leiden (Scanpy),1.0,4.0,4.0,0.172,0.323,baselines_paper_chung_hvg2000_seurat_v3
+chung,authors' data,2000 HVG seurat_v3,Leiden (Scanpy),2.0,4.0,4.0,0.172,0.323,baselines_paper_chung_hvg2000_seurat_v3
+chung,authors' data,2000 HVG seurat_v3,MICA,0.0,4.0,4.0,0.452,0.592,mica_paper_chung_hvg2000_seurat_v3
+chung,authors' data,2000 HVG seurat_v3,MICA,1.0,4.0,4.0,0.438,0.57,mica_paper_chung_hvg2000_seurat_v3
+chung,authors' data,2000 HVG seurat_v3,MICA,2.0,4.0,4.0,0.445,0.579,mica_paper_chung_hvg2000_seurat_v3
+chung,authors' data,2000 HVG seurat_v3,hierarchical,0.0,4.0,4.0,0.279,0.405,baselines_paper_chung_hvg2000_seurat_v3
+chung,authors' data,2000 HVG seurat_v3,hierarchical,1.0,4.0,4.0,0.279,0.405,baselines_paper_chung_hvg2000_seurat_v3
+chung,authors' data,2000 HVG seurat_v3,hierarchical,2.0,4.0,4.0,0.279,0.405,baselines_paper_chung_hvg2000_seurat_v3
+chung,authors' data,2000 HVG seurat_v3,k-means,0.0,4.0,4.0,0.126,0.264,baselines_paper_chung_hvg2000_seurat_v3
+chung,authors' data,2000 HVG seurat_v3,k-means,1.0,4.0,4.0,0.004,0.183,baselines_paper_chung_hvg2000_seurat_v3
+chung,authors' data,2000 HVG seurat_v3,k-means,2.0,4.0,4.0,0.01,0.061,baselines_paper_chung_hvg2000_seurat_v3
+chung,authors' data,all genes,Leiden (Scanpy),0.0,4.0,4.0,0.302,0.491,baselines_paper_chung
+chung,authors' data,all genes,Leiden (Scanpy),1.0,4.0,4.0,0.319,0.516,baselines_paper_chung
+chung,authors' data,all genes,Leiden (Scanpy),2.0,4.0,4.0,0.319,0.516,baselines_paper_chung
+chung,authors' data,all genes,MICA,0.0,4.0,4.0,0.655,0.762,reproduction_paper_chung
+chung,authors' data,all genes,MICA,1.0,4.0,4.0,0.655,0.762,reproduction_paper_chung
+chung,authors' data,all genes,MICA,2.0,4.0,4.0,0.655,0.762,reproduction_paper_chung
+chung,authors' data,all genes,hierarchical,0.0,4.0,4.0,0.093,0.186,baselines_paper_chung
+chung,authors' data,all genes,hierarchical,1.0,4.0,4.0,0.093,0.186,baselines_paper_chung
+chung,authors' data,all genes,hierarchical,2.0,4.0,4.0,0.093,0.186,baselines_paper_chung
+chung,authors' data,all genes,k-means,0.0,4.0,4.0,0.181,0.365,baselines_paper_chung
+chung,authors' data,all genes,k-means,1.0,4.0,4.0,0.168,0.272,baselines_paper_chung
+chung,authors' data,all genes,k-means,2.0,4.0,4.0,0.032,0.167,baselines_paper_chung
+goolam,authors' data,2000 HVG cell_ranger,Leiden (Scanpy),0.0,5.0,5.0,0.543,0.691,baselines_paper_goolam_hvg2000_cell_ranger
+goolam,authors' data,2000 HVG cell_ranger,Leiden (Scanpy),1.0,5.0,5.0,0.543,0.691,baselines_paper_goolam_hvg2000_cell_ranger
+goolam,authors' data,2000 HVG cell_ranger,Leiden (Scanpy),2.0,5.0,5.0,0.543,0.691,baselines_paper_goolam_hvg2000_cell_ranger
+goolam,authors' data,2000 HVG cell_ranger,MICA,0.0,5.0,5.0,0.687,0.844,mica_paper_goolam_hvg2000_cell_ranger
+goolam,authors' data,2000 HVG cell_ranger,MICA,1.0,5.0,5.0,0.687,0.844,mica_paper_goolam_hvg2000_cell_ranger
+goolam,authors' data,2000 HVG cell_ranger,MICA,2.0,5.0,5.0,0.687,0.844,mica_paper_goolam_hvg2000_cell_ranger
+goolam,authors' data,2000 HVG cell_ranger,hierarchical,0.0,5.0,5.0,0.91,0.881,baselines_paper_goolam_hvg2000_cell_ranger
+goolam,authors' data,2000 HVG cell_ranger,hierarchical,1.0,5.0,5.0,0.91,0.881,baselines_paper_goolam_hvg2000_cell_ranger
+goolam,authors' data,2000 HVG cell_ranger,hierarchical,2.0,5.0,5.0,0.91,0.881,baselines_paper_goolam_hvg2000_cell_ranger
+goolam,authors' data,2000 HVG cell_ranger,k-means,0.0,5.0,5.0,0.91,0.881,baselines_paper_goolam_hvg2000_cell_ranger
+goolam,authors' data,2000 HVG cell_ranger,k-means,1.0,5.0,5.0,0.91,0.881,baselines_paper_goolam_hvg2000_cell_ranger
+goolam,authors' data,2000 HVG cell_ranger,k-means,2.0,5.0,5.0,0.91,0.881,baselines_paper_goolam_hvg2000_cell_ranger
+goolam,authors' data,2000 HVG seurat,Leiden (Scanpy),0.0,5.0,5.0,0.572,0.711,baselines_paper_goolam_hvg2000
+goolam,authors' data,2000 HVG seurat,Leiden (Scanpy),1.0,5.0,5.0,0.572,0.711,baselines_paper_goolam_hvg2000
+goolam,authors' data,2000 HVG seurat,Leiden (Scanpy),2.0,5.0,5.0,0.572,0.711,baselines_paper_goolam_hvg2000
+goolam,authors' data,2000 HVG seurat,MICA,0.0,5.0,5.0,0.914,0.9,mica_paper_goolam_hvg2000_seurat
+goolam,authors' data,2000 HVG seurat,MICA,1.0,5.0,5.0,0.914,0.9,mica_paper_goolam_hvg2000_seurat
+goolam,authors' data,2000 HVG seurat,MICA,2.0,5.0,5.0,0.914,0.9,mica_paper_goolam_hvg2000_seurat
+goolam,authors' data,2000 HVG seurat,hierarchical,0.0,5.0,5.0,0.91,0.881,baselines_paper_goolam_hvg2000
+goolam,authors' data,2000 HVG seurat,hierarchical,1.0,5.0,5.0,0.91,0.881,baselines_paper_goolam_hvg2000
+goolam,authors' data,2000 HVG seurat,hierarchical,2.0,5.0,5.0,0.91,0.881,baselines_paper_goolam_hvg2000
+goolam,authors' data,2000 HVG seurat,k-means,0.0,5.0,5.0,0.981,0.943,baselines_paper_goolam_hvg2000
+goolam,authors' data,2000 HVG seurat,k-means,1.0,5.0,5.0,0.981,0.943,baselines_paper_goolam_hvg2000
+goolam,authors' data,2000 HVG seurat,k-means,2.0,5.0,5.0,0.91,0.881,baselines_paper_goolam_hvg2000
+goolam,authors' data,2000 HVG seurat_v3,Leiden (Scanpy),0.0,5.0,5.0,0.572,0.711,baselines_paper_goolam_hvg2000_seurat_v3
+goolam,authors' data,2000 HVG seurat_v3,Leiden (Scanpy),1.0,5.0,5.0,0.572,0.711,baselines_paper_goolam_hvg2000_seurat_v3
+goolam,authors' data,2000 HVG seurat_v3,Leiden (Scanpy),2.0,5.0,5.0,0.572,0.711,baselines_paper_goolam_hvg2000_seurat_v3
+goolam,authors' data,2000 HVG seurat_v3,MICA,0.0,5.0,5.0,0.687,0.844,mica_paper_goolam_hvg2000_seurat_v3
+goolam,authors' data,2000 HVG seurat_v3,MICA,1.0,5.0,5.0,0.687,0.844,mica_paper_goolam_hvg2000_seurat_v3
+goolam,authors' data,2000 HVG seurat_v3,MICA,2.0,5.0,5.0,0.687,0.844,mica_paper_goolam_hvg2000_seurat_v3
+goolam,authors' data,2000 HVG seurat_v3,hierarchical,0.0,5.0,5.0,0.91,0.881,baselines_paper_goolam_hvg2000_seurat_v3
+goolam,authors' data,2000 HVG seurat_v3,hierarchical,1.0,5.0,5.0,0.91,0.881,baselines_paper_goolam_hvg2000_seurat_v3
+goolam,authors' data,2000 HVG seurat_v3,hierarchical,2.0,5.0,5.0,0.91,0.881,baselines_paper_goolam_hvg2000_seurat_v3
+goolam,authors' data,2000 HVG seurat_v3,k-means,0.0,5.0,5.0,0.91,0.881,baselines_paper_goolam_hvg2000_seurat_v3
+goolam,authors' data,2000 HVG seurat_v3,k-means,1.0,5.0,5.0,0.678,0.824,baselines_paper_goolam_hvg2000_seurat_v3
+goolam,authors' data,2000 HVG seurat_v3,k-means,2.0,5.0,5.0,0.91,0.881,baselines_paper_goolam_hvg2000_seurat_v3
+goolam,authors' data,all genes,Leiden (Scanpy),0.0,5.0,5.0,0.308,0.548,baselines_paper_goolam
+goolam,authors' data,all genes,Leiden (Scanpy),1.0,5.0,5.0,0.308,0.548,baselines_paper_goolam
+goolam,authors' data,all genes,Leiden (Scanpy),2.0,5.0,5.0,0.308,0.548,baselines_paper_goolam
+goolam,authors' data,all genes,MICA,0.0,5.0,5.0,0.544,0.705,reproduction_paper_goolam
+goolam,authors' data,all genes,MICA,1.0,5.0,5.0,0.544,0.705,reproduction_paper_goolam
+goolam,authors' data,all genes,MICA,2.0,5.0,5.0,0.544,0.705,reproduction_paper_goolam
+goolam,authors' data,all genes,hierarchical,0.0,5.0,5.0,0.865,0.827,baselines_paper_goolam
+goolam,authors' data,all genes,hierarchical,1.0,5.0,5.0,0.865,0.827,baselines_paper_goolam
+goolam,authors' data,all genes,hierarchical,2.0,5.0,5.0,0.865,0.827,baselines_paper_goolam
+goolam,authors' data,all genes,k-means,0.0,5.0,5.0,0.919,0.887,baselines_paper_goolam
+goolam,authors' data,all genes,k-means,1.0,5.0,5.0,0.865,0.827,baselines_paper_goolam
+goolam,authors' data,all genes,k-means,2.0,5.0,5.0,0.639,0.721,baselines_paper_goolam
+klein,authors' data,2000 HVG cell_ranger,Leiden (Scanpy),0.0,4.0,4.0,0.768,0.817,baselines_paper_klein_hvg2000_cell_ranger
+klein,authors' data,2000 HVG cell_ranger,Leiden (Scanpy),1.0,4.0,4.0,0.766,0.818,baselines_paper_klein_hvg2000_cell_ranger
+klein,authors' data,2000 HVG cell_ranger,Leiden (Scanpy),2.0,4.0,4.0,0.768,0.817,baselines_paper_klein_hvg2000_cell_ranger
+klein,authors' data,2000 HVG cell_ranger,MICA,0.0,4.0,4.0,0.724,0.743,mica_paper_klein_hvg2000_cell_ranger
+klein,authors' data,2000 HVG cell_ranger,MICA,1.0,4.0,4.0,0.724,0.743,mica_paper_klein_hvg2000_cell_ranger
+klein,authors' data,2000 HVG cell_ranger,MICA,2.0,4.0,4.0,0.724,0.743,mica_paper_klein_hvg2000_cell_ranger
+klein,authors' data,2000 HVG cell_ranger,hierarchical,0.0,4.0,4.0,0.743,0.802,baselines_paper_klein_hvg2000_cell_ranger
+klein,authors' data,2000 HVG cell_ranger,hierarchical,1.0,4.0,4.0,0.743,0.802,baselines_paper_klein_hvg2000_cell_ranger
+klein,authors' data,2000 HVG cell_ranger,hierarchical,2.0,4.0,4.0,0.743,0.802,baselines_paper_klein_hvg2000_cell_ranger
+klein,authors' data,2000 HVG cell_ranger,k-means,0.0,4.0,4.0,0.569,0.655,baselines_paper_klein_hvg2000_cell_ranger
+klein,authors' data,2000 HVG cell_ranger,k-means,1.0,4.0,4.0,0.569,0.655,baselines_paper_klein_hvg2000_cell_ranger
+klein,authors' data,2000 HVG cell_ranger,k-means,2.0,4.0,4.0,0.571,0.657,baselines_paper_klein_hvg2000_cell_ranger
+klein,authors' data,2000 HVG seurat,Leiden (Scanpy),0.0,4.0,4.0,0.949,0.924,baselines_paper_klein_hvg2000
+klein,authors' data,2000 HVG seurat,Leiden (Scanpy),1.0,4.0,4.0,0.949,0.924,baselines_paper_klein_hvg2000
+klein,authors' data,2000 HVG seurat,Leiden (Scanpy),2.0,4.0,4.0,0.947,0.921,baselines_paper_klein_hvg2000
+klein,authors' data,2000 HVG seurat,MICA,0.0,4.0,4.0,0.792,0.782,mica_paper_klein_hvg2000_seurat
+klein,authors' data,2000 HVG seurat,MICA,1.0,4.0,4.0,0.792,0.782,mica_paper_klein_hvg2000_seurat
+klein,authors' data,2000 HVG seurat,MICA,2.0,4.0,4.0,0.792,0.782,mica_paper_klein_hvg2000_seurat
+klein,authors' data,2000 HVG seurat,hierarchical,0.0,4.0,4.0,0.562,0.617,baselines_paper_klein_hvg2000
+klein,authors' data,2000 HVG seurat,hierarchical,1.0,4.0,4.0,0.562,0.617,baselines_paper_klein_hvg2000
+klein,authors' data,2000 HVG seurat,hierarchical,2.0,4.0,4.0,0.562,0.617,baselines_paper_klein_hvg2000
+klein,authors' data,2000 HVG seurat,k-means,0.0,4.0,4.0,0.618,0.646,baselines_paper_klein_hvg2000
+klein,authors' data,2000 HVG seurat,k-means,1.0,4.0,4.0,0.618,0.646,baselines_paper_klein_hvg2000
+klein,authors' data,2000 HVG seurat,k-means,2.0,4.0,4.0,0.617,0.646,baselines_paper_klein_hvg2000
+klein,authors' data,2000 HVG seurat_v3,Leiden (Scanpy),0.0,4.0,4.0,0.959,0.937,baselines_paper_klein_hvg2000_seurat_v3
+klein,authors' data,2000 HVG seurat_v3,Leiden (Scanpy),1.0,4.0,4.0,0.957,0.936,baselines_paper_klein_hvg2000_seurat_v3
+klein,authors' data,2000 HVG seurat_v3,Leiden (Scanpy),2.0,4.0,4.0,0.957,0.934,baselines_paper_klein_hvg2000_seurat_v3
+klein,authors' data,2000 HVG seurat_v3,MICA,0.0,4.0,4.0,0.847,0.822,mica_paper_klein_hvg2000_seurat_v3
+klein,authors' data,2000 HVG seurat_v3,MICA,1.0,4.0,4.0,0.847,0.822,mica_paper_klein_hvg2000_seurat_v3
+klein,authors' data,2000 HVG seurat_v3,MICA,2.0,4.0,4.0,0.847,0.822,mica_paper_klein_hvg2000_seurat_v3
+klein,authors' data,2000 HVG seurat_v3,hierarchical,0.0,4.0,4.0,0.732,0.796,baselines_paper_klein_hvg2000_seurat_v3
+klein,authors' data,2000 HVG seurat_v3,hierarchical,1.0,4.0,4.0,0.732,0.796,baselines_paper_klein_hvg2000_seurat_v3
+klein,authors' data,2000 HVG seurat_v3,hierarchical,2.0,4.0,4.0,0.732,0.796,baselines_paper_klein_hvg2000_seurat_v3
+klein,authors' data,2000 HVG seurat_v3,k-means,0.0,4.0,4.0,0.633,0.664,baselines_paper_klein_hvg2000_seurat_v3
+klein,authors' data,2000 HVG seurat_v3,k-means,1.0,4.0,4.0,0.634,0.664,baselines_paper_klein_hvg2000_seurat_v3
+klein,authors' data,2000 HVG seurat_v3,k-means,2.0,4.0,4.0,0.633,0.664,baselines_paper_klein_hvg2000_seurat_v3
+klein,authors' data,all genes,Leiden (Scanpy),0.0,4.0,4.0,0.977,0.961,baselines_paper_klein
+klein,authors' data,all genes,Leiden (Scanpy),1.0,4.0,4.0,0.977,0.961,baselines_paper_klein
+klein,authors' data,all genes,Leiden (Scanpy),2.0,4.0,4.0,0.973,0.956,baselines_paper_klein
+klein,authors' data,all genes,MICA,0.0,4.0,4.0,0.98,0.963,reproduction_paper_klein
+klein,authors' data,all genes,MICA,1.0,4.0,4.0,0.98,0.963,reproduction_paper_klein
+klein,authors' data,all genes,MICA,2.0,4.0,4.0,0.98,0.963,reproduction_paper_klein
+klein,authors' data,all genes,hierarchical,0.0,4.0,4.0,0.441,0.577,baselines_paper_klein
+klein,authors' data,all genes,hierarchical,1.0,4.0,4.0,0.441,0.577,baselines_paper_klein
+klein,authors' data,all genes,hierarchical,2.0,4.0,4.0,0.441,0.577,baselines_paper_klein
+klein,authors' data,all genes,k-means,0.0,4.0,4.0,0.396,0.532,baselines_paper_klein
+klein,authors' data,all genes,k-means,1.0,4.0,4.0,0.396,0.532,baselines_paper_klein
+klein,authors' data,all genes,k-means,2.0,4.0,4.0,0.396,0.532,baselines_paper_klein
+kolodziejczyk,authors' data,2000 HVG cell_ranger,Leiden (Scanpy),0.0,3.0,3.0,1.0,1.0,baselines_paper_kolodziejczyk_hvg2000_cell_ranger
+kolodziejczyk,authors' data,2000 HVG cell_ranger,Leiden (Scanpy),1.0,3.0,3.0,1.0,1.0,baselines_paper_kolodziejczyk_hvg2000_cell_ranger
+kolodziejczyk,authors' data,2000 HVG cell_ranger,Leiden (Scanpy),2.0,3.0,3.0,1.0,1.0,baselines_paper_kolodziejczyk_hvg2000_cell_ranger
+kolodziejczyk,authors' data,2000 HVG cell_ranger,MICA,0.0,3.0,3.0,0.996,0.991,mica_paper_kolodziejczyk_hvg2000_cell_ranger
+kolodziejczyk,authors' data,2000 HVG cell_ranger,MICA,1.0,3.0,3.0,0.996,0.991,mica_paper_kolodziejczyk_hvg2000_cell_ranger
+kolodziejczyk,authors' data,2000 HVG cell_ranger,MICA,2.0,3.0,3.0,0.996,0.991,mica_paper_kolodziejczyk_hvg2000_cell_ranger
+kolodziejczyk,authors' data,2000 HVG cell_ranger,hierarchical,0.0,3.0,3.0,0.965,0.946,baselines_paper_kolodziejczyk_hvg2000_cell_ranger
+kolodziejczyk,authors' data,2000 HVG cell_ranger,hierarchical,1.0,3.0,3.0,0.965,0.946,baselines_paper_kolodziejczyk_hvg2000_cell_ranger
+kolodziejczyk,authors' data,2000 HVG cell_ranger,hierarchical,2.0,3.0,3.0,0.965,0.946,baselines_paper_kolodziejczyk_hvg2000_cell_ranger
+kolodziejczyk,authors' data,2000 HVG cell_ranger,k-means,0.0,3.0,3.0,0.938,0.918,baselines_paper_kolodziejczyk_hvg2000_cell_ranger
+kolodziejczyk,authors' data,2000 HVG cell_ranger,k-means,1.0,3.0,3.0,0.941,0.922,baselines_paper_kolodziejczyk_hvg2000_cell_ranger
+kolodziejczyk,authors' data,2000 HVG cell_ranger,k-means,2.0,3.0,3.0,0.941,0.922,baselines_paper_kolodziejczyk_hvg2000_cell_ranger
+kolodziejczyk,authors' data,2000 HVG seurat,Leiden (Scanpy),0.0,3.0,3.0,0.996,0.992,baselines_paper_kolodziejczyk_hvg2000
+kolodziejczyk,authors' data,2000 HVG seurat,Leiden (Scanpy),1.0,3.0,3.0,0.996,0.992,baselines_paper_kolodziejczyk_hvg2000
+kolodziejczyk,authors' data,2000 HVG seurat,Leiden (Scanpy),2.0,3.0,3.0,0.996,0.992,baselines_paper_kolodziejczyk_hvg2000
+kolodziejczyk,authors' data,2000 HVG seurat,MICA,0.0,3.0,3.0,0.992,0.985,mica_paper_kolodziejczyk_hvg2000_seurat
+kolodziejczyk,authors' data,2000 HVG seurat,MICA,1.0,3.0,3.0,0.992,0.985,mica_paper_kolodziejczyk_hvg2000_seurat
+kolodziejczyk,authors' data,2000 HVG seurat,MICA,2.0,3.0,3.0,0.992,0.985,mica_paper_kolodziejczyk_hvg2000_seurat
+kolodziejczyk,authors' data,2000 HVG seurat,hierarchical,0.0,3.0,3.0,0.724,0.776,baselines_paper_kolodziejczyk_hvg2000
+kolodziejczyk,authors' data,2000 HVG seurat,hierarchical,1.0,3.0,3.0,0.724,0.776,baselines_paper_kolodziejczyk_hvg2000
+kolodziejczyk,authors' data,2000 HVG seurat,hierarchical,2.0,3.0,3.0,0.724,0.776,baselines_paper_kolodziejczyk_hvg2000
+kolodziejczyk,authors' data,2000 HVG seurat,k-means,0.0,3.0,3.0,0.714,0.777,baselines_paper_kolodziejczyk_hvg2000
+kolodziejczyk,authors' data,2000 HVG seurat,k-means,1.0,3.0,3.0,0.714,0.777,baselines_paper_kolodziejczyk_hvg2000
+kolodziejczyk,authors' data,2000 HVG seurat,k-means,2.0,3.0,3.0,0.714,0.777,baselines_paper_kolodziejczyk_hvg2000
+kolodziejczyk,authors' data,2000 HVG seurat_v3,Leiden (Scanpy),0.0,3.0,3.0,1.0,1.0,baselines_paper_kolodziejczyk_hvg2000_seurat_v3
+kolodziejczyk,authors' data,2000 HVG seurat_v3,Leiden (Scanpy),1.0,3.0,3.0,1.0,1.0,baselines_paper_kolodziejczyk_hvg2000_seurat_v3
+kolodziejczyk,authors' data,2000 HVG seurat_v3,Leiden (Scanpy),2.0,3.0,3.0,1.0,1.0,baselines_paper_kolodziejczyk_hvg2000_seurat_v3
+kolodziejczyk,authors' data,2000 HVG seurat_v3,MICA,0.0,3.0,3.0,0.992,0.985,mica_paper_kolodziejczyk_hvg2000_seurat_v3
+kolodziejczyk,authors' data,2000 HVG seurat_v3,MICA,1.0,3.0,3.0,0.992,0.985,mica_paper_kolodziejczyk_hvg2000_seurat_v3
+kolodziejczyk,authors' data,2000 HVG seurat_v3,MICA,2.0,3.0,3.0,0.992,0.985,mica_paper_kolodziejczyk_hvg2000_seurat_v3
+kolodziejczyk,authors' data,2000 HVG seurat_v3,hierarchical,0.0,3.0,3.0,0.535,0.675,baselines_paper_kolodziejczyk_hvg2000_seurat_v3
+kolodziejczyk,authors' data,2000 HVG seurat_v3,hierarchical,1.0,3.0,3.0,0.535,0.675,baselines_paper_kolodziejczyk_hvg2000_seurat_v3
+kolodziejczyk,authors' data,2000 HVG seurat_v3,hierarchical,2.0,3.0,3.0,0.535,0.675,baselines_paper_kolodziejczyk_hvg2000_seurat_v3
+kolodziejczyk,authors' data,2000 HVG seurat_v3,k-means,0.0,3.0,3.0,0.536,0.683,baselines_paper_kolodziejczyk_hvg2000_seurat_v3
+kolodziejczyk,authors' data,2000 HVG seurat_v3,k-means,1.0,3.0,3.0,0.536,0.683,baselines_paper_kolodziejczyk_hvg2000_seurat_v3
+kolodziejczyk,authors' data,2000 HVG seurat_v3,k-means,2.0,3.0,3.0,0.646,0.721,baselines_paper_kolodziejczyk_hvg2000_seurat_v3
+kolodziejczyk,authors' data,all genes,Leiden (Scanpy),0.0,3.0,3.0,0.564,0.698,baselines_paper_kolodziejczyk
+kolodziejczyk,authors' data,all genes,Leiden (Scanpy),1.0,3.0,3.0,0.564,0.698,baselines_paper_kolodziejczyk
+kolodziejczyk,authors' data,all genes,Leiden (Scanpy),2.0,3.0,3.0,0.564,0.698,baselines_paper_kolodziejczyk
+kolodziejczyk,authors' data,all genes,MICA,0.0,3.0,3.0,0.727,0.784,reproduction_paper_kolodziejczyk
+kolodziejczyk,authors' data,all genes,MICA,1.0,3.0,3.0,0.727,0.784,reproduction_paper_kolodziejczyk
+kolodziejczyk,authors' data,all genes,MICA,2.0,3.0,3.0,0.727,0.784,reproduction_paper_kolodziejczyk
+kolodziejczyk,authors' data,all genes,hierarchical,0.0,3.0,3.0,0.716,0.761,baselines_paper_kolodziejczyk
+kolodziejczyk,authors' data,all genes,hierarchical,1.0,3.0,3.0,0.716,0.761,baselines_paper_kolodziejczyk
+kolodziejczyk,authors' data,all genes,hierarchical,2.0,3.0,3.0,0.716,0.761,baselines_paper_kolodziejczyk
+kolodziejczyk,authors' data,all genes,k-means,0.0,3.0,3.0,0.716,0.778,baselines_paper_kolodziejczyk
+kolodziejczyk,authors' data,all genes,k-means,1.0,3.0,3.0,0.716,0.778,baselines_paper_kolodziejczyk
+kolodziejczyk,authors' data,all genes,k-means,2.0,3.0,3.0,0.716,0.778,baselines_paper_kolodziejczyk
+pbmc14k,authors' data,2000 HVG cell_ranger,Leiden (Scanpy),0.0,7.0,7.0,0.698,0.774,baselines_paper_pbmc14k_hvg2000_cell_ranger
+pbmc14k,authors' data,2000 HVG cell_ranger,Leiden (Scanpy),1.0,7.0,7.0,0.689,0.789,baselines_paper_pbmc14k_hvg2000_cell_ranger
+pbmc14k,authors' data,2000 HVG cell_ranger,Leiden (Scanpy),2.0,7.0,7.0,0.691,0.791,baselines_paper_pbmc14k_hvg2000_cell_ranger
+pbmc14k,authors' data,2000 HVG cell_ranger,MICA,0.0,7.0,7.0,0.633,0.75,mica_paper_pbmc14k_hvg2000_cell_ranger
+pbmc14k,authors' data,2000 HVG cell_ranger,hierarchical,0.0,7.0,7.0,0.569,0.724,baselines_paper_pbmc14k_hvg2000_cell_ranger
+pbmc14k,authors' data,2000 HVG cell_ranger,hierarchical,1.0,7.0,7.0,0.569,0.724,baselines_paper_pbmc14k_hvg2000_cell_ranger
+pbmc14k,authors' data,2000 HVG cell_ranger,hierarchical,2.0,7.0,7.0,0.569,0.724,baselines_paper_pbmc14k_hvg2000_cell_ranger
+pbmc14k,authors' data,2000 HVG cell_ranger,k-means,0.0,7.0,7.0,0.566,0.748,baselines_paper_pbmc14k_hvg2000_cell_ranger
+pbmc14k,authors' data,2000 HVG cell_ranger,k-means,1.0,7.0,7.0,0.57,0.748,baselines_paper_pbmc14k_hvg2000_cell_ranger
+pbmc14k,authors' data,2000 HVG cell_ranger,k-means,2.0,7.0,7.0,0.566,0.748,baselines_paper_pbmc14k_hvg2000_cell_ranger
+pbmc14k,authors' data,2000 HVG seurat,Leiden (Scanpy),0.0,8.0,7.0,0.725,0.788,baselines_paper_pbmc14k_hvg2000
+pbmc14k,authors' data,2000 HVG seurat,Leiden (Scanpy),1.0,7.0,7.0,0.72,0.788,baselines_paper_pbmc14k_hvg2000
+pbmc14k,authors' data,2000 HVG seurat,Leiden (Scanpy),2.0,7.0,7.0,0.72,0.795,baselines_paper_pbmc14k_hvg2000
+pbmc14k,authors' data,2000 HVG seurat,MICA,0.0,7.0,7.0,0.688,0.768,mica_paper_pbmc14k_hvg2000_seurat
+pbmc14k,authors' data,2000 HVG seurat,hierarchical,0.0,7.0,7.0,0.565,0.736,baselines_paper_pbmc14k_hvg2000
+pbmc14k,authors' data,2000 HVG seurat,hierarchical,1.0,7.0,7.0,0.565,0.736,baselines_paper_pbmc14k_hvg2000
+pbmc14k,authors' data,2000 HVG seurat,hierarchical,2.0,7.0,7.0,0.565,0.736,baselines_paper_pbmc14k_hvg2000
+pbmc14k,authors' data,2000 HVG seurat,k-means,0.0,7.0,7.0,0.517,0.715,baselines_paper_pbmc14k_hvg2000
+pbmc14k,authors' data,2000 HVG seurat,k-means,1.0,7.0,7.0,0.518,0.715,baselines_paper_pbmc14k_hvg2000
+pbmc14k,authors' data,2000 HVG seurat,k-means,2.0,7.0,7.0,0.518,0.715,baselines_paper_pbmc14k_hvg2000
+pbmc14k,authors' data,2000 HVG seurat_v3,Leiden (Scanpy),0.0,7.0,7.0,0.725,0.787,baselines_paper_pbmc14k_hvg2000_seurat_v3
+pbmc14k,authors' data,2000 HVG seurat_v3,Leiden (Scanpy),1.0,7.0,7.0,0.732,0.796,baselines_paper_pbmc14k_hvg2000_seurat_v3
+pbmc14k,authors' data,2000 HVG seurat_v3,Leiden (Scanpy),2.0,7.0,7.0,0.729,0.797,baselines_paper_pbmc14k_hvg2000_seurat_v3
+pbmc14k,authors' data,2000 HVG seurat_v3,MICA,0.0,7.0,7.0,0.703,0.792,mica_paper_pbmc14k_hvg2000_seurat_v3
+pbmc14k,authors' data,2000 HVG seurat_v3,hierarchical,0.0,7.0,7.0,0.664,0.776,baselines_paper_pbmc14k_hvg2000_seurat_v3
+pbmc14k,authors' data,2000 HVG seurat_v3,hierarchical,1.0,7.0,7.0,0.664,0.776,baselines_paper_pbmc14k_hvg2000_seurat_v3
+pbmc14k,authors' data,2000 HVG seurat_v3,hierarchical,2.0,7.0,7.0,0.664,0.776,baselines_paper_pbmc14k_hvg2000_seurat_v3
+pbmc14k,authors' data,2000 HVG seurat_v3,k-means,0.0,7.0,7.0,0.522,0.718,baselines_paper_pbmc14k_hvg2000_seurat_v3
+pbmc14k,authors' data,2000 HVG seurat_v3,k-means,1.0,7.0,7.0,0.523,0.719,baselines_paper_pbmc14k_hvg2000_seurat_v3
+pbmc14k,authors' data,2000 HVG seurat_v3,k-means,2.0,7.0,7.0,0.522,0.718,baselines_paper_pbmc14k_hvg2000_seurat_v3
+pbmc14k,authors' data,all genes,Leiden (Scanpy),0.0,7.0,7.0,0.878,0.903,baselines_paper_pbmc14k
+pbmc14k,authors' data,all genes,Leiden (Scanpy),1.0,7.0,7.0,0.878,0.901,baselines_paper_pbmc14k
+pbmc14k,authors' data,all genes,Leiden (Scanpy),2.0,7.0,7.0,0.877,0.901,baselines_paper_pbmc14k
+pbmc14k,authors' data,all genes,MICA,0.0,7.0,7.0,0.853,0.871,reproduction_paper_pbmc14k
+pbmc14k,authors' data,all genes,hierarchical,0.0,7.0,7.0,0.578,0.717,baselines_paper_pbmc14k
+pbmc14k,authors' data,all genes,hierarchical,1.0,7.0,7.0,0.578,0.717,baselines_paper_pbmc14k
+pbmc14k,authors' data,all genes,hierarchical,2.0,7.0,7.0,0.578,0.717,baselines_paper_pbmc14k
+pbmc14k,authors' data,all genes,k-means,0.0,7.0,7.0,0.393,0.64,baselines_paper_pbmc14k
+pbmc14k,authors' data,all genes,k-means,1.0,7.0,7.0,0.545,0.691,baselines_paper_pbmc14k
+pbmc14k,authors' data,all genes,k-means,2.0,7.0,7.0,0.393,0.64,baselines_paper_pbmc14k
+pollen,authors' data,2000 HVG cell_ranger,Leiden (Scanpy),0.0,11.0,11.0,0.833,0.862,baselines_paper_pollen_hvg2000_cell_ranger
+pollen,authors' data,2000 HVG cell_ranger,Leiden (Scanpy),1.0,10.0,11.0,0.86,0.892,baselines_paper_pollen_hvg2000_cell_ranger
+pollen,authors' data,2000 HVG cell_ranger,Leiden (Scanpy),2.0,11.0,11.0,0.818,0.89,baselines_paper_pollen_hvg2000_cell_ranger
+pollen,authors' data,2000 HVG cell_ranger,MICA,0.0,11.0,11.0,0.942,0.951,mica_paper_pollen_hvg2000_cell_ranger
+pollen,authors' data,2000 HVG cell_ranger,MICA,1.0,11.0,11.0,0.942,0.951,mica_paper_pollen_hvg2000_cell_ranger
+pollen,authors' data,2000 HVG cell_ranger,MICA,2.0,11.0,11.0,0.942,0.951,mica_paper_pollen_hvg2000_cell_ranger
+pollen,authors' data,2000 HVG cell_ranger,hierarchical,0.0,11.0,11.0,0.929,0.933,baselines_paper_pollen_hvg2000_cell_ranger
+pollen,authors' data,2000 HVG cell_ranger,hierarchical,1.0,11.0,11.0,0.929,0.933,baselines_paper_pollen_hvg2000_cell_ranger
+pollen,authors' data,2000 HVG cell_ranger,hierarchical,2.0,11.0,11.0,0.929,0.933,baselines_paper_pollen_hvg2000_cell_ranger
+pollen,authors' data,2000 HVG cell_ranger,k-means,0.0,11.0,11.0,0.89,0.899,baselines_paper_pollen_hvg2000_cell_ranger
+pollen,authors' data,2000 HVG cell_ranger,k-means,1.0,11.0,11.0,0.924,0.928,baselines_paper_pollen_hvg2000_cell_ranger
+pollen,authors' data,2000 HVG cell_ranger,k-means,2.0,11.0,11.0,0.906,0.907,baselines_paper_pollen_hvg2000_cell_ranger
+pollen,authors' data,2000 HVG seurat,Leiden (Scanpy),0.0,10.0,11.0,0.828,0.878,baselines_paper_pollen_hvg2000
+pollen,authors' data,2000 HVG seurat,Leiden (Scanpy),1.0,10.0,11.0,0.828,0.878,baselines_paper_pollen_hvg2000
+pollen,authors' data,2000 HVG seurat,Leiden (Scanpy),2.0,10.0,11.0,0.826,0.877,baselines_paper_pollen_hvg2000
+pollen,authors' data,2000 HVG seurat,MICA,0.0,11.0,11.0,0.942,0.951,mica_paper_pollen_hvg2000_seurat
+pollen,authors' data,2000 HVG seurat,MICA,1.0,11.0,11.0,0.942,0.951,mica_paper_pollen_hvg2000_seurat
+pollen,authors' data,2000 HVG seurat,MICA,2.0,11.0,11.0,0.942,0.951,mica_paper_pollen_hvg2000_seurat
+pollen,authors' data,2000 HVG seurat,hierarchical,0.0,11.0,11.0,0.948,0.955,baselines_paper_pollen_hvg2000
+pollen,authors' data,2000 HVG seurat,hierarchical,1.0,11.0,11.0,0.948,0.955,baselines_paper_pollen_hvg2000
+pollen,authors' data,2000 HVG seurat,hierarchical,2.0,11.0,11.0,0.948,0.955,baselines_paper_pollen_hvg2000
+pollen,authors' data,2000 HVG seurat,k-means,0.0,11.0,11.0,0.905,0.927,baselines_paper_pollen_hvg2000
+pollen,authors' data,2000 HVG seurat,k-means,1.0,11.0,11.0,0.892,0.92,baselines_paper_pollen_hvg2000
+pollen,authors' data,2000 HVG seurat,k-means,2.0,11.0,11.0,0.884,0.905,baselines_paper_pollen_hvg2000
+pollen,authors' data,2000 HVG seurat_v3,Leiden (Scanpy),0.0,11.0,11.0,0.869,0.894,baselines_paper_pollen_hvg2000_seurat_v3
+pollen,authors' data,2000 HVG seurat_v3,Leiden (Scanpy),1.0,11.0,11.0,0.867,0.896,baselines_paper_pollen_hvg2000_seurat_v3
+pollen,authors' data,2000 HVG seurat_v3,Leiden (Scanpy),2.0,11.0,11.0,0.867,0.896,baselines_paper_pollen_hvg2000_seurat_v3
+pollen,authors' data,2000 HVG seurat_v3,MICA,0.0,11.0,11.0,0.942,0.951,mica_paper_pollen_hvg2000_seurat_v3
+pollen,authors' data,2000 HVG seurat_v3,MICA,1.0,11.0,11.0,0.942,0.951,mica_paper_pollen_hvg2000_seurat_v3
+pollen,authors' data,2000 HVG seurat_v3,MICA,2.0,11.0,11.0,0.941,0.948,mica_paper_pollen_hvg2000_seurat_v3
+pollen,authors' data,2000 HVG seurat_v3,hierarchical,0.0,11.0,11.0,0.937,0.941,baselines_paper_pollen_hvg2000_seurat_v3
+pollen,authors' data,2000 HVG seurat_v3,hierarchical,1.0,11.0,11.0,0.937,0.941,baselines_paper_pollen_hvg2000_seurat_v3
+pollen,authors' data,2000 HVG seurat_v3,hierarchical,2.0,11.0,11.0,0.937,0.941,baselines_paper_pollen_hvg2000_seurat_v3
+pollen,authors' data,2000 HVG seurat_v3,k-means,0.0,11.0,11.0,0.853,0.894,baselines_paper_pollen_hvg2000_seurat_v3
+pollen,authors' data,2000 HVG seurat_v3,k-means,1.0,11.0,11.0,0.899,0.917,baselines_paper_pollen_hvg2000_seurat_v3
+pollen,authors' data,2000 HVG seurat_v3,k-means,2.0,11.0,11.0,0.935,0.937,baselines_paper_pollen_hvg2000_seurat_v3
+pollen,authors' data,all genes,Leiden (Scanpy),0.0,11.0,11.0,0.858,0.901,baselines_paper_pollen
+pollen,authors' data,all genes,Leiden (Scanpy),1.0,11.0,11.0,0.858,0.901,baselines_paper_pollen
+pollen,authors' data,all genes,Leiden (Scanpy),2.0,11.0,11.0,0.858,0.901,baselines_paper_pollen
+pollen,authors' data,all genes,MICA,0.0,11.0,11.0,0.942,0.951,reproduction_paper_pollen
+pollen,authors' data,all genes,MICA,1.0,11.0,11.0,0.942,0.951,reproduction_paper_pollen
+pollen,authors' data,all genes,MICA,2.0,11.0,11.0,0.969,0.973,reproduction_paper_pollen
+pollen,authors' data,all genes,hierarchical,0.0,11.0,11.0,0.948,0.955,baselines_paper_pollen
+pollen,authors' data,all genes,hierarchical,1.0,11.0,11.0,0.948,0.955,baselines_paper_pollen
+pollen,authors' data,all genes,hierarchical,2.0,11.0,11.0,0.948,0.955,baselines_paper_pollen
+pollen,authors' data,all genes,k-means,0.0,11.0,11.0,0.886,0.907,baselines_paper_pollen
+pollen,authors' data,all genes,k-means,1.0,11.0,11.0,0.867,0.905,baselines_paper_pollen
+pollen,authors' data,all genes,k-means,2.0,11.0,11.0,0.891,0.907,baselines_paper_pollen
+usoskin,authors' data,2000 HVG cell_ranger,Leiden (Scanpy),0.0,4.0,4.0,0.907,0.871,baselines_paper_usoskin_hvg2000_cell_ranger
+usoskin,authors' data,2000 HVG cell_ranger,Leiden (Scanpy),1.0,4.0,4.0,0.9,0.859,baselines_paper_usoskin_hvg2000_cell_ranger
+usoskin,authors' data,2000 HVG cell_ranger,Leiden (Scanpy),2.0,4.0,4.0,0.907,0.871,baselines_paper_usoskin_hvg2000_cell_ranger
+usoskin,authors' data,2000 HVG cell_ranger,MICA,0.0,4.0,4.0,0.86,0.837,mica_paper_usoskin_hvg2000_cell_ranger
+usoskin,authors' data,2000 HVG cell_ranger,MICA,1.0,4.0,4.0,0.86,0.837,mica_paper_usoskin_hvg2000_cell_ranger
+usoskin,authors' data,2000 HVG cell_ranger,MICA,2.0,4.0,4.0,0.86,0.837,mica_paper_usoskin_hvg2000_cell_ranger
+usoskin,authors' data,2000 HVG cell_ranger,hierarchical,0.0,4.0,4.0,0.484,0.581,baselines_paper_usoskin_hvg2000_cell_ranger
+usoskin,authors' data,2000 HVG cell_ranger,hierarchical,1.0,4.0,4.0,0.484,0.581,baselines_paper_usoskin_hvg2000_cell_ranger
+usoskin,authors' data,2000 HVG cell_ranger,hierarchical,2.0,4.0,4.0,0.484,0.581,baselines_paper_usoskin_hvg2000_cell_ranger
+usoskin,authors' data,2000 HVG cell_ranger,k-means,0.0,4.0,4.0,0.596,0.656,baselines_paper_usoskin_hvg2000_cell_ranger
+usoskin,authors' data,2000 HVG cell_ranger,k-means,1.0,4.0,4.0,0.598,0.66,baselines_paper_usoskin_hvg2000_cell_ranger
+usoskin,authors' data,2000 HVG cell_ranger,k-means,2.0,4.0,4.0,0.603,0.662,baselines_paper_usoskin_hvg2000_cell_ranger
+usoskin,authors' data,2000 HVG seurat,Leiden (Scanpy),0.0,4.0,4.0,0.859,0.799,baselines_paper_usoskin_hvg2000
+usoskin,authors' data,2000 HVG seurat,Leiden (Scanpy),1.0,4.0,4.0,0.869,0.808,baselines_paper_usoskin_hvg2000
+usoskin,authors' data,2000 HVG seurat,Leiden (Scanpy),2.0,4.0,4.0,0.86,0.803,baselines_paper_usoskin_hvg2000
+usoskin,authors' data,2000 HVG seurat,MICA,0.0,4.0,4.0,0.903,0.854,mica_paper_usoskin_hvg2000_seurat
+usoskin,authors' data,2000 HVG seurat,MICA,1.0,4.0,4.0,0.903,0.854,mica_paper_usoskin_hvg2000_seurat
+usoskin,authors' data,2000 HVG seurat,MICA,2.0,4.0,4.0,0.902,0.852,mica_paper_usoskin_hvg2000_seurat
+usoskin,authors' data,2000 HVG seurat,hierarchical,0.0,4.0,4.0,0.411,0.463,baselines_paper_usoskin_hvg2000
+usoskin,authors' data,2000 HVG seurat,hierarchical,1.0,4.0,4.0,0.411,0.463,baselines_paper_usoskin_hvg2000
+usoskin,authors' data,2000 HVG seurat,hierarchical,2.0,4.0,4.0,0.411,0.463,baselines_paper_usoskin_hvg2000
+usoskin,authors' data,2000 HVG seurat,k-means,0.0,4.0,4.0,0.411,0.489,baselines_paper_usoskin_hvg2000
+usoskin,authors' data,2000 HVG seurat,k-means,1.0,4.0,4.0,0.343,0.414,baselines_paper_usoskin_hvg2000
+usoskin,authors' data,2000 HVG seurat,k-means,2.0,4.0,4.0,0.38,0.487,baselines_paper_usoskin_hvg2000
+usoskin,authors' data,2000 HVG seurat_v3,Leiden (Scanpy),0.0,4.0,4.0,0.899,0.853,baselines_paper_usoskin_hvg2000_seurat_v3
+usoskin,authors' data,2000 HVG seurat_v3,Leiden (Scanpy),1.0,4.0,4.0,0.899,0.853,baselines_paper_usoskin_hvg2000_seurat_v3
+usoskin,authors' data,2000 HVG seurat_v3,Leiden (Scanpy),2.0,4.0,4.0,0.907,0.862,baselines_paper_usoskin_hvg2000_seurat_v3
+usoskin,authors' data,2000 HVG seurat_v3,MICA,0.0,4.0,4.0,0.904,0.873,mica_paper_usoskin_hvg2000_seurat_v3
+usoskin,authors' data,2000 HVG seurat_v3,MICA,1.0,4.0,4.0,0.904,0.873,mica_paper_usoskin_hvg2000_seurat_v3
+usoskin,authors' data,2000 HVG seurat_v3,MICA,2.0,4.0,4.0,0.902,0.87,mica_paper_usoskin_hvg2000_seurat_v3
+usoskin,authors' data,2000 HVG seurat_v3,hierarchical,0.0,4.0,4.0,0.626,0.692,baselines_paper_usoskin_hvg2000_seurat_v3
+usoskin,authors' data,2000 HVG seurat_v3,hierarchical,1.0,4.0,4.0,0.626,0.692,baselines_paper_usoskin_hvg2000_seurat_v3
+usoskin,authors' data,2000 HVG seurat_v3,hierarchical,2.0,4.0,4.0,0.626,0.692,baselines_paper_usoskin_hvg2000_seurat_v3
+usoskin,authors' data,2000 HVG seurat_v3,k-means,0.0,4.0,4.0,0.482,0.544,baselines_paper_usoskin_hvg2000_seurat_v3
+usoskin,authors' data,2000 HVG seurat_v3,k-means,1.0,4.0,4.0,0.482,0.544,baselines_paper_usoskin_hvg2000_seurat_v3
+usoskin,authors' data,2000 HVG seurat_v3,k-means,2.0,4.0,4.0,0.49,0.557,baselines_paper_usoskin_hvg2000_seurat_v3
+usoskin,authors' data,all genes,Leiden (Scanpy),0.0,4.0,4.0,0.598,0.686,baselines_paper_usoskin
+usoskin,authors' data,all genes,Leiden (Scanpy),1.0,4.0,4.0,0.598,0.686,baselines_paper_usoskin
+usoskin,authors' data,all genes,Leiden (Scanpy),2.0,4.0,4.0,0.595,0.678,baselines_paper_usoskin
+usoskin,authors' data,all genes,MICA,0.0,4.0,4.0,0.844,0.802,reproduction_paper_usoskin
+usoskin,authors' data,all genes,MICA,1.0,4.0,4.0,0.813,0.777,reproduction_paper_usoskin
+usoskin,authors' data,all genes,MICA,2.0,4.0,4.0,0.847,0.803,reproduction_paper_usoskin
+usoskin,authors' data,all genes,hierarchical,0.0,4.0,4.0,0.154,0.199,baselines_paper_usoskin
+usoskin,authors' data,all genes,hierarchical,1.0,4.0,4.0,0.154,0.199,baselines_paper_usoskin
+usoskin,authors' data,all genes,hierarchical,2.0,4.0,4.0,0.154,0.199,baselines_paper_usoskin
+usoskin,authors' data,all genes,k-means,0.0,4.0,4.0,0.176,0.24,baselines_paper_usoskin
+usoskin,authors' data,all genes,k-means,1.0,4.0,4.0,0.176,0.24,baselines_paper_usoskin
+usoskin,authors' data,all genes,k-means,2.0,4.0,4.0,0.176,0.24,baselines_paper_usoskin
+yan,authors' data,2000 HVG cell_ranger,Leiden (Scanpy),0.0,7.0,8.0,0.8,0.844,baselines_paper_yan_hvg2000_cell_ranger
+yan,authors' data,2000 HVG cell_ranger,Leiden (Scanpy),1.0,7.0,8.0,0.8,0.844,baselines_paper_yan_hvg2000_cell_ranger
+yan,authors' data,2000 HVG cell_ranger,Leiden (Scanpy),2.0,7.0,8.0,0.8,0.844,baselines_paper_yan_hvg2000_cell_ranger
+yan,authors' data,2000 HVG cell_ranger,MICA,0.0,8.0,8.0,0.866,0.885,mica_paper_yan_hvg2000_cell_ranger
+yan,authors' data,2000 HVG cell_ranger,MICA,1.0,8.0,8.0,0.858,0.882,mica_paper_yan_hvg2000_cell_ranger
+yan,authors' data,2000 HVG cell_ranger,MICA,2.0,8.0,8.0,0.876,0.888,mica_paper_yan_hvg2000_cell_ranger
+yan,authors' data,2000 HVG cell_ranger,hierarchical,0.0,8.0,8.0,0.802,0.847,baselines_paper_yan_hvg2000_cell_ranger
+yan,authors' data,2000 HVG cell_ranger,hierarchical,1.0,8.0,8.0,0.802,0.847,baselines_paper_yan_hvg2000_cell_ranger
+yan,authors' data,2000 HVG cell_ranger,hierarchical,2.0,8.0,8.0,0.802,0.847,baselines_paper_yan_hvg2000_cell_ranger
+yan,authors' data,2000 HVG cell_ranger,k-means,0.0,8.0,8.0,0.667,0.773,baselines_paper_yan_hvg2000_cell_ranger
+yan,authors' data,2000 HVG cell_ranger,k-means,1.0,8.0,8.0,0.866,0.874,baselines_paper_yan_hvg2000_cell_ranger
+yan,authors' data,2000 HVG cell_ranger,k-means,2.0,8.0,8.0,0.879,0.881,baselines_paper_yan_hvg2000_cell_ranger
+yan,authors' data,2000 HVG seurat,Leiden (Scanpy),0.0,6.0,8.0,0.951,0.936,baselines_paper_yan_hvg2000
+yan,authors' data,2000 HVG seurat,Leiden (Scanpy),1.0,6.0,8.0,0.951,0.936,baselines_paper_yan_hvg2000
+yan,authors' data,2000 HVG seurat,Leiden (Scanpy),2.0,6.0,8.0,0.951,0.936,baselines_paper_yan_hvg2000
+yan,authors' data,2000 HVG seurat,MICA,0.0,8.0,8.0,0.868,0.903,mica_paper_yan_hvg2000_seurat
+yan,authors' data,2000 HVG seurat,MICA,1.0,8.0,8.0,0.875,0.905,mica_paper_yan_hvg2000_seurat
+yan,authors' data,2000 HVG seurat,MICA,2.0,8.0,8.0,0.868,0.903,mica_paper_yan_hvg2000_seurat
+yan,authors' data,2000 HVG seurat,hierarchical,0.0,8.0,8.0,0.712,0.782,baselines_paper_yan_hvg2000
+yan,authors' data,2000 HVG seurat,hierarchical,1.0,8.0,8.0,0.712,0.782,baselines_paper_yan_hvg2000
+yan,authors' data,2000 HVG seurat,hierarchical,2.0,8.0,8.0,0.712,0.782,baselines_paper_yan_hvg2000
+yan,authors' data,2000 HVG seurat,k-means,0.0,8.0,8.0,0.848,0.869,baselines_paper_yan_hvg2000
+yan,authors' data,2000 HVG seurat,k-means,1.0,8.0,8.0,0.846,0.848,baselines_paper_yan_hvg2000
+yan,authors' data,2000 HVG seurat,k-means,2.0,8.0,8.0,0.71,0.769,baselines_paper_yan_hvg2000
+yan,authors' data,2000 HVG seurat_v3,Leiden (Scanpy),0.0,8.0,8.0,0.843,0.872,baselines_paper_yan_hvg2000_seurat_v3
+yan,authors' data,2000 HVG seurat_v3,Leiden (Scanpy),1.0,8.0,8.0,0.843,0.872,baselines_paper_yan_hvg2000_seurat_v3
+yan,authors' data,2000 HVG seurat_v3,Leiden (Scanpy),2.0,8.0,8.0,0.843,0.872,baselines_paper_yan_hvg2000_seurat_v3
+yan,authors' data,2000 HVG seurat_v3,MICA,0.0,8.0,8.0,0.875,0.905,mica_paper_yan_hvg2000_seurat_v3
+yan,authors' data,2000 HVG seurat_v3,MICA,1.0,8.0,8.0,0.875,0.905,mica_paper_yan_hvg2000_seurat_v3
+yan,authors' data,2000 HVG seurat_v3,MICA,2.0,8.0,8.0,0.875,0.905,mica_paper_yan_hvg2000_seurat_v3
+yan,authors' data,2000 HVG seurat_v3,hierarchical,0.0,8.0,8.0,0.795,0.845,baselines_paper_yan_hvg2000_seurat_v3
+yan,authors' data,2000 HVG seurat_v3,hierarchical,1.0,8.0,8.0,0.795,0.845,baselines_paper_yan_hvg2000_seurat_v3
+yan,authors' data,2000 HVG seurat_v3,hierarchical,2.0,8.0,8.0,0.795,0.845,baselines_paper_yan_hvg2000_seurat_v3
+yan,authors' data,2000 HVG seurat_v3,k-means,0.0,8.0,8.0,0.785,0.826,baselines_paper_yan_hvg2000_seurat_v3
+yan,authors' data,2000 HVG seurat_v3,k-means,1.0,8.0,8.0,0.678,0.795,baselines_paper_yan_hvg2000_seurat_v3
+yan,authors' data,2000 HVG seurat_v3,k-means,2.0,8.0,8.0,0.82,0.853,baselines_paper_yan_hvg2000_seurat_v3
+yan,authors' data,all genes,Leiden (Scanpy),0.0,8.0,8.0,0.789,0.801,baselines_paper_yan
+yan,authors' data,all genes,Leiden (Scanpy),1.0,8.0,8.0,0.789,0.801,baselines_paper_yan
+yan,authors' data,all genes,Leiden (Scanpy),2.0,8.0,8.0,0.789,0.801,baselines_paper_yan
+yan,authors' data,all genes,MICA,0.0,8.0,8.0,0.939,0.929,reproduction_paper_yan
+yan,authors' data,all genes,MICA,1.0,8.0,8.0,0.939,0.929,reproduction_paper_yan
+yan,authors' data,all genes,MICA,2.0,8.0,8.0,0.939,0.929,reproduction_paper_yan
+yan,authors' data,all genes,hierarchical,0.0,8.0,8.0,0.823,0.856,baselines_paper_yan
+yan,authors' data,all genes,hierarchical,1.0,8.0,8.0,0.823,0.856,baselines_paper_yan
+yan,authors' data,all genes,hierarchical,2.0,8.0,8.0,0.823,0.856,baselines_paper_yan
+yan,authors' data,all genes,k-means,0.0,8.0,8.0,0.799,0.824,baselines_paper_yan
+yan,authors' data,all genes,k-means,1.0,8.0,8.0,0.638,0.713,baselines_paper_yan
+yan,authors' data,all genes,k-means,2.0,8.0,8.0,0.88,0.857,baselines_paper_yan
+zeisel,authors' data,2000 HVG cell_ranger,Leiden (Scanpy),0.0,7.0,7.0,0.753,0.724,baselines_paper_zeisel_hvg2000_cell_ranger
+zeisel,authors' data,2000 HVG cell_ranger,Leiden (Scanpy),1.0,7.0,7.0,0.75,0.718,baselines_paper_zeisel_hvg2000_cell_ranger
+zeisel,authors' data,2000 HVG cell_ranger,Leiden (Scanpy),2.0,7.0,7.0,0.718,0.698,baselines_paper_zeisel_hvg2000_cell_ranger
+zeisel,authors' data,2000 HVG cell_ranger,MICA,0.0,7.0,7.0,0.809,0.786,mica_paper_zeisel_hvg2000_cell_ranger
+zeisel,authors' data,2000 HVG cell_ranger,MICA,1.0,7.0,7.0,0.809,0.786,mica_paper_zeisel_hvg2000_cell_ranger
+zeisel,authors' data,2000 HVG cell_ranger,MICA,2.0,7.0,7.0,0.809,0.786,mica_paper_zeisel_hvg2000_cell_ranger
+zeisel,authors' data,2000 HVG cell_ranger,hierarchical,0.0,7.0,7.0,0.583,0.631,baselines_paper_zeisel_hvg2000_cell_ranger
+zeisel,authors' data,2000 HVG cell_ranger,hierarchical,1.0,7.0,7.0,0.583,0.631,baselines_paper_zeisel_hvg2000_cell_ranger
+zeisel,authors' data,2000 HVG cell_ranger,hierarchical,2.0,7.0,7.0,0.583,0.631,baselines_paper_zeisel_hvg2000_cell_ranger
+zeisel,authors' data,2000 HVG cell_ranger,k-means,0.0,7.0,7.0,0.833,0.776,baselines_paper_zeisel_hvg2000_cell_ranger
+zeisel,authors' data,2000 HVG cell_ranger,k-means,1.0,7.0,7.0,0.832,0.775,baselines_paper_zeisel_hvg2000_cell_ranger
+zeisel,authors' data,2000 HVG cell_ranger,k-means,2.0,7.0,7.0,0.832,0.776,baselines_paper_zeisel_hvg2000_cell_ranger
+zeisel,authors' data,2000 HVG seurat,Leiden (Scanpy),0.0,7.0,7.0,0.674,0.673,baselines_paper_zeisel_hvg2000
+zeisel,authors' data,2000 HVG seurat,Leiden (Scanpy),1.0,7.0,7.0,0.649,0.657,baselines_paper_zeisel_hvg2000
+zeisel,authors' data,2000 HVG seurat,Leiden (Scanpy),2.0,7.0,7.0,0.649,0.657,baselines_paper_zeisel_hvg2000
+zeisel,authors' data,2000 HVG seurat,MICA,0.0,7.0,7.0,0.762,0.73,mica_paper_zeisel_hvg2000_seurat
+zeisel,authors' data,2000 HVG seurat,MICA,1.0,7.0,7.0,0.764,0.732,mica_paper_zeisel_hvg2000_seurat
+zeisel,authors' data,2000 HVG seurat,MICA,2.0,7.0,7.0,0.763,0.731,mica_paper_zeisel_hvg2000_seurat
+zeisel,authors' data,2000 HVG seurat,hierarchical,0.0,7.0,7.0,0.4,0.454,baselines_paper_zeisel_hvg2000
+zeisel,authors' data,2000 HVG seurat,hierarchical,1.0,7.0,7.0,0.4,0.454,baselines_paper_zeisel_hvg2000
+zeisel,authors' data,2000 HVG seurat,hierarchical,2.0,7.0,7.0,0.4,0.454,baselines_paper_zeisel_hvg2000
+zeisel,authors' data,2000 HVG seurat,k-means,0.0,7.0,7.0,0.613,0.634,baselines_paper_zeisel_hvg2000
+zeisel,authors' data,2000 HVG seurat,k-means,1.0,7.0,7.0,0.474,0.534,baselines_paper_zeisel_hvg2000
+zeisel,authors' data,2000 HVG seurat,k-means,2.0,7.0,7.0,0.612,0.632,baselines_paper_zeisel_hvg2000
+zeisel,authors' data,2000 HVG seurat_v3,Leiden (Scanpy),0.0,7.0,7.0,0.675,0.676,baselines_paper_zeisel_hvg2000_seurat_v3
+zeisel,authors' data,2000 HVG seurat_v3,Leiden (Scanpy),1.0,7.0,7.0,0.715,0.697,baselines_paper_zeisel_hvg2000_seurat_v3
+zeisel,authors' data,2000 HVG seurat_v3,Leiden (Scanpy),2.0,7.0,7.0,0.687,0.687,baselines_paper_zeisel_hvg2000_seurat_v3
+zeisel,authors' data,2000 HVG seurat_v3,MICA,0.0,7.0,7.0,0.797,0.759,mica_paper_zeisel_hvg2000_seurat_v3
+zeisel,authors' data,2000 HVG seurat_v3,MICA,1.0,7.0,7.0,0.797,0.759,mica_paper_zeisel_hvg2000_seurat_v3
+zeisel,authors' data,2000 HVG seurat_v3,MICA,2.0,7.0,7.0,0.797,0.759,mica_paper_zeisel_hvg2000_seurat_v3
+zeisel,authors' data,2000 HVG seurat_v3,hierarchical,0.0,7.0,7.0,0.559,0.588,baselines_paper_zeisel_hvg2000_seurat_v3
+zeisel,authors' data,2000 HVG seurat_v3,hierarchical,1.0,7.0,7.0,0.559,0.588,baselines_paper_zeisel_hvg2000_seurat_v3
+zeisel,authors' data,2000 HVG seurat_v3,hierarchical,2.0,7.0,7.0,0.559,0.588,baselines_paper_zeisel_hvg2000_seurat_v3
+zeisel,authors' data,2000 HVG seurat_v3,k-means,0.0,7.0,7.0,0.623,0.644,baselines_paper_zeisel_hvg2000_seurat_v3
+zeisel,authors' data,2000 HVG seurat_v3,k-means,1.0,7.0,7.0,0.622,0.644,baselines_paper_zeisel_hvg2000_seurat_v3
+zeisel,authors' data,2000 HVG seurat_v3,k-means,2.0,7.0,7.0,0.614,0.634,baselines_paper_zeisel_hvg2000_seurat_v3
+zeisel,authors' data,all genes,Leiden (Scanpy),0.0,7.0,7.0,0.839,0.796,baselines_paper_zeisel
+zeisel,authors' data,all genes,Leiden (Scanpy),1.0,7.0,7.0,0.839,0.796,baselines_paper_zeisel
+zeisel,authors' data,all genes,Leiden (Scanpy),2.0,7.0,7.0,0.839,0.796,baselines_paper_zeisel
+zeisel,authors' data,all genes,MICA,0.0,7.0,7.0,0.714,0.762,reproduction_paper_zeisel
+zeisel,authors' data,all genes,MICA,1.0,7.0,7.0,0.714,0.762,reproduction_paper_zeisel
+zeisel,authors' data,all genes,MICA,2.0,7.0,7.0,0.714,0.762,reproduction_paper_zeisel
+zeisel,authors' data,all genes,hierarchical,0.0,7.0,7.0,0.664,0.725,baselines_paper_zeisel
+zeisel,authors' data,all genes,hierarchical,1.0,7.0,7.0,0.664,0.725,baselines_paper_zeisel
+zeisel,authors' data,all genes,hierarchical,2.0,7.0,7.0,0.664,0.725,baselines_paper_zeisel
+zeisel,authors' data,all genes,k-means,0.0,7.0,7.0,0.595,0.688,baselines_paper_zeisel
+zeisel,authors' data,all genes,k-means,1.0,7.0,7.0,0.483,0.58,baselines_paper_zeisel
+zeisel,authors' data,all genes,k-means,2.0,7.0,7.0,0.484,0.588,baselines_paper_zeisel
+allen_100k,our preprocessing,2000 HVG seurat_v3,Leiden (Scanpy),0.0,35.0,34.0,0.661,0.85,baselines_allen_100k_hvg2000_seurat_v3
+allen_100k,our preprocessing,2000 HVG seurat_v3,k-means,0.0,34.0,34.0,0.579,0.82,baselines_allen_100k_hvg2000_seurat_v3
+allen_100k,our preprocessing,all genes,Leiden (Scanpy),0.0,34.0,34.0,0.624,0.839,baselines_allen_100k
+allen_100k,our preprocessing,all genes,MICA,0.0,33.0,34.0,0.652,0.836,pilot_mica_allen_100k
+allen_100k,our preprocessing,all genes,k-means,0.0,34.0,34.0,0.431,0.709,baselines_allen_100k
+klein,our preprocessing,2000 HVG cell_ranger,Leiden (Scanpy),0.0,4.0,4.0,0.765,0.817,baselines_klein_hvg2000_cell_ranger
+klein,our preprocessing,2000 HVG cell_ranger,Leiden (Scanpy),1.0,4.0,4.0,0.765,0.817,baselines_klein_hvg2000_cell_ranger
+klein,our preprocessing,2000 HVG cell_ranger,Leiden (Scanpy),2.0,4.0,4.0,0.766,0.817,baselines_klein_hvg2000_cell_ranger
+klein,our preprocessing,2000 HVG cell_ranger,MICA,0.0,4.0,4.0,0.728,0.744,mica_klein_hvg2000_cell_ranger
+klein,our preprocessing,2000 HVG cell_ranger,MICA,1.0,4.0,4.0,0.728,0.744,mica_klein_hvg2000_cell_ranger
+klein,our preprocessing,2000 HVG cell_ranger,MICA,2.0,4.0,4.0,0.728,0.744,mica_klein_hvg2000_cell_ranger
+klein,our preprocessing,2000 HVG cell_ranger,hierarchical,0.0,4.0,4.0,0.752,0.8,baselines_klein_hvg2000_cell_ranger
+klein,our preprocessing,2000 HVG cell_ranger,hierarchical,1.0,4.0,4.0,0.752,0.8,baselines_klein_hvg2000_cell_ranger
+klein,our preprocessing,2000 HVG cell_ranger,hierarchical,2.0,4.0,4.0,0.752,0.8,baselines_klein_hvg2000_cell_ranger
+klein,our preprocessing,2000 HVG cell_ranger,k-means,0.0,4.0,4.0,0.57,0.659,baselines_klein_hvg2000_cell_ranger
+klein,our preprocessing,2000 HVG cell_ranger,k-means,1.0,4.0,4.0,0.57,0.659,baselines_klein_hvg2000_cell_ranger
+klein,our preprocessing,2000 HVG cell_ranger,k-means,2.0,4.0,4.0,0.57,0.659,baselines_klein_hvg2000_cell_ranger
+klein,our preprocessing,2000 HVG seurat,Leiden (Scanpy),0.0,4.0,4.0,0.95,0.925,baselines_klein_hvg2000
+klein,our preprocessing,2000 HVG seurat,Leiden (Scanpy),1.0,4.0,4.0,0.95,0.926,baselines_klein_hvg2000
+klein,our preprocessing,2000 HVG seurat,Leiden (Scanpy),2.0,4.0,4.0,0.951,0.927,baselines_klein_hvg2000
+klein,our preprocessing,2000 HVG seurat,MICA,0.0,4.0,4.0,0.793,0.777,mica_klein_hvg2000_seurat
+klein,our preprocessing,2000 HVG seurat,MICA,1.0,4.0,4.0,0.793,0.777,mica_klein_hvg2000_seurat
+klein,our preprocessing,2000 HVG seurat,MICA,2.0,4.0,4.0,0.793,0.777,mica_klein_hvg2000_seurat
+klein,our preprocessing,2000 HVG seurat,hierarchical,0.0,4.0,4.0,0.66,0.688,baselines_klein_hvg2000
+klein,our preprocessing,2000 HVG seurat,hierarchical,1.0,4.0,4.0,0.66,0.688,baselines_klein_hvg2000
+klein,our preprocessing,2000 HVG seurat,hierarchical,2.0,4.0,4.0,0.66,0.688,baselines_klein_hvg2000
+klein,our preprocessing,2000 HVG seurat,k-means,0.0,4.0,4.0,0.616,0.645,baselines_klein_hvg2000
+klein,our preprocessing,2000 HVG seurat,k-means,1.0,4.0,4.0,0.615,0.644,baselines_klein_hvg2000
+klein,our preprocessing,2000 HVG seurat,k-means,2.0,4.0,4.0,0.615,0.644,baselines_klein_hvg2000
+klein,our preprocessing,2000 HVG seurat_v3,Leiden (Scanpy),0.0,4.0,4.0,0.976,0.96,baselines_klein_hvg2000_seurat_v3
+klein,our preprocessing,2000 HVG seurat_v3,Leiden (Scanpy),1.0,4.0,4.0,0.976,0.96,baselines_klein_hvg2000_seurat_v3
+klein,our preprocessing,2000 HVG seurat_v3,Leiden (Scanpy),2.0,4.0,4.0,0.975,0.959,baselines_klein_hvg2000_seurat_v3
+klein,our preprocessing,2000 HVG seurat_v3,MICA,0.0,4.0,4.0,0.839,0.845,mica_klein_hvg2000_seurat_v3
+klein,our preprocessing,2000 HVG seurat_v3,MICA,1.0,4.0,4.0,0.839,0.845,mica_klein_hvg2000_seurat_v3
+klein,our preprocessing,2000 HVG seurat_v3,MICA,2.0,4.0,4.0,0.839,0.845,mica_klein_hvg2000_seurat_v3
+klein,our preprocessing,2000 HVG seurat_v3,hierarchical,0.0,4.0,4.0,0.787,0.836,baselines_klein_hvg2000_seurat_v3
+klein,our preprocessing,2000 HVG seurat_v3,hierarchical,1.0,4.0,4.0,0.787,0.836,baselines_klein_hvg2000_seurat_v3
+klein,our preprocessing,2000 HVG seurat_v3,hierarchical,2.0,4.0,4.0,0.787,0.836,baselines_klein_hvg2000_seurat_v3
+klein,our preprocessing,2000 HVG seurat_v3,k-means,0.0,4.0,4.0,0.757,0.804,baselines_klein_hvg2000_seurat_v3
+klein,our preprocessing,2000 HVG seurat_v3,k-means,1.0,4.0,4.0,0.757,0.804,baselines_klein_hvg2000_seurat_v3
+klein,our preprocessing,2000 HVG seurat_v3,k-means,2.0,4.0,4.0,0.757,0.804,baselines_klein_hvg2000_seurat_v3
+klein,our preprocessing,all genes,Leiden (Scanpy),0.0,4.0,4.0,0.977,0.961,baselines_klein
+klein,our preprocessing,all genes,Leiden (Scanpy),1.0,4.0,4.0,0.973,0.956,baselines_klein
+klein,our preprocessing,all genes,Leiden (Scanpy),2.0,4.0,4.0,0.973,0.956,baselines_klein
+klein,our preprocessing,all genes,MICA,0.0,4.0,4.0,0.98,0.963,reproduction_klein
+klein,our preprocessing,all genes,MICA,1.0,4.0,4.0,0.98,0.963,reproduction_klein
+klein,our preprocessing,all genes,MICA,2.0,4.0,4.0,0.98,0.963,reproduction_klein
+klein,our preprocessing,all genes,hierarchical,0.0,4.0,4.0,0.433,0.566,baselines_klein
+klein,our preprocessing,all genes,hierarchical,1.0,4.0,4.0,0.433,0.566,baselines_klein
+klein,our preprocessing,all genes,hierarchical,2.0,4.0,4.0,0.433,0.566,baselines_klein
+klein,our preprocessing,all genes,k-means,0.0,4.0,4.0,0.396,0.532,baselines_klein
+klein,our preprocessing,all genes,k-means,1.0,4.0,4.0,0.396,0.532,baselines_klein
+klein,our preprocessing,all genes,k-means,2.0,4.0,4.0,0.396,0.532,baselines_klein
+kolodziejczyk,our preprocessing,2000 HVG cell_ranger,Leiden (Scanpy),0.0,3.0,3.0,1.0,1.0,baselines_kolodziejczyk_hvg2000_cell_ranger
+kolodziejczyk,our preprocessing,2000 HVG cell_ranger,Leiden (Scanpy),1.0,3.0,3.0,1.0,1.0,baselines_kolodziejczyk_hvg2000_cell_ranger
+kolodziejczyk,our preprocessing,2000 HVG cell_ranger,Leiden (Scanpy),2.0,3.0,3.0,1.0,1.0,baselines_kolodziejczyk_hvg2000_cell_ranger
+kolodziejczyk,our preprocessing,2000 HVG cell_ranger,MICA,0.0,3.0,3.0,1.0,1.0,mica_kolodziejczyk_hvg2000_cell_ranger
+kolodziejczyk,our preprocessing,2000 HVG cell_ranger,MICA,1.0,3.0,3.0,1.0,1.0,mica_kolodziejczyk_hvg2000_cell_ranger
+kolodziejczyk,our preprocessing,2000 HVG cell_ranger,MICA,2.0,3.0,3.0,1.0,1.0,mica_kolodziejczyk_hvg2000_cell_ranger
+kolodziejczyk,our preprocessing,2000 HVG cell_ranger,hierarchical,0.0,3.0,3.0,0.618,0.728,baselines_kolodziejczyk_hvg2000_cell_ranger
+kolodziejczyk,our preprocessing,2000 HVG cell_ranger,hierarchical,1.0,3.0,3.0,0.618,0.728,baselines_kolodziejczyk_hvg2000_cell_ranger
+kolodziejczyk,our preprocessing,2000 HVG cell_ranger,hierarchical,2.0,3.0,3.0,0.618,0.728,baselines_kolodziejczyk_hvg2000_cell_ranger
+kolodziejczyk,our preprocessing,2000 HVG cell_ranger,k-means,0.0,3.0,3.0,0.619,0.737,baselines_kolodziejczyk_hvg2000_cell_ranger
+kolodziejczyk,our preprocessing,2000 HVG cell_ranger,k-means,1.0,3.0,3.0,0.619,0.737,baselines_kolodziejczyk_hvg2000_cell_ranger
+kolodziejczyk,our preprocessing,2000 HVG cell_ranger,k-means,2.0,3.0,3.0,0.619,0.737,baselines_kolodziejczyk_hvg2000_cell_ranger
+kolodziejczyk,our preprocessing,2000 HVG seurat,Leiden (Scanpy),0.0,3.0,3.0,0.996,0.992,baselines_kolodziejczyk_hvg2000
+kolodziejczyk,our preprocessing,2000 HVG seurat,Leiden (Scanpy),1.0,3.0,3.0,0.996,0.992,baselines_kolodziejczyk_hvg2000
+kolodziejczyk,our preprocessing,2000 HVG seurat,Leiden (Scanpy),2.0,3.0,3.0,0.996,0.992,baselines_kolodziejczyk_hvg2000
+kolodziejczyk,our preprocessing,2000 HVG seurat,MICA,0.0,3.0,3.0,0.988,0.979,mica_kolodziejczyk_hvg2000_seurat
+kolodziejczyk,our preprocessing,2000 HVG seurat,MICA,1.0,3.0,3.0,0.988,0.979,mica_kolodziejczyk_hvg2000_seurat
+kolodziejczyk,our preprocessing,2000 HVG seurat,MICA,2.0,3.0,3.0,0.988,0.979,mica_kolodziejczyk_hvg2000_seurat
+kolodziejczyk,our preprocessing,2000 HVG seurat,hierarchical,0.0,3.0,3.0,0.616,0.722,baselines_kolodziejczyk_hvg2000
+kolodziejczyk,our preprocessing,2000 HVG seurat,hierarchical,1.0,3.0,3.0,0.616,0.722,baselines_kolodziejczyk_hvg2000
+kolodziejczyk,our preprocessing,2000 HVG seurat,hierarchical,2.0,3.0,3.0,0.616,0.722,baselines_kolodziejczyk_hvg2000
+kolodziejczyk,our preprocessing,2000 HVG seurat,k-means,0.0,3.0,3.0,0.619,0.737,baselines_kolodziejczyk_hvg2000
+kolodziejczyk,our preprocessing,2000 HVG seurat,k-means,1.0,3.0,3.0,0.618,0.728,baselines_kolodziejczyk_hvg2000
+kolodziejczyk,our preprocessing,2000 HVG seurat,k-means,2.0,3.0,3.0,0.619,0.737,baselines_kolodziejczyk_hvg2000
+kolodziejczyk,our preprocessing,2000 HVG seurat_v3,Leiden (Scanpy),0.0,3.0,3.0,1.0,1.0,baselines_kolodziejczyk_hvg2000_seurat_v3
+kolodziejczyk,our preprocessing,2000 HVG seurat_v3,Leiden (Scanpy),1.0,3.0,3.0,1.0,1.0,baselines_kolodziejczyk_hvg2000_seurat_v3
+kolodziejczyk,our preprocessing,2000 HVG seurat_v3,Leiden (Scanpy),2.0,3.0,3.0,1.0,1.0,baselines_kolodziejczyk_hvg2000_seurat_v3
+kolodziejczyk,our preprocessing,2000 HVG seurat_v3,MICA,0.0,3.0,3.0,0.992,0.985,mica_kolodziejczyk_hvg2000_seurat_v3
+kolodziejczyk,our preprocessing,2000 HVG seurat_v3,MICA,1.0,3.0,3.0,0.992,0.985,mica_kolodziejczyk_hvg2000_seurat_v3
+kolodziejczyk,our preprocessing,2000 HVG seurat_v3,MICA,2.0,3.0,3.0,0.992,0.985,mica_kolodziejczyk_hvg2000_seurat_v3
+kolodziejczyk,our preprocessing,2000 HVG seurat_v3,hierarchical,0.0,3.0,3.0,0.614,0.714,baselines_kolodziejczyk_hvg2000_seurat_v3
+kolodziejczyk,our preprocessing,2000 HVG seurat_v3,hierarchical,1.0,3.0,3.0,0.614,0.714,baselines_kolodziejczyk_hvg2000_seurat_v3
+kolodziejczyk,our preprocessing,2000 HVG seurat_v3,hierarchical,2.0,3.0,3.0,0.614,0.714,baselines_kolodziejczyk_hvg2000_seurat_v3
+kolodziejczyk,our preprocessing,2000 HVG seurat_v3,k-means,0.0,3.0,3.0,0.591,0.686,baselines_kolodziejczyk_hvg2000_seurat_v3
+kolodziejczyk,our preprocessing,2000 HVG seurat_v3,k-means,1.0,3.0,3.0,0.591,0.686,baselines_kolodziejczyk_hvg2000_seurat_v3
+kolodziejczyk,our preprocessing,2000 HVG seurat_v3,k-means,2.0,3.0,3.0,0.591,0.686,baselines_kolodziejczyk_hvg2000_seurat_v3
+kolodziejczyk,our preprocessing,all genes,Leiden (Scanpy),0.0,3.0,3.0,0.562,0.69,baselines_kolodziejczyk
+kolodziejczyk,our preprocessing,all genes,Leiden (Scanpy),1.0,3.0,3.0,0.562,0.69,baselines_kolodziejczyk
+kolodziejczyk,our preprocessing,all genes,Leiden (Scanpy),2.0,3.0,3.0,0.562,0.69,baselines_kolodziejczyk
+kolodziejczyk,our preprocessing,all genes,MICA,0.0,3.0,3.0,0.721,0.781,reproduction_kolodziejczyk
+kolodziejczyk,our preprocessing,all genes,MICA,1.0,3.0,3.0,0.721,0.781,reproduction_kolodziejczyk
+kolodziejczyk,our preprocessing,all genes,MICA,2.0,3.0,3.0,0.721,0.781,reproduction_kolodziejczyk
+kolodziejczyk,our preprocessing,all genes,hierarchical,0.0,3.0,3.0,0.714,0.758,baselines_kolodziejczyk
+kolodziejczyk,our preprocessing,all genes,hierarchical,1.0,3.0,3.0,0.714,0.758,baselines_kolodziejczyk
+kolodziejczyk,our preprocessing,all genes,hierarchical,2.0,3.0,3.0,0.714,0.758,baselines_kolodziejczyk
+kolodziejczyk,our preprocessing,all genes,k-means,0.0,3.0,3.0,0.719,0.78,baselines_kolodziejczyk
+kolodziejczyk,our preprocessing,all genes,k-means,1.0,3.0,3.0,0.719,0.78,baselines_kolodziejczyk
+kolodziejczyk,our preprocessing,all genes,k-means,2.0,3.0,3.0,0.719,0.78,baselines_kolodziejczyk
+pbmc14k,our preprocessing,2000 HVG cell_ranger,Leiden (Scanpy),0.0,7.0,7.0,0.601,0.742,baselines_pbmc14k_hvg2000_cell_ranger
+pbmc14k,our preprocessing,2000 HVG cell_ranger,Leiden (Scanpy),1.0,7.0,7.0,0.583,0.752,baselines_pbmc14k_hvg2000_cell_ranger
+pbmc14k,our preprocessing,2000 HVG cell_ranger,Leiden (Scanpy),2.0,7.0,7.0,0.581,0.747,baselines_pbmc14k_hvg2000_cell_ranger
+pbmc14k,our preprocessing,2000 HVG cell_ranger,MICA,0.0,7.0,7.0,0.531,0.741,mica_pbmc14k_hvg2000_cell_ranger
+pbmc14k,our preprocessing,2000 HVG cell_ranger,hierarchical,0.0,7.0,7.0,0.47,0.735,baselines_pbmc14k_hvg2000_cell_ranger
+pbmc14k,our preprocessing,2000 HVG cell_ranger,hierarchical,1.0,7.0,7.0,0.47,0.735,baselines_pbmc14k_hvg2000_cell_ranger
+pbmc14k,our preprocessing,2000 HVG cell_ranger,hierarchical,2.0,7.0,7.0,0.47,0.735,baselines_pbmc14k_hvg2000_cell_ranger
+pbmc14k,our preprocessing,2000 HVG cell_ranger,k-means,0.0,7.0,7.0,0.481,0.738,baselines_pbmc14k_hvg2000_cell_ranger
+pbmc14k,our preprocessing,2000 HVG cell_ranger,k-means,1.0,7.0,7.0,0.482,0.738,baselines_pbmc14k_hvg2000_cell_ranger
+pbmc14k,our preprocessing,2000 HVG cell_ranger,k-means,2.0,7.0,7.0,0.482,0.738,baselines_pbmc14k_hvg2000_cell_ranger
+pbmc14k,our preprocessing,2000 HVG seurat,Leiden (Scanpy),0.0,7.0,7.0,0.652,0.757,baselines_pbmc14k_hvg2000
+pbmc14k,our preprocessing,2000 HVG seurat,Leiden (Scanpy),1.0,7.0,7.0,0.652,0.757,baselines_pbmc14k_hvg2000
+pbmc14k,our preprocessing,2000 HVG seurat,Leiden (Scanpy),2.0,7.0,7.0,0.665,0.761,baselines_pbmc14k_hvg2000
+pbmc14k,our preprocessing,2000 HVG seurat,MICA,0.0,7.0,7.0,0.653,0.737,mica_pbmc14k_hvg2000_seurat
+pbmc14k,our preprocessing,2000 HVG seurat,hierarchical,0.0,7.0,7.0,0.529,0.708,baselines_pbmc14k_hvg2000
+pbmc14k,our preprocessing,2000 HVG seurat,hierarchical,1.0,7.0,7.0,0.529,0.708,baselines_pbmc14k_hvg2000
+pbmc14k,our preprocessing,2000 HVG seurat,hierarchical,2.0,7.0,7.0,0.529,0.708,baselines_pbmc14k_hvg2000
+pbmc14k,our preprocessing,2000 HVG seurat,k-means,0.0,7.0,7.0,0.505,0.713,baselines_pbmc14k_hvg2000
+pbmc14k,our preprocessing,2000 HVG seurat,k-means,1.0,7.0,7.0,0.501,0.712,baselines_pbmc14k_hvg2000
+pbmc14k,our preprocessing,2000 HVG seurat,k-means,2.0,7.0,7.0,0.504,0.712,baselines_pbmc14k_hvg2000
+pbmc14k,our preprocessing,2000 HVG seurat_v3,Leiden (Scanpy),0.0,7.0,7.0,0.756,0.813,baselines_pbmc14k_hvg2000_seurat_v3
+pbmc14k,our preprocessing,2000 HVG seurat_v3,Leiden (Scanpy),1.0,7.0,7.0,0.755,0.814,baselines_pbmc14k_hvg2000_seurat_v3
+pbmc14k,our preprocessing,2000 HVG seurat_v3,Leiden (Scanpy),2.0,7.0,7.0,0.755,0.816,baselines_pbmc14k_hvg2000_seurat_v3
+pbmc14k,our preprocessing,2000 HVG seurat_v3,MICA,0.0,7.0,7.0,0.737,0.798,mica_pbmc14k_hvg2000_seurat_v3
+pbmc14k,our preprocessing,2000 HVG seurat_v3,hierarchical,0.0,7.0,7.0,0.702,0.791,baselines_pbmc14k_hvg2000_seurat_v3
+pbmc14k,our preprocessing,2000 HVG seurat_v3,hierarchical,1.0,7.0,7.0,0.702,0.791,baselines_pbmc14k_hvg2000_seurat_v3
+pbmc14k,our preprocessing,2000 HVG seurat_v3,hierarchical,2.0,7.0,7.0,0.702,0.791,baselines_pbmc14k_hvg2000_seurat_v3
+pbmc14k,our preprocessing,2000 HVG seurat_v3,k-means,0.0,7.0,7.0,0.66,0.783,baselines_pbmc14k_hvg2000_seurat_v3
+pbmc14k,our preprocessing,2000 HVG seurat_v3,k-means,1.0,7.0,7.0,0.662,0.783,baselines_pbmc14k_hvg2000_seurat_v3
+pbmc14k,our preprocessing,2000 HVG seurat_v3,k-means,2.0,7.0,7.0,0.664,0.785,baselines_pbmc14k_hvg2000_seurat_v3
+pbmc14k,our preprocessing,all genes,Leiden (Scanpy),0.0,7.0,7.0,0.877,0.901,baselines_pbmc14k
+pbmc14k,our preprocessing,all genes,Leiden (Scanpy),1.0,7.0,7.0,0.875,0.9,baselines_pbmc14k
+pbmc14k,our preprocessing,all genes,Leiden (Scanpy),2.0,7.0,7.0,0.876,0.9,baselines_pbmc14k
+pbmc14k,our preprocessing,all genes,MICA,0.0,7.0,7.0,0.854,0.871,reproduction_pbmc14k
+pbmc14k,our preprocessing,all genes,hierarchical,0.0,7.0,7.0,0.608,0.746,baselines_pbmc14k
+pbmc14k,our preprocessing,all genes,hierarchical,1.0,7.0,7.0,0.608,0.746,baselines_pbmc14k
+pbmc14k,our preprocessing,all genes,hierarchical,2.0,7.0,7.0,0.608,0.746,baselines_pbmc14k
+pbmc14k,our preprocessing,all genes,k-means,0.0,7.0,7.0,0.557,0.697,baselines_pbmc14k
+pbmc14k,our preprocessing,all genes,k-means,1.0,7.0,7.0,0.578,0.726,baselines_pbmc14k
+pbmc14k,our preprocessing,all genes,k-means,2.0,7.0,7.0,0.553,0.697,baselines_pbmc14k
+usoskin,our preprocessing,2000 HVG cell_ranger,Leiden (Scanpy),0.0,4.0,4.0,0.919,0.882,baselines_usoskin_hvg2000_cell_ranger
+usoskin,our preprocessing,2000 HVG cell_ranger,Leiden (Scanpy),1.0,4.0,4.0,0.919,0.882,baselines_usoskin_hvg2000_cell_ranger
+usoskin,our preprocessing,2000 HVG cell_ranger,Leiden (Scanpy),2.0,4.0,4.0,0.919,0.882,baselines_usoskin_hvg2000_cell_ranger
+usoskin,our preprocessing,2000 HVG cell_ranger,MICA,0.0,4.0,4.0,0.857,0.834,mica_usoskin_hvg2000_cell_ranger
+usoskin,our preprocessing,2000 HVG cell_ranger,MICA,1.0,4.0,4.0,0.857,0.834,mica_usoskin_hvg2000_cell_ranger
+usoskin,our preprocessing,2000 HVG cell_ranger,MICA,2.0,4.0,4.0,0.857,0.834,mica_usoskin_hvg2000_cell_ranger
+usoskin,our preprocessing,2000 HVG cell_ranger,hierarchical,0.0,4.0,4.0,0.832,0.805,baselines_usoskin_hvg2000_cell_ranger
+usoskin,our preprocessing,2000 HVG cell_ranger,hierarchical,1.0,4.0,4.0,0.832,0.805,baselines_usoskin_hvg2000_cell_ranger
+usoskin,our preprocessing,2000 HVG cell_ranger,hierarchical,2.0,4.0,4.0,0.832,0.805,baselines_usoskin_hvg2000_cell_ranger
+usoskin,our preprocessing,2000 HVG cell_ranger,k-means,0.0,4.0,4.0,0.608,0.656,baselines_usoskin_hvg2000_cell_ranger
+usoskin,our preprocessing,2000 HVG cell_ranger,k-means,1.0,4.0,4.0,0.623,0.666,baselines_usoskin_hvg2000_cell_ranger
+usoskin,our preprocessing,2000 HVG cell_ranger,k-means,2.0,4.0,4.0,0.623,0.666,baselines_usoskin_hvg2000_cell_ranger
+usoskin,our preprocessing,2000 HVG seurat,Leiden (Scanpy),0.0,4.0,4.0,0.885,0.842,baselines_usoskin_hvg2000
+usoskin,our preprocessing,2000 HVG seurat,Leiden (Scanpy),1.0,4.0,4.0,0.885,0.842,baselines_usoskin_hvg2000
+usoskin,our preprocessing,2000 HVG seurat,Leiden (Scanpy),2.0,4.0,4.0,0.885,0.842,baselines_usoskin_hvg2000
+usoskin,our preprocessing,2000 HVG seurat,MICA,0.0,4.0,4.0,0.84,0.813,mica_usoskin_hvg2000_seurat
+usoskin,our preprocessing,2000 HVG seurat,MICA,1.0,4.0,4.0,0.84,0.813,mica_usoskin_hvg2000_seurat
+usoskin,our preprocessing,2000 HVG seurat,MICA,2.0,4.0,4.0,0.84,0.813,mica_usoskin_hvg2000_seurat
+usoskin,our preprocessing,2000 HVG seurat,hierarchical,0.0,4.0,4.0,0.316,0.416,baselines_usoskin_hvg2000
+usoskin,our preprocessing,2000 HVG seurat,hierarchical,1.0,4.0,4.0,0.316,0.416,baselines_usoskin_hvg2000
+usoskin,our preprocessing,2000 HVG seurat,hierarchical,2.0,4.0,4.0,0.316,0.416,baselines_usoskin_hvg2000
+usoskin,our preprocessing,2000 HVG seurat,k-means,0.0,4.0,4.0,0.379,0.479,baselines_usoskin_hvg2000
+usoskin,our preprocessing,2000 HVG seurat,k-means,1.0,4.0,4.0,0.374,0.474,baselines_usoskin_hvg2000
+usoskin,our preprocessing,2000 HVG seurat,k-means,2.0,4.0,4.0,0.434,0.507,baselines_usoskin_hvg2000
+usoskin,our preprocessing,2000 HVG seurat_v3,Leiden (Scanpy),0.0,4.0,4.0,0.933,0.913,baselines_usoskin_hvg2000_seurat_v3
+usoskin,our preprocessing,2000 HVG seurat_v3,Leiden (Scanpy),1.0,4.0,4.0,0.933,0.913,baselines_usoskin_hvg2000_seurat_v3
+usoskin,our preprocessing,2000 HVG seurat_v3,Leiden (Scanpy),2.0,4.0,4.0,0.901,0.864,baselines_usoskin_hvg2000_seurat_v3
+usoskin,our preprocessing,2000 HVG seurat_v3,MICA,0.0,4.0,4.0,0.873,0.849,mica_usoskin_hvg2000_seurat_v3
+usoskin,our preprocessing,2000 HVG seurat_v3,MICA,1.0,4.0,4.0,0.873,0.849,mica_usoskin_hvg2000_seurat_v3
+usoskin,our preprocessing,2000 HVG seurat_v3,MICA,2.0,4.0,4.0,0.873,0.849,mica_usoskin_hvg2000_seurat_v3
+usoskin,our preprocessing,2000 HVG seurat_v3,hierarchical,0.0,4.0,4.0,0.523,0.608,baselines_usoskin_hvg2000_seurat_v3
+usoskin,our preprocessing,2000 HVG seurat_v3,hierarchical,1.0,4.0,4.0,0.523,0.608,baselines_usoskin_hvg2000_seurat_v3
+usoskin,our preprocessing,2000 HVG seurat_v3,hierarchical,2.0,4.0,4.0,0.523,0.608,baselines_usoskin_hvg2000_seurat_v3
+usoskin,our preprocessing,2000 HVG seurat_v3,k-means,0.0,4.0,4.0,0.434,0.504,baselines_usoskin_hvg2000_seurat_v3
+usoskin,our preprocessing,2000 HVG seurat_v3,k-means,1.0,4.0,4.0,0.434,0.504,baselines_usoskin_hvg2000_seurat_v3
+usoskin,our preprocessing,2000 HVG seurat_v3,k-means,2.0,4.0,4.0,0.434,0.504,baselines_usoskin_hvg2000_seurat_v3
+usoskin,our preprocessing,all genes,Leiden (Scanpy),0.0,4.0,4.0,0.588,0.666,baselines_usoskin
+usoskin,our preprocessing,all genes,Leiden (Scanpy),1.0,4.0,4.0,0.588,0.666,baselines_usoskin
+usoskin,our preprocessing,all genes,Leiden (Scanpy),2.0,4.0,4.0,0.589,0.662,baselines_usoskin
+usoskin,our preprocessing,all genes,MICA,0.0,4.0,4.0,0.883,0.835,reproduction_usoskin
+usoskin,our preprocessing,all genes,MICA,1.0,4.0,4.0,0.883,0.835,reproduction_usoskin
+usoskin,our preprocessing,all genes,MICA,2.0,4.0,4.0,0.886,0.838,reproduction_usoskin
+usoskin,our preprocessing,all genes,hierarchical,0.0,4.0,4.0,0.186,0.25,baselines_usoskin
+usoskin,our preprocessing,all genes,hierarchical,1.0,4.0,4.0,0.186,0.25,baselines_usoskin
+usoskin,our preprocessing,all genes,hierarchical,2.0,4.0,4.0,0.186,0.25,baselines_usoskin
+usoskin,our preprocessing,all genes,k-means,0.0,4.0,4.0,0.176,0.24,baselines_usoskin
+usoskin,our preprocessing,all genes,k-means,1.0,4.0,4.0,0.176,0.24,baselines_usoskin
+usoskin,our preprocessing,all genes,k-means,2.0,4.0,4.0,0.177,0.241,baselines_usoskin
+zeisel,our preprocessing,2000 HVG cell_ranger,Leiden (Scanpy),0.0,7.0,7.0,0.674,0.673,baselines_zeisel_hvg2000_cell_ranger
+zeisel,our preprocessing,2000 HVG cell_ranger,Leiden (Scanpy),1.0,7.0,7.0,0.682,0.68,baselines_zeisel_hvg2000_cell_ranger
+zeisel,our preprocessing,2000 HVG cell_ranger,Leiden (Scanpy),2.0,7.0,7.0,0.718,0.697,baselines_zeisel_hvg2000_cell_ranger
+zeisel,our preprocessing,2000 HVG cell_ranger,MICA,0.0,7.0,7.0,0.806,0.778,mica_zeisel_hvg2000_cell_ranger
+zeisel,our preprocessing,2000 HVG cell_ranger,MICA,1.0,7.0,7.0,0.806,0.777,mica_zeisel_hvg2000_cell_ranger
+zeisel,our preprocessing,2000 HVG cell_ranger,MICA,2.0,7.0,7.0,0.806,0.778,mica_zeisel_hvg2000_cell_ranger
+zeisel,our preprocessing,2000 HVG cell_ranger,hierarchical,0.0,7.0,7.0,0.596,0.613,baselines_zeisel_hvg2000_cell_ranger
+zeisel,our preprocessing,2000 HVG cell_ranger,hierarchical,1.0,7.0,7.0,0.596,0.613,baselines_zeisel_hvg2000_cell_ranger
+zeisel,our preprocessing,2000 HVG cell_ranger,hierarchical,2.0,7.0,7.0,0.596,0.613,baselines_zeisel_hvg2000_cell_ranger
+zeisel,our preprocessing,2000 HVG cell_ranger,k-means,0.0,7.0,7.0,0.818,0.758,baselines_zeisel_hvg2000_cell_ranger
+zeisel,our preprocessing,2000 HVG cell_ranger,k-means,1.0,7.0,7.0,0.818,0.758,baselines_zeisel_hvg2000_cell_ranger
+zeisel,our preprocessing,2000 HVG cell_ranger,k-means,2.0,7.0,7.0,0.817,0.757,baselines_zeisel_hvg2000_cell_ranger
+zeisel,our preprocessing,2000 HVG seurat,Leiden (Scanpy),0.0,7.0,7.0,0.647,0.65,baselines_zeisel_hvg2000
+zeisel,our preprocessing,2000 HVG seurat,Leiden (Scanpy),1.0,7.0,7.0,0.608,0.627,baselines_zeisel_hvg2000
+zeisel,our preprocessing,2000 HVG seurat,Leiden (Scanpy),2.0,7.0,7.0,0.59,0.619,baselines_zeisel_hvg2000
+zeisel,our preprocessing,2000 HVG seurat,MICA,0.0,7.0,7.0,0.728,0.701,mica_zeisel_hvg2000_seurat
+zeisel,our preprocessing,2000 HVG seurat,MICA,1.0,7.0,7.0,0.728,0.701,mica_zeisel_hvg2000_seurat
+zeisel,our preprocessing,2000 HVG seurat,MICA,2.0,7.0,7.0,0.728,0.701,mica_zeisel_hvg2000_seurat
+zeisel,our preprocessing,2000 HVG seurat,hierarchical,0.0,7.0,7.0,0.391,0.45,baselines_zeisel_hvg2000
+zeisel,our preprocessing,2000 HVG seurat,hierarchical,1.0,7.0,7.0,0.391,0.45,baselines_zeisel_hvg2000
+zeisel,our preprocessing,2000 HVG seurat,hierarchical,2.0,7.0,7.0,0.391,0.45,baselines_zeisel_hvg2000
+zeisel,our preprocessing,2000 HVG seurat,k-means,0.0,7.0,7.0,0.602,0.623,baselines_zeisel_hvg2000
+zeisel,our preprocessing,2000 HVG seurat,k-means,1.0,7.0,7.0,0.601,0.622,baselines_zeisel_hvg2000
+zeisel,our preprocessing,2000 HVG seurat,k-means,2.0,7.0,7.0,0.602,0.624,baselines_zeisel_hvg2000
+zeisel,our preprocessing,2000 HVG seurat_v3,Leiden (Scanpy),0.0,7.0,7.0,0.796,0.746,baselines_zeisel_hvg2000_seurat_v3
+zeisel,our preprocessing,2000 HVG seurat_v3,Leiden (Scanpy),1.0,7.0,7.0,0.795,0.745,baselines_zeisel_hvg2000_seurat_v3
+zeisel,our preprocessing,2000 HVG seurat_v3,Leiden (Scanpy),2.0,7.0,7.0,0.794,0.745,baselines_zeisel_hvg2000_seurat_v3
+zeisel,our preprocessing,2000 HVG seurat_v3,MICA,0.0,7.0,7.0,0.869,0.812,mica_zeisel_hvg2000_seurat_v3
+zeisel,our preprocessing,2000 HVG seurat_v3,MICA,1.0,7.0,7.0,0.869,0.812,mica_zeisel_hvg2000_seurat_v3
+zeisel,our preprocessing,2000 HVG seurat_v3,MICA,2.0,7.0,7.0,0.869,0.812,mica_zeisel_hvg2000_seurat_v3
+zeisel,our preprocessing,2000 HVG seurat_v3,hierarchical,0.0,7.0,7.0,0.553,0.626,baselines_zeisel_hvg2000_seurat_v3
+zeisel,our preprocessing,2000 HVG seurat_v3,hierarchical,1.0,7.0,7.0,0.553,0.626,baselines_zeisel_hvg2000_seurat_v3
+zeisel,our preprocessing,2000 HVG seurat_v3,hierarchical,2.0,7.0,7.0,0.553,0.626,baselines_zeisel_hvg2000_seurat_v3
+zeisel,our preprocessing,2000 HVG seurat_v3,k-means,0.0,7.0,7.0,0.671,0.696,baselines_zeisel_hvg2000_seurat_v3
+zeisel,our preprocessing,2000 HVG seurat_v3,k-means,1.0,7.0,7.0,0.67,0.695,baselines_zeisel_hvg2000_seurat_v3
+zeisel,our preprocessing,2000 HVG seurat_v3,k-means,2.0,7.0,7.0,0.831,0.778,baselines_zeisel_hvg2000_seurat_v3
+zeisel,our preprocessing,all genes,Leiden (Scanpy),0.0,7.0,7.0,0.846,0.8,baselines_zeisel
+zeisel,our preprocessing,all genes,Leiden (Scanpy),1.0,7.0,7.0,0.844,0.797,baselines_zeisel
+zeisel,our preprocessing,all genes,Leiden (Scanpy),2.0,7.0,7.0,0.845,0.798,baselines_zeisel
+zeisel,our preprocessing,all genes,MICA,0.0,7.0,7.0,0.704,0.755,reproduction_zeisel
+zeisel,our preprocessing,all genes,MICA,1.0,7.0,7.0,0.706,0.756,reproduction_zeisel
+zeisel,our preprocessing,all genes,MICA,2.0,7.0,7.0,0.706,0.756,reproduction_zeisel
+zeisel,our preprocessing,all genes,hierarchical,0.0,7.0,7.0,0.561,0.656,baselines_zeisel
+zeisel,our preprocessing,all genes,hierarchical,1.0,7.0,7.0,0.561,0.656,baselines_zeisel
+zeisel,our preprocessing,all genes,hierarchical,2.0,7.0,7.0,0.561,0.656,baselines_zeisel
+zeisel,our preprocessing,all genes,k-means,0.0,7.0,7.0,0.542,0.632,baselines_zeisel
+zeisel,our preprocessing,all genes,k-means,1.0,7.0,7.0,0.567,0.671,baselines_zeisel
+zeisel,our preprocessing,all genes,k-means,2.0,7.0,7.0,0.459,0.582,baselines_zeisel

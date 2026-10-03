@@ -7,5 +7,5 @@
   "n_clusters": 3,
   "hit_true_k": true,
   "n_hits": 1,
-  "median_ari_of_hits": 0.7322340514815998
+  "median_ari_of_hits": 0.8571038037530648
 }
