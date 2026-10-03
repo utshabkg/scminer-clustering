@@ -108,7 +108,7 @@ MICA's graph mode needs each cell's 79 nearest neighbors under its mutual inform
 
 Then we fed each graph to MICA's own later steps (node2vec, then Louvain), twice each. Our 800-candidate graph gives ARI 0.853 both times, and MICA's own graph gives 0.852 both times. So on PBMC14K the fast graph is about six times quicker to build and leaves MICA's result unchanged.
 
-On the Allen pilot (100,000 cells) the gap to brute force is much bigger. Brute force would take about 100 hours, and MICA's HNSW finds 90.3% of the true neighbors in 5.2 hours. Correlation finds 89.8% with 1,600 candidates per cell and 94.6% with 3,200. The full timed build at that size is running now.
+On the Allen pilot (100,000 cells) the gap to brute force is much bigger. Brute force would take about 100 hours, and MICA's HNSW finds 90.3% of the true neighbors in 5.2 hours. Correlation finds 89.8% with 1,600 candidates per cell and 94.6% with 3,200. With 1,600, the full build for all 100,000 cells takes 1.1 hours, against 5.2 hours for HNSW, at nearly the same recall. Nine minutes of that is the correlation step and the rest is exact rescoring. The 3,200 build and the clustering check are running now.
 
 *What did not work.*
 - Candidates from 50 principal components. On PBMC14K, 400 of them find only 33% of the true neighbors. Shared detected genes find 72%.
