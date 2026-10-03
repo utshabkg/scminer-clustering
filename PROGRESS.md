@@ -108,7 +108,15 @@ MICA's graph mode needs each cell's 79 nearest neighbors under its mutual inform
 
 Then we fed each graph to MICA's own later steps (node2vec, then Louvain), twice each. Our 800-candidate graph gives ARI 0.853 both times, and MICA's own graph gives 0.852 both times. So on PBMC14K the fast graph is about six times quicker to build and leaves MICA's result unchanged.
 
-On the Allen pilot (100,000 cells) the gap to brute force is much bigger. Brute force would take about 100 hours, and MICA's HNSW finds 90.3% of the true neighbors in 5.2 hours. Correlation finds 89.8% with 1,600 candidates per cell and 94.6% with 3,200. With 1,600, the full build for all 100,000 cells takes 1.1 hours, against 5.2 hours for HNSW, at nearly the same recall. Nine minutes of that is the correlation step and the rest is exact rescoring. The 3,200 build and the clustering check are running now.
+On the Allen pilot (100,000 cells), brute force would take about 43 hours even with the faster exact distance below.
+
+| Method | True neighbors found | Time for all cells (8 workers) |
+|---|---|---|
+| MICA's own HNSW search | 90.3% | 5.2 h |
+| Correlation, 1,600 candidates per cell | 89.8% | 1.1 h |
+| Correlation, 3,200 candidates | 94.6% | 2.2 h |
+
+The correlation step itself takes 9 minutes, and the rest is exact rescoring. So at this size we match HNSW's recall about five times faster, or beat it clearly at well under half its time. Leiden on our 3,200 graph and on MICA's graph lands at 0.599 and 0.595 at class level, and the two partitions agree at 0.97. MICA's own later steps on our graph are running now. They take about 80 minutes.
 
 *What did not work.*
 - Candidates from 50 principal components. On PBMC14K, 400 of them find only 33% of the true neighbors. Shared detected genes find 72%.
@@ -123,7 +131,7 @@ On the four small sets we could compare against every pair. There, 200 candidate
 - **The mutual information graph has strong hubs.** On PBMC14K, the top 1% of cells take 23% of all exact neighbor slots. Their links join cells of the same type only 42% of the time, against 76% for other links. On Klein, the median cell is a neighbor of only 7 others while the biggest hub is a neighbor of 868.
 - **Leiden on the raw neighbor graph is a poor stand-in for MICA.** On PBMC14K it scores 0.64 on either graph, against MICA's 0.85. On Klein, Leiden on the exact graph scores 0.59, while approximate graphs that miss many true neighbors score up to 0.98. So finding every true neighbor is not by itself the goal. Removing hub effects might help clustering. That would be a new task, so it is a decision for the team.
 
-*Caveats.* Recall is measured on 500 random cells. For MICA we count each cell's 79 closest links in its saved graph, which can only flatter MICA. Our code is numpy and MICA's search is compiled, both on 8 workers of a shared machine. The PBMC14K times and the 100-hour brute force estimate use the plain exact distance, from before the faster one was added. The number of candidates needed grows with dataset size (800 at 13,605 cells, about 3,200 at 100,000), so the full atlas will likely need the GPU version (U-18). Tables in `results/rq2_graph_*/`, `results/rq2_large_paper_pbmc14k/` and `results/rq2_downstream_*/`.
+*Caveats.* Recall is measured on 500 random cells. For MICA we count each cell's 79 closest links in its saved graph, which can only flatter MICA. Our code is numpy and MICA's search is compiled, both on 8 workers of a shared machine. The PBMC14K times use the plain exact distance, from before the faster one was added. The Allen times use the faster one. The number of candidates needed to match HNSW grows with dataset size (800 at 13,605 cells, about 1,600 at 100,000), so the full atlas will likely need the GPU version (U-18). Tables in `results/rq2_graph_*/`, `results/rq2_large_paper_pbmc14k/` and `results/rq2_downstream_*/`.
 
 **Limits**
 - The bootstrap resamples cells only. It ignores run-to-run variation and the fact that cells are not independent, so its intervals are too narrow.

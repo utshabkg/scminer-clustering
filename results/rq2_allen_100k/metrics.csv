@@ -1,0 +1,11 @@
+dataset,stage,candidates,k,recall_at_k,share_of_pairs_scored,seconds_all_cells,workers,seconds_all_cells_dense_path,c,mean_scored,seconds_candidates,seconds_rescoring,leiden_ari_fast_graph,leiden_ari_mica_graph,partition_agreement_same_resolution,note
+allen_100k,query sweep,brute force (estimated),79,1.0,1.0,153319.6,8.0,366400.0,,,,,,,,
+allen_100k,query sweep,"MICA HNSW, K closest links",79,0.9028,,18887.9,8.0,,,,,,,,,
+allen_100k,query sweep,correlation,79,0.5578,0.002,,,,200.0,200.0,,,,,,
+allen_100k,query sweep,correlation,79,0.7097,0.004,,,,400.0,400.0,,,,,,
+allen_100k,query sweep,correlation,79,0.8231,0.008,,,,800.0,800.0,,,,,,
+allen_100k,query sweep,correlation,79,0.8981,0.016,,,,1600.0,1600.0,,,,,,
+allen_100k,query sweep,correlation,79,0.9456,0.032,,,,3200.0,3200.0,,,,,,
+allen_100k,"all cells, round 0",correlation,79,0.8981,0.016,3828.4,8.0,,1600.0,1600.0,513.5,3314.9,,,,
+allen_100k,"all cells, round 0",correlation,79,0.9456,0.032,7798.4,8.0,,3200.0,3200.0,513.5,7284.9,,,,
+allen_100k,clustering,correlation 3200,79,,,,,,,,,,0.5986,0.5951,0.9683,"class level, Leiden on 20 resolutions stands in for MICA's node2vec and Louvain"
