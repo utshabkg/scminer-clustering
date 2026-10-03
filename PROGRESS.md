@@ -116,7 +116,7 @@ On the Allen pilot (100,000 cells), brute force would take about 43 hours even w
 | Correlation, 1,600 candidates per cell | 89.8% | 1.1 h |
 | Correlation, 3,200 candidates | 94.6% | 2.2 h |
 
-The correlation step itself takes 9 minutes, and the rest is exact rescoring. So at this size we match HNSW's recall about five times faster, or beat it clearly at well under half its time. Leiden on our 3,200 graph and on MICA's graph lands at 0.599 and 0.595 at class level, and the two partitions agree at 0.97. MICA's own later steps on our graph are running now. They take about 80 minutes.
+The correlation step itself takes 9 minutes, and the rest is exact rescoring. So at this size we match HNSW's recall about five times faster, or beat it clearly at well under half its time. Leiden on our 3,200 graph and on MICA's graph lands at 0.599 and 0.595 at class level, and the two partitions agree at 0.97. With MICA's own later steps the picture is less clean. On our 3,200 graph they give ARI 0.602 (AMI 0.819). On MICA's graph, run through the same code, they give 0.641 (AMI 0.835), close to the 0.652 of MICA's own run. That is one run each, and a second repeat of both is running to see whether the 0.04 gap is real or run-to-run noise.
 
 *What did not work.*
 - Candidates from 50 principal components. On PBMC14K, 400 of them find only 33% of the true neighbors. Shared detected genes find 72%.
