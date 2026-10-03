@@ -1,0 +1,5 @@
+{
+  "dataset": "paper_kolodziejczyk",
+  "pipeline": "our MICA distance, MDS, k-means k=3, 50 restarts, seeds 0-2",
+  "note": "plate correction uses batch labels that partly line up with culture"
+}

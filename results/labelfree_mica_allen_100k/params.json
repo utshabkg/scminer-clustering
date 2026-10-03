@@ -1,0 +1,5 @@
+{
+  "dataset": "allen_100k",
+  "mica_output": "results/reproduction/mica_allen_100k",
+  "tag": null
+}
