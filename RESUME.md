@@ -1,21 +1,27 @@
 # Resume note (for Claude, after a session limit or a restart)
 
-Last updated: 2026-10-03 17:50 CDT. Read this first, then `PROGRESS.md` and `WORKPLAN.md`.
+Last updated: 2026-10-03 21:10 CDT. Read this first, then `PROGRESS.md` and `WORKPLAN.md`.
 
 The user asked Claude to keep doing Utshab's tasks until something depends on Laraib or Rhea, to stop before any long GPU run and ask first, and to keep going after a session limit resets.
 
-## Running right now (Oct 3, 17:50)
+## Running right now (Oct 3, 21:10)
 
-MICA's own node2vec and Louvain, run on the Allen 100K graphs. This is the last step of U-19 at this size.
-- **`scm-downstream-allen`** runs `scripts/run_downstream_allen.sh`, log `logs/downstream_allen.log`. Done: our corr3200 graph scored ARI 0.602 and AMI 0.819. MICA's own pilot got 0.652 and 0.836. Running now: the same wrapper on MICA's own graph, about 70 min.
-- **`scm-downstream-allen2`** waits for that to finish, then runs a second repeat on both graphs, about 2.3 h. Log `logs/downstream_allen_rep2.log`, ends with DOWNSTREAM ALLEN REP2 DONE.
+Nothing. All U-19 runs are finished, written into PROGRESS.md and pushed.
 
-**How to read the result.**
-- If MICA's graph gives about 0.65 through our wrapper in both repeats while ours stays near 0.60, the graph costs ARI at this size, even though its recall is higher (94.6% against 90.3%). That would fit the hub and Klein findings.
-- If both graphs vary by about 0.05, it is run-to-run noise.
-- Write whichever holds into the Allen paragraph of PROGRESS.md. It currently ends with "MICA's own later steps on our graph are running now". Then commit, push, and report to Utshab.
+**U-19 final numbers on Allen 100K:**
+- MICA's HNSW finds 90.3% of neighbors in 5.2 h. Correlation finds 89.8% at 1,600 candidates in 1.1 h, and 94.6% at 3,200 in 2.2 h.
+- MICA's downstream steps on our 3,200 graph give ARI 0.602 and 0.627, with AMI 0.819 and 0.825.
+- On MICA's graph through our wrapper they give ARI 0.641 and 0.617, with AMI 0.835 and 0.831. MICA's own run gave 0.652.
+- So the ARI ranges overlap, and our AMI is about 0.01 lower.
 
-The rest of U-19 is written in PROGRESS.md and pushed in 4a8811c. That covers the Allen table: HNSW 90.3% in 5.2 h, correlation 1,600 at 89.8% in 1.1 h, and correlation 3,200 at 94.6% in 2.2 h.
+**On PBMC14K:** ours gives 0.853 twice and MICA's graph gives 0.852 twice.
+
+**Waiting on Utshab, so ask before doing any of these:**
+1. GPU time for U-18, the GPU version of the correlation step and the sparse exact MI.
+2. Whether to add a hubness-reduction task. MICA's MI graph has strong hubs, and approximate graphs sometimes cluster better than exact ones.
+3. U-30: whether to contact the scMINER authors about the Kolodziejczyk input.
+
+Nothing else on Utshab's list can go ahead without those answers or the teammates' tasks. The open ones are L-1, L-2, R-1, plus U-4, which waits on Rhea's GitHub invite.
 
 ## Done on Oct 3 (all pushed except as noted)
 

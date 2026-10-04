@@ -13,21 +13,21 @@ Updated: 2026-10-03. Counts follow the Milestone column in `WORKPLAN.md`.
 | M2 reproduce the paper | Oct 14 | 6 of 9 | 67% | Ten of the paper's 13 benchmark sets run, nine reproduce within 0.05. Left: decide on contacting the authors (U-30), PBMC14K card (L-2), results summary (R-1) |
 | M3 cluster count without labels | Oct 21 | 4 of 6 | 67% | Label-free choice, the five small sets and the uncertainty estimates are done. Left: Allen card (L-3), paper tables (R-2) |
 | M4 what the similarity measures, atlas downloaded | Oct 28 | 4 of 5 | 80% | Diagnostics, atlas download, 100,000 cell pilot and the Kolodziejczyk side test are done. Left: related work table (L-4) |
-| M5 fast neighbor search | Nov 11 | 1 of 4 | 25% | Our distance matches the authors' (U-17). CPU prototype of the fast neighbor search is running (U-19). The GPU version (U-18) waits for GPU time |
+| M5 fast neighbor search | Nov 11 | 2 of 4 | 50% | Our distance matches the authors' (U-17). The CPU fast neighbor search matches MICA's recall about 5 times faster on 100,000 cells (U-19). The GPU version (U-18) waits for GPU time |
 | M6 full 2.3 million cell run | Nov 18 | 0 of 4 | 0% | Not started |
 | M7 retrieval and drivers | Nov 25 | 0 of 4 | 0% | Not started |
 | M8 paper and slides | Dec 2 | 0 of 3 | 0% | Not started |
 | Every week: notes, plan and progress updates | weekly | | | Start at the Oct 7 meeting (L-7, R-3, R-8) |
 
-Overall: 21 of 46 tasks finished. Three of the 46 repeat every week.
+Overall: 22 of 46 tasks finished. Three of the 46 repeat every week.
 
-Next three things: finish the CPU neighbor search on larger data (U-19), get GPU time for the GPU distance (U-18), and decide whether to write to the scMINER authors (U-30).
+Next three things: get GPU time for the GPU version (U-18), decide whether to look into the hub cells in MICA's graph, and decide whether to write to the scMINER authors (U-30).
 
 ---
 
 ## 2026-10-03, Utshab
 
-Finished nine tasks: the label-free choice of cluster count (U-12, U-13), what MICA's similarity measures (U-14), the Allen download and 100,000 cell pilot (U-15, U-16), the test that our distance matches the authors' (U-17), the paper's five small benchmark sets (U-27), uncertainty estimates (U-28) and the Kolodziejczyk side test (U-29). Started the fast neighbor search (U-19). A third review of the claims found one serious bug. It is fixed and rerun, and every number below comes after the fix.
+Finished ten tasks: the label-free choice of cluster count (U-12, U-13), what MICA's similarity measures (U-14), the Allen download and 100,000 cell pilot (U-15, U-16), the test that our distance matches the authors' (U-17), the paper's five small benchmark sets (U-27), uncertainty estimates (U-28), the Kolodziejczyk side test (U-29) and a CPU version of the fast neighbor search (U-19). A third review of the claims found one serious bug. It is fixed and rerun, and every number below comes after the fix.
 
 Unless a line says otherwise, scores use the paper's rule: each method is told the true number of cell types, and the labels pick the best run among those that hit it.
 
@@ -92,7 +92,7 @@ All 13 raw region files are downloaded (97 GB, listed in `docs/allen_files.csv`)
 
 Scaled up to all 2.3 million cells, MICA would need about 7 to 8 days and about 3.2 TB of memory. The machine has 754 GB, so MICA as shipped cannot run the whole atlas here. The working is in `docs/allen_pilot.md`.
 
-**Fast neighbor search (U-19, CPU prototype, in progress)**
+**Fast neighbor search (U-19, CPU prototype)**
 
 MICA's graph mode needs each cell's 79 nearest neighbors under its mutual information distance. Its HNSW search for them is the slowest step by far, 5.3 of the 7.1 hours on the Allen pilot. The idea is to propose candidates with something cheap, then compute the exact distance only for those. We check against brute force on 500 random cells, and against the graph MICA itself built and saved. Our distance matches the weights in MICA's saved graphs to 1e-6.
 
@@ -116,7 +116,7 @@ On the Allen pilot (100,000 cells), brute force would take about 43 hours even w
 | Correlation, 1,600 candidates per cell | 89.8% | 1.1 h |
 | Correlation, 3,200 candidates | 94.6% | 2.2 h |
 
-The correlation step itself takes 9 minutes, and the rest is exact rescoring. So at this size we match HNSW's recall about five times faster, or beat it clearly at well under half its time. Leiden on our 3,200 graph and on MICA's graph lands at 0.599 and 0.595 at class level, and the two partitions agree at 0.97. With MICA's own later steps the picture is less clean. On our 3,200 graph they give ARI 0.602 (AMI 0.819). On MICA's graph, run through the same code, they give 0.641 (AMI 0.835), close to the 0.652 of MICA's own run. That is one run each, and a second repeat of both is running to see whether the 0.04 gap is real or run-to-run noise.
+The correlation step itself takes 9 minutes, and the rest is exact rescoring. So at this size we match HNSW's recall about five times faster, or beat it clearly at well under half its time. Leiden on our 3,200 graph and on MICA's graph lands at 0.599 and 0.595 at class level, and the two partitions agree at 0.97. With MICA's own later steps, run twice on each graph, the two are close. Our 3,200 graph gives ARI 0.602 and 0.627. MICA's graph, run through the same code, gives 0.641 and 0.617, and MICA's own run gave 0.652. So the ARI ranges overlap. AMI is a little lower on our graph every time (0.819 and 0.825, against 0.831 to 0.836). At this size the fast graph costs at most a small amount of agreement, and two runs each cannot say more than that.
 
 *What did not work.*
 - Candidates from 50 principal components. On PBMC14K, 400 of them find only 33% of the true neighbors. Shared detected genes find 72%.
@@ -140,8 +140,8 @@ On the four small sets we could compare against every pair. There, 200 candidate
 - The ten datasets are the paper's choice, and five of them have fewer than 320 cells.
 
 **Next**
-1. Finish the timed U-19 build on the Allen pilot, then run MICA's own later steps on that graph and compare with its 0.652.
-2. The GPU distance (U-18) needs GPU time. I will ask before using the GPUs.
+1. The GPU version of the exact distance and the correlation step (U-18). It needs GPU time, so I will ask first.
+2. Whether to add a task on the hub cells in MICA's graph. That is new scope, so it is the team's call.
 3. U-30: whether to write to the authors about the Kolodziejczyk input. That is Utshab's call.
 
 **For the team.** Rhea, for R-1 please use `docs/results_for_pivot.csv` instead of the full tracker. It keeps only the main comparison, one row per run, with plain column names. The full tracker now has 1,556 rows of every kind.

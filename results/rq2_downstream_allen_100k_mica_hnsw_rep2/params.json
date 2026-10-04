@@ -1,0 +1,9 @@
+{
+  "run_dir": "data/runs/rq2/downstream_allen_100k_mica_hnsw_rep2",
+  "graph": "mica_hnsw",
+  "resolution": 3.1,
+  "n_clusters": 34,
+  "hit_true_k": true,
+  "n_hits": 2,
+  "median_ari_of_hits": 0.6116787709424902
+}

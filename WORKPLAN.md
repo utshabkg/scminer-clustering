@@ -73,7 +73,7 @@ There are 46 tasks: 30 for Utshab and 8 each for Laraib and Rhea. Three of them 
 | U-16 | Preprocess the atlas and run a 100,000 cell timing pilot | U-15 | `docs/allen_pilot.md` | measured time and memory, extrapolated to 2.3M | Oct 28 | M4 | `[x]` |
 | U-17 | Our own mutual information distance, proven to match the authors' | their code | `tests/test_mi_matches_mica.py` | matches on 10,000 random cell pairs | Nov 11 | M5 | `[x]` |
 | U-18 | GPU version of the distance | U-17 | `src/scminer_clust/mi.py` | same numbers as the CPU version, with a speedup recorded | Nov 11 | M5 | `[ ]` |
-| U-19 | Fast neighbor graph: propose candidates cheaply, rescore exactly | U-17 (CPU first, U-18 for speed) | `results/rq2_graph_<dataset>/` | neighbor recall measured against brute force | Nov 11 | M5 | `[~]` CPU prototype running on small data |
+| U-19 | Fast neighbor graph: propose candidates cheaply, rescore exactly | U-17 (CPU first, U-18 for speed) | `results/rq2_graph_<dataset>/` | neighbor recall measured against brute force | Nov 11 | M5 | `[x]` CPU version done. Matches MICA's recall about 5 times faster on 100,000 cells |
 | U-20 | Cluster a sketch of the atlas and assign the rest, full 2.3M run | U-19 | `results/rq2_atlas/` | the run finishes within a day and is scored | Nov 18 | M6 | `[ ]` |
 | U-21 | Rare population analysis | U-20 | `results/rq2_atlas/rare_types.csv` | per-type recall, and which types were lost | Nov 18 | M6 | `[ ]` |
 | U-22 | Driver activity in Python, including hidden drivers | PBMC14K clusters | `results/rq3_drivers/` | driver lists per cluster | Nov 25 | M7 | `[ ]` |
@@ -197,3 +197,5 @@ Datasets never go into git. They live on the shared 20 TB disk, and the repo onl
 | Oct 3 | Rerun MICA's final k-means with 100 restarts | The published scores match the best k-means fit, and one run often misses it by a lot (Usoskin 0.66 against 0.89) |
 | Oct 3 | Call the label-free comparison inconclusive for now | Which method wins flips with the k range and with the embedding used for the silhouette |
 | Oct 3 | Drop the landmark proof of exact neighbor lists | Mutual information distances bunch together, so the bounds prove under 10 percent of lists exact |
+| Oct 3 | Fast neighbor search proposes candidates by correlation over all genes, then scores them exactly | 50 principal components miss most of MICA's neighbors on PBMC14K (33% found), correlation finds 97% with 800 candidates |
+| Oct 3 | Judge a fast graph by MICA's own later steps, not only by neighbor recall | Graphs that miss many exact neighbors can cluster as well or better, because MICA's graph has strong hub cells |
