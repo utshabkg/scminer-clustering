@@ -25,6 +25,18 @@ Next three things: get GPU time for the GPU version (U-18), decide whether to lo
 
 ---
 
+## 2026-10-10, Rhea
+
+Added the pivot tables to the repo as `docs/author_data_results_summary.csv` (authors' data) and `docs/our_preprocessing_results_summary.csv` (our preprocessing).
+
+---
+
+## 2026-10-03, Rhea
+
+Created the results summary pivot tables for R-1 in Google Sheets: https://docs.google.com/spreadsheets/d/1on9E9J4lL-G5-tVfYVDseXX1d4YugjW4CYyXuQbPqaU/edit?usp=sharing
+
+---
+
 ## 2026-10-03, Utshab
 
 Finished ten tasks: the label-free choice of cluster count (U-12, U-13), what MICA's similarity measures (U-14), the Allen download and 100,000 cell pilot (U-15, U-16), the test that our distance matches the authors' (U-17), the paper's five small benchmark sets (U-27), uncertainty estimates (U-28), the Kolodziejczyk side test (U-29) and a CPU version of the fast neighbor search (U-19). A third review of the claims found one serious bug. It is fixed and rerun, and every number below comes after the fix.

@@ -2,7 +2,7 @@
 
 Course project for Clustering Algorithms (Missouri S&T, Fall 2026). We study scMINER, a mutual information based framework for clustering single-cell RNA data ([Pan et al., Nature Communications 2025](https://doi.org/10.1038/s41467-025-59620-6)). We test its clustering part (MICA) on three dataset regimes and extend it to data with millions of cells.
 
-Team: Utshab Kumar Ghosh (lead), Laraib Khan and Rhea.
+Team: Utshab Kumar Ghosh (lead), Laraib Khan and Rhea Eckman.
 
 ## Layout
 

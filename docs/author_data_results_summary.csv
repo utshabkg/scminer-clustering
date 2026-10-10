@@ -1,0 +1,42 @@
+AVERAGE of ari,,method,,,
+dataset,genes,hierarchical,k-means,Leiden (Scanpy),MICA
+buettner,2000 HVG cell_ranger,0.248,0.428,0.308,0.896
+buettner,2000 HVG seurat,0.280,0.465,0.302,0.826
+buettner,2000 HVG seurat_v3,0.234,0.332,0.295,0.837
+buettner,all genes,0.604,0.395,0.276,0.934
+chung,2000 HVG cell_ranger,0.276,0.121,0.176,0.655
+chung,2000 HVG seurat,0.007,0.007,0.163,0.154
+chung,2000 HVG seurat_v3,0.279,0.047,0.172,0.445
+chung,all genes,0.093,0.127,0.313,0.655
+goolam,2000 HVG cell_ranger,0.910,0.910,0.543,0.687
+goolam,2000 HVG seurat,0.910,0.957,0.572,0.914
+goolam,2000 HVG seurat_v3,0.910,0.833,0.572,0.687
+goolam,all genes,0.865,0.808,0.308,0.544
+klein,2000 HVG cell_ranger,0.743,0.570,0.767,0.724
+klein,2000 HVG seurat,0.562,0.618,0.948,0.792
+klein,2000 HVG seurat_v3,0.732,0.633,0.958,0.847
+klein,all genes,0.441,0.396,0.976,0.980
+kolodziejczyk,2000 HVG cell_ranger,0.965,0.940,1.000,0.996
+kolodziejczyk,2000 HVG seurat,0.724,0.714,0.996,0.992
+kolodziejczyk,2000 HVG seurat_v3,0.535,0.573,1.000,0.992
+kolodziejczyk,all genes,0.716,0.716,0.564,0.727
+pbmc14k,2000 HVG cell_ranger,0.569,0.567,0.693,0.633
+pbmc14k,2000 HVG seurat,0.565,0.518,0.722,0.688
+pbmc14k,2000 HVG seurat_v3,0.664,0.522,0.729,0.703
+pbmc14k,all genes,0.578,0.444,0.878,0.853
+pollen,2000 HVG cell_ranger,0.929,0.907,0.837,0.942
+pollen,2000 HVG seurat,0.948,0.894,0.827,0.942
+pollen,2000 HVG seurat_v3,0.937,0.896,0.868,0.942
+pollen,all genes,0.948,0.881,0.858,0.951
+usoskin,2000 HVG cell_ranger,0.484,0.599,0.905,0.860
+usoskin,2000 HVG seurat,0.411,0.378,0.863,0.903
+usoskin,2000 HVG seurat_v3,0.626,0.485,0.902,0.903
+usoskin,all genes,0.154,0.176,0.597,0.835
+yan,2000 HVG cell_ranger,0.802,0.804,0.800,0.867
+yan,2000 HVG seurat,0.712,0.801,0.951,0.870
+yan,2000 HVG seurat_v3,0.795,0.761,0.843,0.875
+yan,all genes,0.823,0.772,0.789,0.939
+zeisel,2000 HVG cell_ranger,0.583,0.832,0.740,0.809
+zeisel,2000 HVG seurat,0.400,0.566,0.657,0.763
+zeisel,2000 HVG seurat_v3,0.559,0.620,0.692,0.797
+zeisel,all genes,0.664,0.521,0.839,0.714

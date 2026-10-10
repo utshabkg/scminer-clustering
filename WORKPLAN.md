@@ -58,7 +58,7 @@ There are 46 tasks: 30 for Utshab and 8 each for Laraib and Rhea. Three of them 
 | U-1 | Fix the main software environment so the GPUs are visible | `envs/scminer.yml` | `envs/scminer.lock.yml` | PyTorch reports the GPUs | Oct 7 | M1 | `[x]` |
 | U-2 | Install the authors' MICA code | their GitHub repo | `envs/mica-legacy.lock.yml` | `mica -h` runs | Oct 7 | M1 | `[x]` |
 | U-3 | Repo scaffolding: code package, run scripts, configs, results folders | plan | `src/`, `scripts/`, `configs/` | a test run writes a results folder | Oct 7 | M1 | `[x]` |
-| U-4 | Add Laraib and Rhea as repo collaborators | their GitHub accounts | GitHub settings | both can open the repo | Oct 7 | M1 | `[~]` Laraib has joined, waiting for Rhea to accept |
+| U-4 | Add Laraib and Rhea as repo collaborators | their GitHub accounts | GitHub settings | both can open the repo | Oct 7 | M1 | `[~]` Laraib and Rhea have joined |
 | U-5 | Download the Zeisel dataset and its labels | public source | `data/raw/zeisel/` | 3,005 cells load with labels attached | Oct 7 | M1 | `[x]` |
 | U-6 | Assemble the PBMC14K dataset and labels | the authors' raw count file and label file | `data/raw/pbmc14k/` | about 13,605 cells with 7 labelled types | Oct 7 | M1 | `[x]` |
 | U-7 | Preprocessing code: quality filters, normalization, log transform | raw data | `src/scminer_clust/preprocess.py`, processed files | both datasets processed, counts logged | Oct 7 | M1 | `[x]` |
