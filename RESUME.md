@@ -1,28 +1,36 @@
 # Resume note (for Claude, after a session limit or a restart)
 
-Last updated: 2026-10-14 04:10 CDT. Read this first, then `PROGRESS.md` and `WORKPLAN.md`.
+Last updated: 2026-10-14 05:30 CDT. Read this first, then `PROGRESS.md` and `WORKPLAN.md`.
 
 The user asked Claude to keep doing Utshab's tasks until something depends on Laraib or Rhea, to stop before any long GPU run and ask first, and to keep going after a session limit resets.
 
-## Current task (Oct 14): Assignment 2 report, due today
+## Where things stand (Oct 14, after the Assignment 2 submission)
 
-The report is written, verified and pushed. The user compiles it on Overleaf from `latex/`: `main.tex`, `sections/`, `tables/`, `figures/`, `references.bib` and `IEEEtran.cls`. A local compile gives 4 pages of body plus 1 page of references. The preview is `latex/a2_report_preview.pdf`, which is untracked.
+Nothing is running. Everything is committed and pushed.
 
-- **How it was built.**
-  - Tables and the figure come from `scripts/a2_report.py`, and every quoted number is in `results/a2_report_numbers.json`.
-  - The hub numbers come from `scripts/rq2_hubs.py` and `results/rq2_hubs/`.
-  - The notebook is `notebooks/assignment2_preliminary.ipynb`, built and run by `scripts/make_a2_notebook.py`.
-  - The literature was verified by workflow wf_c52c8b84-309. The report itself was verified by wf_682bf22b-e8d (numbers, citations, requirements, writing, reviewer), and its confirmed findings were applied.
-- **Left for the user before submitting:**
-  1. Put the real Overleaf view link into `\overleaflink` in `latex/main.tex`.
-  2. Make the GitHub repo accessible to the professor. It is private, so either make it public or add the professor as a collaborator.
-  3. Merge PR #1 (Laraib's Zeisel card) so the card exists on main. Merging was blocked by the permission classifier, so the user must merge on GitHub or allow it.
-  4. Merge PR #2 (Rhea's pivots).
-  5. Optional: Rhea's Google Sheet is viewable by anyone with the link, while U-30 asks us not to discuss the Kolodziejczyk result outside the team yet.
-- **After the merges** (follow-up fixes and PROGRESS/WORKPLAN, held back to avoid conflicts):
-  - The PR1 card needs a correct 2,903-cell sentence, post-QC labels on the counts, log2(CPM + 1) and a title line.
-  - U-4 goes to [x] and R-1 to [~].
-  - Add a PROGRESS.md entry for Oct 14 covering the report, the label-free repeats, the hub script and the corrected hub numbers (44% and 75%, not 42% and 76%).
+**Assignment 2 is done.** The report is in `latex/` (`main.tex` plus `sections/00_abstract` to `05_schedule`), 4 pages of body plus 1 page of references. Utshab compiles it on Overleaf. The local preview `latex/a2_report_preview.pdf` is untracked.
+- Tables and the figure come from `scripts/a2_report.py`, and every quoted number is in `results/a2_report_numbers.json`.
+- Hub numbers come from `scripts/rq2_hubs.py` and `results/rq2_hubs/`.
+- The notebook is `notebooks/assignment2_preliminary.ipynb`, built by `scripts/make_a2_notebook.py`.
+- Two verification workflows checked it: wf_c52c8b84-309 for the literature, wf_682bf22b-e8d for numbers, citations, requirements, writing and a reviewer read-through. Confirmed findings were applied.
+- To rebuild the PDF locally: copy `latex/` to a scratch folder, then `conda activate texenv && tectonic -X compile main.tex`. PyMuPDF in that env counts pages and renders previews.
+
+**Both teammate pull requests are merged.** PR #1 (Laraib's Zeisel card, L-1) and PR #2 (Rhea's pivots, R-1). The card's wrong 2,903-cell claim is fixed. R-1 stays `[~]` until the odd results are marked.
+
+**One thing still open for Utshab:** the Overleaf link. `latex/main.tex` line 15 still has the placeholder `REPLACE-WITH-OUR-LINK`. Utshab pasted the real link into Overleaf directly, so if he ever copies the local `main.tex` over again, the placeholder would overwrite it. Ask whether to store the real link in the repo.
+
+## Next tasks (no GPU, nothing blocked)
+
+The plan was realigned to the instructor's targets: main experiments by Nov 4, full draft by Nov 18. Eight tasks were added, U-31 to U-38.
+
+1. **U-32, the stability rule.** Pick the setting whose clusters best survive subsampling, for MICA and Leiden alike, in the spirit of MultiK and chooseR. It varies k in MICA's small-data mode. Start on PBMC14K and Zeisel. This is the rule that gives the final clustering we report.
+2. **U-33, the significance rule.** Merge clusters a test cannot separate, in the style of sc-SHC.
+3. **U-35 and U-36.** Rerun the silhouette rule in one shared embedding over a matched range of cluster counts, and run label-free Leiden on the Allen subset so it becomes a third anchor.
+4. **U-34 and U-37.** The transfer rule (hold out one dataset, take the best resolution from the others) and the final comparison table across all eleven sets.
+
+**Still needs Utshab's decision:** GPU time for U-18 (now gated behind a Nov 4 result), and U-30, whether to write to the scMINER authors about the Kolodziejczyk input.
+
+**Rules fixed in the report, do not quietly change them:** every rule is applied the same way to both methods, its settings are committed before scoring, and a win for MICA means a higher median ARI on at least 7 of the 11 sets and a mean lead of at least 0.05.
 
 ## Done on Oct 3 (all pushed except as noted)
 

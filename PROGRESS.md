@@ -5,23 +5,53 @@ Utshab adds an entry at the end of each working session. Laraib and Rhea add a l
 
 ## Where we stand
 
-Updated: 2026-10-03. Counts follow the Milestone column in `WORKPLAN.md`.
+Updated: 2026-10-14. Counts follow the Milestone column in `WORKPLAN.md`.
 
 | Milestone | Due | Tasks done | Percent | State |
 |-----------|-----|------------|---------|-------|
-| M1 software, small data ready | Oct 7 | 6 of 8 | 75% | Software works, data ready. Laraib has joined GitHub. Waiting on Rhea's invite (U-4) and the Zeisel card (L-1) |
-| M2 reproduce the paper | Oct 14 | 6 of 9 | 67% | Ten of the paper's 13 benchmark sets run, nine reproduce within 0.05. Left: decide on contacting the authors (U-30), PBMC14K card (L-2), results summary (R-1) |
-| M3 cluster count without labels | Oct 21 | 4 of 6 | 67% | Label-free choice, the five small sets and the uncertainty estimates are done. Left: Allen card (L-3), paper tables (R-2) |
-| M4 what the similarity measures, atlas downloaded | Oct 28 | 4 of 5 | 80% | Diagnostics, atlas download, 100,000 cell pilot and the Kolodziejczyk side test are done. Left: related work table (L-4) |
-| M5 fast neighbor search | Nov 11 | 2 of 4 | 50% | Our distance matches the authors' (U-17). The CPU fast neighbor search matches MICA's recall about 5 times faster on 100,000 cells (U-19). The GPU version (U-18) waits for GPU time |
-| M6 full 2.3 million cell run | Nov 18 | 0 of 4 | 0% | Not started |
-| M7 retrieval and drivers | Nov 25 | 0 of 4 | 0% | Not started |
-| M8 paper and slides | Dec 2 | 0 of 3 | 0% | Not started |
-| Every week: notes, plan and progress updates | weekly | | | Start at the Oct 7 meeting (L-7, R-3, R-8) |
+| M1 software, small data ready | Oct 7 | 8 of 8 | 100% | Done. Laraib's Zeisel card (L-1) merged on Oct 14 |
+| M2 reproduce the paper, Assignment 2 report | Oct 14 | 7 of 9 | 78% | Ten benchmark sets run, nine reproduce within 0.05. Report submitted (U-31). Left: contacting the authors (U-30), PBMC14K card (L-2) |
+| M3 cluster count without labels | Oct 21 | 4 of 9 | 44% | The old label-free work is done. The new stability and significance rules start this week (U-32, U-33). Left: Allen card (L-3), paper tables (R-2), results summary (R-1) |
+| M4 what the similarity measures, atlas downloaded | Oct 28 | 4 of 7 | 57% | Diagnostics, atlas and pilot done. Left: shared-space silhouette (U-35), label-free Leiden on Allen (U-36), related work table (L-4) |
+| M5 main experiments complete | Nov 4 | 2 of 5 | 40% | Our distance matches the authors' (U-17) and the CPU fast neighbor search is done (U-19). Left: transfer rule (U-34) and the final comparison table (U-37) |
+| M6 gated extras | Nov 11 | 0 of 6 | 0% | Not started. The GPU search (U-18), the annotation comparison (U-22, U-23) and the optional checks (U-38) all depend on the Nov 4 result |
+| M7 full manuscript draft | Nov 18 | 0 of 4 | 0% | Not started |
+| M8 revision and slides | Dec 2 | 0 of 3 | 0% | Not started |
+| Every week: notes, plan and progress updates | weekly | | | L-7, R-3 and R-8 |
 
-Overall: 22 of 46 tasks finished. Three of the 46 repeat every week.
+Overall: 25 of 54 tasks finished. Three of the 54 repeat every week.
 
-Next three things: get GPU time for the GPU version (U-18), decide whether to look into the hub cells in MICA's graph, and decide whether to write to the scMINER authors (U-30).
+Next three things: the stability rule (U-32) and the significance rule (U-33) on PBMC14K and Zeisel, and a decision on whether to write to the scMINER authors (U-30).
+
+---
+
+## 2026-10-14, Utshab
+
+Wrote and submitted the Assignment 2 report (U-31), merged both teammate pull requests, and narrowed the project as the instructor asked.
+
+**The instructor's feedback.** The proposal packed four substantial projects into one semester. The clustering question is now first, scaling and annotation follow it, and anything that uses the labels to pick a clustering is reported separately. The feedback also asked us to check the approximate neighbor search against a reference on a subset, and to estimate the full atlas cost before attempting it.
+
+**The report** is in `latex/` (`main.tex` plus `sections/00_abstract` to `05_schedule`). It is 4 pages of body plus 1 page of references. The tables and the figure are generated from `results/` by `scripts/a2_report.py`, every number it quotes is in `results/a2_report_numbers.json`, and `notebooks/assignment2_preliminary.ipynb` rebuilds them all. The proposal as submitted is kept in `latex/archive/proposal/`.
+
+**New results since Oct 3.**
+- Scored the label-free rules on all six MICA graph-mode runs of PBMC14K and Zeisel, which gives the run-to-run spread we were missing. PBMC14K: default 0.837 to 0.851, silhouette 0.616 to 0.833. Zeisel: default 0.538 to 0.717, silhouette 0.634 to 0.735.
+- A single MICA run can move the label-free score by 0.2 on PBMC14K, because its silhouette pick is 5 clusters in four runs and 7 in the other two. Leiden barely moves across seeds. Every result from here on gets at least five runs.
+- `scripts/rq2_hubs.py` rebuilds the hub numbers from the exact graph and saves them, which the Oct 3 entry had only from a scratch run.
+
+**What the checks caught.** Two verification passes ran over the report, one on the literature and one on the numbers, citations, requirements, writing and a reviewer read-through.
+- One real error: the Yan example for MICA's k-means restarts was wrong. MICA's own default run on Yan scores 0.939, and the 0.77 was a tail value from an earlier redraw. Chung replaces it, where MICA's own default run scores 0.589 against the published 0.655.
+- The label-free flip on Zeisel is mostly about granularity, not quality. MICA's own 20-cluster partition scores 0.29, and the AMI gap is 0.06 where the ARI gap is 0.23. The report now says this.
+- The two methods' sweeps do not cover the same range of cluster counts, so part of the silhouette result measures how coarse each sweep can go. Leiden reaches 2 clusters on Zeisel while MICA never goes below 7.
+- Our earlier claim that matched genes put Leiden ahead held only for the two anchor datasets. MICA leads on seven of the other eight.
+- The bibliography had real errors: a wrong title and first author for one preprint, a wrong volume for another paper, and missing page numbers in several. All 23 cited works were checked against Crossref.
+
+**Teammate work merged.**
+- Laraib's Zeisel dataset card (L-1). Checked against the raw download and our pipeline: the cell and gene counts, the label counts, the region counts and the smallest groups all reproduce. One claim was wrong and is fixed. The 2,903 cells belong to the scMINER authors' processed input, not to Zeisel et al., who analyzed all 3,005. Our QC keeps 2,987, sharing 2,888 with the authors' set.
+- Rhea's results summary pivots (R-1). Every value in both CSVs matches a fresh pivot of `docs/results_for_pivot.csv` to three decimals. R-1 stays in progress until the odd results are marked.
+
+**What the plan looks like now.** The milestones are realigned to the instructor's targets of November 4 for the main experiments and November 18 for the draft. Eight tasks were added (U-31 to U-38): three new label-free rules, a shared-space silhouette, label-free Leiden on the Allen subset as a third anchor, the final comparison table, and two optional checks. The GPU work and the full atlas run are now behind gates.
+
+**Next.** The stability rule (U-32) and the significance rule (U-33) on PBMC14K and Zeisel.
 
 ---
 
@@ -140,7 +170,7 @@ On the four small sets we could compare against every pair. There, 200 candidate
 
 *Found along the way.*
 - **A faster exact distance.** Most genes of a cell fall in the lowest bin, so the joint histogram only needs the genes where the other cell is outside it. The result is identical, and it is 7 times faster on PBMC14K and 1.2 to 1.9 times faster on the denser Zeisel and Klein.
-- **The mutual information graph has strong hubs.** On PBMC14K, the top 1% of cells take 23% of all exact neighbor slots. Their links join cells of the same type only 42% of the time, against 76% for other links. On Klein, the median cell is a neighbor of only 7 others while the biggest hub is a neighbor of 868.
+- **The mutual information graph has strong hubs.** On PBMC14K, the top 1% of cells take 23% of all exact neighbor slots. Their links join cells of the same type only 44% of the time, against 75% for other links. On Klein, the median cell is a neighbor of only 7 others while the biggest hub is a neighbor of 868. (Corrected on Oct 14. The first two shares were quoted as 42% and 76% from a scratch run. `scripts/rq2_hubs.py` now rebuilds them from the exact graph and writes `results/rq2_hubs/`.)
 - **Leiden on the raw neighbor graph is a poor stand-in for MICA.** On PBMC14K it scores 0.64 on either graph, against MICA's 0.85. On Klein, Leiden on the exact graph scores 0.59, while approximate graphs that miss many true neighbors score up to 0.98. So finding every true neighbor is not by itself the goal. Removing hub effects might help clustering. That would be a new task, so it is a decision for the team.
 
 *Caveats.* Recall is measured on 500 random cells. For MICA we count each cell's 79 closest links in its saved graph, which can only flatter MICA. Our code is numpy and MICA's search is compiled, both on 8 workers of a shared machine. The PBMC14K times use the plain exact distance, from before the faster one was added. The Allen times use the faster one. The number of candidates needed to match HNSW grows with dataset size (800 at 13,605 cells, about 1,600 at 100,000), so the full atlas will likely need the GPU version (U-18). Tables in `results/rq2_graph_*/`, `results/rq2_large_paper_pbmc14k/` and `results/rq2_downstream_*/`.
