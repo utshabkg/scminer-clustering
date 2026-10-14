@@ -1,0 +1,3 @@
+dataset,n_cells,k,n_hubs,hub_share_of_slots,same_type_share_hub_slots,same_type_share_other_slots,indegree_median,indegree_p99,indegree_max
+paper_pbmc14k,13605,79,136,0.2325,0.4354,0.7479,10.0,1100.0,4545
+klein,2717,80,27,0.0875,0.7518,0.7717,7.0,637.8400000000001,868

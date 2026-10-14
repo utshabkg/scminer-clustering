@@ -33,3 +33,6 @@ __pycache__/
 
 # raw MICA output (per-resolution tables and plots); scored copies live in results/reproduction_<name>/
 results/reproduction/
+
+# local compile preview of the Assignment 2 report (the real build is on Overleaf)
+latex/a2_report_preview.pdf

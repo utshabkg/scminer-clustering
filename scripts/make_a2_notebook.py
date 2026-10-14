@@ -37,7 +37,8 @@ nums = json.loads((RESULTS / "a2_report_numbers.json").read_text())"""),
     ("md", "## Table I. Reproduction on the authors' inputs (ARI, the paper's rule)"),
     ("code", """t1 = pd.DataFrame({ds: {"cells": r["cells"], "MICA, paper": r["published_mica"], "MICA, ours": round(r["ours_mica"]["median"], 3),
                          "Scanpy, paper": r["published_scanpy"], "Leiden all genes, ours": round(r["ours_leiden_all_genes"]["median"], 3)}
-                    for ds, r in nums["reproduction"].items()}).T
+                    for ds, r in nums["reproduction"].items() if "cells" in r}).T
+print("Zeisel in graph mode, six runs:", nums["reproduction"]["zeisel_graph_mode"]["values"])
 t1["within 0.05"] = (t1["MICA, ours"] - t1["MICA, paper"]).abs() <= 0.05
 t1"""),
     ("md", "## Table II. Choosing the clustering without and with labels (PBMC14K and Zeisel, all genes)\n\nMedian [min, max] ARI over six MICA graph-mode runs or three Leiden seeds, and the number of clusters chosen."),

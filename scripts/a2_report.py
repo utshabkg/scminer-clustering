@@ -54,26 +54,26 @@ def reproduction(nums):
     pub = pd.read_csv(REPO / "docs" / "published_scores.csv").set_index("dataset")
     lines = []
     for ds in ALL10:
-        if ds in GRAPH_MODE:
+        # The paper ran MICA's small-data mode up to 5,000 cells, so only PBMC14K is graph mode in its headline.
+        if ds == "pbmc14k":
             ours = spread([read(e).query("method == 'mica'").ari.iloc[0] for e in GRAPH_MODE[ds]])
         else:
             ours = spread([read(f"reproduction_paper_{ds}").query("method == 'mica'").ari.mean()])
+        if ds == "zeisel":
+            nums["reproduction"]["zeisel_graph_mode"] = spread([read(e).query("method == 'mica'").ari.iloc[0] for e in GRAPH_MODE[ds]])
         leiden = spread(read(f"baselines_paper_{ds}").query("method == 'leiden_pca' and k_setting == 'paper_protocol'").ari)
         p = pub.loc[ds]
         nums["reproduction"][ds] = {"cells": int(p.n_cells), "published_mica": float(p.MICA_ARI), "ours_mica": ours,
                                     "published_scanpy": float(p.Scanpy_ARI), "ours_leiden_all_genes": leiden}
-        mark = "$^\\dagger$" if ds in GRAPH_MODE else ("$^\\ast$" if ds == "kolodziejczyk" else "")
+        mark = {"pbmc14k": "$^\\dagger$", "kolodziejczyk": "$^\\ast$", "zeisel": "$^\\ddagger$"}.get(ds, "")
         lines.append(f"{NAMES[ds]} & {int(p.n_cells):,} & {p.MICA_ARI:.3f} & {ours['median']:.3f}{mark} & {p.Scanpy_ARI:.3f} & {leiden['median']:.3f} \\\\")
     body = "\n".join(lines)
     (TABLES / "a2_reproduction.tex").write_text(
-        "\\begin{table}[t]\n\\centering\n\\caption{MICA on the authors' released inputs, all genes, scored by the paper's rule (the true number of "
-        "types is given and the labels pick the setting). ARI.}\n\\label{tab:repro}\n\\footnotesize\n\\setlength{\\tabcolsep}{3.5pt}\n"
-        "\\begin{tabular}{lrcccc}\n\\toprule\n & & \\multicolumn{2}{c}{MICA} & Scanpy & Leiden \\\\\n"
-        "\\cmidrule(lr){3-4}\nDataset & Cells & paper & ours & paper & ours \\\\\n\\midrule\n" + body +
-        "\n\\bottomrule\n\\end{tabular}\n\\\\[2pt]\n\\parbox{\\columnwidth}{\\scriptsize $^\\dagger$Graph mode, median of six runs "
-        "(PBMC14K 0.850 to 0.857, Zeisel 0.755 to 0.781). Other rows use MICA's small-data mode with the final $k$-means given 100 restarts. "
-        "$^\\ast$Not reproduced from the released files (Sec.~\\ref{sec:results}). The paper's Scanpy used 2,000 variable genes. "
-        "Our Leiden uses all genes, the same input MICA gets, median of three seeds.}\n\\end{table}\n")
+        "\\begin{table}[t]\n\\centering\n\\caption{MICA and PCA + Leiden on the authors' released inputs with all genes, scored by ARI under the paper's rule, "
+        "where the true number of types is given and the labels pick the setting.}\n\\label{tab:repro}\n\\footnotesize\n\\setlength{\\tabcolsep}{3.5pt}\n"
+        "\\begin{tabular}{lrcccc}\n\\toprule\n & & \\multicolumn{2}{c}{MICA} & \\multicolumn{2}{c}{PCA + Leiden} \\\\\n"
+        "\\cmidrule(lr){3-4}\\cmidrule(lr){5-6}\nDataset & Cells & paper & ours & paper & ours \\\\\n\\midrule\n" + body +
+        "\n\\bottomrule\n\\end{tabular}\n\\\\[2pt]\n\\parbox{\\columnwidth}{\\scriptsize As in the paper, sets of up to 5,000 cells use MICA's small-data mode, where we give the final $k$-means 100 restarts and report the mean of three seeds, and PBMC14K uses graph mode. $^\\dagger$Median of six runs, 0.850 to 0.857. $^\\ddagger$Graph mode gives 0.755 to 0.781 over six runs. $^\\ast$Not reproduced from the released files (Sec.~\\ref{sec:results}). The paper's PCA + Leiden is Scanpy on 2,000 variable genes. Ours uses all genes, like MICA, and we report the median of three seeds.}\n\\end{table}\n")
 
 
 def selection(nums):
@@ -104,10 +104,10 @@ def selection(nums):
         if block == "No labels":
             lines.append("\\midrule")
     (TABLES / "a2_selection.tex").write_text(
-        "\\begin{table}[t]\n\\centering\n\\caption{Choosing the final clustering without and with the labels, on the authors' PBMC14K "
-        "and Zeisel inputs with all genes (7 types in each). ARI as median [min, max] over six MICA graph-mode runs or three Leiden "
-        "seeds, and $k$, the number of clusters chosen. In the top block the labels are used only to score.}\n"
-        "\\label{tab:selection}\n\\scriptsize\n\\setlength{\\tabcolsep}{2.4pt}\n\\begin{tabular}{llcccc}\n\\toprule\n"
+        "\\begin{table}[t]\n\\centering\n\\caption{ARI of the chosen clustering on the authors' PBMC14K and Zeisel inputs (all genes, "
+        "7 types each), as median [min, max] over six MICA graph-mode runs or three Leiden seeds. A single value means all runs agree "
+        "within 0.005. $k$ is the number of clusters chosen. In the top block the labels are used only for scoring.}\n"
+        "\\label{tab:selection}\n\\scriptsize\n\\setlength{\\tabcolsep}{1.7pt}\n\\begin{tabular}{llcccc}\n\\toprule\n"
         " & & \\multicolumn{2}{c}{PBMC14K} & \\multicolumn{2}{c}{Zeisel} \\\\\n\\cmidrule(lr){3-4}\\cmidrule(lr){5-6}\n"
         "Rule & Method & ARI & $k$ & ARI & $k$ \\\\\n\\midrule\n" + "\n".join(lines) + "\n\\bottomrule\n\\end{tabular}\n\\end{table}\n")
 
@@ -141,21 +141,20 @@ def figure(nums):
                          "ytick.major.width": 0.6, "axes.edgecolor": MUTED, "xtick.color": MUTED, "ytick.color": MUTED,
                          "axes.labelcolor": INK, "pdf.fonttype": 42})
     fig, axes = plt.subplots(1, 2, figsize=(3.5, 1.9), sharey=True)
-    lab = dict(fontsize=5.5, color=INK, textcoords="offset points")
+    lab = dict(fontsize=6.3, color=INK, textcoords="offset points")
     ax = axes[0]
     ax.axhline(100 * hn_p.recall_at_k, color=MUTED, lw=0.8, ls=(0, (3, 2)), label="MICA HNSW")
-    ax.text(102, 100 * hn_p.recall_at_k + 1.0, "MICA HNSW, 15 min", color=MUTED, fontsize=5.5, va="bottom")
+    ax.text(102, 100 * hn_p.recall_at_k + 1.0, "MICA HNSW, 15 min", color=MUTED, fontsize=6.3, va="bottom")
     ax.plot(corr.c, 100 * corr.recall_at_k, color=BLUE, lw=1.4, marker="o", ms=3.2, mec="#fcfcfb", mew=0.6, label="Correlation")
     ax.plot(pd_.mean_scored, 100 * pd_.recall_at_k, color=ORANGE, lw=1.4, marker="s", ms=3.0, mec="#fcfcfb", mew=0.6, label="PCA + detected")
     ax.annotate(f"{full.seconds_all_cells[800] / 60:.1f} min", (800, 100 * full.recall_at_k[800]), xytext=(3, -11), ha="left", **lab)
-    ax.annotate("correlation", (200, 100 * corr.recall_at_k.iloc[1]), xytext=(-3, 6), ha="right", **lab)
     ax.annotate("PCA + detected", (pd_.mean_scored.iloc[-1], 100 * pd_.recall_at_k.iloc[-1]), xytext=(4, -2), ha="left", va="center", **lab)
     ax.set_title("PBMC14K, 13,605 cells", fontsize=7, color=INK, pad=3)
     ax.set_ylabel("True neighbors found (%)")
-    ax.legend(loc="lower right", fontsize=5.5, frameon=False, handlelength=1.6, borderaxespad=0.1, labelspacing=0.25)
+    ax.legend(loc="lower right", fontsize=6.3, frameon=False, handlelength=1.6, borderaxespad=0.1, labelspacing=0.25)
     ax = axes[1]
     ax.axhline(100 * hn_a.recall_at_k, color=MUTED, lw=0.8, ls=(0, (3, 2)))
-    ax.text(205, 100 * hn_a.recall_at_k + 1.2, "MICA HNSW, 5.2 h", color=MUTED, fontsize=5.5, va="bottom")
+    ax.text(205, 100 * hn_a.recall_at_k + 1.2, "MICA HNSW, 5.2 h", color=MUTED, fontsize=6.3, va="bottom")
     ax.plot(ca.c, 100 * ca.recall_at_k, color=BLUE, lw=1.4, marker="o", ms=3.2, mec="#fcfcfb", mew=0.6)
     ax.annotate(f"{fa.seconds_all_cells[1600] / 3600:.1f} h", (1600, 100 * fa.recall_at_k[1600]), xytext=(5, -10), ha="left", **lab)
     ax.annotate(f"{fa.seconds_all_cells[3200] / 3600:.1f} h", (3200, 100 * fa.recall_at_k[3200]), xytext=(-5, 2), ha="right", **lab)

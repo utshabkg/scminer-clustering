@@ -1,27 +1,28 @@
 # Resume note (for Claude, after a session limit or a restart)
 
-Last updated: 2026-10-03 21:10 CDT. Read this first, then `PROGRESS.md` and `WORKPLAN.md`.
+Last updated: 2026-10-14 04:10 CDT. Read this first, then `PROGRESS.md` and `WORKPLAN.md`.
 
 The user asked Claude to keep doing Utshab's tasks until something depends on Laraib or Rhea, to stop before any long GPU run and ask first, and to keep going after a session limit resets.
 
-## Running right now (Oct 3, 21:10)
+## Current task (Oct 14): Assignment 2 report, due today
 
-Nothing. All U-19 runs are finished, written into PROGRESS.md and pushed.
+The report is written, verified and pushed. The user compiles it on Overleaf from `latex/`: `main.tex`, `sections/`, `tables/`, `figures/`, `references.bib` and `IEEEtran.cls`. A local compile gives 4 pages of body plus 1 page of references. The preview is `latex/a2_report_preview.pdf`, which is untracked.
 
-**U-19 final numbers on Allen 100K:**
-- MICA's HNSW finds 90.3% of neighbors in 5.2 h. Correlation finds 89.8% at 1,600 candidates in 1.1 h, and 94.6% at 3,200 in 2.2 h.
-- MICA's downstream steps on our 3,200 graph give ARI 0.602 and 0.627, with AMI 0.819 and 0.825.
-- On MICA's graph through our wrapper they give ARI 0.641 and 0.617, with AMI 0.835 and 0.831. MICA's own run gave 0.652.
-- So the ARI ranges overlap, and our AMI is about 0.01 lower.
-
-**On PBMC14K:** ours gives 0.853 twice and MICA's graph gives 0.852 twice.
-
-**Waiting on Utshab, so ask before doing any of these:**
-1. GPU time for U-18, the GPU version of the correlation step and the sparse exact MI.
-2. Whether to add a hubness-reduction task. MICA's MI graph has strong hubs, and approximate graphs sometimes cluster better than exact ones.
-3. U-30: whether to contact the scMINER authors about the Kolodziejczyk input.
-
-Nothing else on Utshab's list can go ahead without those answers or the teammates' tasks. The open ones are L-1, L-2, R-1, plus U-4, which waits on Rhea's GitHub invite.
+- **How it was built.**
+  - Tables and the figure come from `scripts/a2_report.py`, and every quoted number is in `results/a2_report_numbers.json`.
+  - The hub numbers come from `scripts/rq2_hubs.py` and `results/rq2_hubs/`.
+  - The notebook is `notebooks/assignment2_preliminary.ipynb`, built and run by `scripts/make_a2_notebook.py`.
+  - The literature was verified by workflow wf_c52c8b84-309. The report itself was verified by wf_682bf22b-e8d (numbers, citations, requirements, writing, reviewer), and its confirmed findings were applied.
+- **Left for the user before submitting:**
+  1. Put the real Overleaf view link into `\overleaflink` in `latex/main.tex`.
+  2. Make the GitHub repo accessible to the professor. It is private, so either make it public or add the professor as a collaborator.
+  3. Merge PR #1 (Laraib's Zeisel card) so the card exists on main. Merging was blocked by the permission classifier, so the user must merge on GitHub or allow it.
+  4. Merge PR #2 (Rhea's pivots).
+  5. Optional: Rhea's Google Sheet is viewable by anyone with the link, while U-30 asks us not to discuss the Kolodziejczyk result outside the team yet.
+- **After the merges** (follow-up fixes and PROGRESS/WORKPLAN, held back to avoid conflicts):
+  - The PR1 card needs a correct 2,903-cell sentence, post-QC labels on the counts, log2(CPM + 1) and a title line.
+  - U-4 goes to [x] and R-1 to [~].
+  - Add a PROGRESS.md entry for Oct 14 covering the report, the label-free repeats, the hub script and the corrected hub numbers (44% and 75%, not 42% and 76%).
 
 ## Done on Oct 3 (all pushed except as noted)
 
