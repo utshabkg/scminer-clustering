@@ -33,7 +33,7 @@
 
 **Preprocessing we applied**
 
-- **Quality control:** scMINER reference command filterSparseEset(pbmc14k_raw\.eset, filter_mode = "auto", filter_type = "both"). For cells, require 458 ≤ nUMI ≤ 3,694, nFeature ≥ 221, mitochondrial UMI fraction ≤ 0.0408 (4.08%); no additional spike-in-based cells failed. Combined result: 395 cells removed / 13,605 retained. Individual failures: 174 by nUMI, 0 by gene-count, 222 by mitochondrial fraction, 0 by spike-ins; individual failures can overlap. Auto thresholds use a median ±3 MAD strategy.
+- **Quality control:** scMINER reference command filterSparseEset *(pbmc14k_raw\.eset, filter_mode = "auto", filter_type = "both")*. For cells, require 458 ≤ nUMI ≤ 3,694, nFeature ≥ 221, mitochondrial UMI fraction ≤ 0.0408 (4.08%); no additional spike-in-based cells failed. Combined result: 395 cells removed / 13,605 retained. Individual failures: 174 by nUMI, 0 by gene-count, 222 by mitochondrial fraction, 0 by spike-ins; individual failures can overlap. Auto thresholds use a median ±3 MAD strategy.
 - **Normalization:** Counts per million (CPM; library scaling factor 1,000,000) followed by log2(CPM + 1)
 - **Gene filtering:** Retain genes detected (nonzero) in at least 70 cells
 - **Anything unusual about this dataset:** The scMINER developers first repaired gene symbols against GRCh37.82, selected seven populations from ten antibody-purified samples, and discarded genes absent from the selected 14K cells. The term PBMC14K denotes the pre-QC 14,000-cell collection, not the 13,605-cell filtered analysis matrix. Some of the selected T-cell groups are transcriptionally similar despite different sorting markers.
