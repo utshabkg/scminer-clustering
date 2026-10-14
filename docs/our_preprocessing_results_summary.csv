@@ -1,0 +1,24 @@
+AVERAGE of ari,,method,,,
+dataset,genes,hierarchical,k-means,Leiden (Scanpy),MICA
+allen_100k,2000 HVG seurat_v3,,0.579,0.661,
+allen_100k,all genes,,0.431,0.624,0.652
+klein,2000 HVG cell_ranger,0.752,0.570,0.765,0.728
+klein,2000 HVG seurat,0.660,0.615,0.950,0.793
+klein,2000 HVG seurat_v3,0.787,0.757,0.976,0.839
+klein,all genes,0.433,0.396,0.974,0.980
+kolodziejczyk,2000 HVG cell_ranger,0.618,0.619,1.000,1.000
+kolodziejczyk,2000 HVG seurat,0.616,0.619,0.996,0.988
+kolodziejczyk,2000 HVG seurat_v3,0.614,0.591,1.000,0.992
+kolodziejczyk,all genes,0.714,0.719,0.562,0.721
+pbmc14k,2000 HVG cell_ranger,0.470,0.482,0.588,0.531
+pbmc14k,2000 HVG seurat,0.529,0.503,0.656,0.653
+pbmc14k,2000 HVG seurat_v3,0.702,0.662,0.755,0.737
+pbmc14k,all genes,0.608,0.563,0.876,0.854
+usoskin,2000 HVG cell_ranger,0.832,0.618,0.919,0.857
+usoskin,2000 HVG seurat,0.316,0.396,0.885,0.840
+usoskin,2000 HVG seurat_v3,0.523,0.434,0.922,0.873
+usoskin,all genes,0.186,0.176,0.588,0.884
+zeisel,2000 HVG cell_ranger,0.596,0.818,0.691,0.806
+zeisel,2000 HVG seurat,0.391,0.602,0.615,0.728
+zeisel,2000 HVG seurat_v3,0.553,0.724,0.795,0.869
+zeisel,all genes,0.561,0.523,0.845,0.705
