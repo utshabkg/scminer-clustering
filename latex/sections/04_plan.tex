@@ -1,0 +1,14 @@
+\section{What We Learned and the Revised Plan}\label{sec:plan}
+The preliminary runs taught us three things. The reproduction holds, but the paper's comparison mixes gene sets and uses the labels to pick settings, and with matched genes and label-chosen settings Leiden is ahead on both anchor datasets. Without labels the ranking can flip, and the size of the drop depends on the rule, with the silhouette rule often merging true types. For scale, exact rescoring of cheap candidates works on subsets, but the candidates must come from correlation over all genes, not from principal components.
+
+These results change the plan in five ways.
+
+\textbf{1. Stronger label-free rules become the main experiment.} We add two rules from the closest work and apply each one identically to MICA and Leiden. One picks the resolution whose clusters are most stable under subsampling, in the spirit of MultiK and chooseR \cite{liu2021multik,pattersoncross2021chooser}. The other merges clusters that a significance test cannot separate, as in sc-SHC and CHOIR \cite{grabski2023significance,sant2025choir}. They run on PBMC14K, Zeisel and the other eight benchmark sets, with matched gene sets, and label-chosen scores stay in a separate table.
+
+\textbf{2. Every MICA result gets repeats.} We run at least five MICA runs per setting and report the spread, since a single run moved ARI by 0.2 on PBMC14K.
+
+\textbf{3. Scaling is judged on subsets first.} The exact neighbor search on 13,605 and 100,000 cells is the reference. A GPU version of the correlation step and the exact distance is next, and we will judge it by the clustering it gives. The full 2.3 million cell run is now a stretch goal. We attempt it only if a 300,000-cell run predicts that it fits in a day.
+
+\textbf{4. A small hubness test.} Because hub cells crowd the exact graph, we will test whether a standard hub correction \cite{amblard2022hubness} on the mutual information graph changes MICA's label-free results. It runs on the CPU and needs no new data.
+
+\textbf{5. The annotation part is narrowed.} If the main experiments finish by November 4, we run one comparison on the PBMC14K and Zeisel clusters: marker genes alone against marker genes plus inferred regulator activity. Both arms use the same retrieval sources and the same local language model with fixed settings, and we score whether each biological statement is supported by the retrieved text.

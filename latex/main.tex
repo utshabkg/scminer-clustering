@@ -2,19 +2,23 @@
 \IEEEoverridecommandlockouts
 \usepackage{cite}
 \usepackage{amsmath,amssymb,amsfonts}
-\usepackage{algorithmic}
 \usepackage{graphicx}
 \usepackage{textcomp}
 \usepackage{xcolor}
+\usepackage{booktabs}
+\usepackage{multirow}
+\usepackage{url}
+\usepackage[hidelinks]{hyperref}
 \usepackage{balance}
 
-\def\BibTeX{{\rm B\kern-.05em{\sc i\kern-.025em b}\kern-.08em
-    T\kern-.1667em\lower.7ex\hbox{E}\kern-.125emX}}
+% Fill in before submitting: the shareable Overleaf link.
+\newcommand{\overleaflink}{\url{https://www.overleaf.com/read/REPLACE-WITH-OUR-LINK}}
 
 \begin{document}
 
-\title{Single-Cell Genomic Clustering Using scMINER with RAG-Assisted Biological Interpretation\\
-{\footnotesize{Project Proposal for Clustering Algorithms course at Missouri University of Science and Technology}}
+\title{Does Mutual Information Clustering Hold Up Without Labels?\\
+Revised Plan and Preliminary Results\\
+{\footnotesize{Project Assignment 2 for the Clustering Algorithms course at Missouri University of Science and Technology}}
 }
 
 \author{
@@ -34,27 +38,15 @@
 
 \maketitle
 
-% \begin{abstract}
-% Leaving this blank for now but including the section as it is useful
-% \end{abstract}
-
-\begin{IEEEkeywords}
-Single-cell RNA sequencing, mutual information clustering, MICA, large-scale clustering, retrieval-augmented generation, cell-type annotation, regulatory network inference
-\end{IEEEkeywords}
-
-% Sections follow the order asked for in the proposal guidelines:
-% background, limitations, research questions, method and evaluation,
-% literature review and expected contribution, feasibility.
-\input{sections/01_background}
-\input{sections/02_limitations}
-\input{sections/03_research_questions}
-\input{sections/04_method_evaluation}
-\input{sections/05_related_work_contribution}
-\input{sections/06_feasibility}
+\input{sections/00_abstract}
+\input{sections/01_question}
+\input{sections/02_related}
+\input{sections/03_results}
+\input{sections/04_plan}
+\input{sections/05_schedule}
 
 \balance
 \bibliographystyle{IEEEtran}
 \bibliography{references}
-\vspace{12pt}
 
 \end{document}

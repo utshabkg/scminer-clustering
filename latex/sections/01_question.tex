@@ -1,0 +1,14 @@
+\section{Revised Question and Scope}\label{sec:question}
+Our proposal asked three questions at once. Does scMINER's clustering advantage survive without labels? Can its mutual information graph reach atlas scale? And does regulator activity help a language model interpret clusters? Following the feedback, the first is now the main question, and the other two depend on it.
+
+scMINER clusters cells with MICA, which scores a pair of cells by the mutual information between their binned expression profiles \cite{pan2025scminer}. Its benchmark tells every method the true number of cell types and keeps the setting that best matches the reference labels. Someone analyzing new data has neither, so we ask:
+
+\textbf{Main question.} When each method must choose its own final clustering without the reference labels, does MICA give partitions closer to the known cell types than a standard pipeline of principal components and Leiden clustering \cite{traag2019louvain}?
+
+The label-free rules are fixed before scoring and applied the same way to both methods. So far there are two. The first is each method's default setting (MICA resolution 1.822, Scanpy's Leiden resolution 1.0). The second keeps the setting with the highest mean silhouette in the method's own embedding. The labels come in afterwards, only to compute the adjusted Rand index (ARI) and adjusted mutual information (AMI). Results where the labels choose the setting, as in the paper, are reported separately as an upper bound.
+
+\textbf{Secondary question.} Can MICA's neighbor graph be built much faster without losing the neighbors that matter? We test this on subsets where brute force gives the exact answer, and we use those runs to estimate the cost of the full atlas before attempting it.
+
+\textbf{Later, if time allows.} Does inferred regulator activity add supported evidence beyond marker genes when a retrieval-augmented language model names clusters? This waits until the clustering pipeline is stable.
+
+The anchor datasets are the two the feedback named. PBMC14K has 13,605 blood cells in 7 types that were sorted with antibodies before sequencing, so its labels do not come from any clustering \cite{zheng2017massively}. Zeisel has 2,903 mouse brain cells in 7 classes, whose labels did come from the original authors' clustering \cite{zeisel2015cell}. We use the processed inputs the scMINER authors released, add eight more of their benchmark sets for breadth, and use a 100,000-cell subset of the Allen brain atlas \cite{yao2023allen} for the scaling test.

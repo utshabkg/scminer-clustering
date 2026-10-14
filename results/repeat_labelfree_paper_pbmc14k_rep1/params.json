@@ -1,0 +1,5 @@
+{
+  "dataset": "paper_pbmc14k",
+  "mica_output": "results/reproduction/mica_paper_pbmc14k_rep1",
+  "tag": null
+}

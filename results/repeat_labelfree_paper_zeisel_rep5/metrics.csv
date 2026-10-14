@@ -1,0 +1,3 @@
+dataset,method,genes,hvg_flavor,seed,k_setting,mode,silhouette,n_candidates,chosen_setting,n_clusters,n_true_classes,ari,ami,nmi
+paper_zeisel,mica,all,,0,silhouette,graph,0.31221762074339027,40.0,2.4,9,7,0.6593693274006469,0.7350660196026869,0.7362340293400015
+paper_zeisel,mica,all,,0,default_resolution_1.8,graph,,,,10,7,0.589043417550309,0.6976774831142106,0.6991333553861905

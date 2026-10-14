@@ -1,0 +1,32 @@
+\section{Schedule and Division of Work}\label{sec:schedule}
+Table~\ref{tab:schedule} lists the milestones, aligned with the course targets: main experiments by November 4 and a full manuscript draft by November 18.
+
+\begin{table}[t]
+\centering
+\caption{Schedule for the rest of the semester.}
+\label{tab:schedule}
+\footnotesize
+\setlength{\tabcolsep}{4pt}
+\begin{tabular}{p{0.24\columnwidth}p{0.68\columnwidth}}
+\toprule
+Dates & Milestone \\
+\midrule
+Oct 15 to 21 & Stability and significance rules running on PBMC14K and Zeisel, for both methods \\
+Oct 22 to 28 & All ten datasets with matched genes and repeat runs. Hubness test \\
+Oct 29 to Nov 4 & \textbf{Main experiments complete.} Fast neighbor search on GPU, judged on subsets \\
+Nov 5 to 11 & Annotation comparison, if on track. Methods and results drafted \\
+Nov 12 to 18 & \textbf{Full manuscript draft} \\
+Nov 19 to Dec 2 & Revision from feedback, optional 300,000-cell run, slides \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+Only Utshab has access to the workstation and its GPUs, so the work is split by that constraint, and nobody else has to run code.
+
+\textbf{Utshab} writes all code, runs every experiment, exports the results as tables and figures, and writes the methods and results.
+
+\textbf{Laraib} writes the dataset cards (Zeisel is done, PBMC14K and the Allen atlas are next) and the comparison table of related work, which feeds the related work section. For the annotation part she checks proposed cluster names against the CellMarker and PanglaoDB databases \cite{hu2023cellmarker,franzen2019panglaodb} through their websites, and she proofreads the manuscript.
+
+\textbf{Rhea} turns the exported result files into the paper's tables (the first results summary is done), keeps the schedule and risk list current, checks that every number in the text matches its table, and assembles the slides.
+
+\textbf{Code and draft.} The code, the result files and a notebook that rebuilds Tables~\ref{tab:repro} and~\ref{tab:selection} and Fig.~\ref{fig:neighbors} are at \url{https://github.com/utshabkg/scminer-clustering} (notebook: \texttt{notebooks/assignment2\_preliminary.ipynb}). The Overleaf project is at \overleaflink.

@@ -1,0 +1,7 @@
+\begin{abstract}
+scMINER reports that its mutual information clustering, MICA, beats standard single-cell pipelines, but its benchmark picks each method's setting with the reference labels. We narrow our project to one question: does MICA still win when each method must choose its own clustering without labels? On the authors' released inputs we reproduce MICA's published scores on 9 of 10 datasets. On PBMC14K and Zeisel, Leiden on principal components is ahead when the labels pick the setting. Without labels the ranking can flip: on Zeisel, Leiden at its default resolution splits 7 types into 21 clusters, while MICA stays near 10. For scaling, correlation candidates rescored with the exact distance match MICA's own neighbor search at 6.2 times lower cost on 13,605 cells, verified against brute force.
+\end{abstract}
+
+\begin{IEEEkeywords}
+Single-cell RNA sequencing, mutual information clustering, label-free model selection, nearest neighbor graphs, cell-type annotation
+\end{IEEEkeywords}
