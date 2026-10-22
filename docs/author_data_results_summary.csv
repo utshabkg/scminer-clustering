@@ -1,42 +1,42 @@
-AVERAGE of ari,,method,,,
-dataset,genes,hierarchical,k-means,Leiden (Scanpy),MICA
-buettner,2000 HVG cell_ranger,0.248,0.428,0.308,0.896
-buettner,2000 HVG seurat,0.280,0.465,0.302,0.826
-buettner,2000 HVG seurat_v3,0.234,0.332,0.295,0.837
-buettner,all genes,0.604,0.395,0.276,0.934
-chung,2000 HVG cell_ranger,0.276,0.121,0.176,0.655
-chung,2000 HVG seurat,0.007,0.007,0.163,0.154
-chung,2000 HVG seurat_v3,0.279,0.047,0.172,0.445
-chung,all genes,0.093,0.127,0.313,0.655
-goolam,2000 HVG cell_ranger,0.910,0.910,0.543,0.687
-goolam,2000 HVG seurat,0.910,0.957,0.572,0.914
-goolam,2000 HVG seurat_v3,0.910,0.833,0.572,0.687
-goolam,all genes,0.865,0.808,0.308,0.544
-klein,2000 HVG cell_ranger,0.743,0.570,0.767,0.724
-klein,2000 HVG seurat,0.562,0.618,0.948,0.792
-klein,2000 HVG seurat_v3,0.732,0.633,0.958,0.847
-klein,all genes,0.441,0.396,0.976,0.980
-kolodziejczyk,2000 HVG cell_ranger,0.965,0.940,1.000,0.996
-kolodziejczyk,2000 HVG seurat,0.724,0.714,0.996,0.992
-kolodziejczyk,2000 HVG seurat_v3,0.535,0.573,1.000,0.992
-kolodziejczyk,all genes,0.716,0.716,0.564,0.727
-pbmc14k,2000 HVG cell_ranger,0.569,0.567,0.693,0.633
-pbmc14k,2000 HVG seurat,0.565,0.518,0.722,0.688
-pbmc14k,2000 HVG seurat_v3,0.664,0.522,0.729,0.703
-pbmc14k,all genes,0.578,0.444,0.878,0.853
-pollen,2000 HVG cell_ranger,0.929,0.907,0.837,0.942
-pollen,2000 HVG seurat,0.948,0.894,0.827,0.942
-pollen,2000 HVG seurat_v3,0.937,0.896,0.868,0.942
-pollen,all genes,0.948,0.881,0.858,0.951
-usoskin,2000 HVG cell_ranger,0.484,0.599,0.905,0.860
-usoskin,2000 HVG seurat,0.411,0.378,0.863,0.903
-usoskin,2000 HVG seurat_v3,0.626,0.485,0.902,0.903
-usoskin,all genes,0.154,0.176,0.597,0.835
-yan,2000 HVG cell_ranger,0.802,0.804,0.800,0.867
-yan,2000 HVG seurat,0.712,0.801,0.951,0.870
-yan,2000 HVG seurat_v3,0.795,0.761,0.843,0.875
-yan,all genes,0.823,0.772,0.789,0.939
-zeisel,2000 HVG cell_ranger,0.583,0.832,0.740,0.809
-zeisel,2000 HVG seurat,0.400,0.566,0.657,0.763
-zeisel,2000 HVG seurat_v3,0.559,0.620,0.692,0.797
-zeisel,all genes,0.664,0.521,0.839,0.714
+AVERAGE of ari,,method,,,,
+dataset,genes,hierarchical,k-means,Leiden (Scanpy),MICA,anomaly
+buettner,2000 HVG cell_ranger,0.248,0.428,0.308,0.896,MICA 0.83-0.93 vs 0.23-0.60 for every other method on cell-cycle labels that benchmarks usually find hard. All methods were given the true k=3 so it is not a cluster-count advantage. Check no MICA parameter was tuned against the labels
+buettner,2000 HVG seurat,0.280,0.465,0.302,0.826,Same MICA gap as the cell_ranger row
+buettner,2000 HVG seurat_v3,0.234,0.332,0.295,0.837,Same MICA gap as the cell_ranger row
+buettner,all genes,0.604,0.395,0.276,0.934,Same MICA gap. Hierarchical also jumps to 0.604 from 0.23-0.28 with HVGs
+chung,2000 HVG cell_ranger,0.276,0.121,0.176,0.655,MICA 0.655 is identical to the all genes row (sd 0 over 3 seeds). Compare the label vectors to rule out a reused result
+chung,2000 HVG seurat,0.007,0.007,0.163,0.154,Collapse: hierarchical and k-means 0.007 (random) and MICA 0.154 vs 0.445-0.655 in the other gene settings. Investigate first. Likely cause is the wrong input to the seurat flavor (it expects log-normalized data). Check which 2000 genes were picked
+chung,2000 HVG seurat_v3,0.279,0.047,0.172,0.445,"k-means 0.047 (sd 0.069 over 3 seeds), close to random"
+chung,all genes,0.093,0.127,0.313,0.655,MICA 0.655 is identical to the cell_ranger row
+goolam,2000 HVG cell_ranger,0.910,0.910,0.543,0.687,Hierarchical 0.910 in all three HVG rows and k-means also 0.910 here. MICA 0.687 repeats in the seurat_v3 row. Plausible with about 124 cells but compare label vectors to confirm the partitions really differ
+goolam,2000 HVG seurat,0.910,0.957,0.572,0.914,Hierarchical 0.910 repeated. Leiden 0.572 repeats in the seurat_v3 row
+goolam,2000 HVG seurat_v3,0.910,0.833,0.572,0.687,Hierarchical 0.910 and MICA 0.687 repeated (see cell_ranger row)
+goolam,all genes,0.865,0.808,0.308,0.544,Leiden falls to 0.308 from 0.54-0.57 with HVGs
+klein,2000 HVG cell_ranger,0.743,0.570,0.767,0.724,
+klein,2000 HVG seurat,0.562,0.618,0.948,0.792,
+klein,2000 HVG seurat_v3,0.732,0.633,0.958,0.847,
+klein,all genes,0.441,0.396,0.976,0.980,
+kolodziejczyk,2000 HVG cell_ranger,0.965,0.940,1.000,0.996,Hierarchical 0.965 and k-means 0.940 vs 0.54-0.72 with the other flavors and about 0.62 with our preprocessing
+kolodziejczyk,2000 HVG seurat,0.724,0.714,0.996,0.992,
+kolodziejczyk,2000 HVG seurat_v3,0.535,0.573,1.000,0.992,
+kolodziejczyk,all genes,0.716,0.716,0.564,0.727,Leiden falls from 1.000 to 0.564 and MICA from about 0.99 to 0.727. Hierarchical and k-means both 0.716. Check Leiden resolution and neighbors were re-tuned for all genes. Same drop with our preprocessing
+pbmc14k,2000 HVG cell_ranger,0.569,0.567,0.693,0.633,
+pbmc14k,2000 HVG seurat,0.565,0.518,0.722,0.688,
+pbmc14k,2000 HVG seurat_v3,0.664,0.522,0.729,0.703,
+pbmc14k,all genes,0.578,0.444,0.878,0.853,
+pollen,2000 HVG cell_ranger,0.929,0.907,0.837,0.942,MICA 0.942 in all three HVG rows (sd 0.001 or less). Plausible on an easy set but confirm the partitions differ. Leiden found 10 clusters instead of 11 in some runs
+pollen,2000 HVG seurat,0.948,0.894,0.827,0.942,MICA 0.942 repeated. Leiden found 10 clusters instead of 11 in every run
+pollen,2000 HVG seurat_v3,0.937,0.896,0.868,0.942,MICA 0.942 repeated
+pollen,all genes,0.948,0.881,0.858,0.951,
+usoskin,2000 HVG cell_ranger,0.484,0.599,0.905,0.860,
+usoskin,2000 HVG seurat,0.411,0.378,0.863,0.903,
+usoskin,2000 HVG seurat_v3,0.626,0.485,0.902,0.903,
+usoskin,all genes,0.154,0.176,0.597,0.835,Hierarchical 0.154 and k-means 0.176 vs 0.38-0.63 with HVGs. Same with our preprocessing
+yan,2000 HVG cell_ranger,0.802,0.804,0.800,0.867,
+yan,2000 HVG seurat,0.712,0.801,0.951,0.870,
+yan,2000 HVG seurat_v3,0.795,0.761,0.843,0.875,
+yan,all genes,0.823,0.772,0.789,0.939,
+zeisel,2000 HVG cell_ranger,0.583,0.832,0.740,0.809,
+zeisel,2000 HVG seurat,0.400,0.566,0.657,0.763,
+zeisel,2000 HVG seurat_v3,0.559,0.620,0.692,0.797,
+zeisel,all genes,0.664,0.521,0.839,0.714,

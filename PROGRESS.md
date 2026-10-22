@@ -5,13 +5,13 @@ Utshab adds an entry at the end of each working session. Laraib and Rhea add a l
 
 ## Where we stand
 
-Updated: 2026-10-14. Counts follow the Milestone column in `WORKPLAN.md`.
+Updated: 2026-10-21. Counts follow the Milestone column in `WORKPLAN.md`.
 
 | Milestone | Due | Tasks done | Percent | State |
 |-----------|-----|------------|---------|-------|
 | M1 software, small data ready | Oct 7 | 8 of 8 | 100% | Done. Laraib's Zeisel card (L-1) merged on Oct 14 |
 | M2 reproduce the paper, Assignment 2 report | Oct 14 | 7 of 9 | 78% | Ten benchmark sets run, nine reproduce within 0.05. Report submitted (U-31). Left: contacting the authors (U-30), PBMC14K card (L-2) |
-| M3 cluster count without labels | Oct 21 | 4 of 9 | 44% | The old label-free work is done. The new stability and significance rules start this week (U-32, U-33). Left: Allen card (L-3), paper tables (R-2), results summary (R-1) |
+| M3 cluster count without labels | Oct 21 | 5 of 9 | 56% | The old label-free work and the results summary (R-1) are done. The new stability and significance rules start this week (U-32, U-33). Left: Allen card (L-3), paper tables (R-2) |
 | M4 what the similarity measures, atlas downloaded | Oct 28 | 4 of 7 | 57% | Diagnostics, atlas and pilot done. Left: shared-space silhouette (U-35), label-free Leiden on Allen (U-36), related work table (L-4) |
 | M5 main experiments complete | Nov 4 | 2 of 5 | 40% | Our distance matches the authors' (U-17) and the CPU fast neighbor search is done (U-19). Left: transfer rule (U-34) and the final comparison table (U-37) |
 | M6 gated extras | Nov 11 | 0 of 6 | 0% | Not started. The GPU search (U-18), the annotation comparison (U-22, U-23) and the optional checks (U-38) all depend on the Nov 4 result |
@@ -19,9 +19,23 @@ Updated: 2026-10-14. Counts follow the Milestone column in `WORKPLAN.md`.
 | M8 revision and slides | Dec 2 | 0 of 3 | 0% | Not started |
 | Every week: notes, plan and progress updates | weekly | | | L-7, R-3 and R-8 |
 
-Overall: 25 of 54 tasks finished. Three of the 54 repeat every week.
+Overall: 26 of 54 tasks finished. Three of the 54 repeat every week.
 
 Next three things: the stability rule (U-32) and the significance rule (U-33) on PBMC14K and Zeisel, and a decision on whether to write to the scMINER authors (U-30).
+
+---
+
+## 2026-10-21, Rhea
+
+Finished the results summary (R-1). Odd results are marked in a new `anomaly` column in `docs/author_data_results_summary.csv` and `docs/our_preprocessing_results_summary.csv`. Checked against `docs/results_for_pivot.csv`: each cell is the mean of three seeds (0, 1, 2), except allen_100k, which has one run. Every method was given the true number of clusters.
+
+For the next meeting, most important first:
+- Chung with seurat HVGs collapses on the authors' data. Hierarchical and k-means score 0.007 and MICA 0.154, against 0.445 to 0.655 in the other gene settings. The likely cause is the wrong input to the seurat flavor, which expects log-normalized data. Utshab, can you check which 2000 genes it picked?
+- On Buettner, MICA scores 0.83 to 0.93 and every other method 0.23 to 0.60. All methods were given k=3, so the number of clusters doesn't explain it. We need to confirm no MICA setting was tuned against the labels.
+- Repeated scores: Goolam hierarchical is 0.910 for all three HVG flavors, Pollen MICA is 0.942 for all three, and Chung MICA is 0.655 for both cell_ranger and all genes. These are plausible on small sets, but comparing the label vectors would rule out reused results.
+- On Kolodziejczyk with all genes, Leiden falls from 1.000 to about 0.56 and MICA from about 0.99 to about 0.72, on both inputs. Were the Leiden resolution and neighbor settings re-tuned for all genes?
+- On Kolodziejczyk cell_ranger, hierarchical and k-means score 0.965 and 0.940 on the authors' data but about 0.62 with our preprocessing.
+- allen_100k has one run per cell, and hierarchical (both gene settings) and MICA (HVG) were not run.
 
 ---
 
