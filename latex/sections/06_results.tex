@@ -19,10 +19,10 @@ setting without labels. MICA has the higher mean under three of the four rules. 
 first thing to say, and on its own it would read as support for the published claim.
 
 The second thing is that the rules disagree with each other more than the methods disagree
-under any one rule. MICA's mean ARI ranges from 0.473 to 0.727 depending only on which rule
-selects its setting, a spread of 0.254. The baseline's ranges from 0.514 to 0.628, a spread
-of 0.114. Under the rule most favourable to MICA it leads by 0.213, and under the least
-favourable it trails by 0.141. A study reporting any single one of these rules would be
+under any one rule. MICA's mean ARI ranges from 0.473 to 0.727 depending only on which rule selects its
+setting, a spread of 0.255. The baseline's ranges from 0.514 to 0.635, a spread of
+0.120. Under the rule most favourable to MICA it leads by 0.213, and under the least
+favourable it trails by 0.162. A study reporting any single one of these rules would be
 making what looks like a statement about two clustering methods, when a large part of it is
 a statement about the rule.
 
@@ -33,9 +33,9 @@ threshold. The second column keeps the highest-scoring setting outright. They sh
 subsamples, the candidate settings and the scores, and differ only in how settings that
 score alike are separated.
 
-Under the published reading MICA leads, 0.680 against 0.628. Under the second it trails,
-0.473 against 0.614. Between the two readings MICA's mean moves by 0.207 and the
-baseline's by 0.014. The baseline is nearly indifferent to the tie-break and MICA is not.
+Under the published reading MICA leads, 0.661 against 0.632. Under the second it trails,
+0.473 against 0.635. Between the two readings MICA's mean moves by 0.189 and the
+baseline's by 0.003. The baseline is nearly indifferent to the tie-break and MICA is not.
 
 Individual datasets show it more sharply. On Pollen MICA scores 0.896 under the published
 reading and 0.087 under the other, because the first keeps 18 clusters and the second
@@ -69,22 +69,22 @@ clear maximum near the true value, and it selects 3 clusters for an ARI of 0.934
 MICA's stability stays close to its maximum across the whole range from 2 to 20 clusters,
 leaving the threshold nothing to act on.
 
-Measured across all datasets, 37 percent of MICA's candidate settings score within 0.01 of
-its best, against 27 percent for the baseline. The consequence is clearer in cluster counts
-than in scores: among the settings that tie with the best, the span of cluster counts
-averages 7.2 for MICA and 2.7 for the baseline. On Yan the rule cannot separate 3 clusters
+Measured across all datasets, 38 percent of MICA's candidate settings score within 0.01
+of its best, against 22 percent for the baseline. The consequence is clearer in cluster
+counts than in scores: among the settings that tie with the best, the span of cluster
+counts averages 7.3 for MICA and 2.7 for the baseline. On Yan the rule cannot separate 3 clusters
 from 19, and on Pollen it cannot separate 2 from 18.
 
 One explanation we expected does not hold. We supposed stability would carry less
-information about accuracy for MICA. It carries slightly more: the rank correlation between
-stability and ARI across settings averages 0.68 for MICA against 0.53 for the baseline. The
-signal is not pointing the wrong way, it is compressed into a band too narrow for a
-threshold to act on. We also tested a prediction that the narrower a method's spread of
-scores, the worse its overclustering should be. The association runs in the predicted
-direction for both methods, with a Spearman correlation of $-0.45$ for MICA and $-0.30$ for
-the baseline, but across nine datasets those are not meaningfully different and we do not
-treat the prediction as confirmed. The direct measurement of ambiguity above does not rest
-on it.
+information about accuracy for MICA. It carries slightly more: the rank correlation between stability and ARI across settings
+averages 0.65 for MICA against 0.50 for the baseline. The signal is not pointing the
+wrong way, it is compressed into a band too narrow for a threshold to act on. We also
+tested a prediction that followed from this, that the narrower a method's spread of
+scores, the worse its overclustering should be. It is not supported. Across nine
+datasets and three seeds the Spearman correlation is $-0.03$ for MICA and $-0.21$ for
+the baseline, so if anything the association is weaker for the method whose scores are
+more compressed. We report the prediction as failed. The direct measurement of ambiguity
+above is an observation rather than an inference and does not rest on it.
 
 
 A second check points the same way. The threshold the rule applies is the largest lower
@@ -116,11 +116,22 @@ changes the selected ARI by 0.13 on average for MICA and 0.16 for the baseline, 
 and the method are identical. Assignment 2 scored each method in its own space, and this is
 why the rule is now computed in one shared space for both.
 
+
+\subsection{The rule is also sensitive to the subsample draw} Repeating each rule with
+three independent seeds, which redraw the subsamples and reinitialise the clustering,
+moves the resulting ARI by 0.09 on average for both methods, and by as much as 0.46. The
+largest swings are MICA on Buettner under the second reading, from 0.474 to 0.934, and
+MICA on Klein under the published reading, from 0.501 to 0.863. The seed is not a
+property of either method or of the data. Taken with the threshold check above, three
+incidental choices inside one selection rule, the tie-break, the threshold and the
+random draw, each move the result by an amount comparable to the gap between the two
+methods.
+
 \subsection{Cost}
 The stability rule costs 494 clusterings per dataset for MICA over 19 candidate values of
 $k$, and about 1,040 for the baseline over its resolution grid, in both cases 25 subsample
-reruns plus the full-data fit. On these datasets that is 15 to 101 seconds for MICA and 14
-to 211 seconds for the baseline on 8 threads, excluding the mutual information distance
+reruns plus the full-data fit. On these datasets that is 15 to 106 seconds for MICA and 14 to 211 seconds for the
+baseline on 8 threads, excluding the mutual information distance
 matrix, which is computed once per dataset and shared by every setting and seed.
 
 That one-off cost is the larger number and falls only on MICA: 6 to 11 minutes on the two

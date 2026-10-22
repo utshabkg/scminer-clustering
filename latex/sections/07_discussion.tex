@@ -1,21 +1,22 @@
 \section{Discussion}\label{sec:discussion}
 \subsection{What is now answered}
 Our main question was whether MICA's reported advantage survives when each method must
-choose its own clustering without reference labels. On the evidence here the honest answer
-is that the question, as we posed it, does not have a single answer, and the reason is
-informative rather than evasive.
-
-Under one published rule read exactly as its authors specify it, MICA is ahead. Under the
-same scores read with a different tie-break, it is behind. Nothing about the data or either
-clustering method changes between those two readings. What changes is how the rule resolves
-settings it cannot tell apart, and for MICA it cannot tell apart a large fraction of them.
-A benchmark that reports a single label-free rule can therefore obtain either ranking, and
-would in both cases appear to be making a statement about the methods.
+choose its own clustering without reference labels. Part of it does. MICA has the higher
+mean under three of the four rules we applied, and on the small datasets where the
+published benchmark concentrates, it is often well ahead. A reader who wanted a one-line
+answer could take that as a qualified yes.  The qualification is the result. The amount
+of the advantage, and on one rule its sign, is set by choices inside the selection rule
+that have nothing to do with either method. The tie-break reverses the ranking. Relaxing
+the threshold by 0.02 changes the chosen number of clusters in 14 of 18 cases. Changing
+only the random subsample draw moves ARI by 0.09 on average and by up to 0.46. Each of
+those is comparable to or larger than the gap between the two methods under any one
+rule. A benchmark that reported a single label-free rule would appear to be making a
+statement about the methods when much of it would be a statement about the rule.
 
 This is a different claim from the one we set out to test, and weaker in one sense and
-stronger in another. Weaker, because we cannot say which method a user should prefer.
-Stronger, because it identifies a failure mode that applies to any comparison of this kind,
-not only to ours.
+stronger in another. Weaker, because we cannot give a user a single ranking. Stronger,
+because it identifies a failure mode that applies to any comparison of this kind, not
+only to ours, and because it is measurable rather than a caution in principle.
 
 \subsection{Why it happens}
 The mechanism we can support is that MICA's partitions are too reproducible for
@@ -27,11 +28,12 @@ score barely distinguishes the two. The baseline rebuilds its principal componen
 neighbour graph on every subsample, which injects exactly the variability the rule is
 designed to detect.
 
-We tested this rather than assuming it. Two predictions follow and both hold. First, the
-span of cluster counts among settings that tie with the best should be wider for MICA, and
-it is. Second, where that ambiguity is widest the rule's preference for fine partitions
-should produce the worst overclustering, and the association runs in the predicted
-direction. We note one competing explanation we could not rule out: all but one of our
+We tested this rather than assuming it, with mixed results. The first prediction holds:
+the span of cluster counts among settings that tie with the best is wider for MICA, 7.3
+against 2.7. The second does not. We expected that where the spread of scores is
+narrowest the overclustering would be worst, and across nine datasets and three seeds
+that association is absent for MICA. So the compression of the scores is something we
+have measured, not something we have explained. We note one competing explanation we could not rule out: all but one of our
 datasets has fewer than 3,000 cells, while chooseR was demonstrated near 11,000, so some of
 this may be a small-sample effect rather than a property of mutual information clustering.
 Separating the two needs a dataset where MICA's graph mode and small-data mode can both be

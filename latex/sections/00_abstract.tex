@@ -4,20 +4,22 @@ reference labels, either by supplying the true number of cell types or by keepin
 that reproduces it. The scores that result are conditional on information a user does not
 have. We ask what happens to one such published advantage, that of the mutual information
 clustering MICA in scMINER over a principal component and Leiden pipeline, when the same
-label-free rule chooses the setting for both methods. Applying subsampling stability as
-specified by chooseR to nine datasets, with 25 subsamples per candidate setting and three
-seeds, we find that the answer depends on the rule and not on the data. Read as its authors
-specify, the rule favours MICA, which leads on five of nine datasets with a mean adjusted Rand
-index of 0.658 against 0.624. Read with a different tie-break applied to the same
-scores, it favours the baseline, 0.613 against 0.473. MICA's mean moves by 0.19 between
-the two readings and the baseline's by 0.01. The cause is measurable: among settings the rule
-treats as equivalent, the span of cluster counts averages 6.7 for MICA and 2.3 for the baseline, and on one
-dataset the rule cannot distinguish 3 clusters from 19. MICA's
+label-free rule chooses the setting for both methods. Applying four rules to nine datasets, including subsampling stability as specified by
+chooseR with 25 subsamples per candidate setting and three seeds, we find that MICA
+leads under three of the four, but by amounts the rule rather than the method decides.
+Its mean adjusted Rand index ranges from 0.473 to 0.727 across rules, a spread of 0.255,
+against 0.120 for the baseline. Two readings of the same stability scores reverse the
+ranking, MICA leading 0.661 to 0.632 under the published reading and trailing 0.473 to
+0.635 under the other, a move of 0.189 for MICA and 0.003 for the baseline. The cause is
+measurable: among settings the rule treats as equivalent, the span of cluster counts
+averages 7.3 for MICA and 2.7 for the baseline, and on one dataset the rule cannot
+distinguish 3 clusters from 19. MICA's
 partitions are too reproducible for reproducibility to discriminate, because its distance is
 computed per cell pair and does not move when the sample changes, so splitting a true type
-survives resampling as readily as recovering it. On these datasets the uncertainty from the
-choice of selection rule exceeds the difference between the two methods under any single
-rule. The PBMC14K run in MICA's graph mode and a transfer rule remain to be completed.
+survives resampling as readily as recovering it. Three incidental choices inside the rule, its tie-break, its threshold and its random
+draw, each move the result by as much as the gap between the methods. On these datasets
+the uncertainty introduced by label-free selection exceeds the difference the benchmark
+was reporting. The PBMC14K run in MICA's graph mode and a transfer rule remain to be completed.
 \end{abstract}
 
 \begin{IEEEkeywords}

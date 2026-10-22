@@ -33,15 +33,21 @@ reference labels are used only afterwards, to score what the rule chose. The exp
 covers nine of the ten datasets in the original benchmark, repeated across three seeds, with
 cost recorded.
 
-The result is not the one we expected. Read exactly as its authors specify, the rule favours MICA, which leads on five of nine datasets with a mean ARI of 0.658
-against 0.624. Read with a different tie-break applied to the same scores, the rule
-favours the baseline, 0.613 against 0.473. Nothing about the data or either method differs between those two readings.
-We traced this to a measurable property: among settings the rule scores as equivalent, the span of cluster counts averages 6.7 for MICA and 2.3 for the baseline, so for MICA
-the tie-break rather than the data usually decides. On one dataset the rule cannot distinguish 3
-clusters from 19. Our initial explanation, that stability would simply be less informative
-for MICA, turned out to be wrong: it correlates slightly better with accuracy for MICA than
-for the baseline. The signal is present but compressed into a band too narrow for a
-threshold to act on.
+The result is not the one we expected. MICA has the higher mean under three of the four
+rules we applied, which on its own would read as support for the published claim. But
+its mean ranges from 0.473 to 0.727 across those rules, a spread of 0.255, where the
+baseline's is 0.120. Two readings of one rule reverse the ranking outright: MICA leads
+0.661 to 0.632 when chooseR is read as its authors specify, and trails 0.473 to 0.635
+when the same scores are read with a different tie-break. Nothing about the data or
+either method differs between them.
+We traced this to a measurable property: among settings the rule scores as equivalent,
+the span of cluster counts averages 7.3 for MICA and 2.7 for the baseline, so for MICA
+the tie-break rather than the data usually decides. On one dataset the rule cannot
+distinguish 3 clusters from 19. Our initial explanation, that stability would simply be less informative for MICA,
+turned out to be wrong: it correlates slightly better with accuracy for MICA than for
+the baseline. The signal is present but compressed into a band too narrow for a
+threshold to act on. A further prediction we drew from that account also failed its
+test, and we report it as failed.
 
 This submission makes two contributions.
 
@@ -49,10 +55,10 @@ This submission makes two contributions.
 The closest work establishes that benchmarks which tune on the labels are optimistic
 \cite{ullmann2023overoptimistic}, and supplies rules intended to replace that tuning
 \cite{pattersoncross2021chooser,liu2021multik}, but no study applies such a rule to mutual
-information clustering, and the scMINER benchmark reports no label-free result at all. We
-supply that measurement and find that the uncertainty introduced by the choice of rule is
-larger, on these datasets, than the difference between the two methods under any single
-rule. A benchmark reporting one label-free rule could obtain either ranking.
+information clustering, and the scMINER benchmark reports no label-free result at all. We supply that measurement and find that three incidental choices inside a single rule,
+its tie-break, its threshold and its random subsample draw, each move the result by as
+much as the gap between the two methods. A benchmark reporting one label-free rule could
+obtain either ranking.
 
 \textbf{An account of why reproducibility fails as a criterion for this method.} MICA's
 partitions are unusually reproducible under subsampling, including partitions that split a
