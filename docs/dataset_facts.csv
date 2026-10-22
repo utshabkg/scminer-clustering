@@ -1,0 +1,17 @@
+dataset,cells_after_filtering,cells_before_filtering,genes_after_filtering,genes_before_filtering,label_classes,largest_class,smallest_class,smallest_class_percent,median_counts_per_cell,median_genes_detected_per_cell,percent_zeros,normalization,qc_rule,mito_filter
+allen_100k,100000,100000,28536,,34,31 OPC-Oligo (20283),15 HY Gnrh1 Glut (5),0.0,14888,4627,82.4,log2(CPM + 1),4.0 MADs on log counts and log genes,off
+klein,2717,2717,24022,,4,d0 (933),d2 (303),11.2,17373,9021,65.5,log2(CPM + 1),4.0 MADs on log counts and log genes,off
+kolodziejczyk,704,704,27942,,3,2i (295),a2i (159),22.6,4075140,11338,59.8,log2(CPM + 1),4.0 MADs on log counts and log genes,off
+paper_buettner,182,,8989,,3,G2M (65),S (58),31.9,1641754,5581,37.9,log2(CPM + 1),as released by the scMINER authors,off
+paper_chung,317,,10897,,4,TrueLabel_3 (130),TrueLabel_2 (25),7.9,16936,445,95.9,log2(CPM + 1),as released by the scMINER authors,off
+paper_goolam,124,,23571,,5,TrueLabel_0 (64),TrueLabel_2 (6),4.8,965042,13068,45.6,log2(CPM + 1),as released by the scMINER authors,off
+paper_klein,2717,,24175,,4,TrueLabel_d0 (933),TrueLabel_d2 (303),11.2,1000000,9021,65.8,log2(CPM + 1),as released by the scMINER authors,off
+paper_kolodziejczyk,704,,13698,,3,TrueLabel_1 (295),TrueLabel_2 (159),22.6,991841,8687,37.3,log2(CPM + 1),as released by the scMINER authors,off
+paper_pbmc14k,13605,,8846,,7,CD4TN (1994),Monocyte (1837),13.5,1000000,509,93.9,log2(CPM + 1),as released by the scMINER authors,off
+paper_pollen,249,,6982,,11,TrueLabel_0 (42),TrueLabel_10 (7),2.8,3523207,5491,25.3,log2(CPM + 1),as released by the scMINER authors,off
+paper_usoskin,622,,16383,,4,TH (233),PEP (81),13.0,915762,3331,78.0,log2(CPM + 1),as released by the scMINER authors,off
+paper_yan,124,,20286,,8,TrueLabel_hESC_passage (34),TrueLabel_Zygote (3),2.4,1000000,12706,37.7,log2(CPM + 1),as released by the scMINER authors,off
+paper_zeisel,2903,,14890,,7,TrueLabel_3 (888),TrueLabel_5 (97),3.3,1000000,3453,76.3,log2(CPM + 1),as released by the scMINER authors,off
+pbmc14k,13646,14000,15064,,7,CD4TN (1991),NK (1901),13.9,1290,514,96.4,log2(CPM + 1),4.0 MADs on log counts and log genes,off
+usoskin,622,622,16298,,4,TH (233),PEP (81),13.0,92726,3581,76.2,log2(CPM + 1),4.0 MADs on log counts and log genes,off
+zeisel,2987,3005,18907,,7,pyramidal CA1 (939),microglia (94),3.1,12972,3675,79.9,log2(CPM + 1),4.0 MADs on log counts and log genes,off
