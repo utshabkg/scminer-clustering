@@ -1,0 +1,10 @@
+{
+  "rule": "the setting MICA uses when none is given",
+  "mica_small_data_k": 4,
+  "source": "MICA/mica_mds.py -nck default",
+  "seeds": [
+    0,
+    1,
+    2
+  ]
+}

@@ -19,27 +19,28 @@ setting without labels. The two stability columns are the same scores read two w
 published chooseR rule keeps the finest setting that clears a reproducibility threshold.
 The second column keeps the highest-scoring setting outright.
 
-Under the published reading, MICA leads on five of eight datasets with a mean ARI of 0.675
-against 0.595. Under the second reading, MICA leads on three of eight with a mean of 0.467
-against 0.583. The ranking reverses. The two columns use identical subsamples, identical
+Under the published reading, MICA leads on five of nine datasets with a mean ARI of
+0.658 against 0.624. Under the second reading, MICA leads on three of nine with a mean
+of 0.473 against 0.613. The ranking reverses. The two columns use identical subsamples, identical
 candidate settings and identical scores, and differ only in how settings that score alike
 are separated.
 
-The size of the movement is the result. Between the two readings MICA's mean ARI changes by
-0.208, while the baseline's changes by 0.012. The baseline is nearly indifferent to the
+The size of the movement is the result. Between the two readings MICA's mean ARI changes by 0.185, while the baseline's changes
+by 0.011. The baseline is nearly indifferent to the
 tie-break and MICA is not, which is why a single rule reported alone would look like a
 statement about the two methods when it is partly a statement about the rule.
 
-Individual datasets show the same pattern more sharply. On Pollen MICA scores 0.896 under
-the published reading and 0.087 under the other, because the first keeps 18 clusters and the
-second collapses to 2. Neither is close to the 11 types actually present.
+Individual datasets show the same pattern more sharply. On Pollen MICA scores 0.896 under the published reading and 0.087 under the other,
+because the first keeps 18 clusters and the second collapses to 2. Neither is close to
+the 11 types actually present. The baseline moves from 0.755 to 0.509 on the same
+dataset, a smaller swing from a smaller change in count.
 
 \input{tables/a3_clusters}
 
 \subsection{The chosen cluster counts}
-Table~\ref{tab:clusters} shows why the ARI values alone understate the problem. Under the
-published reading MICA chooses 19 clusters on Yan, which has 8 types, 18 on Pollen, which
-has 11, and 12 on Chung, which has 4. A user inspecting those partitions would see the
+Table~\ref{tab:clusters} shows why the ARI values alone understate the problem. Under the published reading MICA chooses 19 clusters on Yan, which has 8 types, 18 on
+Pollen, which has 11, and 12 on Chung, which has 4. It errs the other way on Zeisel,
+choosing 3 where there are 7. A user inspecting those partitions would see the
 problem at once, which is the argument for reporting the count next to the score. The
 baseline's counts are closer to the truth on most datasets, and where it fails it fails by
 merging rather than by splitting.
@@ -62,24 +63,23 @@ clear maximum near the true value, and it selects 3 clusters for an ARI of 0.934
 MICA's stability stays close to its maximum across the whole range from 2 to 20 clusters,
 so there is nothing for the threshold to discriminate on.
 
-Measured across all datasets, 38 percent of MICA's candidate settings score within 0.01 of
-its best, against 27 percent for the baseline. The consequence is clearer in cluster counts
-than in scores: among the settings that tie with the best, the span of cluster counts
-averages 6.9 for MICA and 2.5 for the baseline. On Yan the rule cannot separate 3 clusters
-from 19.
+Measured across all datasets, 37 percent of MICA's candidate settings score within 0.01
+of its best, against 27 percent for the baseline. The consequence is clearer in cluster
+counts than in scores: among the settings that tie with the best, the span of cluster
+counts averages 6.7 for MICA and 2.3 for the baseline. On Yan the rule cannot separate 3
+clusters from 19, and on Pollen it cannot separate 2 from 18.
 
-This explains the reversal. When many settings tie, the rule's preference decides, and the
-published rule prefers the finest. It also yields a prediction we can test: the worse the
-ambiguity, the worse the overclustering should be. Across datasets the association between
-the spread of a method's stability scores and the excess over the true cluster count has a
-Spearman correlation of $-0.74$ for MICA and $-0.24$ for the baseline, in the predicted
-direction and much stronger for the method whose scores are compressed. With eight
-datasets this is a consistency check rather than a test, and we report it as such.
+This explains the reversal. When many settings tie, the rule's preference decides, and
+the published rule prefers the finest. We also tested a prediction that follows from it,
+that the narrower a method's spread of stability scores, the worse its overclustering
+should be. The association runs in the predicted direction for both methods, with a
+Spearman correlation of $-0.45$ for MICA and $-0.30$ for the baseline, but across nine
+datasets the two are not meaningfully different, and we do not regard that prediction as
+confirmed. The direct measurement of ambiguity above does not rest on it.
 
 One explanation we expected does not hold. We supposed that stability would simply carry
-less information about accuracy for MICA. It carries slightly more: the rank correlation
-between stability and ARI across settings averages 0.69 for MICA against 0.50 for the
-baseline. The problem is not that the signal points the wrong way but that it is compressed
+less information about accuracy for MICA. It carries slightly more: the rank correlation between stability and ARI across settings averages 0.68 for MICA
+against 0.53 for the baseline. The problem is not that the signal points the wrong way but that it is compressed
 into a band too narrow for a threshold to act on.
 
 \subsection{Cost}

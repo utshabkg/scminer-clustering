@@ -7,12 +7,12 @@ clustering MICA in scMINER over a principal component and Leiden pipeline, when 
 label-free rule chooses the setting for both methods. Applying subsampling stability as
 specified by chooseR to nine datasets, with 25 subsamples per candidate setting and three
 seeds, we find that the answer depends on the rule and not on the data. Read as its authors
-specify, the rule favours MICA, which leads on five of eight datasets with a mean adjusted
-Rand index of 0.675 against 0.595. Read with a different tie-break applied to the same
-scores, it favours the baseline, 0.583 against 0.467. MICA's mean moves by 0.21 between the
-two readings and the baseline's by 0.01. The cause is measurable: among settings the rule
-treats as equivalent, the span of cluster counts averages 6.9 for MICA and 2.5 for the
-baseline, and on one dataset the rule cannot distinguish 3 clusters from 19. MICA's
+specify, the rule favours MICA, which leads on five of nine datasets with a mean adjusted Rand
+index of 0.658 against 0.624. Read with a different tie-break applied to the same
+scores, it favours the baseline, 0.613 against 0.473. MICA's mean moves by 0.19 between
+the two readings and the baseline's by 0.01. The cause is measurable: among settings the rule
+treats as equivalent, the span of cluster counts averages 6.7 for MICA and 2.3 for the baseline, and on one
+dataset the rule cannot distinguish 3 clusters from 19. MICA's
 partitions are too reproducible for reproducibility to discriminate, because its distance is
 computed per cell pair and does not move when the sample changes, so splitting a true type
 survives resampling as readily as recovering it. On these datasets the uncertainty from the

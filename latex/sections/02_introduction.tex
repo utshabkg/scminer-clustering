@@ -33,13 +33,11 @@ reference labels are used only afterwards, to score what the rule chose. The exp
 covers nine of the ten datasets in the original benchmark, repeated across three seeds, with
 cost recorded.
 
-The result is not the one we expected. Read exactly as its authors specify, the rule favours
-MICA, which leads on five of eight datasets with a mean ARI of 0.675 against 0.595. Read
-with a different tie-break applied to the same scores, the rule favours the baseline, 0.583
-against 0.467. Nothing about the data or either method differs between those two readings.
-We traced this to a measurable property: among settings the rule scores as equivalent, the
-span of cluster counts averages 6.9 for MICA and 2.5 for the baseline, so for MICA the
-tie-break rather than the data usually decides. On one dataset the rule cannot distinguish 3
+The result is not the one we expected. Read exactly as its authors specify, the rule favours MICA, which leads on five of nine datasets with a mean ARI of 0.658
+against 0.624. Read with a different tie-break applied to the same scores, the rule
+favours the baseline, 0.613 against 0.473. Nothing about the data or either method differs between those two readings.
+We traced this to a measurable property: among settings the rule scores as equivalent, the span of cluster counts averages 6.7 for MICA and 2.3 for the baseline, so for MICA
+the tie-break rather than the data usually decides. On one dataset the rule cannot distinguish 3
 clusters from 19. Our initial explanation, that stability would simply be less informative
 for MICA, turned out to be wrong: it correlates slightly better with accuracy for MICA than
 for the baseline. The signal is present but compressed into a band too narrow for a
