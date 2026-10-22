@@ -30,7 +30,7 @@ TABLES = {
         caption="ARI on our own preprocessing of the raw data, scored and laid out as in "
                 "Table~\\ref{tab:r2_author_data}.",
         note="Allen 100k is 100,000 cells drawn at random from the Allen brain atlas, scored against its "
-             "34 cell classes, with a single run (seed 0). -- marks a method or gene setting not run."),
+             "34 cell classes, with a single run (seed 0). n/a marks a method or gene setting not run."),
 }
 
 def read_summary(path):
@@ -78,7 +78,7 @@ def render(name, caption, note, data):
             for m in METHODS:
                 v = scores[m]
                 if v is None:
-                    cells.append("--")
+                    cells.append("n/a")
                 else:
                     cells.append(f"\\textbf{{{v:.3f}}}" if f"{v:.3f}" == best else f"{v:.3f}")
         lines.append(f"{DATASETS[d]} & " + " & ".join(cells) + " \\\\")

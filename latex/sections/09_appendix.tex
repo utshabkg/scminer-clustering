@@ -25,8 +25,8 @@ in small-data mode, resolutions 0.05 to 2.00 in steps of 0.05 for Leiden, and 0.
 steps of 0.1 for MICA in graph mode, which is MICA's own grid. Only settings whose
 full-data partition yields 2 to 20 clusters enter the comparison. $k$-means uses 50
 restarts. The bootstrap for the stability threshold is a percentile bootstrap over cells
-with 2,000 resamples, where chooseR uses BCa with 25,000; this affects the threshold only
-through its lower bound and we did not observe a case where it changed the choice.
+with 2,000 resamples, where chooseR uses BCa with 25,000. This affects the threshold only
+through its lower bound, and we saw no case where it changed the choice.
 
 \textbf{Scale of the computation.} Each dataset and seed runs $B+1$ clusterings per
 candidate setting for each method, which is 494 for MICA over 19 values of $k$ and about

@@ -60,7 +60,7 @@ def agg(d, rule):
 
 def cell(r):
     if r is None or not len(r):
-        return "--"
+        return "n/a"
     v = r.iloc[0]
     if v.runs > 1 and v.ari_max - v.ari_min >= 0.005:
         return f"{v.ari:.3f} [{v.ari_min:.2f}, {v.ari_max:.2f}]"
@@ -69,7 +69,7 @@ def cell(r):
 
 def kcell(r, truth):
     if r is None or not len(r):
-        return "--"
+        return "n/a"
     v = r.iloc[0]
     k = f"{int(v.k)}" if v.k_min == v.k_max else f"{int(v.k_min)} to {int(v.k_max)}"
     return k
