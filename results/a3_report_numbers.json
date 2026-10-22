@@ -1,0 +1,256 @@
+{
+ "stability_finest": {
+  "per_dataset": {
+   "leiden_pca": {
+    "buettner": 0.2321,
+    "chung": 0.1295,
+    "goolam": 0.4288,
+    "kolodziejczyk": 0.8378,
+    "pollen": 0.7546,
+    "usoskin": 0.633,
+    "yan": 0.7727
+   },
+   "mica": {
+    "buettner": 0.9339,
+    "chung": 0.4329,
+    "goolam": 0.5973,
+    "kolodziejczyk": 0.7265,
+    "pollen": 0.8961,
+    "usoskin": 0.8179,
+    "yan": 0.4962
+   }
+  },
+  "mica_mean": 0.7001,
+  "leiden_mean": 0.5412,
+  "mica_wins": 5,
+  "n_datasets": 7,
+  "median_gap": 0.1686,
+  "chosen_k": {
+   "leiden_pca": {
+    "buettner": 3.0,
+    "chung": 3.0,
+    "goolam": 3.0,
+    "kolodziejczyk": 4.0,
+    "pollen": 7.0,
+    "usoskin": 6.0,
+    "yan": 8.0
+   },
+   "mica": {
+    "buettner": 3.0,
+    "chung": 12.0,
+    "goolam": 6.0,
+    "kolodziejczyk": 3.0,
+    "pollen": 18.0,
+    "usoskin": 3.0,
+    "yan": 19.0
+   }
+  },
+  "seconds_median": {
+   "leiden_pca": 16.7,
+   "mica": 18.9
+  }
+ },
+ "stability_most": {
+  "per_dataset": {
+   "leiden_pca": {
+    "buettner": 0.2321,
+    "chung": 0.1295,
+    "goolam": 0.6189,
+    "kolodziejczyk": 0.8378,
+    "pollen": 0.5091,
+    "usoskin": 0.633,
+    "yan": 0.8451
+   },
+   "mica": {
+    "buettner": 0.4744,
+    "chung": 0.1005,
+    "goolam": 0.6299,
+    "kolodziejczyk": 0.63,
+    "pollen": 0.0869,
+    "usoskin": 0.8179,
+    "yan": 0.4965
+   }
+  },
+  "mica_mean": 0.4623,
+  "leiden_mean": 0.5436,
+  "mica_wins": 3,
+  "n_datasets": 7,
+  "median_gap": -0.029,
+  "chosen_k": {
+   "leiden_pca": {
+    "buettner": 3.0,
+    "chung": 3.0,
+    "goolam": 2.0,
+    "kolodziejczyk": 4.0,
+    "pollen": 5.0,
+    "usoskin": 6.0,
+    "yan": 5.0
+   },
+   "mica": {
+    "buettner": 2.0,
+    "chung": 2.0,
+    "goolam": 2.0,
+    "kolodziejczyk": 2.0,
+    "pollen": 2.0,
+    "usoskin": 3.0,
+    "yan": 3.0
+   }
+  },
+  "seconds_median": {
+   "leiden_pca": 16.7,
+   "mica": 18.9
+  }
+ },
+ "mechanism": {
+  "per_method_mean_spread": {
+   "leiden_pca": 0.559,
+   "mica": 0.339
+  },
+  "per_method_mean_spearman_stability_ari": {
+   "leiden_pca": 0.478,
+   "mica": 0.652
+  },
+  "spearman_spread_vs_excess_clusters": {
+   "leiden_pca": -0.162,
+   "mica": -0.703
+  },
+  "n_datasets": 7,
+  "table": [
+   {
+    "ds": "buettner",
+    "method": "leiden_pca",
+    "spread": 0.799,
+    "spearman_stability_ari": 0.417,
+    "chosen_k": 3.0,
+    "true_k": 3,
+    "excess_clusters": 0.0
+   },
+   {
+    "ds": "buettner",
+    "method": "mica",
+    "spread": 0.835,
+    "spearman_stability_ari": 0.707,
+    "chosen_k": 3.0,
+    "true_k": 3,
+    "excess_clusters": 0.0
+   },
+   {
+    "ds": "chung",
+    "method": "leiden_pca",
+    "spread": 0.999,
+    "spearman_stability_ari": 0.712,
+    "chosen_k": 3.0,
+    "true_k": 4,
+    "excess_clusters": -1.0
+   },
+   {
+    "ds": "chung",
+    "method": "mica",
+    "spread": 0.37,
+    "spearman_stability_ari": 0.659,
+    "chosen_k": 12.0,
+    "true_k": 4,
+    "excess_clusters": 8.0
+   },
+   {
+    "ds": "goolam",
+    "method": "leiden_pca",
+    "spread": 0.993,
+    "spearman_stability_ari": 0.54,
+    "chosen_k": 3.0,
+    "true_k": 5,
+    "excess_clusters": -2.0
+   },
+   {
+    "ds": "goolam",
+    "method": "mica",
+    "spread": 0.288,
+    "spearman_stability_ari": 0.874,
+    "chosen_k": 6.0,
+    "true_k": 5,
+    "excess_clusters": 1.0
+   },
+   {
+    "ds": "kolodziejczyk",
+    "method": "leiden_pca",
+    "spread": 0.181,
+    "spearman_stability_ari": 0.921,
+    "chosen_k": 4.0,
+    "true_k": 3,
+    "excess_clusters": 1.0
+   },
+   {
+    "ds": "kolodziejczyk",
+    "method": "mica",
+    "spread": 0.31,
+    "spearman_stability_ari": 0.929,
+    "chosen_k": 3.0,
+    "true_k": 3,
+    "excess_clusters": 0.0
+   },
+   {
+    "ds": "pollen",
+    "method": "leiden_pca",
+    "spread": 0.158,
+    "spearman_stability_ari": -0.493,
+    "chosen_k": 7.0,
+    "true_k": 11,
+    "excess_clusters": -4.0
+   },
+   {
+    "ds": "pollen",
+    "method": "mica",
+    "spread": 0.124,
+    "spearman_stability_ari": 0.233,
+    "chosen_k": 18.0,
+    "true_k": 11,
+    "excess_clusters": 7.0
+   },
+   {
+    "ds": "usoskin",
+    "method": "leiden_pca",
+    "spread": 0.281,
+    "spearman_stability_ari": 0.83,
+    "chosen_k": 6.0,
+    "true_k": 4,
+    "excess_clusters": 2.0
+   },
+   {
+    "ds": "usoskin",
+    "method": "mica",
+    "spread": 0.397,
+    "spearman_stability_ari": 0.826,
+    "chosen_k": 3.0,
+    "true_k": 4,
+    "excess_clusters": -1.0
+   },
+   {
+    "ds": "yan",
+    "method": "leiden_pca",
+    "spread": 0.502,
+    "spearman_stability_ari": 0.42,
+    "chosen_k": 8.0,
+    "true_k": 8,
+    "excess_clusters": 0.0
+   },
+   {
+    "ds": "yan",
+    "method": "mica",
+    "spread": 0.047,
+    "spearman_stability_ari": 0.337,
+    "chosen_k": 19.0,
+    "true_k": 8,
+    "excess_clusters": 11.0
+   }
+  ]
+ },
+ "true_k": {
+  "yan": 8,
+  "goolam": 5,
+  "buettner": 3,
+  "pollen": 11,
+  "chung": 4,
+  "usoskin": 4,
+  "kolodziejczyk": 3
+ }
+}

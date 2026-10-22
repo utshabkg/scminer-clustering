@@ -1,0 +1,15 @@
+ds,method,spread,spearman_stability_ari,chosen_k,true_k,excess_clusters
+buettner,leiden_pca,0.799,0.417,3.0,3,0.0
+buettner,mica,0.835,0.707,3.0,3,0.0
+chung,leiden_pca,0.999,0.712,3.0,4,-1.0
+chung,mica,0.37,0.659,12.0,4,8.0
+goolam,leiden_pca,0.993,0.54,3.0,5,-2.0
+goolam,mica,0.288,0.874,6.0,5,1.0
+kolodziejczyk,leiden_pca,0.181,0.921,4.0,3,1.0
+kolodziejczyk,mica,0.31,0.929,3.0,3,0.0
+pollen,leiden_pca,0.158,-0.493,7.0,11,-4.0
+pollen,mica,0.124,0.233,18.0,11,7.0
+usoskin,leiden_pca,0.281,0.83,6.0,4,2.0
+usoskin,mica,0.397,0.826,3.0,4,-1.0
+yan,leiden_pca,0.502,0.42,8.0,8,0.0
+yan,mica,0.047,0.337,19.0,8,11.0

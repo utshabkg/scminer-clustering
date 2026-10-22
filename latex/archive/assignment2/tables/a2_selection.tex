@@ -1,0 +1,24 @@
+\begin{table}[t]
+\centering
+\caption{ARI of the chosen clustering on the authors' PBMC14K and Zeisel inputs (all genes, 7 types each), as median [min, max] over six MICA graph-mode runs or three Leiden seeds. A single value means all runs agree within 0.005. $k$ is the number of clusters chosen. In the top block the labels are used only for scoring.}
+\label{tab:selection}
+\scriptsize
+\setlength{\tabcolsep}{1.7pt}
+\begin{tabular}{llcccc}
+\toprule
+ & & \multicolumn{2}{c}{PBMC14K} & \multicolumn{2}{c}{Zeisel} \\
+\cmidrule(lr){3-4}\cmidrule(lr){5-6}
+Rule & Method & ARI & $k$ & ARI & $k$ \\
+\midrule
+\multicolumn{6}{l}{\textit{No labels}} \\
+Default & MICA & 0.844 [0.84, 0.85] & 7 & 0.608 [0.54, 0.72] & 9 to 11 \\
+ & Leiden & 0.866 [0.85, 0.87] & 8 & 0.378 [0.37, 0.38] & 21 \\
+Silhouette & MICA & 0.624 [0.62, 0.83] & 5 or 7 & 0.659 [0.63, 0.74] & 9 \\
+ & Leiden & 0.397 & 4 & 0.370 [0.36, 0.37] & 2 \\
+\midrule
+\multicolumn{6}{l}{\textit{Labels pick the setting}} \\
+Paper's rule & MICA & 0.854 [0.85, 0.86] & 7 & 0.764 [0.76, 0.78] & 7 \\
+ & Leiden & 0.878 & 7 & 0.839 & 7 \\
+\bottomrule
+\end{tabular}
+\end{table}

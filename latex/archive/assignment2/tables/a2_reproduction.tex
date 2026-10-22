@@ -1,0 +1,27 @@
+\begin{table}[t]
+\centering
+\caption{MICA and PCA + Leiden on the authors' released inputs with all genes, scored by ARI under the paper's rule, where the true number of types is given and the labels pick the setting.}
+\label{tab:repro}
+\footnotesize
+\setlength{\tabcolsep}{3.5pt}
+\begin{tabular}{lrcccc}
+\toprule
+ & & \multicolumn{2}{c}{MICA} & \multicolumn{2}{c}{PCA + Leiden} \\
+\cmidrule(lr){3-4}\cmidrule(lr){5-6}
+Dataset & Cells & paper & ours & paper & ours \\
+\midrule
+Yan & 124 & 0.939 & 0.939 & 0.839 & 0.789 \\
+Goolam & 124 & 0.544 & 0.544 & 0.572 & 0.308 \\
+Buettner & 182 & 0.934 & 0.934 & 0.277 & 0.268 \\
+Pollen & 249 & 0.942 & 0.951 & 0.874 & 0.858 \\
+Chung & 317 & 0.655 & 0.655 & 0.170 & 0.319 \\
+Usoskin & 622 & 0.847 & 0.835 & 0.860 & 0.598 \\
+Kolodziejczyk & 704 & 1.000 & 0.727$^\ast$ & 0.996 & 0.564 \\
+Klein & 2,717 & 0.980 & 0.980 & 0.820 & 0.977 \\
+Zeisel & 2,903 & 0.744 & 0.714$^\ddagger$ & 0.630 & 0.839 \\
+PBMC14K & 13,605 & 0.853 & 0.854$^\dagger$ & 0.754 & 0.878 \\
+\bottomrule
+\end{tabular}
+\\[2pt]
+\parbox{\columnwidth}{\scriptsize As in the paper, sets of up to 5,000 cells use MICA's small-data mode, where we give the final $k$-means 100 restarts and report the mean of three seeds, and PBMC14K uses graph mode. $^\dagger$Median of six runs, 0.850 to 0.857. $^\ddagger$Graph mode gives 0.755 to 0.781 over six runs. $^\ast$Not reproduced from the released files (Sec.~\ref{sec:results}). The paper's PCA + Leiden is Scanpy on 2,000 variable genes. Ours uses all genes, like MICA, and we report the median of three seeds.}
+\end{table}

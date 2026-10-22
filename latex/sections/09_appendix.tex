@@ -1,0 +1,68 @@
+\section{Reproducing the results}\label{app:repro}
+Everything below is in the project repository. The main table and figure are rebuilt
+from saved result files by \texttt{scripts/a3\_report.py}, which also writes
+\texttt{results/a3\_report\_numbers.json} holding every number quoted in the text, so
+each can be traced to the run that produced it.
+
+\textbf{Software.} Two conda environments, both pinned in \texttt{envs/}. The analysis
+environment has Python 3.11, Scanpy 1.11.5 and scikit-learn. The second reproduces the
+authors' published environment, Python 3.9.2 with MICA 1.0.0 and scikit-learn 0.24.1, and
+is used whenever MICA's own code runs. MICA is the released version at commit
+\texttt{54fae81}.
+
+\textbf{Running the experiment.} The stability rule for the nine small-data datasets is
+\texttt{scripts/run\_rules\_small.sh}, which calls
+\texttt{scripts/run\_rule\_stability.py} once per dataset and seed. PBMC14K needs MICA's
+graph mode and runs through \texttt{scripts/run\_rule\_stability\_graph.py}, which shells
+out to the legacy environment for the node2vec step. The silhouette rule is
+\texttt{scripts/run\_rule\_silhouette.py}. Each writes a folder under \texttt{results/}
+containing \texttt{metrics.csv} and a \texttt{params.json} recording the settings, seed
+and candidate grid of that run.
+
+\textbf{Settings.} Subsamples: $B = 25$ at 80 percent of cells, redrawn per seed, shared
+between the two methods within a seed. Candidate settings: $k \in \{2,\dots,20\}$ for MICA
+in small-data mode, resolutions 0.05 to 2.00 in steps of 0.05 for Leiden, and 0.1 to 4.0 in
+steps of 0.1 for MICA in graph mode, which is MICA's own grid. Only settings whose
+full-data partition yields 2 to 20 clusters enter the comparison. $k$-means uses 50
+restarts. The bootstrap for the stability threshold is a percentile bootstrap over cells
+with 2,000 resamples, where chooseR uses BCa with 25,000; this affects the threshold only
+through its lower bound and we did not observe a case where it changed the choice.
+
+\textbf{Scale of the computation.} Each dataset and seed runs $B+1$ clusterings per
+candidate setting for each method, which is 494 for MICA over 19 values of $k$ and about
+1,040 for Leiden over its grid. The reported cost excludes the one-off mutual information
+distance matrix, which is computed once per dataset, cached, and shared by every setting
+and seed.
+
+\section{Why subsampling the distance matrix is exact}\label{app:exact}
+Section~\ref{sec:method} states that MICA's distance matrix restricted to a subset of
+cells equals the matrix computed from that subset alone. The reason is that
+Eq.~\ref{eq:mi} involves only the two cells being compared. Cell $i$ is discretised using
+its own minimum and maximum across genes, so its bin codes $C_i$ do not change when other
+cells are removed. The joint histogram of $C_i$ and $C_j$ is taken over the $g$ genes, which
+are also unchanged. Hence every term in $I(C_i; C_j)$ and $H(C_i, C_j)$ is a function of
+cells $i$ and $j$ alone.
+
+This fails for any method that standardises genes across cells, principal components
+included, which is why the baseline is fully recomputed on every subsample while MICA's
+distance is not. The claim is checked rather than assumed:
+\texttt{tests/test\_subsample\_invariance.py} recomputes the distance on a random half of
+a dataset and asserts exact equality with the corresponding submatrix, in both of MICA's
+modes.
+
+\section{Anomalies raised against the Assignment 2 tables}\label{app:anomalies}
+A team member reviewing the result tables flagged six values as possible data handling
+errors. Each was checked against the stored partitions and gene sets, and all six are
+genuine results. We record them here because two are informative.
+
+Identical scores in different gene settings do not indicate reused results. On Goolam the
+three highly variable gene sets give hierarchical clustering partitions that agree at
+ARI 1.000 with each other, so the repeated 0.910 is one partition found three times. On
+Pollen the three MICA partitions are different from one another, agreeing at ARI 0.91 to
+0.95, yet each scores 0.942 against the labels, which is a coincidence of equal agreement
+rather than a copied value.
+
+The collapse of every method on Chung with the \texttt{seurat} gene set is also real. That
+input is stored on a natural log scale, and after correcting the log base in Assignment 2
+the \texttt{seurat} selector shares only 715 of its 2,000 genes with \texttt{cell\_ranger}.
+The two gene sets are genuinely different, and one of them is poor for this dataset.

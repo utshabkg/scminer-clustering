@@ -1,0 +1,28 @@
+\section{Schedule and Division of Work}\label{sec:schedule}
+\begin{table}[t]
+\centering
+\caption{Schedule for the rest of the semester.}
+\label{tab:schedule}
+\footnotesize
+\setlength{\tabcolsep}{4pt}
+\begin{tabular}{p{0.24\columnwidth}p{0.68\columnwidth}}
+\toprule
+Dates & Milestone \\
+\midrule
+Oct 15 to 21 & Stability and significance rules on PBMC14K, Zeisel \\
+Oct 22 to 28 & All datasets, both gene settings, repeat runs \\
+Oct 29 to Nov 4 & \textbf{Main experiments complete}, transfer rule \\
+Nov 5 to 11 & Annotation and GPU search if on track, drafting \\
+Nov 12 to 18 & \textbf{Full manuscript draft} \\
+Nov 19 to Dec 2 & Revision, optional 300,000-cell run, slides \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+Table~\ref{tab:schedule} gives the schedule. Only Utshab can use the workstation and its GPUs, so Utshab writes and runs all code, exports the results and drafts the methods and results. Laraib and Rhea work from the exported results, about 3 to 4 hours a week each.
+
+\textbf{Laraib} writes the dataset cards (Zeisel is done, then PBMC14K and the Allen atlas) and the related work comparison table, then rewrites the introduction and related work from it. For the annotation part, Laraib checks proposed cluster names against CellMarker and PanglaoDB \cite{hu2023cellmarker,franzen2019panglaodb} through their websites and proofreads the manuscript.
+
+\textbf{Rhea} turns the exported result files into the manuscript's tables (the first results summary is done), keeps the schedule and risk list current, checks every number in the text against its table, and assembles the slides. Laraib and Rhea also write the rubric for the annotation comparison and score its statements independently.
+
+\textbf{Links.} The code, the results and a notebook that rebuilds Tables~\ref{tab:repro} and~\ref{tab:selection} and Fig.~\ref{fig:neighbors} are at \url{https://github.com/utshabkg/scminer-clustering}, in \url{notebooks/assignment2_preliminary.ipynb}. The Overleaf project is at \overleaflink.
