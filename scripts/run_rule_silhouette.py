@@ -53,10 +53,9 @@ def main(name, n_hvg=None, flavor="seurat"):
             rows.append(rec)
             print(f"  {method} scored in {space}: setting {key}, {rec['n_clusters']} clusters, "
                   f"ARI {rec['ari']:.3f}", flush=True)
-    # the shared space is the principal components, so name that one as the rule
-    for r in rows:
-        if r["space"] == "pca":
-            rows.append({**r, "k_setting": "silhouette_shared"})
+    # The shared space is the principal components, so that scoring is the rule itself.
+    # Iterate over a copy: appending to the list being iterated would never terminate.
+    rows += [{**r, "k_setting": "silhouette_shared"} for r in list(rows) if r["space"] == "pca"]
     d = metrics.write(f"rule_silhouette_{tag}", rows,
                       {"dataset": name, "rule": "highest mean silhouette, scored in a shared space",
                        "shared_space": "50 principal components", "also_scored_in": "MICA MDS", "seed": SEED})

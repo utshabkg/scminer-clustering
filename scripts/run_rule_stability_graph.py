@@ -16,6 +16,7 @@ This is the most expensive job in the project after the atlas pilot. Budget abou
 six minutes per subsample for MICA and under a minute for Leiden.
 """
 import json
+import os
 import shutil
 import subprocess
 import sys
@@ -36,6 +37,9 @@ K_NEIGHBORS = 79  # MICA's 80 counts the cell itself
 RESOLUTIONS = np.round(np.arange(0.1, 4.0 + 1e-9, 0.1), 1)  # MICA's own Louvain grid
 LEIDEN_RESOLUTIONS = np.round(np.arange(0.05, 2.0 + 1e-9, 0.05), 2)
 WORK = DATA / "runs" / "rules" / "pbmc14k_graph"
+# node2vec and Louvain live in the authors' environment. Call its interpreter directly,
+# since conda itself is not on the PATH of a subprocess started from the analysis env.
+LEGACY_PYTHON = Path.home() / "anaconda3" / "envs" / "mica-legacy" / "bin" / "python"
 
 
 def full_distance(X):
@@ -67,9 +71,12 @@ def mica_graph_partitions(D, cells, tag, workers=8):
     out = WORK / f"{tag}_out"
     if out.exists():
         shutil.rmtree(out)
-    cmd = ["conda", "run", "-n", "mica-legacy", "python", "-u", str(REPO / "scripts" / "mica_downstream.py"),
+    cmd = [str(LEGACY_PYTHON), "-u", str(REPO / "scripts" / "mica_downstream.py"),
            str(gdir), str(out), str(workers)]
-    r = subprocess.run(cmd, capture_output=True, text=True, cwd=REPO)
+    # MICA's node2vec step shells out to the pecanpy command, so the legacy environment's
+    # bin directory has to be on the PATH of the subprocess, not just its interpreter.
+    env = {**os.environ, "PATH": f"{LEGACY_PYTHON.parent}:{os.environ.get('PATH', '')}"}
+    r = subprocess.run(cmd, capture_output=True, text=True, cwd=REPO, env=env)
     if r.returncode != 0:
         raise RuntimeError(f"node2vec step failed for {tag}: {r.stderr[-800:]}")
     parts = {}
@@ -122,6 +129,7 @@ def run(method, maker, n, truth, seed, b):
 
 def main(seed=0, b=stability.B_SUBSAMPLES):
     seed, b = int(seed), int(b)
+    assert LEGACY_PYTHON.exists(), f"mica-legacy interpreter not found at {LEGACY_PYTHON}"
     WORK.mkdir(parents=True, exist_ok=True)
     a = ad.read_h5ad(PROCESSED / f"{NAME}.h5ad")
     X = np.asarray(a.X.todense() if sparse.issparse(a.X) else a.X, dtype=np.float32)
