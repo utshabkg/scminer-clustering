@@ -11,7 +11,7 @@ Updated: 2026-10-21. Counts follow the Milestone column in `WORKPLAN.md`.
 |-----------|-----|------------|---------|-------|
 | M1 software, small data ready | Oct 7 | 8 of 8 | 100% | Done. Laraib's Zeisel card (L-1) merged on Oct 14 |
 | M2 reproduce the paper, Assignment 2 report | Oct 14 | 7 of 9 | 78% | Ten benchmark sets run, nine reproduce within 0.05. Report submitted (U-31). Left: contacting the authors (U-30), PBMC14K card (L-2) |
-| M3 cluster count without labels | Oct 21 | 5 of 9 | 56% | The old label-free work and the results summary (R-1) are done. The new stability and significance rules start this week (U-32, U-33). Left: Allen card (L-3), paper tables (R-2) |
+| M3 cluster count without labels | Oct 21 | 6 of 9 | 67% | The old label-free work, the results summary (R-1) and the paper tables (R-2) are done. The new stability and significance rules start this week (U-32, U-33). Left: Allen card (L-3) |
 | M4 what the similarity measures, atlas downloaded | Oct 28 | 4 of 7 | 57% | Diagnostics, atlas and pilot done. Left: shared-space silhouette (U-35), label-free Leiden on Allen (U-36), related work table (L-4) |
 | M5 main experiments complete | Nov 4 | 2 of 5 | 40% | Our distance matches the authors' (U-17) and the CPU fast neighbor search is done (U-19). Left: transfer rule (U-34) and the final comparison table (U-37) |
 | M6 gated extras | Nov 11 | 0 of 6 | 0% | Not started. The GPU search (U-18), the annotation comparison (U-22, U-23) and the optional checks (U-38) all depend on the Nov 4 result |
@@ -19,7 +19,7 @@ Updated: 2026-10-21. Counts follow the Milestone column in `WORKPLAN.md`.
 | M8 revision and slides | Dec 2 | 0 of 3 | 0% | Not started |
 | Every week: notes, plan and progress updates | weekly | | | L-7, R-3 and R-8 |
 
-Overall: 26 of 54 tasks finished. Three of the 54 repeat every week.
+Overall: 27 of 54 tasks finished. Three of the 54 repeat every week.
 
 Next three things: the stability rule (U-32) and the significance rule (U-33) on PBMC14K and Zeisel, and a decision on whether to write to the scMINER authors (U-30).
 
@@ -36,6 +36,8 @@ For the next meeting, most important first:
 - On Kolodziejczyk with all genes, Leiden falls from 1.000 to about 0.56 and MICA from about 0.99 to about 0.72, on both inputs. Were the Leiden resolution and neighbor settings re-tuned for all genes?
 - On Kolodziejczyk cell_ranger, hierarchical and k-means score 0.965 and 0.940 on the authors' data but about 0.62 with our preprocessing.
 - allen_100k has one run per cell, and hierarchical (both gene settings) and MICA (HVG) were not run.
+
+Also finished the paper tables (R-2). `scripts/make_paper_tables.py` turns the two summary CSVs into `latex/tables/r2_author_data.tex` and `latex/tables/r2_our_preprocessing.tex`. Each is a full-width table with one row per dataset, a column group per gene setting, and the best method in each group in bold. Both compile with the report's IEEEtran preamble, with no overfull boxes or undefined references. They are not yet `\input` anywhere, so the submitted Assignment 2 report is unchanged. Add them to the results section when the manuscript draft starts, and rerun the script whenever the CSVs are refreshed. The tables show the scores as they are, including the Chung seurat collapse, so they should be regenerated once the anomalies above are resolved.
 
 ---
 
