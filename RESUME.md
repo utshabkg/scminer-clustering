@@ -1,56 +1,63 @@
 # Resume note (for Claude, after a session limit or a restart)
 
-Last updated: 2026-10-22 12:10 CDT. Read this first, then `PROGRESS.md` and `WORKPLAN.md`.
+Last updated: 2026-10-22 13:45 CDT. Read this first, then `PROGRESS.md` and `WORKPLAN.md`.
 
 The user asked Claude to keep doing Utshab's tasks until something depends on Laraib or Rhea, to stop before any long GPU run and ask first, and to keep going after a session limit resets.
 
-## Where things stand (Oct 22, Assignment 3 in progress)
+## Where things stand (Oct 22 evening, Assignment 3 due Oct 28)
 
-**Assignment 3 is due Wednesday Oct 28.** 5 to 7 pages excluding references and appendix,
-in the same Overleaf project. It needs new results, a revised introduction, related work and
-methods, and a completion plan naming each person. The instructor's writing guide is
-`docs/Project_Paper_Writing_Guide.docx`, and `scripts/lint_prose.py` enforces the team's
-style rules across all prose.
+**The manuscript is complete except for PBMC14K.** `latex/` holds it: abstract, changes
+since Assignment 2, introduction, related work, problem and method, experimental design,
+results, discussion, conclusion with the completion plan, and a technical appendix. It
+compiles to about 7.4 pages of body plus references and appendix, against the 5 to 7 the
+assignment allows. Assignment 2 is archived under `latex/archive/assignment2`.
 
-**The manuscript is drafted** in `latex/`, restructured to the guide's order: abstract,
-changes since Assignment 2, introduction, related work, problem and method, experimental
-design, results, discussion, conclusion with the completion plan, then a technical appendix.
-It compiles to 7 pages of body plus references and appendix. Assignment 2 is archived in
-`latex/archive/assignment2`.
+**The result, from three seeds on nine datasets.** MICA leads under three of four label-free
+rules, but the margin, and on one rule the sign, is set by choices inside the rule.
+- Means: default 0.727 against 0.514, silhouette 0.595 against 0.564, stability read as
+  chooseR specifies 0.661 against 0.632, stability read as the plain maximum 0.473 against
+  0.635.
+- MICA's mean spans 0.255 across rules, the baseline's 0.120.
+- Three incidental choices each move the result as much as the gap between methods: the
+  tie-break (MICA moves 0.189, baseline 0.003), the threshold (relaxing it by 0.02 changes
+  the chosen cluster count in 14 of 18 cases) and the random draw (0.09 on average, up to
+  0.46).
+- Mechanism: among settings tied within 0.01, the span of cluster counts averages 7.3 for
+  MICA and 2.7 for the baseline. On Yan the rule cannot separate 3 clusters from 19.
+- MICA's shipped small-data default is k=4, and the median true cluster count of this
+  benchmark is also 4. It scores 0.802 where the true count is 3 to 5 and 0.579 outside.
 
-**The new experiment** is the chooseR-style subsampling stability rule applied identically to
-MICA and to PCA plus Leiden, in `src/scminer_clust/stability.py` and
-`scripts/run_rule_stability.py`. Seed 0 is complete on all nine small-data datasets.
+**Three claims that did NOT survive testing. Do not restore the stronger versions.**
+1. Stability is not less informative for MICA. It correlates slightly better with ARI
+   (0.65 against 0.50).
+2. The prediction that narrower score spread causes worse overclustering failed, with
+   Spearman -0.03 for MICA against -0.21 for the baseline. Reported as failed.
+3. The appendix claimed the bootstrap flavour would not change the rule's choice. Testing
+   showed it would. Corrected, and now a reported result.
 
-**Headline result.** The ranking depends on how the rule breaks ties, not on the data.
-- Read as chooseR specifies (finest setting above a threshold): MICA 0.658, Leiden 0.624, MICA wins 5 of 9.
-- Read as the plain maximum: MICA 0.473, Leiden 0.613, MICA wins 3 of 9.
-- MICA's mean moves 0.185 between the two readings, Leiden's 0.011.
-- Mechanism, measured: among settings tied within 0.01 of the best, the span of cluster
-  counts averages 6.7 for MICA and 2.3 for Leiden. On Yan the rule cannot separate 3
-  clusters from 19.
-- A hypothesis that did NOT hold: stability is not less informative for MICA. It correlates
-  slightly better with ARI (0.68 against 0.53). The problem is the compressed range.
-- Adding Zeisel weakened the spread-versus-overclustering correlation from -0.74 to -0.45,
-  so that prediction is reported as not confirmed. Do not restore the stronger wording.
+**Running.** `scm-pbmc` runs `scripts/run_rules_pbmc_graph.sh`, PBMC14K in MICA's graph mode
+at three seeds, about 3 hours each. Log `logs/pbmc_graph.log`, ends with PBMC GRAPH DONE.
+PBMC14K matters because it is the only dataset with antibody-sorted labels and the only one
+above MICA's 5,000 cell switch, so it tests whether the ambiguity is a small-data artifact.
+Verification workflow wf_214db52b-b2d is checking numbers, citations, requirements, writing
+and a reviewer critique.
 
-**Running now.**
-- `scm-repeats`: `scripts/run_rules_repeats.sh`. MICA's shipped default (small-data mode
-  defaults to k=4 whatever the dataset), the shared-space silhouette rule, then stability
-  seeds 1 and 2. Log `logs/rules_repeats.log`, ends with RULES REPEATS DONE.
-- A background smoke test of `scripts/run_rule_stability_graph.py 0 2`, which is PBMC14K in
-  MICA's graph mode. It crosses into the mica-legacy environment for node2vec. If it works,
-  run it with B=25 for the flagship dataset, about 3 hours.
+**When PBMC14K lands:** rerun `scripts/a3_report.py`, which rewrites every table, the figure
+and `results/a3_report_numbers.json`, then `scripts/make_a3_notebook.py`, then
+`scripts/lint_prose.py`, then recompile and recheck the page count. Update the abstract,
+which currently says nine datasets.
 
-**Before submitting, check:** the abstract claims three seeds, so confirm seeds 1 and 2
-finished and regenerate with `scripts/a3_report.py`, which rewrites every table and
-`results/a3_report_numbers.json`. Then run `scripts/lint_prose.py` and recompile.
+**Build locally:** copy `latex/` to a scratch folder, `conda activate texenv`, then
+`tectonic -X compile main.tex`. PyMuPDF in that env counts pages and renders previews. The
+preview `latex/a3_report_preview.pdf` is untracked.
 
-**Teammates.** Laraib asked for preprocessing numbers weekly and for technical background:
-`scripts/dataset_facts.py` writes `docs/dataset_facts.md` from the processed files, and
-`docs/primer.md` explains the project for a non-CS reader. Rhea's PR #3 is merged, and the
-six anomalies she raised were each checked and are genuine results, written up in the
-manuscript appendix.
+**Teammates.** PR #3 merged. Replies to Laraib and Rhea are drafted but NOT yet sent, since
+Utshab sends them. Laraib has `docs/dataset_facts.md` (generated by `scripts/dataset_facts.py`)
+and `docs/primer.md`. Rhea's six anomalies were each checked and are genuine results,
+written up in the manuscript appendix.
+
+**Open for Utshab:** whether to send the two replies, whether U-30 (contacting the authors)
+is still on hold, and GPU time for U-18, which is now unblocked since the GPUs are idle.
 
 ## Done on Oct 3 (all pushed except as noted)
 
