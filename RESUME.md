@@ -1,36 +1,56 @@
 # Resume note (for Claude, after a session limit or a restart)
 
-Last updated: 2026-10-14 05:30 CDT. Read this first, then `PROGRESS.md` and `WORKPLAN.md`.
+Last updated: 2026-10-22 12:10 CDT. Read this first, then `PROGRESS.md` and `WORKPLAN.md`.
 
 The user asked Claude to keep doing Utshab's tasks until something depends on Laraib or Rhea, to stop before any long GPU run and ask first, and to keep going after a session limit resets.
 
-## Where things stand (Oct 14, after the Assignment 2 submission)
+## Where things stand (Oct 22, Assignment 3 in progress)
 
-Nothing is running. Everything is committed and pushed.
+**Assignment 3 is due Wednesday Oct 28.** 5 to 7 pages excluding references and appendix,
+in the same Overleaf project. It needs new results, a revised introduction, related work and
+methods, and a completion plan naming each person. The instructor's writing guide is
+`docs/Project_Paper_Writing_Guide.docx`, and `scripts/lint_prose.py` enforces the team's
+style rules across all prose.
 
-**Assignment 2 is done.** The report is in `latex/` (`main.tex` plus `sections/00_abstract` to `05_schedule`), 4 pages of body plus 1 page of references. Utshab compiles it on Overleaf. The local preview `latex/a2_report_preview.pdf` is untracked.
-- Tables and the figure come from `scripts/a2_report.py`, and every quoted number is in `results/a2_report_numbers.json`.
-- Hub numbers come from `scripts/rq2_hubs.py` and `results/rq2_hubs/`.
-- The notebook is `notebooks/assignment2_preliminary.ipynb`, built by `scripts/make_a2_notebook.py`.
-- Two verification workflows checked it: wf_c52c8b84-309 for the literature, wf_682bf22b-e8d for numbers, citations, requirements, writing and a reviewer read-through. Confirmed findings were applied.
-- To rebuild the PDF locally: copy `latex/` to a scratch folder, then `conda activate texenv && tectonic -X compile main.tex`. PyMuPDF in that env counts pages and renders previews.
+**The manuscript is drafted** in `latex/`, restructured to the guide's order: abstract,
+changes since Assignment 2, introduction, related work, problem and method, experimental
+design, results, discussion, conclusion with the completion plan, then a technical appendix.
+It compiles to 7 pages of body plus references and appendix. Assignment 2 is archived in
+`latex/archive/assignment2`.
 
-**Both teammate pull requests are merged.** PR #1 (Laraib's Zeisel card, L-1) and PR #2 (Rhea's pivots, R-1). The card's wrong 2,903-cell claim is fixed. R-1 stays `[~]` until the odd results are marked.
+**The new experiment** is the chooseR-style subsampling stability rule applied identically to
+MICA and to PCA plus Leiden, in `src/scminer_clust/stability.py` and
+`scripts/run_rule_stability.py`. Seed 0 is complete on all nine small-data datasets.
 
-**One thing still open for Utshab:** the Overleaf link. `latex/main.tex` line 15 still has the placeholder `REPLACE-WITH-OUR-LINK`. Utshab pasted the real link into Overleaf directly, so if he ever copies the local `main.tex` over again, the placeholder would overwrite it. Ask whether to store the real link in the repo.
+**Headline result.** The ranking depends on how the rule breaks ties, not on the data.
+- Read as chooseR specifies (finest setting above a threshold): MICA 0.658, Leiden 0.624, MICA wins 5 of 9.
+- Read as the plain maximum: MICA 0.473, Leiden 0.613, MICA wins 3 of 9.
+- MICA's mean moves 0.185 between the two readings, Leiden's 0.011.
+- Mechanism, measured: among settings tied within 0.01 of the best, the span of cluster
+  counts averages 6.7 for MICA and 2.3 for Leiden. On Yan the rule cannot separate 3
+  clusters from 19.
+- A hypothesis that did NOT hold: stability is not less informative for MICA. It correlates
+  slightly better with ARI (0.68 against 0.53). The problem is the compressed range.
+- Adding Zeisel weakened the spread-versus-overclustering correlation from -0.74 to -0.45,
+  so that prediction is reported as not confirmed. Do not restore the stronger wording.
 
-## Next tasks (no GPU, nothing blocked)
+**Running now.**
+- `scm-repeats`: `scripts/run_rules_repeats.sh`. MICA's shipped default (small-data mode
+  defaults to k=4 whatever the dataset), the shared-space silhouette rule, then stability
+  seeds 1 and 2. Log `logs/rules_repeats.log`, ends with RULES REPEATS DONE.
+- A background smoke test of `scripts/run_rule_stability_graph.py 0 2`, which is PBMC14K in
+  MICA's graph mode. It crosses into the mica-legacy environment for node2vec. If it works,
+  run it with B=25 for the flagship dataset, about 3 hours.
 
-The plan was realigned to the instructor's targets: main experiments by Nov 4, full draft by Nov 18. Eight tasks were added, U-31 to U-38.
+**Before submitting, check:** the abstract claims three seeds, so confirm seeds 1 and 2
+finished and regenerate with `scripts/a3_report.py`, which rewrites every table and
+`results/a3_report_numbers.json`. Then run `scripts/lint_prose.py` and recompile.
 
-1. **U-32, the stability rule.** Pick the setting whose clusters best survive subsampling, for MICA and Leiden alike, in the spirit of MultiK and chooseR. It varies k in MICA's small-data mode. Start on PBMC14K and Zeisel. This is the rule that gives the final clustering we report.
-2. **U-33, the significance rule.** Merge clusters a test cannot separate, in the style of sc-SHC.
-3. **U-35 and U-36.** Rerun the silhouette rule in one shared embedding over a matched range of cluster counts, and run label-free Leiden on the Allen subset so it becomes a third anchor.
-4. **U-34 and U-37.** The transfer rule (hold out one dataset, take the best resolution from the others) and the final comparison table across all eleven sets.
-
-**Still needs Utshab's decision:** GPU time for U-18 (now gated behind a Nov 4 result), and U-30, whether to write to the scMINER authors about the Kolodziejczyk input.
-
-**Rules fixed in the report, do not quietly change them:** every rule is applied the same way to both methods, its settings are committed before scoring, and a win for MICA means a higher median ARI on at least 7 of the 11 sets and a mean lead of at least 0.05.
+**Teammates.** Laraib asked for preprocessing numbers weekly and for technical background:
+`scripts/dataset_facts.py` writes `docs/dataset_facts.md` from the processed files, and
+`docs/primer.md` explains the project for a non-CS reader. Rhea's PR #3 is merged, and the
+six anomalies she raised were each checked and are genuine results, written up in the
+manuscript appendix.
 
 ## Done on Oct 3 (all pushed except as noted)
 
