@@ -1,3 +1,16 @@
+\section{Code, data and the Overleaf project}\label{app:links}
+The manuscript source is in the Overleaf project linked \overleaflink. The code, the saved
+result files and the notebook are at \url{https://github.com/utshabkg/scminer-clustering}.
+
+Table~\ref{tab:rules}, Table~\ref{tab:clusters} and Fig.~\ref{fig:curve} are regenerated
+from the saved results by \texttt{scripts/a3\_report.py}, and
+\texttt{notebooks/assignment3\_results.ipynb} runs that script and displays each table and
+figure with the underlying rows, so the main displays can be reproduced without rerunning
+any experiment. The per-run outputs they read are committed under \texttt{results/}, one
+folder per run holding \texttt{metrics.csv} and a \texttt{params.json} that records the
+settings, seed and candidate grid of that run. \texttt{results/a3\_report\_numbers.json}
+holds every number quoted in the text.
+
 \section{Reproducing the results}\label{app:repro}
 Everything below is in the project repository. The main table and figure are rebuilt
 from saved result files by \texttt{scripts/a3\_report.py}, which also writes
