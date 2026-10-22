@@ -34,7 +34,8 @@ def short(ds):
 
 def load_stability():
     rows = []
-    for f in sorted(glob(str(RESULTS / "rule_stability_*" / "metrics.csv"))):
+    patterns = ["rule_stability_*", "rule_silhouette_*", "rule_default_*"]
+    for f in sorted(f for pat in patterns for f in glob(str(RESULTS / pat / "metrics.csv"))):
         d = pd.read_csv(f)
         if "seed" not in d:
             d["seed"] = 0
@@ -42,6 +43,12 @@ def load_stability():
     if not rows:
         return pd.DataFrame()
     d = pd.concat(rows, ignore_index=True)
+    # Leiden's shipped default was scored in the Assignment 2 runs and lives in the tracker
+    t = pd.read_csv(REPO / "docs" / "results_tracker.csv", low_memory=False)
+    lei = t[(t.k_setting == "default_resolution_1") & (t.gene_setting == "all genes")
+            & t.dataset.str.startswith("paper_") & (t.method == "leiden_pca")].copy()
+    lei["k_setting"] = "default"
+    d = pd.concat([d, lei], ignore_index=True)
     d["ds"] = d.dataset.map(short)
     return d
 
@@ -183,6 +190,23 @@ def main():
     mech.to_csv(RESULTS / "a3_mechanism.csv", index=False)
     print("mechanism: share of settings tied with the best " + str(nums["mechanism"]["mean_share_tied"]))
     print("mechanism: mean span of cluster counts among tied settings " + str(nums["mechanism"]["mean_k_span_among_tied"]))
+
+    # ---------- does MICA's shipped default suit this benchmark in particular? ----------
+    dflt = d[(d.k_setting == "default") & (d.method == "mica")]
+    if len(dflt):
+        g = dflt.groupby("ds").agg(ari=("ari", "median")).reset_index()
+        g["true_k"] = g.ds.map(truth_k)
+        near = g[g.true_k.between(3, 5)]
+        far = g[~g.true_k.between(3, 5)]
+        nums["mica_default"] = {
+            "shipped_k": 4, "source": "MICA/mica_mds.py, -nck default",
+            "median_true_k_of_benchmark": int(np.median(list(truth_k.values()))),
+            "datasets_with_true_k_4": [k for k, v in truth_k.items() if v == 4],
+            "mean_ari_true_k_3_to_5": round(float(near.ari.mean()), 3),
+            "mean_ari_true_k_outside": round(float(far.ari.mean()), 3),
+            "n_near": int(len(near)), "n_far": int(len(far))}
+        print(f"MICA default k=4: ARI {nums['mica_default']['mean_ari_true_k_3_to_5']} where the true "
+              f"count is 3 to 5, {nums['mica_default']['mean_ari_true_k_outside']} outside")
 
     nums["true_k"] = truth_k
     (RESULTS / "a3_report_numbers.json").write_text(json.dumps(nums, indent=1, default=str))

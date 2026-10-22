@@ -80,9 +80,15 @@ def mica_graph_partitions(D, cells, tag, workers=8):
     if r.returncode != 0:
         raise RuntimeError(f"node2vec step failed for {tag}: {r.stderr[-800:]}")
     parts = {}
+    want = [str(c) for c in sub]
     for f in sorted(out.glob("clustering_*.txt")):
         s = pd.read_csv(f, sep="\t", index_col=0)["label"]
-        parts[float(f.stem.split("_")[-1])] = s.reindex([str(c) for c in sub]).to_numpy().astype(str)
+        # the cell names are positional integers written as text, so pandas reads the index
+        # back as int64. Without this cast the reindex below silently returns all NaN.
+        s.index = s.index.astype(str)
+        lab = s.reindex(want)
+        assert lab.notna().all(), f"{f.name}: {int(lab.isna().sum())} of {len(want)} cells missing a label"
+        parts[float(f.stem.split("_")[-1])] = lab.to_numpy().astype(str)
     shutil.rmtree(gdir, ignore_errors=True)
     shutil.rmtree(out, ignore_errors=True)
     return parts

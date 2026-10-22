@@ -1,0 +1,7 @@
+{
+  "dataset": "paper_chung",
+  "rule": "highest mean silhouette, scored in a shared space",
+  "shared_space": "50 principal components",
+  "also_scored_in": "MICA MDS",
+  "seed": 0
+}

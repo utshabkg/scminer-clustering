@@ -1,6 +1,6 @@
 \section{Results}\label{sec:results}
-We first confirm that the starting point is sound, then report the label-free comparison,
-then test why it comes out as it does.
+We first confirm that the starting point is sound, then report what each label-free rule
+chooses, then test why the rules disagree as much as they do.
 
 \subsection{The reproduction holds}
 On the authors' released inputs and under their own protocol, MICA reaches the published
@@ -8,42 +8,48 @@ ARI within 0.05 on nine of ten datasets and within 0.001 on six. The exception i
 Kolodziejczyk, where the released files give 0.727 against a published 1.000, and the
 authors' own notebook also gives 0.727, so the published value appears to come from an
 input that was not released. These numbers were established in Assignment 2 and are
-unchanged. They matter here only because they license the comparison that follows: when
-the labels fix the setting, our MICA runs behave as the paper reports.
+unchanged. They matter here only because they license what follows: when the labels fix the
+setting, our MICA runs behave as the paper reports.
 
 \input{tables/a3_rules}
 
-\subsection{The ranking depends on the selection rule, not on the data}
+\subsection{MICA leads under most rules, but by amounts the rule decides}
 Table~\ref{tab:rules} reports what each method achieves when the same rule chooses its
-setting without labels. The two stability columns are the same scores read two ways. The
-published chooseR rule keeps the finest setting that clears a reproducibility threshold.
-The second column keeps the highest-scoring setting outright.
+setting without labels. MICA has the higher mean under three of the four rules. That is the
+first thing to say, and on its own it would read as support for the published claim.
 
-Under the published reading, MICA leads on five of nine datasets with a mean ARI of
-0.658 against 0.624. Under the second reading, MICA leads on three of nine with a mean
-of 0.473 against 0.613. The ranking reverses. The two columns use identical subsamples, identical
-candidate settings and identical scores, and differ only in how settings that score alike
-are separated.
+The second thing is that the rules disagree with each other more than the methods disagree
+under any one rule. MICA's mean ARI ranges from 0.473 to 0.727 depending only on which rule
+selects its setting, a spread of 0.254. The baseline's ranges from 0.514 to 0.628, a spread
+of 0.114. Under the rule most favourable to MICA it leads by 0.213, and under the least
+favourable it trails by 0.141. A study reporting any single one of these rules would be
+making what looks like a statement about two clustering methods, when a large part of it is
+a statement about the rule.
 
-The size of the movement is the result. Between the two readings MICA's mean ARI changes by 0.185, while the baseline's changes
-by 0.011. The baseline is nearly indifferent to the
-tie-break and MICA is not, which is why a single rule reported alone would look like a
-statement about the two methods when it is partly a statement about the rule.
+\subsection{Two readings of one rule reverse the ranking}
+The clearest case is the stability rule, whose two columns are the same scores read two
+ways. The published chooseR rule keeps the finest setting that clears a reproducibility
+threshold. The second column keeps the highest-scoring setting outright. They share the
+subsamples, the candidate settings and the scores, and differ only in how settings that
+score alike are separated.
 
-Individual datasets show the same pattern more sharply. On Pollen MICA scores 0.896 under the published reading and 0.087 under the other,
-because the first keeps 18 clusters and the second collapses to 2. Neither is close to
-the 11 types actually present. The baseline moves from 0.755 to 0.509 on the same
-dataset, a smaller swing from a smaller change in count.
+Under the published reading MICA leads, 0.680 against 0.628. Under the second it trails,
+0.473 against 0.614. Between the two readings MICA's mean moves by 0.207 and the
+baseline's by 0.014. The baseline is nearly indifferent to the tie-break and MICA is not.
+
+Individual datasets show it more sharply. On Pollen MICA scores 0.896 under the published
+reading and 0.087 under the other, because the first keeps 18 clusters and the second
+collapses to 2. Neither is near the 11 types present. The baseline moves from 0.755 to
+0.509 on the same dataset, a smaller swing from a smaller change in count.
 
 \input{tables/a3_clusters}
 
 \subsection{The chosen cluster counts}
-Table~\ref{tab:clusters} shows why the ARI values alone understate the problem. Under the published reading MICA chooses 19 clusters on Yan, which has 8 types, 18 on
+Table~\ref{tab:clusters} shows why the scores alone understate the problem. Under the
+published stability reading MICA chooses 19 clusters on Yan, which has 8 types, 18 on
 Pollen, which has 11, and 12 on Chung, which has 4. It errs the other way on Zeisel,
-choosing 3 where there are 7. A user inspecting those partitions would see the
-problem at once, which is the argument for reporting the count next to the score. The
-baseline's counts are closer to the truth on most datasets, and where it fails it fails by
-merging rather than by splitting.
+choosing 3 where there are 7. A user inspecting those partitions would see the problem at
+once, which is the argument for reporting the count beside the score.
 
 \begin{figure*}[t]
 \centering
@@ -57,41 +63,61 @@ another and its tie-break decides instead.}
 \end{figure*}
 
 \subsection{Why: the rule cannot separate the settings}
-Figure~\ref{fig:curve} shows the quantity the rule maximises, plotted against the number of
+Figure~\ref{fig:curve} plots the quantity the rule maximises against the number of
 clusters. On Buettner MICA's stability falls steadily as clusters are added, the rule has a
 clear maximum near the true value, and it selects 3 clusters for an ARI of 0.934. On Pollen
 MICA's stability stays close to its maximum across the whole range from 2 to 20 clusters,
-so there is nothing for the threshold to discriminate on.
+leaving the threshold nothing to act on.
 
-Measured across all datasets, 37 percent of MICA's candidate settings score within 0.01
-of its best, against 27 percent for the baseline. The consequence is clearer in cluster
-counts than in scores: among the settings that tie with the best, the span of cluster
-counts averages 6.7 for MICA and 2.3 for the baseline. On Yan the rule cannot separate 3
-clusters from 19, and on Pollen it cannot separate 2 from 18.
+Measured across all datasets, 37 percent of MICA's candidate settings score within 0.01 of
+its best, against 27 percent for the baseline. The consequence is clearer in cluster counts
+than in scores: among the settings that tie with the best, the span of cluster counts
+averages 7.2 for MICA and 2.7 for the baseline. On Yan the rule cannot separate 3 clusters
+from 19, and on Pollen it cannot separate 2 from 18.
 
-This explains the reversal. When many settings tie, the rule's preference decides, and
-the published rule prefers the finest. We also tested a prediction that follows from it,
-that the narrower a method's spread of stability scores, the worse its overclustering
-should be. The association runs in the predicted direction for both methods, with a
-Spearman correlation of $-0.45$ for MICA and $-0.30$ for the baseline, but across nine
-datasets the two are not meaningfully different, and we do not regard that prediction as
-confirmed. The direct measurement of ambiguity above does not rest on it.
+One explanation we expected does not hold. We supposed stability would carry less
+information about accuracy for MICA. It carries slightly more: the rank correlation between
+stability and ARI across settings averages 0.68 for MICA against 0.53 for the baseline. The
+signal is not pointing the wrong way, it is compressed into a band too narrow for a
+threshold to act on. We also tested a prediction that the narrower a method's spread of
+scores, the worse its overclustering should be. The association runs in the predicted
+direction for both methods, with a Spearman correlation of $-0.45$ for MICA and $-0.30$ for
+the baseline, but across nine datasets those are not meaningfully different and we do not
+treat the prediction as confirmed. The direct measurement of ambiguity above does not rest
+on it.
 
-One explanation we expected does not hold. We supposed that stability would simply carry
-less information about accuracy for MICA. It carries slightly more: the rank correlation between stability and ARI across settings averages 0.68 for MICA
-against 0.53 for the baseline. The problem is not that the signal points the wrong way but that it is compressed
-into a band too narrow for a threshold to act on.
+\subsection{The rule most favourable to MICA is the one tied to this benchmark}
+MICA's best result comes from its own shipped default. Its small-data mode returns four
+clusters when no setting is given, on any dataset of any size. That rule gives a mean ARI
+of 0.727 and leads on seven of nine datasets.
+
+The median number of cell types across these datasets is also four. Splitting the datasets
+by that, MICA's default scores a mean ARI of 0.802 where the true count is between 3 and 5,
+and 0.579 where it is outside. Three of the nine have exactly four types. We cannot show
+how that default was chosen, and we make no claim about it. What we can say is that its
+apparent strength is a property of this benchmark's composition rather than of the method,
+and that it would not transfer to tissue with a different number of cell types. The
+baseline's default is a resolution rather than a count, and it overclusters badly on these
+small datasets, reaching 21 clusters on Zeisel.
+
+\subsection{The silhouette rule depends on where it is computed}
+A second incidental choice moves the result by a comparable amount. Scoring the silhouette
+of the same partitions in the 50 principal components rather than in MICA's own embedding
+changes the selected ARI by 0.13 on average for MICA and 0.16 for the baseline, reaching
+0.39 on Goolam and 0.48 on Usoskin. Only the space changes. The partitions, the candidates
+and the method are identical. Assignment 2 scored each method in its own space, and this is
+why the rule is now computed in one shared space for both.
 
 \subsection{Cost}
-The rule costs 494 clusterings per dataset for MICA over 19 candidate values of $k$, and
-about 1,040 for the baseline over its resolution grid, in both cases 25 subsample reruns
-plus the full-data fit. On the datasets here that is 15 to 92 seconds for MICA and 14 to
-211 seconds for the baseline on 8 threads, excluding the mutual information distance
+The stability rule costs 494 clusterings per dataset for MICA over 19 candidate values of
+$k$, and about 1,040 for the baseline over its resolution grid, in both cases 25 subsample
+reruns plus the full-data fit. On these datasets that is 15 to 101 seconds for MICA and 14
+to 211 seconds for the baseline on 8 threads, excluding the mutual information distance
 matrix, which is computed once per dataset and shared by every setting and seed.
 
-That one-off cost is the larger number and it falls only on MICA: 6 to 11 minutes on the
-two datasets above 2,500 cells, against seconds on the smallest. It is also what makes the
-rule affordable at all. Because MICA's distance between two cells does not depend on any
-other cell, the matrix is computed once and subsampled exactly, rather than recomputed 25
-times. Without that property the rule would cost roughly 25 times more for MICA, and the
-comparison in Table~\ref{tab:rules} would not have been feasible on this hardware.
+That one-off cost is the larger number and falls only on MICA: 6 to 11 minutes on the two
+datasets above 2,500 cells, against seconds on the smallest. It is also what makes the rule
+affordable. Because MICA's distance between two cells does not depend on any other cell, the
+matrix is computed once and subsampled exactly rather than recomputed 25 times. Without
+that property the rule would cost roughly 25 times more for MICA, and the comparison in
+Table~\ref{tab:rules} would not have been feasible on this hardware.
