@@ -6,17 +6,15 @@ established and what remains.
 
 \subsection{The method under test}
 scMINER \cite{pan2025scminer} introduces MICA and reports a mean ARI of 0.84 across ten
-labelled datasets, against 0.73 for Seurat and 0.68 for Scanpy. The setting of every method
-in that benchmark is fixed with the labels, as described in Section~\ref{sec:method}, and
-nine of the ten datasets are below the 5,000 cell threshold, so nine of the ten headline
-scores come from MICA given the true number of clusters. In the authors' own benchmark
-files MICA trails Scanpy on the three larger datasets, between 76,000 and 647,000 cells,
-which were used for runtime and memory rather than accuracy. The paper reports no setting
-chosen without labels. Asked during peer review how a user should choose the resolution
-when labels are unavailable, the authors pointed to silhouette scores and marker genes but
-did not test either. MICA's shipped default resolution appears only in the source code,
-with no derivation given. We found no independent benchmark that includes MICA, so its
-behaviour outside the published protocol was open before this work.
+labelled datasets, against 0.73 for Seurat and 0.68 for Scanpy. Every setting in that
+benchmark is fixed with the labels, and nine of the ten datasets sit below the 5,000
+cell threshold, so nine of the ten headline scores come from MICA given the true number
+of clusters. In the authors' own benchmark files MICA trails Scanpy on the three larger
+datasets, which were used for runtime rather than accuracy. Asked during peer review how
+a user should choose the resolution without labels, the authors pointed to silhouette
+scores and marker genes but tested neither, and MICA's shipped defaults appear only in
+its source code. We found no independent benchmark that includes MICA, so its behaviour
+outside the published protocol was open before this work.
 
 \subsection{Choosing a clustering without labels}
 chooseR \cite{pattersoncross2021chooser} is the rule we adopt. It reruns a pipeline on 100
@@ -29,32 +27,29 @@ mutual information method, and its behaviour on datasets of a few hundred cells 
 examined. Both gaps matter here, since nine of our ten datasets are smaller than the ones
 it was shown on.
 
-MultiK \cite{liu2021multik} takes a related approach, pooling 4,000 subsampled Seurat runs
-by the number of clusters they produce and returning two or three candidate counts rather
-than one. Yu et al. \cite{yu2022benchmarking} benchmarked 14 methods that estimate the
-number of cell types on mixtures of Tabula Muris cells, and found that most underestimate
-it, with the error growing as the true number rises, while SC3 and Seurat overestimate. One
-of their conclusions bears directly on our design: a good ARI did not imply a correct
-cluster count, which is why we report the chosen count alongside the score. None of these
-studies includes a mutual information method.
+MultiK \cite{liu2021multik} pools 4,000 subsampled Seurat runs by the number of clusters
+they produce and returns two or three candidate counts rather than one. Yu et al.
+\cite{yu2022benchmarking} benchmarked 14 methods that estimate the number of cell types
+and found that most underestimate it, with the error growing as the true number rises.
+One conclusion bears directly on our design: a good ARI did not imply a correct cluster
+count, which is why we report the chosen count beside the score. None of these includes
+a mutual information method.
 
-A second family tests whether a split is real rather than whether it is reproducible.
-sc-SHC \cite{grabski2023significance} compares each split of a hierarchy against a
-one-population null model, and on data from a single cell line it returned one cluster
-where Seurat's Louvain and Leiden defaults both returned nine. CHOIR \cite{sant2025choir}
-overclusters first, then merges neighbouring clusters a random forest cannot separate
-better than chance, and matched or beat 15 methods on 230 simulated datasets. The
-distinction matters for our result: reproducibility and significance are different
-criteria, and a partition can be perfectly reproducible without being real.
+A second family tests whether a split is real rather than reproducible. sc-SHC
+\cite{grabski2023significance} compares each split against a one-population null model,
+and on data from a single cell line returned one cluster where Seurat's Louvain and
+Leiden defaults both returned nine. CHOIR \cite{sant2025choir} overclusters, then merges
+neighbouring clusters a random forest cannot separate better than chance. The
+distinction matters here: a partition can be perfectly reproducible without being real.
 
 \subsection{Tuning on the ground truth}
 Ullmann et al. \cite{ullmann2023overoptimistic} set out to make a recently published
-clustering algorithm look good, by tuning its hyperparameters and the data settings against
-the known labels, and then showed how much of the advantage disappeared when those choices
-moved. They state that tuning hyperparameters on the ground truth is frequently seen in the
-literature and overstates what a user without labels will obtain, and they recommend tuning
-on separate datasets and testing on held-out ones. Their study used toy and UCI data and a
-single algorithm, with no single-cell data and no label-free rule tested as the remedy. A
+clustering algorithm look good by tuning its hyperparameters and the data settings
+against the known labels, then showed how much of that advantage disappeared when the
+choices moved. They state that tuning on the ground truth is common in the literature
+and overstates what a user without labels obtains, and recommend tuning on separate
+datasets. Their study used toy and UCI data and one algorithm, with no single-cell data
+and no label-free rule tested as the remedy. A
 2025 preprint \cite{szmigiel2025benchmarking} swept Leiden and Louvain over a very large
 grid on 16 single-cell datasets and reports that on six of them the Scanpy default did no
 better than a typical random setting, which is evidence that the default is a weak rule but
@@ -66,12 +61,9 @@ information clustering, and the scMINER benchmark reports no label-free result a
 is missing is a direct measurement: hold the rule fixed, apply it identically to both
 methods, and see what survives.
 
-\subsection{Scaling the neighbour graph}
-The secondary question is unchanged since Assignment 2 and is summarised here. Proposing
-candidate neighbours cheaply and rescoring them exactly is standard in nearest neighbour
-search, as in the refinement step of Faiss \cite{douze2024faiss}, and MICA itself uses HNSW
-\cite{malkov2020efficient}. Song et al. \cite{song2012comparison} found that binned mutual
-information tracks correlation closely for gene pairs, which is what suggested correlation
-as the cheap stage. Amblard et al. \cite{amblard2022hubness} showed that single-cell
-neighbour graphs contain hub cells and that correcting for them improves Leiden clustering,
-although they tuned the resolution to the true number of clusters.
+\subsection{Scaling the neighbour graph} The secondary question is unchanged since
+Assignment 2. Proposing candidate neighbours cheaply and rescoring them exactly is
+standard in nearest neighbour search, as in the refinement step of Faiss
+\cite{douze2024faiss}, and MICA itself uses HNSW \cite{malkov2020efficient}. Song et al.
+\cite{song2012comparison} found that binned mutual information tracks correlation
+closely for gene pairs, which is what suggested correlation as the cheap stage.

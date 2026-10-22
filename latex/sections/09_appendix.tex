@@ -2,7 +2,7 @@
 The manuscript source is in the Overleaf project linked \overleaflink. The code, the saved
 result files and the notebook are at \url{https://github.com/utshabkg/scminer-clustering}.
 
-Table~\ref{tab:rules}, Table~\ref{tab:clusters} and Fig.~\ref{fig:curve} are regenerated
+Table~\ref{tab:rules} and Fig.~\ref{fig:curve} are regenerated
 from the saved results by \texttt{scripts/a3\_report.py}, and
 \texttt{notebooks/assignment3\_results.ipynb} runs that script and displays each table and
 figure with the underlying rows, so the main displays can be reproduced without rerunning
@@ -10,6 +10,9 @@ any experiment. The per-run outputs they read are committed under \texttt{result
 folder per run holding \texttt{metrics.csv} and a \texttt{params.json} that records the
 settings, seed and candidate grid of that run. \texttt{results/a3\_report\_numbers.json}
 holds every number quoted in the text.
+
+\section{The datasets}\label{app:data}
+\input{tables/a3_datasets}
 
 \section{Reproducing the results}\label{app:repro}
 Everything below is in the project repository. The main table and figure are rebuilt
@@ -51,6 +54,16 @@ candidate setting for each method, which is 494 for MICA over 19 values of $k$ a
 1,040 for Leiden over its grid. The reported cost excludes the one-off mutual information
 distance matrix, which is computed once per dataset, cached, and shared by every setting
 and seed.
+
+
+\textbf{The silhouette rule and the space it is scored in.} Each partition from both
+methods was scored both in the 50 principal components and in MICA's multidimensional
+scaling embedding. The selected ARI differs between the two spaces by 0.13 on average
+for MICA and 0.16 for the baseline, with the largest differences on Goolam, 0.39 for
+MICA, and Usoskin, 0.48 for the baseline. The partitions, the candidate settings and the
+methods are identical across the two, so the difference is attributable to the space
+alone. Per-dataset values are in the \texttt{rule\_silhouette} folders under
+\texttt{results/}.
 
 \section{Why subsampling the distance matrix is exact}\label{app:exact}
 Section~\ref{sec:method} states that MICA's distance matrix restricted to a subset of

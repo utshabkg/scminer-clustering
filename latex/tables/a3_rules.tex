@@ -1,25 +1,25 @@
 \begin{table*}[t]
 \centering
-\caption{ARI of the partition each label-free rule chose, with no reference labels used in the choice. Median over three seeds, with the range in brackets where the runs differed by more than 0.005. Both methods saw the same input, the same candidate range of 2 to 20 clusters and the same subsamples.}
+\caption{ARI of the partition each label-free rule chose, with the number of clusters it chose in brackets, and the true number of cell types after each dataset name. No reference labels are used in the choice. Values are the median over three seeds. Both methods saw the same input, the same candidate range of 2 to 20 clusters and the same subsamples. A rule can reach a fair ARI with a badly wrong cluster count, which a user would notice.}
 \label{tab:rules}
 \footnotesize
-\setlength{\tabcolsep}{5pt}
+\setlength{\tabcolsep}{4pt}
 \begin{tabular}{lcccccccc}
 \toprule
  & \multicolumn{2}{c}{Default} & \multicolumn{2}{c}{Silhouette} & \multicolumn{2}{c}{Finest stable} & \multicolumn{2}{c}{Most stable} \\
 \cmidrule(lr){2-3}\cmidrule(lr){4-5}\cmidrule(lr){6-7}\cmidrule(lr){8-9}
-Dataset & MICA & Leiden & MICA & Leiden & MICA & Leiden & MICA & Leiden \\
+Dataset (types) & MICA & Leiden & MICA & Leiden & MICA & Leiden & MICA & Leiden \\
 \midrule
-Yan & 0.765 & 0.845 & 0.794 & 0.765 & 0.496 [0.40, 0.50] & 0.845 [0.77, 0.85] & 0.496 & 0.765 [0.77, 0.85] \\
-Goolam & 0.582 & 0.349 & 0.630 & 0.619 & 0.593 [0.45, 0.60] & 0.429 [0.43, 0.62] & 0.630 [0.63, 0.88] & 0.619 [0.43, 0.62] \\
-Buettner & 0.919 [0.87, 0.92] & 0.237 [0.21, 0.25] & 0.474 & 0.154 & 0.934 & 0.232 [0.23, 0.24] & 0.474 [0.47, 0.93] & 0.134 [0.13, 0.23] \\
-Pollen & 0.493 [0.48, 0.49] & 0.865 & 0.942 & 0.870 & 0.898 [0.90, 0.93] & 0.755 [0.75, 0.86] & 0.087 & 0.755 [0.51, 0.86] \\
-Chung & 0.655 [0.46, 0.66] & 0.567 & 0.551 & 0.046 & 0.474 [0.43, 0.48] & 0.129 [0.13, 0.32] & 0.100 & 0.129 \\
-Usoskin & 0.839 [0.81, 0.85] & 0.393 [0.39, 0.44] & 0.347 & 0.761 & 0.818 & 0.633 & 0.818 & 0.757 [0.63, 0.76] \\
-Kolodziejczyk & 0.834 & 0.525 & 0.727 & 0.525 & 0.722 & 0.838 & 0.630 & 0.838 \\
-Klein & 0.980 & 0.469 [0.44, 0.49] & 0.501 & 0.859 & 0.501 [0.50, 0.86] & 0.973 & 0.501 & 0.859 [0.86, 0.97] \\
-Zeisel & 0.478 & 0.378 [0.37, 0.38] & 0.386 & 0.473 & 0.518 & 0.855 [0.72, 0.86] & 0.518 [0.39, 0.52] & 0.855 \\
-PBMC14K & n/a & 0.866 [0.85, 0.87] & n/a & n/a & n/a & n/a & n/a & n/a \\
+Yan (8) & 0.765\,(4) & 0.845\,(5) & 0.794\,(5) & 0.765\,(4) & 0.496\,(19\textrm{-}20) & 0.845\,(5\textrm{-}8) & 0.496\,(3) & 0.765\,(4\textrm{-}5) \\
+Goolam (5) & 0.582\,(4) & 0.349\,(6) & 0.630\,(2) & 0.619\,(2) & 0.593\,(6\textrm{-}7) & 0.429\,(2\textrm{-}3) & 0.630\,(2\textrm{-}3) & 0.619\,(2\textrm{-}3) \\
+Buettner (3) & 0.919\,(4) & 0.237\,(4) & 0.474\,(2) & 0.154\,(2) & 0.934\,(3) & 0.232\,(3) & 0.474\,(2\textrm{-}3) & 0.134\,(2\textrm{-}3) \\
+Pollen (11) & 0.493\,(4) & 0.865\,(9) & 0.942\,(12) & 0.870\,(9) & 0.898\,(15\textrm{-}18) & 0.755\,(7\textrm{-}11) & 0.087\,(2) & 0.755\,(5\textrm{-}11) \\
+Chung (4) & 0.655\,(4) & 0.567\,(7) & 0.551\,(9) & 0.046\,(2) & 0.474\,(11\textrm{-}12) & 0.129\,(3\textrm{-}4) & 0.100\,(2) & 0.129\,(3) \\
+Usoskin (4) & 0.839\,(4) & 0.393\,(10\textrm{-}11) & 0.347\,(2) & 0.761\,(3) & 0.818\,(3) & 0.633\,(6) & 0.818\,(3) & 0.757\,(3\textrm{-}6) \\
+Kolodziejczyk (3) & 0.834\,(4) & 0.525\,(7) & 0.727\,(3) & 0.525\,(7) & 0.722\,(3\textrm{-}5) & 0.838\,(4) & 0.630\,(2) & 0.838\,(4) \\
+Klein (4) & 0.980\,(4) & 0.469\,(10\textrm{-}11) & 0.501\,(2) & 0.859\,(3) & 0.501\,(2\textrm{-}3) & 0.973\,(4) & 0.501\,(2) & 0.859\,(3\textrm{-}4) \\
+Zeisel (7) & 0.478\,(4) & 0.378\,(21) & 0.386\,(2) & 0.473\,(3) & 0.518\,(3) & 0.855\,(8\textrm{-}9) & 0.518\,(2\textrm{-}3) & 0.855\,(8) \\
+PBMC14K (7) & n/a & 0.866\,(8) & n/a & n/a & n/a & n/a & n/a & n/a \\
 \bottomrule
 \end{tabular}
 \end{table*}

@@ -9,29 +9,28 @@ detail of tuning but the main decision, and it has to be made without knowing th
 because the number of cell types is usually what the experiment is trying to establish.
 
 Published benchmarks do not make that decision. In the benchmark for scMINER
-\cite{pan2025scminer}, the framework we study, every method is either given the true number
-of cell types or has its setting swept and keeps only the runs that reproduce that number,
-with remaining ties broken by agreement with the reference labels. The reported scores are
-therefore conditional on information a user does not have. This is not specific to scMINER.
-Ullmann et al. \cite{ullmann2023overoptimistic} show that tuning a clustering algorithm
-against the ground truth inflates its apparent advantage, and a recent single-cell survey
-\cite{szmigiel2025benchmarking} reports that on six of sixteen datasets the common default
-setting performs no better than a setting picked at random. What is missing is a direct
-measurement of what happens to a specific published advantage when the selection is made
-without labels.
+\cite{pan2025scminer}, the framework we study, every method is either given the true
+number of cell types or has its setting swept and keeps only the runs reproducing that
+number, with ties broken by agreement with the labels. The reported scores are
+conditional on information a user does not have. This is not specific to scMINER:
+Ullmann et al. \cite{ullmann2023overoptimistic} show that tuning against the ground
+truth inflates a method's apparent advantage, and a recent survey
+\cite{szmigiel2025benchmarking} reports that on six of sixteen datasets the common
+default does no better than a random setting. What is missing is a direct measurement of
+what happens to a specific published advantage when the selection is made without
+labels.
 
 \textbf{Main question.} When the same label-free rule chooses the setting for both methods,
 does MICA, the mutual information clustering in scMINER, produce partitions closer to the
 known cell types than a principal component and Leiden pipeline on the same genes?
 
-Our approach is to hold everything except the method fixed. Both methods receive the same
-preprocessed matrix, choose among settings yielding 2 to 20 clusters, and are selected by
-the same rule. We use a published rule, subsampling stability as specified by chooseR
+Our approach holds everything except the method fixed. Both receive the same matrix,
+choose among settings yielding 2 to 20 clusters, and are selected by the same rule. The
+main rule is a published one, subsampling stability as specified by chooseR
 \cite{pattersoncross2021chooser}, which reruns each method on 25 random 80 percent
-subsamples per candidate setting and prefers settings whose clusters survive resampling. The
-reference labels are used only afterwards, to score what the rule chose. The experiment
-covers nine of the ten datasets in the original benchmark, repeated across three seeds, with
-cost recorded.
+subsamples per candidate setting and prefers settings whose clusters survive resampling.
+Labels are used only afterwards, to score what the rule chose. The experiment covers
+nine of the ten benchmark datasets, three seeds, with cost recorded.
 
 The result is not the one we expected. MICA has the higher mean under three of the four
 rules we applied, which on its own would read as support for the published claim. But
@@ -61,12 +60,11 @@ much as the gap between the two methods. A benchmark reporting one label-free ru
 obtain either ranking.
 
 \textbf{An account of why reproducibility fails as a criterion for this method.} MICA's
-partitions are unusually reproducible under subsampling, including partitions that split a
+partitions are unusually reproducible under subsampling, including those that split a
 true cell type several ways, because its distance is computed per cell pair and does not
-move when the sample changes. Splitting is then as repeatable as recovering, and a rule that
-rewards repeatability cannot tell them apart. We state the property that produces this,
-verify it as an exact identity rather than an approximation, and use it to make the
-experiment affordable, since it lets one distance matrix serve all 25 subsamples.
+move when the sample changes. Splitting is then as repeatable as recovering, and a rule
+rewarding repeatability cannot tell them apart. We state the property behind this,
+verify it as an exact identity, and use it to make the experiment affordable.
 
 Section~\ref{sec:related} covers the closest work. Section~\ref{sec:method} defines the
 methods and the selection rules. Section~\ref{sec:design} gives the experimental design,

@@ -111,34 +111,32 @@ def main():
     # ---------- headline rule table ----------
     tabs = {r: agg(d, r) for r, _ in RULES}
     have = [(r, lab) for r, lab in RULES if len(tabs[r])]
-    body, kbody = [], []
+    body = []
     for x in present:
-        cells, kcells = [], []
+        cells = []
         for r, _ in have:
             t = tabs[r]
             for m in ("mica", "leiden_pca"):
                 sel = t[(t.ds == x) & (t.method == m)] if len(t) else None
-                cells.append(cell(sel))
-                kcells.append(kcell(sel, truth_k[x]))
-        body.append(f"{NAMES[x]} & " + " & ".join(cells) + " \\\\")
-        kbody.append(f"{NAMES[x]} ({truth_k[x]}) & " + " & ".join(kcells) + " \\\\")
-    ncol = 2 * len(have)
+                if sel is None or not len(sel):
+                    cells.append("n/a")
+                    continue
+                v = sel.iloc[0]
+                k = f"{int(v.k)}" if v.k_min == v.k_max else f"{int(v.k_min)}\\textrm{{-}}{int(v.k_max)}"
+                cells.append(f"{v.ari:.3f}\\,({k})")
+        body.append(f"{NAMES[x]} ({truth_k[x]}) & " + " & ".join(cells) + " \\\\")
     groups = " & ".join(f"\\multicolumn{{2}}{{c}}{{{lab}}}" for _, lab in have)
     cmid = "".join(f"\\cmidrule(lr){{{2 + 2 * i}-{3 + 2 * i}}}" for i in range(len(have)))
     heads = " & ".join(["MICA & Leiden"] * len(have))
     (TABLES / "a3_rules.tex").write_text(
-        "\\begin{table*}[t]\n\\centering\n\\caption{ARI of the partition each label-free rule chose, with no "
-        "reference labels used in the choice. Median over three seeds, with the range in brackets where the runs "
-        "differed by more than 0.005. Both methods saw the same input, the same candidate range of 2 to 20 "
-        "clusters and the same subsamples.}\n\\label{tab:rules}\n\\footnotesize\n\\setlength{\\tabcolsep}{5pt}\n"
-        f"\\begin{{tabular}}{{l{'cc' * len(have)}}}\n\\toprule\n & {groups} \\\\\n{cmid}\nDataset & {heads} \\\\\n"
-        "\\midrule\n" + "\n".join(body) + "\n\\bottomrule\n\\end{tabular}\n\\end{table*}\n")
-    (TABLES / "a3_clusters.tex").write_text(
-        "\\begin{table}[t]\n\\centering\n\\caption{Number of clusters each rule chose. The true number of types "
-        "is in brackets after the dataset name. A rule can reach a fair ARI with a badly wrong cluster count, "
-        "which a user would notice.}\n\\label{tab:clusters}\n\\scriptsize\n\\setlength{\\tabcolsep}{3pt}\n"
+        "\\begin{table*}[t]\n\\centering\n\\caption{ARI of the partition each label-free rule chose, with the number "
+        "of clusters it chose in brackets, and the true number of cell types after each dataset name. No reference "
+        "labels are used in the choice. Values are the median over three seeds. Both methods saw the same input, the "
+        "same candidate range of 2 to 20 clusters and the same subsamples. A rule can reach a fair ARI with a badly "
+        "wrong cluster count, which a user would notice.}\n\\label{tab:rules}\n\\footnotesize\n"
+        "\\setlength{\\tabcolsep}{4pt}\n"
         f"\\begin{{tabular}}{{l{'cc' * len(have)}}}\n\\toprule\n & {groups} \\\\\n{cmid}\nDataset (types) & "
-        f"{heads} \\\\\n\\midrule\n" + "\n".join(kbody) + "\n\\bottomrule\n\\end{tabular}\n\\end{table}\n")
+        f"{heads} \\\\\n\\midrule\n" + "\n".join(body) + "\n\\bottomrule\n\\end{tabular}\n\\end{table*}\n")
 
     # ---------- numbers for the text ----------
     for r, _ in RULES:

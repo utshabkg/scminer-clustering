@@ -1,17 +1,17 @@
 \section{Experimental Design}\label{sec:design}
 The experiment asks one question: when the same label-free rule picks the setting for
 both methods, which method's chosen partition agrees better with the reference labels?
-The comparison that answers it is a paired one. For every dataset, every rule and both
-methods, the input matrix, the gene set, the candidate range and the scoring are held
-fixed, and only the clustering method differs.
+The comparison is paired. For every dataset and rule, the input matrix, the gene set,
+the candidate range and the scoring are fixed, and only the method differs.
 
 \subsection{Data}
-We use the ten labelled datasets of the scMINER benchmark, in the processed form the
-authors released, so that differences from their reported numbers cannot come from our
-preprocessing. Table~\ref{tab:data} lists them. They span 124 to 13,605 cells and 3 to 11
-cell types, which is the range over which the published claim was made.
+We use the ten labelled datasets of the scMINER benchmark in the processed form the
+authors released, so differences from their reported numbers cannot come from our
+preprocessing. They span 124 to 13,605 cells and 3 to 11 cell types, the range over
+which the published claim was made, and are listed with their sizes, label counts and
+sparsity in Table~\ref{tab:data}.
 
-\input{tables/a3_datasets}
+
 
 Two of them carry most of the weight. PBMC14K is the only dataset whose labels are
 independent of clustering, since its populations were sorted with antibodies before
@@ -20,18 +20,16 @@ clustering the same data \cite{zeisel2015cell}, so any method resembling theirs 
 flattered. We say which is which whenever a conclusion rests on one of them.
 
 \subsection{What is held fixed}
-Both methods receive the same matrix with all genes retained. Both choose among settings
-whose full-data partition has between 2 and 20 clusters, so neither can win by searching
-a wider range. The true number of types is never supplied. For the stability rule both
-methods see the same $B = 25$ subsamples, drawn once per seed and reused across settings
-and methods, which makes the comparison paired at the level of the subsample draw.
+Both methods receive the same matrix with all genes retained, and both choose among
+settings whose full-data partition has 2 to 20 clusters, so neither can win by searching
+a wider range. The true number of types is never supplied. Both see the same $B = 25$
+subsamples within a seed, which makes the comparison paired at the level of the draw.
 
 \subsection{Use of labels}
-Labels are used in exactly two places. They score the chosen partition, after selection.
-And they define the label-informed reference row, which reproduces the published protocol
-by letting the labels pick the setting. That row is an upper bound on what each method
-could achieve, not a result a user could obtain, and it is kept visually separate in every
-table.
+Labels are used in two places only. They score the chosen partition, after selection.
+And they define the label-informed reference, which reproduces the published protocol by
+letting the labels pick the setting. That is an upper bound on what each method could
+achieve, not a result a user could obtain.
 
 \subsection{Runs and variation}
 Every stochastic comparison is repeated. The stability rule is run with three independent
@@ -51,9 +49,8 @@ because a rule can reach a respectable ARI with a badly wrong number of clusters
 user would notice the latter.
 
 \subsection{Cost}
-Cost is wall-clock time on one shared workstation, counting everything a rule needs:
-building the candidate partitions, the subsample reruns, and the scoring. For MICA we
-exclude the one-off distance matrix, which is shared across all settings and seeds, and
-report it separately. The machine has 120 CPU cores and 754 GB of memory, and every job in
-this section was capped at 8 threads. No GPU was used. We report the number of clustering
-calls a rule makes as a hardware-independent companion to the timings.
+Cost is wall-clock time on one shared workstation with 120 cores and 754 GB of memory,
+every job capped at 8 threads and no GPU used. It counts everything a rule needs: the
+candidate partitions, the subsample reruns and the scoring. MICA's one-off distance
+matrix is shared across all settings and seeds and is reported separately. We also give
+the number of clustering calls, as a hardware-independent companion to the timings.

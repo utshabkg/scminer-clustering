@@ -3,22 +3,21 @@ We first confirm that the starting point is sound, then report what each label-f
 chooses, then test why the rules disagree as much as they do.
 
 \subsection{The reproduction holds}
-On the authors' released inputs and under their own protocol, MICA reaches the published
-ARI within 0.05 on nine of ten datasets and within 0.001 on six. The exception is
-Kolodziejczyk, where the released files give 0.727 against a published 1.000, and the
-authors' own notebook also gives 0.727, so the published value appears to come from an
-input that was not released. These numbers were established in Assignment 2 and are
-unchanged. They matter here only because they license what follows: when the labels fix the
-setting, our MICA runs behave as the paper reports.
+Under the authors' own protocol, on their released inputs, MICA reaches the published
+ARI within 0.05 on nine of ten datasets and within 0.001 on six. Kolodziejczyk is the
+exception, where the released files give 0.727 against a published 1.000, as does the
+authors' own notebook. These numbers are unchanged from Assignment 2 and matter here
+only because they license what follows: when the labels fix the setting, our MICA runs
+behave as the paper reports.
 
 \input{tables/a3_rules}
 
 \subsection{MICA leads under most rules, but by amounts the rule decides}
 Table~\ref{tab:rules} reports what each method achieves when the same rule chooses its
-setting without labels. MICA has the higher mean under three of the four rules. That is the
-first thing to say, and on its own it would read as support for the published claim.
+setting without labels. MICA has the higher mean under three of the four rules, which on
+its own would read as support for the published claim.
 
-The second thing is that the rules disagree with each other more than the methods disagree
+The second is that the rules disagree with each other more than the methods disagree
 under any one rule. MICA's mean ARI ranges from 0.473 to 0.727 depending only on which rule selects its
 setting, a spread of 0.255. The baseline's ranges from 0.514 to 0.635, a spread of
 0.120. Under the rule most favourable to MICA it leads by 0.213, and under the least
@@ -28,28 +27,27 @@ a statement about the rule.
 
 \subsection{Two readings of one rule reverse the ranking}
 The clearest case is the stability rule, whose two columns are the same scores read two
-ways. The published chooseR rule keeps the finest setting that clears a reproducibility
-threshold. The second column keeps the highest-scoring setting outright. They share the
-subsamples, the candidate settings and the scores, and differ only in how settings that
-score alike are separated.
+ways: chooseR keeps the finest setting clearing a reproducibility threshold, the second
+column keeps the highest-scoring setting outright. They share the subsamples, the
+candidates and the scores, differing only in how settings that score alike are
+separated.
 
 Under the published reading MICA leads, 0.661 against 0.632. Under the second it trails,
 0.473 against 0.635. Between the two readings MICA's mean moves by 0.189 and the
 baseline's by 0.003. The baseline is nearly indifferent to the tie-break and MICA is not.
 
-Individual datasets show it more sharply. On Pollen MICA scores 0.896 under the published
-reading and 0.087 under the other, because the first keeps 18 clusters and the second
-collapses to 2. Neither is near the 11 types present. The baseline moves from 0.755 to
-0.509 on the same dataset, a smaller swing from a smaller change in count.
+Individual datasets show it more sharply. On Pollen MICA scores 0.896 under the
+published reading and 0.087 under the other, keeping 18 clusters and then collapsing to
+2, neither near the 11 types present. The baseline moves from 0.755 to 0.509 there, a
+smaller swing from a smaller change in count.
 
-\input{tables/a3_clusters}
 
-\subsection{The chosen cluster counts}
-Table~\ref{tab:clusters} shows why the scores alone understate the problem. Under the
-published stability reading MICA chooses 19 clusters on Yan, which has 8 types, 18 on
-Pollen, which has 11, and 12 on Chung, which has 4. It errs the other way on Zeisel,
-choosing 3 where there are 7. A user inspecting those partitions would see the problem at
-once, which is the argument for reporting the count beside the score.
+
+\subsection{The chosen cluster counts} The counts in Table~\ref{tab:rules} show why the
+scores alone understate the problem. Under the published stability reading MICA chooses
+19 clusters on Yan, which has 8 types, 18 on Pollen, which has 11, and 12 on Chung,
+which has 4, and errs the other way on Zeisel with 3 where there are 7. A user would see
+that at once, which is the argument for reporting the count beside the score.
 
 \begin{figure*}[t]
 \centering
@@ -108,35 +106,22 @@ and that it would not transfer to tissue with a different number of cell types. 
 baseline's default is a resolution rather than a count, and it overclusters badly on these
 small datasets, reaching 21 clusters on Zeisel.
 
-\subsection{The silhouette rule depends on where it is computed}
-A second incidental choice moves the result by a comparable amount. Scoring the silhouette
-of the same partitions in the 50 principal components rather than in MICA's own embedding
-changes the selected ARI by 0.13 on average for MICA and 0.16 for the baseline, reaching
-0.39 on Goolam and 0.48 on Usoskin. Only the space changes. The partitions, the candidates
-and the method are identical. Assignment 2 scored each method in its own space, and this is
-why the rule is now computed in one shared space for both.
+The silhouette rule carries a third such choice. Scoring the same partitions in the 50
+principal components rather than in MICA's own embedding changes the selected ARI by
+0.13 on average for MICA and 0.16 for the baseline, reaching 0.48 on Usoskin, with only
+the space changing. Appendix~\ref{app:repro} gives the per-dataset values.
 
 
-\subsection{The rule is also sensitive to the subsample draw} Repeating each rule with
-three independent seeds, which redraw the subsamples and reinitialise the clustering,
-moves the resulting ARI by 0.09 on average for both methods, and by as much as 0.46. The
-largest swings are MICA on Buettner under the second reading, from 0.474 to 0.934, and
-MICA on Klein under the published reading, from 0.501 to 0.863. The seed is not a
-property of either method or of the data. Taken with the threshold check above, three
-incidental choices inside one selection rule, the tie-break, the threshold and the
-random draw, each move the result by an amount comparable to the gap between the two
+\subsection{The rule is also sensitive to the subsample draw} Repeating each rule with three independent seeds, which redraw the subsamples and
+reinitialise the clustering, moves the resulting ARI by 0.09 on average for both methods
+and by as much as 0.46, from 0.474 to 0.934 for MICA on Buettner. Taken with the
+threshold check, three incidental choices inside one rule, its tie-break, its threshold
+and its random draw, each move the result by about as much as the gap between the two
 methods.
 
-\subsection{Cost}
-The stability rule costs 494 clusterings per dataset for MICA over 19 candidate values of
-$k$, and about 1,040 for the baseline over its resolution grid, in both cases 25 subsample
-reruns plus the full-data fit. On these datasets that is 15 to 106 seconds for MICA and 14 to 211 seconds for the
-baseline on 8 threads, excluding the mutual information distance
-matrix, which is computed once per dataset and shared by every setting and seed.
-
-That one-off cost is the larger number and falls only on MICA: 6 to 11 minutes on the two
-datasets above 2,500 cells, against seconds on the smallest. It is also what makes the rule
-affordable. Because MICA's distance between two cells does not depend on any other cell, the
-matrix is computed once and subsampled exactly rather than recomputed 25 times. Without
-that property the rule would cost roughly 25 times more for MICA, and the comparison in
-Table~\ref{tab:rules} would not have been feasible on this hardware.
+\subsection{Cost} The rule costs 494 clusterings per dataset for MICA and about 1,040
+for the baseline, which is 15 to 106 seconds and 14 to 211 seconds respectively on 8
+threads. MICA additionally needs one distance matrix per dataset, 6 to 11 minutes on the
+two datasets above 2,500 cells, shared across every setting and seed. Without the
+exactness property that matrix would be rebuilt 25 times and the rule would cost roughly
+25 times more for MICA.

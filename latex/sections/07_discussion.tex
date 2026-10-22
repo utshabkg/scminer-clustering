@@ -20,13 +20,12 @@ only to ours, and because it is measurable rather than a caution in principle.
 
 \subsection{Why it happens}
 The mechanism we can support is that MICA's partitions are too reproducible for
-reproducibility to be a useful criterion. MICA's small-data pipeline is deterministic given
-the distance matrix, and its distance is unusually stable under subsampling because it is
-computed per cell pair rather than from any population quantity. Splitting a true cell type
-into several clusters is then just as repeatable across subsamples as recovering it, so the
-score barely distinguishes the two. The baseline rebuilds its principal components and its
-neighbour graph on every subsample, which injects exactly the variability the rule is
-designed to detect.
+reproducibility to be a useful criterion. Its small-data pipeline is deterministic given
+the distance matrix, and that distance is unusually stable under subsampling because it
+is computed per cell pair rather than from any population quantity. Splitting a true
+cell type is then as repeatable as recovering it, so the score barely separates the two.
+The baseline rebuilds its principal components and neighbour graph on every subsample,
+injecting the variability the rule is designed to detect.
 
 We tested this rather than assuming it, with mixed results. The first prediction holds:
 the span of cluster counts among settings that tie with the best is wider for MICA, 7.3
@@ -40,34 +39,25 @@ Separating the two needs a dataset where MICA's graph mode and small-data mode c
 run, which is Section~\ref{sec:conclusion}'s first piece of remaining work.
 
 \subsection{What it changes for someone using these tools}
-Three practical consequences follow, each bounded by what we tested.
-
-A stability rule should not be used on its own to choose the number of clusters for MICA on
-datasets of this size. It will return a defensible-looking score for a partition with
-several times too many clusters. Reporting the chosen cluster count alongside the score
-makes this visible immediately, which is why we show it.
-
-The gap between a method's benchmark score and what a user obtains is not a constant that
-can be quoted once. It depends on the selection rule, and on these datasets the spread
-across rules is larger than the gap between the two methods under any single rule. A
-benchmark that fixes settings with the labels is not measuring a quantity that transfers to
-practice.
-
-Finally, MICA's small-data mode returns four clusters when run unmodified, whatever the
-dataset. Nine of the ten benchmark datasets fall in that mode. Any comparison that does not
-say how the number of clusters was obtained is, for those datasets, reporting a number that
-came from outside the method.
+Three practical consequences follow, each bounded by what we tested. A stability rule
+should not be used on its own to choose the number of clusters for MICA on datasets of
+this size, because it returns a defensible-looking score for a partition with several
+times too many clusters. Reporting the chosen count beside the score makes that visible
+at once.  The gap between a benchmark score and what a user obtains is not a constant
+that can be quoted once. It depends on the rule, and here the spread across rules
+exceeds the gap between the methods under any one of them. Finally, MICA's small-data
+mode returns four clusters when run unmodified, whatever the dataset, and nine of the
+ten benchmark datasets fall in that mode, so any comparison that does not say how the
+cluster count was obtained is reporting a number that came from outside the method.
 
 \subsection{Limitations}
-The comparison covers one clustering method against one baseline, under rules we chose,
-on ten datasets from a single published benchmark. Nine of the ten are smaller than the
-data chooseR was demonstrated on, and the tenth is the only one in MICA's graph mode, so
-mode and size are confounded in our design and we cannot separate them. Three of the
-datasets carry labels derived by clustering the same data, which flatters methods that
-resemble the original pipeline. We report an observed range over three seeds rather than a
-confidence interval, because three runs do not support one. The bootstrap inside the rule is
-a percentile bootstrap where chooseR specifies BCa, which affects the threshold and in
-principle the choice, although we saw no case where it did. Our implementation of the rule
-reproduces chooseR's procedure from its description rather than running the authors' R code,
-so a discrepancy in our reading of it would propagate to every result in
-Table~\ref{tab:rules}.
+The comparison covers one method against one baseline, under rules we chose, on datasets
+from a single benchmark. Nine of the ten are smaller than the data chooseR was
+demonstrated on, and the tenth is the only one in MICA's graph mode, so mode and size
+are confounded and we cannot separate them. Three datasets carry labels derived by
+clustering the same data, which flatters methods resembling the original pipeline. We
+report an observed range over three seeds rather than a confidence interval, because
+three runs do not support one. Our implementation follows chooseR's published
+description rather than running the authors' R code, and since the threshold check shows
+the choice is sensitive at the level a bootstrap difference could produce, a discrepancy
+in our reading would propagate to every result in Table~\ref{tab:rules}.
