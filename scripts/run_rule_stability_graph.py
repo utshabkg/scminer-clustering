@@ -46,7 +46,7 @@ def full_distance(X):
     t0 = time.time()
     D = mi.distance_matrix(X, "ge")
     np.save(cache, D)
-    print(f"  full MI distance for {len(X)} cells in {time.time() - t0 / 60:.0f} min", flush=True)
+    print(f"  full MI distance for {len(X)} cells in {(time.time() - t0) / 60:.0f} min", flush=True)
     return np.load(cache, mmap_mode="r")
 
 
