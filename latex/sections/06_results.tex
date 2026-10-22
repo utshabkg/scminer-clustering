@@ -86,6 +86,14 @@ the baseline, but across nine datasets those are not meaningfully different and 
 treat the prediction as confirmed. The direct measurement of ambiguity above does not rest
 on it.
 
+
+A second check points the same way. The threshold the rule applies is the largest lower
+bootstrap bound across its settings. Relaxing that threshold by at most 0.02 changes the
+chosen cluster count in 14 of 18 dataset and method pairs, 8 of 9 for MICA and 6 of 9
+for the baseline. That is the size of difference the choice of bootstrap could itself
+produce, so the selection rests on a quantity our implementation can only estimate. We
+had assumed this detail would not matter, and it does.
+
 \subsection{The rule most favourable to MICA is the one tied to this benchmark}
 MICA's best result comes from its own shipped default. Its small-data mode returns four
 clusters when no setting is given, on any dataset of any size. That rule gives a mean ARI

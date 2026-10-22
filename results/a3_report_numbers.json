@@ -137,14 +137,14 @@
     "chung": 0.4737,
     "goolam": 0.5927,
     "klein": 0.682,
-    "kolodziejczyk": 0.7245,
+    "kolodziejczyk": 0.7224,
     "pollen": 0.898,
     "usoskin": 0.8179,
     "yan": 0.4962,
     "zeisel": 0.5179
    }
   },
-  "mica_mean": 0.6819,
+  "mica_mean": 0.6816,
   "leiden_mean": 0.6324,
   "mica_wins": 5,
   "n_datasets": 9,
@@ -166,7 +166,7 @@
     "chung": 11.0,
     "goolam": 6.0,
     "klein": 2.5,
-    "kolodziejczyk": 4.0,
+    "kolodziejczyk": 5.0,
     "pollen": 17.0,
     "usoskin": 3.0,
     "yan": 19.0,
@@ -240,7 +240,7 @@
  "mechanism": {
   "tie_window": 0.01,
   "mean_share_tied": {
-   "leiden_pca": 0.221,
+   "leiden_pca": 0.222,
    "mica": 0.375
   },
   "mean_k_span_among_tied": {
@@ -249,15 +249,15 @@
   },
   "mean_spread": {
    "leiden_pca": 0.527,
-   "mica": 0.382
+   "mica": 0.384
   },
   "mean_spearman_stability_ari": {
    "leiden_pca": 0.499,
-   "mica": 0.645
+   "mica": 0.646
   },
   "spearman_spread_vs_excess_clusters": {
    "leiden_pca": -0.21,
-   "mica": -0.008
+   "mica": -0.033
   },
   "n_datasets": 9,
   "table": [
@@ -376,13 +376,13 @@
    {
     "ds": "kolodziejczyk",
     "method": "leiden_pca",
-    "n_settings": 80,
-    "share_tied": 0.212,
+    "n_settings": 120,
+    "share_tied": 0.225,
     "k_tied_min": 4,
     "k_tied_max": 7,
     "k_tied_span": 3,
     "spread": 0.206,
-    "spearman_stability_ari": 0.936,
+    "spearman_stability_ari": 0.935,
     "chosen_k": 4.0,
     "true_k": 3,
     "excess_clusters": 1.0
@@ -390,16 +390,16 @@
    {
     "ds": "kolodziejczyk",
     "method": "mica",
-    "n_settings": 38,
+    "n_settings": 57,
     "share_tied": 0.211,
     "k_tied_min": 2,
     "k_tied_max": 5,
     "k_tied_span": 3,
-    "spread": 0.31,
-    "spearman_stability_ari": 0.937,
-    "chosen_k": 4.0,
+    "spread": 0.331,
+    "spearman_stability_ari": 0.943,
+    "chosen_k": 5.0,
     "true_k": 3,
-    "excess_clusters": 1.0
+    "excess_clusters": 2.0
    },
    {
     "ds": "pollen",
@@ -528,6 +528,163 @@
   "mean_ari_true_k_outside": 0.579,
   "n_near": 6,
   "n_far": 3
+ },
+ "threshold_sensitivity": {
+  "shifts": [
+   -0.01,
+   -0.02
+  ],
+  "changed_of_total": "14 of 18",
+  "by_method": {
+   "leiden_pca": 6,
+   "mica": 8
+  },
+  "table": [
+   {
+    "ds": "buettner",
+    "method": "leiden_pca",
+    "chosen_k": 3,
+    "minus_0.01": 3,
+    "minus_0.02": 3,
+    "changed": false
+   },
+   {
+    "ds": "buettner",
+    "method": "mica",
+    "chosen_k": 3,
+    "minus_0.01": 4,
+    "minus_0.02": 4,
+    "changed": true
+   },
+   {
+    "ds": "chung",
+    "method": "leiden_pca",
+    "chosen_k": 3,
+    "minus_0.01": 7,
+    "minus_0.02": 7,
+    "changed": true
+   },
+   {
+    "ds": "chung",
+    "method": "mica",
+    "chosen_k": 11,
+    "minus_0.01": 12,
+    "minus_0.02": 12,
+    "changed": true
+   },
+   {
+    "ds": "goolam",
+    "method": "leiden_pca",
+    "chosen_k": 2,
+    "minus_0.01": 3,
+    "minus_0.02": 3,
+    "changed": true
+   },
+   {
+    "ds": "goolam",
+    "method": "mica",
+    "chosen_k": 6,
+    "minus_0.01": 8,
+    "minus_0.02": 8,
+    "changed": true
+   },
+   {
+    "ds": "klein",
+    "method": "leiden_pca",
+    "chosen_k": 4,
+    "minus_0.01": 5,
+    "minus_0.02": 5,
+    "changed": true
+   },
+   {
+    "ds": "klein",
+    "method": "mica",
+    "chosen_k": 2,
+    "minus_0.01": 6,
+    "minus_0.02": 7,
+    "changed": true
+   },
+   {
+    "ds": "kolodziejczyk",
+    "method": "leiden_pca",
+    "chosen_k": 4,
+    "minus_0.01": 6,
+    "minus_0.02": 7,
+    "changed": true
+   },
+   {
+    "ds": "kolodziejczyk",
+    "method": "mica",
+    "chosen_k": 5,
+    "minus_0.01": 5,
+    "minus_0.02": 8,
+    "changed": true
+   },
+   {
+    "ds": "pollen",
+    "method": "leiden_pca",
+    "chosen_k": 10,
+    "minus_0.01": 11,
+    "minus_0.02": 11,
+    "changed": true
+   },
+   {
+    "ds": "pollen",
+    "method": "mica",
+    "chosen_k": 15,
+    "minus_0.01": 15,
+    "minus_0.02": 20,
+    "changed": true
+   },
+   {
+    "ds": "usoskin",
+    "method": "leiden_pca",
+    "chosen_k": 6,
+    "minus_0.01": 6,
+    "minus_0.02": 6,
+    "changed": false
+   },
+   {
+    "ds": "usoskin",
+    "method": "mica",
+    "chosen_k": 3,
+    "minus_0.01": 3,
+    "minus_0.02": 3,
+    "changed": false
+   },
+   {
+    "ds": "yan",
+    "method": "leiden_pca",
+    "chosen_k": 4,
+    "minus_0.01": 5,
+    "minus_0.02": 5,
+    "changed": true
+   },
+   {
+    "ds": "yan",
+    "method": "mica",
+    "chosen_k": 19,
+    "minus_0.01": 19,
+    "minus_0.02": 20,
+    "changed": true
+   },
+   {
+    "ds": "zeisel",
+    "method": "leiden_pca",
+    "chosen_k": 9,
+    "minus_0.01": 9,
+    "minus_0.02": 9,
+    "changed": false
+   },
+   {
+    "ds": "zeisel",
+    "method": "mica",
+    "chosen_k": 3,
+    "minus_0.01": 7,
+    "minus_0.02": 7,
+    "changed": true
+   }
+  ]
  },
  "true_k": {
   "yan": 8,

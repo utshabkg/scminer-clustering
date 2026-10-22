@@ -208,6 +208,37 @@ def main():
         print(f"MICA default k=4: ARI {nums['mica_default']['mean_ari_true_k_3_to_5']} where the true "
               f"count is 3 to 5, {nums['mica_default']['mean_ari_true_k_outside']} outside")
 
+    # ---------- how sensitive is the choice to the threshold itself? ----------
+    # Relaxing the threshold admits more settings, so the finest choice can only move up.
+    # Only this direction is meaningful: raising it can empty the passing set entirely,
+    # which says nothing about the rule. The shifts are the size of the difference the
+    # bootstrap flavour could plausibly make to the threshold.
+    curve0 = d[(d.k_setting == "stability_curve") & d.ci_low.notna()]
+    def finest_at(g, bump):
+        u = g[g.n_clusters >= 2]
+        passing = u[u.stability >= u.ci_low.max() + bump]
+        if not len(passing):
+            return None
+        return int(passing.sort_values(["n_clusters", "stability"], ascending=[False, False]).iloc[0].n_clusters)
+    srows = []
+    for (ds_, m), g in curve0.groupby(["ds", "method"]):
+        g = g.groupby("n_clusters", as_index=False).agg({"stability": "median", "ci_low": "median"})
+        base = finest_at(g, 0.0)
+        shifted = {f"minus_{abs(b):.2f}": finest_at(g, b) for b in (-0.01, -0.02)}
+        srows.append({"ds": ds_, "method": m, "chosen_k": base, **shifted,
+                      "changed": any(v is not None and v != base for v in shifted.values())})
+    sens = pd.DataFrame(srows)
+    if len(sens):
+        nums["threshold_sensitivity"] = {
+            "shifts": [-0.01, -0.02],
+            "changed_of_total": f"{int(sens.changed.sum())} of {len(sens)}",
+            "by_method": sens.groupby("method").changed.sum().to_dict(),
+            "table": sens.to_dict(orient="records")}
+        sens.to_csv(RESULTS / "a3_threshold_sensitivity.csv", index=False)
+        print(f"threshold sensitivity: the chosen cluster count changes in "
+              f"{nums['threshold_sensitivity']['changed_of_total']} cases when the threshold is "
+              f"relaxed by at most 0.02")
+
     nums["true_k"] = truth_k
     (RESULTS / "a3_report_numbers.json").write_text(json.dumps(nums, indent=1, default=str))
 
