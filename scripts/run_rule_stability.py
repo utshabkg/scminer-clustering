@@ -68,7 +68,7 @@ def leiden_partitions(adata, cells, seed=SEED):
     return emb, out
 
 
-def run_method(name, adata, D, make_partitions, n):
+def run_method(name, adata, D, make_partitions, n, seed=SEED):
     """The stability rule for one method: full-data partitions, then B subsample reruns."""
     t0 = time.time()
     allc = np.arange(n)
@@ -76,9 +76,9 @@ def run_method(name, adata, D, make_partitions, n):
     # Only settings whose full-data partition has 2 to 20 clusters, so both methods are
     # judged over the same range of cluster counts.
     settings = [s for s, lab in full.items() if 2 <= len(np.unique(lab)) <= 20]
-    ref = stability.reference_cells(n, seed=SEED)
+    ref = stability.reference_cells(n, seed=seed)
     co = {s: stability.CoClustering(ref) for s in settings}
-    subs = stability.subsamples(n, seed=SEED)
+    subs = stability.subsamples(n, seed=seed)
     for i, cells in enumerate(subs, 1):
         _, parts = make_partitions(cells)
         for s in settings:
@@ -87,7 +87,7 @@ def run_method(name, adata, D, make_partitions, n):
     scores = {}
     for s in settings:
         lab_ref = np.asarray(full[s])[ref]
-        scores[s] = stability.score_setting(co[s].distance(), lab_ref, seed=SEED)
+        scores[s] = stability.score_setting(co[s].distance(), lab_ref, seed=seed)
     picks = stability.pick(scores)
     secs, nc = round(time.time() - t0, 1), len(settings) * (len(subs) + 1)
     for v in picks.values():
@@ -95,10 +95,12 @@ def run_method(name, adata, D, make_partitions, n):
     return picks, full, scores
 
 
-def main(name, n_hvg=None, flavor="seurat"):
+def main(name, n_hvg=None, flavor="seurat", seed=SEED):
     cluster.N_HVG = int(n_hvg) if n_hvg else None
     cluster.HVG_FLAVOR = flavor
+    seed = int(seed)
     tag = f"{name}" + (f"_hvg{n_hvg}_{flavor}" if n_hvg else "")
+    exp_tag = tag + (f"_seed{seed}" if seed != SEED else "")
     adata = ad.read_h5ad(PROCESSED / f"{name}.h5ad")
     truth = adata.obs["label"].to_numpy()
     n = adata.n_obs
@@ -108,12 +110,12 @@ def main(name, n_hvg=None, flavor="seurat"):
     D = mica_distance(tag, X)
 
     rows = []
-    for method, maker in [("mica", lambda c: mica_partitions(D, c)),
-                          ("leiden_pca", lambda c: leiden_partitions(adata, c))]:
+    for method, maker in [("mica", lambda c: mica_partitions(D, c, seed)),
+                          ("leiden_pca", lambda c: leiden_partitions(adata, c, seed))]:
         print(f"  {method}: stability rule")
-        picks, full, scores = run_method(name, adata, D, maker, n)
+        picks, full, scores = run_method(name, adata, D, maker, n, seed)
         for rule, info in picks.items():
-            rec = {"dataset": name, "method": method, "k_setting": rule, "seed": SEED,
+            rec = {"dataset": name, "method": method, "k_setting": rule, "seed": seed,
                    "genes": int(n_hvg) if n_hvg else "all", "hvg_flavor": flavor if n_hvg else "",
                    "b_subsamples": stability.B_SUBSAMPLES, "fraction": stability.FRACTION, **info}
             rec.update(metrics.score(truth, full[info["chosen_setting"]]))
@@ -123,16 +125,17 @@ def main(name, n_hvg=None, flavor="seurat"):
         # every setting's stability score, so the choice can be inspected
         for s, sc_ in scores.items():
             rows.append({"dataset": name, "method": method, "k_setting": "stability_curve", "setting": s,
-                         "genes": int(n_hvg) if n_hvg else "all", **sc_,
+                         "seed": seed, "genes": int(n_hvg) if n_hvg else "all", **sc_,
                          "ari": metrics.score(truth, full[s])["ari"]})
-    d = metrics.write(f"rule_stability_{tag}", rows,
+    d = metrics.write(f"rule_stability_{exp_tag}", rows,
                       {"dataset": name, "rule": "chooseR-style subsampling stability", "n_hvg": n_hvg,
                        "b_subsamples": stability.B_SUBSAMPLES, "fraction": stability.FRACTION,
-                       "k_range": [2, 20], "resolutions": RESOLUTIONS.tolist(), "seed": SEED})
+                       "k_range": [2, 20], "resolutions": RESOLUTIONS.tolist(), "seed": seed})
     print(f"wrote {d / 'metrics.csv'}")
     return 0
 
 
 if __name__ == "__main__":
     sys.exit(main(sys.argv[1], sys.argv[2] if len(sys.argv) > 2 else None,
-                  sys.argv[3] if len(sys.argv) > 3 else "seurat"))
+                  sys.argv[3] if len(sys.argv) > 3 else "seurat",
+                  sys.argv[4] if len(sys.argv) > 4 else SEED))

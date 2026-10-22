@@ -150,28 +150,39 @@ def main():
         if len(kp):
             nums.setdefault(r, {})["chosen_k"] = kp.round(1).to_dict()
         nums.setdefault(r, {})["seconds_median"] = t.groupby("method").seconds.median().round(1).to_dict()
-    # ---------- mechanism: does the spread of stability scores predict overclustering? ----------
+    # ---------- mechanism: can the rule tell the settings apart at all? ----------
     from scipy.stats import spearmanr
-    curve_all = d[d.k_setting == "stability_curve"]
-    spread = curve_all.groupby(["ds", "method"]).stability.agg(lambda v: v.max() - v.min()).rename("spread")
-    rho_ari = curve_all.groupby(["ds", "method"]).apply(
-        lambda g: spearmanr(g.stability, g.ari).correlation if len(g.dropna(subset=["stability", "ari"])) > 4 else np.nan
-    ).rename("spearman_stability_ari")
+    curve_all = d[d.k_setting == "stability_curve"].dropna(subset=["stability"])
+    TIE = 0.01  # two settings this close are not meaningfully different
+    mrows = []
+    for (ds_, m), g in curve_all.groupby(["ds", "method"]):
+        tied = g[g.stability >= g.stability.max() - TIE]
+        rho = spearmanr(g.stability, g.ari).correlation if len(g.dropna(subset=["ari"])) > 4 else np.nan
+        mrows.append({"ds": ds_, "method": m, "n_settings": len(g),
+                      "share_tied": round(len(tied) / len(g), 3),
+                      "k_tied_min": int(tied.n_clusters.min()), "k_tied_max": int(tied.n_clusters.max()),
+                      "k_tied_span": int(tied.n_clusters.max() - tied.n_clusters.min()),
+                      "spread": round(float(g.stability.max() - g.stability.min()), 3),
+                      "spearman_stability_ari": round(float(rho), 3) if rho == rho else None})
+    mech = pd.DataFrame(mrows)
     chosen = d[d.k_setting == "stability_finest"].groupby(["ds", "method"]).n_clusters.median().rename("chosen_k")
-    mech = pd.concat([spread, rho_ari, chosen], axis=1).reset_index().dropna(subset=["spread", "chosen_k"])
+    mech = mech.merge(chosen.reset_index(), on=["ds", "method"], how="left")
     mech["true_k"] = mech.ds.map(truth_k)
     mech["excess_clusters"] = mech.chosen_k - mech.true_k
     nums["mechanism"] = {
-        "per_method_mean_spread": mech.groupby("method").spread.mean().round(3).to_dict(),
-        "per_method_mean_spearman_stability_ari": mech.groupby("method").spearman_stability_ari.mean().round(3).to_dict(),
+        "tie_window": TIE,
+        "mean_share_tied": mech.groupby("method").share_tied.mean().round(3).to_dict(),
+        "mean_k_span_among_tied": mech.groupby("method").k_tied_span.mean().round(1).to_dict(),
+        "mean_spread": mech.groupby("method").spread.mean().round(3).to_dict(),
+        "mean_spearman_stability_ari": mech.groupby("method").spearman_stability_ari.mean().round(3).to_dict(),
         "spearman_spread_vs_excess_clusters": {
             m: round(float(spearmanr(g.spread, g.excess_clusters).correlation), 3)
-            for m, g in mech.groupby("method") if len(g) > 3},
+            for m, g in mech.dropna(subset=["excess_clusters"]).groupby("method") if len(g) > 3},
         "n_datasets": int(mech.ds.nunique()),
-        "table": mech.round(3).to_dict(orient="records")}
-    mech.round(3).to_csv(RESULTS / "a3_mechanism.csv", index=False)
-    print("mechanism: mean stability spread " + str(nums["mechanism"]["per_method_mean_spread"]))
-    print("mechanism: spearman(spread, excess clusters) " + str(nums["mechanism"]["spearman_spread_vs_excess_clusters"]))
+        "table": mech.to_dict(orient="records")}
+    mech.to_csv(RESULTS / "a3_mechanism.csv", index=False)
+    print("mechanism: share of settings tied with the best " + str(nums["mechanism"]["mean_share_tied"]))
+    print("mechanism: mean span of cluster counts among tied settings " + str(nums["mechanism"]["mean_k_span_among_tied"]))
 
     nums["true_k"] = truth_k
     (RESULTS / "a3_report_numbers.json").write_text(json.dumps(nums, indent=1, default=str))
