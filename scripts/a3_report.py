@@ -103,10 +103,11 @@ def main():
 
     # ---------- headline rule table ----------
     tabs = {r: agg(d, r) for r, _ in RULES}
+    have = [(r, lab) for r, lab in RULES if len(tabs[r])]
     body, kbody = [], []
     for x in present:
         cells, kcells = [], []
-        for r, _ in RULES:
+        for r, _ in have:
             t = tabs[r]
             for m in ("mica", "leiden_pca"):
                 sel = t[(t.ds == x) & (t.method == m)] if len(t) else None
@@ -114,7 +115,6 @@ def main():
                 kcells.append(kcell(sel, truth_k[x]))
         body.append(f"{NAMES[x]} & " + " & ".join(cells) + " \\\\")
         kbody.append(f"{NAMES[x]} ({truth_k[x]}) & " + " & ".join(kcells) + " \\\\")
-    have = [(r, lab) for r, lab in RULES if len(tabs[r])]
     ncol = 2 * len(have)
     groups = " & ".join(f"\\multicolumn{{2}}{{c}}{{{lab}}}" for _, lab in have)
     cmid = "".join(f"\\cmidrule(lr){{{2 + 2 * i}-{3 + 2 * i}}}" for i in range(len(have)))

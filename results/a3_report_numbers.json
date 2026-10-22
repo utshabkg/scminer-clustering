@@ -5,6 +5,7 @@
     "buettner": 0.2321,
     "chung": 0.1295,
     "goolam": 0.4288,
+    "klein": 0.9735,
     "kolodziejczyk": 0.8378,
     "pollen": 0.7546,
     "usoskin": 0.633,
@@ -14,22 +15,24 @@
     "buettner": 0.9339,
     "chung": 0.4329,
     "goolam": 0.5973,
+    "klein": 0.5007,
     "kolodziejczyk": 0.7265,
     "pollen": 0.8961,
     "usoskin": 0.8179,
     "yan": 0.4962
    }
   },
-  "mica_mean": 0.7001,
-  "leiden_mean": 0.5412,
+  "mica_mean": 0.6752,
+  "leiden_mean": 0.5952,
   "mica_wins": 5,
-  "n_datasets": 7,
-  "median_gap": 0.1686,
+  "n_datasets": 8,
+  "median_gap": 0.155,
   "chosen_k": {
    "leiden_pca": {
     "buettner": 3.0,
     "chung": 3.0,
     "goolam": 3.0,
+    "klein": 4.0,
     "kolodziejczyk": 4.0,
     "pollen": 7.0,
     "usoskin": 6.0,
@@ -39,6 +42,7 @@
     "buettner": 3.0,
     "chung": 12.0,
     "goolam": 6.0,
+    "klein": 2.0,
     "kolodziejczyk": 3.0,
     "pollen": 18.0,
     "usoskin": 3.0,
@@ -46,8 +50,8 @@
    }
   },
   "seconds_median": {
-   "leiden_pca": 16.7,
-   "mica": 18.9
+   "leiden_pca": 17.4,
+   "mica": 19.9
   }
  },
  "stability_most": {
@@ -56,6 +60,7 @@
     "buettner": 0.2321,
     "chung": 0.1295,
     "goolam": 0.6189,
+    "klein": 0.859,
     "kolodziejczyk": 0.8378,
     "pollen": 0.5091,
     "usoskin": 0.633,
@@ -65,22 +70,24 @@
     "buettner": 0.4744,
     "chung": 0.1005,
     "goolam": 0.6299,
+    "klein": 0.5007,
     "kolodziejczyk": 0.63,
     "pollen": 0.0869,
     "usoskin": 0.8179,
     "yan": 0.4965
    }
   },
-  "mica_mean": 0.4623,
-  "leiden_mean": 0.5436,
+  "mica_mean": 0.4671,
+  "leiden_mean": 0.5831,
   "mica_wins": 3,
-  "n_datasets": 7,
-  "median_gap": -0.029,
+  "n_datasets": 8,
+  "median_gap": -0.1184,
   "chosen_k": {
    "leiden_pca": {
     "buettner": 3.0,
     "chung": 3.0,
     "goolam": 2.0,
+    "klein": 3.0,
     "kolodziejczyk": 4.0,
     "pollen": 5.0,
     "usoskin": 6.0,
@@ -90,6 +97,7 @@
     "buettner": 2.0,
     "chung": 2.0,
     "goolam": 2.0,
+    "klein": 2.0,
     "kolodziejczyk": 2.0,
     "pollen": 2.0,
     "usoskin": 3.0,
@@ -97,33 +105,33 @@
    }
   },
   "seconds_median": {
-   "leiden_pca": 16.7,
-   "mica": 18.9
+   "leiden_pca": 17.4,
+   "mica": 19.9
   }
  },
  "mechanism": {
   "tie_window": 0.01,
   "mean_share_tied": {
-   "leiden_pca": 0.305,
-   "mica": 0.398
+   "leiden_pca": 0.273,
+   "mica": 0.382
   },
   "mean_k_span_among_tied": {
-   "leiden_pca": 2.7,
-   "mica": 7.3
+   "leiden_pca": 2.5,
+   "mica": 6.9
   },
   "mean_spread": {
-   "leiden_pca": 0.559,
-   "mica": 0.339
+   "leiden_pca": 0.537,
+   "mica": 0.348
   },
   "mean_spearman_stability_ari": {
-   "leiden_pca": 0.478,
-   "mica": 0.652
+   "leiden_pca": 0.499,
+   "mica": 0.686
   },
   "spearman_spread_vs_excess_clusters": {
-   "leiden_pca": -0.162,
-   "mica": -0.703
+   "leiden_pca": -0.244,
+   "mica": -0.743
   },
-  "n_datasets": 7,
+  "n_datasets": 8,
   "table": [
    {
     "ds": "buettner",
@@ -208,6 +216,34 @@
     "chosen_k": 6.0,
     "true_k": 5,
     "excess_clusters": 1.0
+   },
+   {
+    "ds": "klein",
+    "method": "leiden_pca",
+    "n_settings": 40,
+    "share_tied": 0.05,
+    "k_tied_min": 3,
+    "k_tied_max": 4,
+    "k_tied_span": 1,
+    "spread": 0.383,
+    "spearman_stability_ari": 0.648,
+    "chosen_k": 4.0,
+    "true_k": 4,
+    "excess_clusters": 0.0
+   },
+   {
+    "ds": "klein",
+    "method": "mica",
+    "n_settings": 19,
+    "share_tied": 0.263,
+    "k_tied_min": 2,
+    "k_tied_max": 6,
+    "k_tied_span": 4,
+    "spread": 0.412,
+    "spearman_stability_ari": 0.923,
+    "chosen_k": 2.0,
+    "true_k": 4,
+    "excess_clusters": -2.0
    },
    {
     "ds": "kolodziejczyk",
@@ -330,6 +366,7 @@
   "pollen": 11,
   "chung": 4,
   "usoskin": 4,
-  "kolodziejczyk": 3
+  "kolodziejczyk": 3,
+  "klein": 4
  }
 }

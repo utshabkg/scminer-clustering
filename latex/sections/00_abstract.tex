@@ -1,7 +1,26 @@
 \begin{abstract}
-scMINER reports that its mutual information clustering, MICA, beats standard single-cell pipelines, but its benchmark lets the reference labels pick every method's setting. We now ask one question: does MICA still win when each method must choose its own clustering without labels? On the authors' released inputs we reproduce MICA's published scores on 9 of 10 datasets. Given all genes and label-picked settings, Leiden on principal components beats MICA on PBMC14K and Zeisel, while MICA leads on seven of the other eight. Without labels the ranking can flip, mostly through how many clusters each rule picks. On Zeisel, Leiden at its default resolution splits 7 types into 21 clusters, while MICA stays near 10. For scaling, we shortlist each cell's likely neighbors by correlation and compute the exact MICA distance only for that shortlist. On 13,605 cells this finds as many true neighbors as MICA's own search, checked by brute force, and runs 6.2 times faster.
+Benchmarks for single-cell clustering commonly fix each method's setting using the
+reference labels, either by supplying the true number of cell types or by keeping the run
+that reproduces it. The scores that result are conditional on information a user does not
+have. We ask what happens to one such published advantage, that of the mutual information
+clustering MICA in scMINER over a principal component and Leiden pipeline, when the same
+label-free rule chooses the setting for both methods. Applying subsampling stability as
+specified by chooseR to nine datasets, with 25 subsamples per candidate setting and three
+seeds, we find that the answer depends on the rule and not on the data. Read as its authors
+specify, the rule favours MICA, which leads on five of eight datasets with a mean adjusted
+Rand index of 0.675 against 0.595. Read with a different tie-break applied to the same
+scores, it favours the baseline, 0.583 against 0.467. MICA's mean moves by 0.21 between the
+two readings and the baseline's by 0.01. The cause is measurable: among settings the rule
+treats as equivalent, the span of cluster counts averages 6.9 for MICA and 2.5 for the
+baseline, and on one dataset the rule cannot distinguish 3 clusters from 19. MICA's
+partitions are too reproducible for reproducibility to discriminate, because its distance is
+computed per cell pair and does not move when the sample changes, so splitting a true type
+survives resampling as readily as recovering it. On these datasets the uncertainty from the
+choice of selection rule exceeds the difference between the two methods under any single
+rule. The PBMC14K run in MICA's graph mode and a transfer rule remain to be completed.
 \end{abstract}
 
 \begin{IEEEkeywords}
-Single-cell RNA sequencing, mutual information clustering, label-free model selection, nearest neighbor graphs, cell-type annotation
+Single-cell RNA sequencing, mutual information clustering, label-free model selection,
+cluster number selection, benchmark design
 \end{IEEEkeywords}
