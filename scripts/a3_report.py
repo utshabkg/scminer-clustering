@@ -349,7 +349,9 @@ def main():
             axes[0].legend(fontsize=5.5, frameon=False, loc="lower left", ncol=2, columnspacing=0.8,
                            handlelength=1.5, labelspacing=0.2)
             fig.tight_layout(pad=0.3)
-            fig.savefig(FIGS / "a3_stability_curve.pdf")
+            # No creation date, so regenerating an unchanged figure leaves the file
+            # byte-identical and the repository clean.
+            fig.savefig(FIGS / "a3_stability_curve.pdf", metadata={"CreationDate": None})
             fig.savefig(FIGS / "a3_stability_curve.png", dpi=200)
             print("wrote the stability curve figure")
 
