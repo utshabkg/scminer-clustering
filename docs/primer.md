@@ -18,8 +18,8 @@ much each gene is switched on. The result is a table:
 
 Two properties of this table drive everything else.
 
-**It is wide.** Zeisel has 2,903 cells and 14,890 genes, so there are about five times more
-variables than observations. Most classical statistics assumes the opposite.
+**It is wide.** The scMINER authors' released Zeisel input has 2,903 cells and 14,890 genes,
+so there are about five times more variables than observations. Most classical statistics assumes the opposite.
 
 **It is mostly zeros.** In PBMC14K about 94 percent of the entries are zero. A zero can mean
 the gene is genuinely off in that cell, or that it was on but the experiment missed it. That
@@ -36,8 +36,10 @@ This is the preprocessing, in `src/scminer_clust/preprocess.py`. Four steps.
 1. **Quality control.** Drop cells that look broken. We compute each cell's total count and
    number of detected genes, take logs, and drop a cell if either value is more than 4 median
    absolute deviations from the median. A median absolute deviation is a spread measure that is
-   not thrown off by extreme values, which suits this data. On Zeisel this removes 18 of 3,005
-   cells, all with very few detected genes.
+   not thrown off by extreme values, which suits this data. On our own Zeisel build, which
+   starts from the 3,005 cells of the original study rather than the authors' processed file,
+   this removes 18 cells, all with very few detected genes. The two builds differ, which is
+   why the results in the report use the authors' input throughout.
 2. **Normalization.** Rescale every cell to the same total, one million counts, which is called
    **counts per million** or CPM. Now a value means a share of that cell's output rather than
    a raw amount.

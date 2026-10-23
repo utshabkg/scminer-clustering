@@ -65,7 +65,8 @@ is used whenever MICA's own code runs. MICA is the released version at commit
 
 \textbf{Running the experiment.} The stability rule for the nine small-data datasets is
 \texttt{scripts/run\_rules\_small.sh}, which calls
-\texttt{scripts/run\_rule\_stability.py} once per dataset and seed. PBMC14K needs MICA's
+\texttt{scripts/run\_rule\_stability.py} once per dataset at seed 0, with
+\texttt{scripts/run\_rules\_repeats.sh} supplying seeds 1 and 2. PBMC14K needs MICA's
 graph mode and runs through \texttt{scripts/run\_rule\_stability\_graph.py}, which shells
 out to the legacy environment for the node2vec step. The mode against size comparison of
 Section~\ref{sec:modesize} is \texttt{scripts/run\_rule\_mode\_size.py}, which draws the

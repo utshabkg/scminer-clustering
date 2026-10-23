@@ -57,18 +57,18 @@ There are 55 tasks: 39 for Utshab and 8 each for Laraib and Rhea. Three of them 
 |----|------|-------|--------|-----------|-----|-----------|--------|
 | U-1 | Fix the main software environment so the GPUs are visible | `envs/scminer.yml` | `envs/scminer.lock.yml` | PyTorch reports the GPUs | Oct 7 | M1 | `[x]` |
 | U-2 | Install the authors' MICA code | their GitHub repo | `envs/mica-legacy.lock.yml` | `mica -h` runs | Oct 7 | M1 | `[x]` |
-| U-3 | Repo scaffolding: code package, run scripts, configs, results folders | plan | `src/`, `scripts/`, `configs/` | a test run writes a results folder | Oct 7 | M1 | `[x]` |
+| U-3 | Repo scaffolding: code package, run scripts, results folders | plan | `src/`, `scripts/`, `results/` | a test run writes a results folder | Oct 7 | M1 | `[x]` |
 | U-4 | Add Laraib and Rhea as repo collaborators | their GitHub accounts | GitHub settings | both can open the repo | Oct 7 | M1 | `[x]` |
 | U-5 | Download the Zeisel dataset and its labels | public source | `data/raw/zeisel/` | 3,005 cells load with labels attached | Oct 7 | M1 | `[x]` |
 | U-6 | Assemble the PBMC14K dataset and labels | the authors' raw count file and label file | `data/raw/pbmc14k/` | about 13,605 cells with 7 labelled types | Oct 7 | M1 | `[x]` |
 | U-7 | Preprocessing code: quality filters, normalization, log transform | raw data | `src/scminer_clust/preprocess.py`, processed files | both datasets processed, counts logged | Oct 7 | M1 | `[x]` |
 | U-8 | Scoring code: ARI, AMI, NMI, silhouette, runtime, peak memory, repeated seeds | processed data | `src/scminer_clust/metrics.py` | a run writes `metrics.csv` with a seed column | Oct 14 | M2 | `[x]` |
-| U-9 | Reproduce MICA on Zeisel and PBMC14K | processed data | `results/reproduction/metrics.csv` | our ARI is within about 0.05 of the published value, or the gap is explained | Oct 14 | M2 | `[x]` |
-| U-10 | Baselines: k-means on principal components, Leiden, hierarchical | processed data | `results/baselines/metrics.csv` | all three run on both datasets | Oct 14 | M2 | `[x]` |
+| U-9 | Reproduce MICA on Zeisel and PBMC14K | processed data | `results/reproduction_<dataset>/metrics.csv` | our ARI is within about 0.05 of the published value, or the gap is explained | Oct 14 | M2 | `[x]` |
+| U-10 | Baselines: k-means on principal components, Leiden, hierarchical | processed data | `results/baselines_<dataset>/metrics.csv` | all three run on both datasets | Oct 14 | M2 | `[x]` |
 | U-11 | Export the first results table and figures for the team | results CSVs | `results/` committed | Rhea can build tables from them | Oct 14 | M2 | `[x]` |
 | U-12 | Rule for choosing the number of clusters without labels | processed data | `src/scminer_clust/selection.py` | the rule picks a number on all methods, no labels used | Oct 21 | M3 | `[x]` |
 | U-13 | Compare oracle setting against the label-free rule for every method | U-12 | `results/summary_label_free.md` | one table, both settings, both datasets | Oct 21 | M3 | `[x]` |
-| U-14 | Measure what the similarity captures: detection versus expression, and the depth test | processed data | `results/rq1_diagnostics/` | shares reported, and cluster changes at 25, 50 and 75 percent of counts | Oct 28 | M4 | `[x]` |
+| U-14 | Measure what the similarity captures: detection versus expression, and the depth test | processed data | `results/rq1_diagnostics_<dataset>/` | shares reported, and cluster changes at 25, 50 and 75 percent of counts | Oct 28 | M4 | `[x]` |
 | U-15 | Download the Allen brain atlas | public S3 bucket | `data/raw/allen/`, list in `docs/allen_files.csv` | file list and sizes recorded | Oct 28 | M4 | `[x]` |
 | U-16 | Preprocess the atlas and run a 100,000 cell timing pilot | U-15 | `docs/allen_pilot.md` | measured time and memory, extrapolated to 2.3M | Oct 28 | M4 | `[x]` |
 | U-17 | Our own mutual information distance, proven to match the authors' | their code | `tests/test_mi_matches_mica.py` | matches on 10,000 random cell pairs | Nov 4 | M5 | `[x]` |
@@ -86,14 +86,14 @@ There are 55 tasks: 39 for Utshab and 8 each for Laraib and Rhea. Three of them 
 | U-29 | Kolodziejczyk side test: does removing the plate effect, or the authors' gene filter, recover ARI 1.0? Report any use of the labels as leakage | released input | `results/kolod_side_test/` | a short note on what recovers the published score | Oct 28 | M4 | `[x]` |
 | U-30 | Decide whether to ask the scMINER authors for their unreleased Kolodziejczyk input before we describe the non-reproduction anywhere outside the team | R5 evidence in PROGRESS.md | email or a recorded decision | decision recorded in the decision log | Oct 14 | M2 | `[ ]` |
 | U-31 | Assignment 2 report: revised question, closest work, preliminary results, plan and schedule | the feedback and our results | `latex/` and the submitted PDF | submitted by Oct 14 | Oct 14 | M2 | `[x]` |
-| U-32 | Stability rule: pick the setting whose clusters best survive subsampling, for MICA and Leiden alike. Varies $k$ in MICA's small-data mode | processed data | `src/scminer_clust/selection.py`, `results/rule_stability/` | the rule picks a setting for both methods on all ten sets, no labels used | Oct 21 | M3 | `[ ]` |
+| U-32 | Stability rule: pick the setting whose clusters best survive subsampling, for MICA and Leiden alike. Varies $k$ in MICA's small-data mode | processed data | `src/scminer_clust/selection.py`, `results/rule_stability_<dataset>[_seed<n>]/` | the rule picks a setting for both methods on all ten sets, no labels used | Oct 21 | M3 | `[x]` |
 | U-33 | Significance rule: merge clusters a test cannot separate, in the style of sc-SHC | U-32 | `results/rule_significance/` | the rule runs on both methods and reports the merged cluster count | Oct 21 | M3 | `[ ]` |
 | U-34 | Transfer rule: give each method the resolution that scored best on the other datasets. Also score MICA's default on the Allen subset, outside the paper's benchmark | U-32 | `results/rule_transfer/` | one held-out score per dataset per method | Nov 4 | M5 | `[ ]` |
-| U-35 | Rerun the silhouette rule in one shared embedding, over the same range of cluster counts for both methods | U-32 | `results/rule_silhouette_shared/` | both methods scored in the same space over the same range of k | Oct 28 | M4 | `[ ]` |
+| U-35 | Rerun the silhouette rule in one shared embedding, over the same range of cluster counts for both methods | U-32 | `results/rule_silhouette_<dataset>/` | both methods scored in the same space over the same range of k | Oct 28 | M4 | `[x]` |
 | U-36 | Label-free Leiden on the Allen 100,000 cell subset, so it becomes a third anchor | U-16 | `results/labelfree_allen_100k/` | Leiden scored under every rule on the Allen subset | Oct 28 | M4 | `[ ]` |
 | U-37 | Final label-free comparison table across all eleven sets, with the win criterion from the report applied | U-32 to U-36 | `results/summary_label_free_rules.md` | one table, every rule, every dataset, with repeats | Nov 4 | M5 | `[ ]` |
 | U-38 | Optional checks if time allows: Leiden on the correlation neighbor graph, and a hub correction on the mutual information graph | U-19 | `results/rq2_swap/`, `results/rq2_hubness/` | both run or formally dropped at the Nov 4 meeting | Nov 11 | M6 | `[ ]` |
-| U-39 | Separate MICA's mode from the dataset size: one fixed pool of 2,500 PBMC14K cells run through both of MICA's modes under the same rule | U-32 | `scripts/run_rule_mode_size.py`, `results/rule_mode_size_pbmc14k_n2500_seed0/` | both arms report a tie span on the same cells, so mode and size are no longer confounded | Nov 4 | M5 | `[~]` |
+| U-39 | Separate MICA's mode from the dataset size: one fixed pool of 2,500 PBMC14K cells run through both of MICA's modes under the same rule | U-32 | `scripts/run_rule_mode_size.py`, `results/rule_mode_size_pbmc14k_n2500_seed0/` | both arms report a tie span on the same cells, so mode and size are no longer confounded | Nov 4 | M5 | `[x]` |
 
 ## Tasks: Laraib
 
@@ -103,7 +103,7 @@ There are 55 tasks: 39 for Utshab and 8 each for Laraib and Rhea. Three of them 
 | L-2 | Dataset card: PBMC14K | Same template. Note that labels come from sorting cells with antibodies, not from clustering | `docs/dataset_cards/pbmc14k.md` | every field filled | Oct 14 | M2 | `[ ]` |
 | L-3 | Dataset card: Allen brain atlas | Same template, plus the label levels (34 classes, 338 subclasses) and the license restriction | `docs/dataset_cards/allen_wmb.md` | every field filled | Oct 21 | M3 | `[ ]` |
 | L-4 | Related work comparison table | Using the saved reviews in `docs/research/`, build a table of about 15 papers with columns: paper, year, venue, what it does, biggest data it handled, does it use mutual information, does it choose cluster count without labels, does it use a language model, how ours differs | `docs/related_work_table.md` | 15 rows, each with a link | Oct 28 | M4 | `[ ]` |
-| L-5 | Rewrite background and related work in Overleaf | Use L-4 so the paper's story matches the table | `latex/sections/01_background.tex`, `05_related_work_contribution.tex` | sections updated and compiling | Nov 11 | M5 | `[ ]` |
+| L-5 | Rewrite the introduction and closest work | Use L-4 so the paper's story matches the table | `latex/sections/02_introduction.tex`, `latex/sections/03_related.tex` | sections updated and compiling | Nov 11 | M5 | `[ ]` |
 | L-6 | Marker check | For each cluster name our system proposes, look the markers up in CellMarker 2.0 and PanglaoDB on their websites, and record whether they agree, with the link you used | `results/rq3_rag/marker_check.csv` | every proposed name checked | Nov 18 | M6 | `[ ]` |
 | L-7 | Meeting minutes | Short notes after each Wednesday meeting: decisions, who owns what next | `docs/minutes/YYYY-MM-DD.md` | one file per meeting | weekly | every week | `[ ]` |
 | L-8 | Proofread the paper | Check the writing rules we agreed on: no long dashes, no semicolons, plain words, consistent terms | the LaTeX sections | full read-through with fixes | Dec 2 | M8 | `[ ]` |
@@ -156,7 +156,7 @@ scminer-clustering/
   latex/               the paper, one file per section under latex/sections/
   src/scminer_clust/   our code
   scripts/             one runner per experiment
-  configs/             settings for each run, so results can be repeated
+  results/<run>/params.json   the settings, seed and candidate grid for that run
   results/<id>/        metrics.csv, params.json, figures
   results/summary_*.md the main tables, rebuilt after every run
   docs/results_for_pivot.csv  the main comparison, one row per run (for R-1)
