@@ -28,11 +28,15 @@ MICA's small-data mode, which is the mode nine of the ten benchmark datasets run
 Rebuild every table and figure in the report from saved results, without rerunning an experiment:
 
 ```bash
-conda env create -f envs/scminer.yml        # or envs/scminer.lock.yml for exact pins
+conda env create -f envs/scminer.yml   # installs the project too, so scminer_clust imports
 conda activate scminer
-python scripts/a3_report.py                 # writes latex/tables/*.tex, latex/figures/*, results/a3_*.json
-pytest tests/ -q                            # 4 tests, about 6 seconds
+python scripts/a3_report.py            # rewrites latex/tables/*.tex, latex/figures/*, results/a3_*.json
+pytest tests/ -q                       # 4 tests, about 6 seconds
 ```
+
+Run both from the repository root. If `scminer_clust` fails to import, the project was not
+installed into the environment: `pip install -e .` fixes it. `envs/scminer.lock.yml` has exact
+pins if you need to match our runs byte for byte.
 
 `notebooks/assignment3_results.ipynb` runs the same thing and displays each table and figure next to
 the rows behind it. Both read only from `results/`, which is committed.

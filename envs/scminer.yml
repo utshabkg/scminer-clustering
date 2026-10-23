@@ -23,3 +23,5 @@ dependencies:
       - rdata
       - scikit-misc
       - tabulate
+      # the project itself, so scripts/ and notebooks/ can import scminer_clust
+      - -e .
