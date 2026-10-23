@@ -38,7 +38,7 @@ The first task for each of you (L-1, L-7, R-1) is set so we can get moving. Ever
 
 ## Milestones
 
-There are 54 tasks: 38 for Utshab and 8 each for Laraib and Rhea. Three of them (L-7, R-3, R-8) repeat every week, and each of the other 43 belongs to the milestone in its row. U-25 and U-26 were added on Oct 2 to firm up the first finding, U-27 to U-30 came out of the Oct 2 review, and U-31 to U-38 come from the Assignment 2 feedback and our revised plan.
+There are 55 tasks: 39 for Utshab and 8 each for Laraib and Rhea. Three of them (L-7, R-3, R-8) repeat every week, and each of the other 52 belongs to the milestone in its row. U-25 and U-26 were added on Oct 2 to firm up the first finding, U-27 to U-30 came out of the Oct 2 review, and U-31 to U-38 come from the Assignment 2 feedback and our revised plan, and U-39 was added on Oct 22 because the PBMC14K result could not otherwise be attributed to size or to mode.
 
 | ID | By | What is true when it is done |
 |----|----|------------------------------|
@@ -93,6 +93,7 @@ There are 54 tasks: 38 for Utshab and 8 each for Laraib and Rhea. Three of them 
 | U-36 | Label-free Leiden on the Allen 100,000 cell subset, so it becomes a third anchor | U-16 | `results/labelfree_allen_100k/` | Leiden scored under every rule on the Allen subset | Oct 28 | M4 | `[ ]` |
 | U-37 | Final label-free comparison table across all eleven sets, with the win criterion from the report applied | U-32 to U-36 | `results/summary_label_free_rules.md` | one table, every rule, every dataset, with repeats | Nov 4 | M5 | `[ ]` |
 | U-38 | Optional checks if time allows: Leiden on the correlation neighbor graph, and a hub correction on the mutual information graph | U-19 | `results/rq2_swap/`, `results/rq2_hubness/` | both run or formally dropped at the Nov 4 meeting | Nov 11 | M6 | `[ ]` |
+| U-39 | Separate MICA's mode from the dataset size: one fixed pool of 2,500 PBMC14K cells run through both of MICA's modes under the same rule | U-32 | `scripts/run_rule_mode_size.py`, `results/rule_mode_size_pbmc14k_n2500_seed0/` | both arms report a tie span on the same cells, so mode and size are no longer confounded | Nov 4 | M5 | `[~]` |
 
 ## Tasks: Laraib
 

@@ -5,23 +5,110 @@ Utshab adds an entry at the end of each working session. Laraib and Rhea add a l
 
 ## Where we stand
 
-Updated: 2026-10-21. Counts follow the Milestone column in `WORKPLAN.md`.
+Updated: 2026-10-22. Counts follow the Milestone column in `WORKPLAN.md`.
 
 | Milestone | Due | Tasks done | Percent | State |
 |-----------|-----|------------|---------|-------|
 | M1 software, small data ready | Oct 7 | 8 of 8 | 100% | Done. Laraib's Zeisel card (L-1) merged on Oct 14 |
 | M2 reproduce the paper, Assignment 2 report | Oct 14 | 7 of 9 | 78% | Ten benchmark sets run, nine reproduce within 0.05. Report submitted (U-31). Left: contacting the authors (U-30), PBMC14K card (L-2) |
-| M3 cluster count without labels | Oct 21 | 6 of 9 | 67% | The old label-free work, the results summary (R-1) and the paper tables (R-2) are done. The new stability and significance rules start this week (U-32, U-33). Left: Allen card (L-3) |
-| M4 what the similarity measures, atlas downloaded | Oct 28 | 4 of 7 | 57% | Diagnostics, atlas and pilot done. Left: shared-space silhouette (U-35), label-free Leiden on Allen (U-36), related work table (L-4) |
-| M5 main experiments complete | Nov 4 | 2 of 5 | 40% | Our distance matches the authors' (U-17) and the CPU fast neighbor search is done (U-19). Left: transfer rule (U-34) and the final comparison table (U-37) |
+| M3 cluster count without labels | Oct 21 | 7 of 9 | 78% | The stability rule (U-32) is done on all ten datasets, including PBMC14K in graph mode. The results summary (R-1) and paper tables (R-2) are done. Left: significance rule (U-33), Allen card (L-3) |
+| M4 what the similarity measures, atlas downloaded | Oct 28 | 5 of 7 | 71% | Diagnostics, atlas, pilot and the shared-space silhouette (U-35) done. Left: label-free Leiden on Allen (U-36), related work table (L-4) |
+| M5 main experiments complete | Nov 4 | 2 of 6 | 33% | Our distance matches the authors' (U-17) and the CPU fast neighbor search is done (U-19). Mode against size (U-39) is running. Left: transfer rule (U-34), final comparison table (U-37), U-39 |
 | M6 gated extras | Nov 11 | 0 of 6 | 0% | Not started. The GPU search (U-18), the annotation comparison (U-22, U-23) and the optional checks (U-38) all depend on the Nov 4 result |
 | M7 full manuscript draft | Nov 18 | 0 of 4 | 0% | Not started |
 | M8 revision and slides | Dec 2 | 0 of 3 | 0% | Not started |
 | Every week: notes, plan and progress updates | weekly | | | L-7, R-3 and R-8 |
 
-Overall: 27 of 54 tasks finished. Three of the 54 repeat every week.
+Overall: 29 of 55 tasks finished. Three of the 55 repeat every week.
 
-Next three things: the stability rule (U-32) and the significance rule (U-33) on PBMC14K and Zeisel, and a decision on whether to write to the scMINER authors (U-30).
+Next three things: finish the mode against size arms (U-39) and PBMC14K seed 2, submit Assignment 3, and a decision on whether to write to the scMINER authors (U-30).
+
+---
+
+## 2026-10-22, Utshab
+
+Assignment 3 experiments and the manuscript. Two new results and a long list of corrections.
+
+**PBMC14K under MICA's graph mode (U-32, the last dataset).** All three seeds are done and
+agree closely. `results/rule_stability_paper_pbmc14k_graph_seed{0,1,2}/`. MICA picks
+resolution 4.0 or 3.9 and 5 clusters every time, for a median ARI of 0.629 and AMI of
+0.790. Leiden picks 0.05 and 4 clusters every time, for 0.397 and 0.725. Across the three
+seeds MICA's ARI spans 0.628 to 0.631 and Leiden's 0.3966 to 0.3968, so the rule's
+behaviour on this dataset is highly repeatable.
+
+The important part is the tie structure. On the nine small datasets the settings that tie
+with MICA's best span 7.3 cluster counts on average, so the tie-break decides the answer.
+On PBMC14K they all return exactly 5 clusters, on all three seeds, so the span is 0 and
+the two readings of chooseR agree. The ambiguity that the whole Assignment 3 argument rests on is
+absent on the one large dataset. Relaxing the threshold by 0.02 also leaves MICA's choice
+alone here, one of only five cases in twenty where it does not move.
+
+The rule still fails, in the other direction. MICA's best available ARI is at the true 7
+clusters, 0.851 to 0.859 across the three seeds, and the rule selects 5 for 0.629. Leiden's best
+is about 0.88 at 7 clusters and it selects 4 for 0.397. Both underclustered, neither was
+ambiguous. About 100 minutes per seed for MICA and 9 for Leiden.
+
+**Mode against size, a new task (U-39).** PBMC14K is both the largest dataset and the only
+one in MICA's graph mode, so the result above could not be attributed to either. New script
+`scripts/run_rule_mode_size.py` draws one fixed pool of 2,500 PBMC14K cells and runs the
+same rule on those same cells through both of MICA's modes, which holds the data, the size,
+the subsamples and the labels fixed. The graph-mode distance is an exact submatrix of the
+cached full matrix. Both arms are done and the answer is the mode, not the size.
+
+| arm on the same 2,500 cells | settings tied | cluster counts among tied | finest stable | most stable |
+|---|---|---|---|---|
+| MICA small-data mode | 6 of 19 | 2 to 7 | 0.675 at k=5 | 0.219 at k=3 |
+| MICA graph mode | 6 of 37 | 5 to 5 | 0.608 at k=5 | 0.608 at k=5 |
+| Leiden, as a control | 6 of 40 | 4 to 5 | 0.609 at k=5 | 0.390 at k=4 |
+
+At the same size, on the same cells, with the same subsamples, small-data mode ties
+settings spanning 5 cluster counts and its two readings disagree by 0.456, while graph mode
+ties only settings that return the same count and both readings give 0.608. Graph mode is
+unambiguous at 2,500 cells and at 13,605 alike, so size is not the variable. The ambiguity
+belongs to MICA's small-data pipeline. It is not a property of mutual information either,
+since both arms use the same distance on the same cells and only the embedding and the
+normalisation differ.
+
+This corrects what I wrote in Assignment 3 before the arm finished. The draft had attributed
+the PBMC14K result to dataset size, which the experiment rules out. The abstract,
+introduction, results and discussion were all rewritten to attribute it to the mode.
+
+**Corrections the verification pass forced.** Ran an adversarial check over the manuscript
+against the saved results. The ones that changed a claim:
+
+- "MICA's small-data pipeline is deterministic given the distance matrix" was false. At a
+  fixed k=4 its ARI moves by 0.192 across seeds on Chung, which is larger than the 0.189
+  tie-break effect the abstract leads with. The reproducibility belongs to the distance,
+  not to the pipeline. Rewritten.
+- B=25 was credited to chooseR in the abstract and introduction. chooseR specifies 100.
+  It is our reduction, now justified in the design section and listed as a limitation.
+- The introduction opened on "MICA returns between 7 and 59 clusters, Leiden between 1 and
+  33" on Zeisel. Neither number is in any saved run and the range contradicts our own
+  method section. Replaced with the Zeisel sweep we do have, 2 clusters at the low end of
+  the grid and 21 at Scanpy's shipped resolution.
+- AMI was promised in Measures and never reported. It is now Table III.
+- The cost figures were wrong. They are 17 to 109 seconds for MICA and 14 to 225 for
+  Leiden, and the Leiden clustering count is a range, 468 to 1,040, not about 1,040.
+- Three Pollen, Yan and Chung figures in the text were seed-0 values quoted against a
+  table of medians. Pollen is 0.898 at 17 clusters, Chung 11, and the baseline's Pollen
+  median does not move between the two readings.
+- The tie spans on Yan and Pollen are 2 to 20, the full candidate range, not 3 to 19 and
+  2 to 18.
+- The silhouette rule was run at one seed while the table caption claimed three.
+- The baseline's largest silhouette-space move is 0.52 on Chung, not 0.48 on Usoskin.
+- We claimed chooseR did not examine datasets of a few hundred cells. We cannot verify
+  that, so the claim is now only about the size of the data it was demonstrated on.
+
+Table I gained a mean row and the PBMC14K row, and the cluster counts now print as the
+median with the seed range. New `results/a3_seed_variation.csv` holds the per-dataset ARI
+ranges the main table has no room for.
+
+**Open for the next session.** The manuscript body is 7.5 pages against the 5 to 7 the
+assignment allows, after three rounds of cuts. The remaining lever is moving the Default
+and Silhouette columns of Table I to the appendix, which would free a full-width float and
+about a third of a page, at the cost of putting two of the four rules behind a page turn.
+The GitHub repository is private, so the code link in Appendix A returns 404 for a grader.
+It needs to be made public or the grader added before submission.
 
 ---
 
