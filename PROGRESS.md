@@ -13,15 +13,15 @@ Updated: 2026-10-22. Counts follow the Milestone column in `WORKPLAN.md`.
 | M2 reproduce the paper, Assignment 2 report | Oct 14 | 7 of 9 | 78% | Ten benchmark sets run, nine reproduce within 0.05. Report submitted (U-31). Left: contacting the authors (U-30), PBMC14K card (L-2) |
 | M3 cluster count without labels | Oct 21 | 7 of 9 | 78% | The stability rule (U-32) is done on all ten datasets, including PBMC14K in graph mode. The results summary (R-1) and paper tables (R-2) are done. Left: significance rule (U-33), Allen card (L-3) |
 | M4 what the similarity measures, atlas downloaded | Oct 28 | 5 of 7 | 71% | Diagnostics, atlas, pilot and the shared-space silhouette (U-35) done. Left: label-free Leiden on Allen (U-36), related work table (L-4) |
-| M5 main experiments complete | Nov 4 | 2 of 6 | 33% | Our distance matches the authors' (U-17) and the CPU fast neighbor search is done (U-19). Mode against size (U-39) is running. Left: transfer rule (U-34), final comparison table (U-37), U-39 |
+| M5 main experiments complete | Nov 4 | 3 of 6 | 50% | Our distance matches the authors' (U-17), the CPU fast neighbor search is done (U-19), and mode against size (U-39) is finished. Left: transfer rule (U-34), final comparison table (U-37), GPU search (U-18) |
 | M6 gated extras | Nov 11 | 0 of 6 | 0% | Not started. The GPU search (U-18), the annotation comparison (U-22, U-23) and the optional checks (U-38) all depend on the Nov 4 result |
 | M7 full manuscript draft | Nov 18 | 0 of 4 | 0% | Not started |
 | M8 revision and slides | Dec 2 | 0 of 3 | 0% | Not started |
 | Every week: notes, plan and progress updates | weekly | | | L-7, R-3 and R-8 |
 
-Overall: 29 of 55 tasks finished. Three of the 55 repeat every week.
+Overall: 30 of 55 tasks finished. Three of the 55 repeat every week. The counts above are read off the status markers in `WORKPLAN.md`.
 
-Next three things: finish the mode against size arms (U-39) and PBMC14K seed 2, submit Assignment 3, and a decision on whether to write to the scMINER authors (U-30).
+Next three things: submit Assignment 3, run the transfer rule (U-34), and a decision on whether to write to the scMINER authors (U-30).
 
 ---
 
@@ -166,7 +166,7 @@ Added the pivot tables to the repo as `docs/author_data_results_summary.csv` (au
 
 ## 2026-10-03, Rhea
 
-Created the results summary pivot tables for R-1 in Google Sheets: https://docs.google.com/spreadsheets/d/1on9E9J4lL-G5-tVfYVDseXX1d4YugjW4CYyXuQbPqaU/edit?usp=sharing
+Created the results summary pivot tables for R-1 in Google Sheets. They were added to the repository on 2026-10-10 as `docs/author_data_results_summary.csv` and `docs/our_preprocessing_results_summary.csv`.
 
 ---
 
