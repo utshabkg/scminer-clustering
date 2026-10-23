@@ -1,36 +1,99 @@
-# scMINER clustering
+# scMINER clustering: what a published advantage is worth without labels
 
-Course project for Clustering Algorithms (Missouri S&T, Fall 2026). We study scMINER, a mutual information based framework for clustering single-cell RNA data ([Pan et al., Nature Communications 2025](https://doi.org/10.1038/s41467-025-59620-6)). Our main question: when each method must choose its own clustering without the reference labels, does scMINER's clustering (MICA) beat a standard pipeline of principal components and Leiden? The paper's benchmark lets the labels pick every method's setting, so we ask what is left without them. Scaling the mutual information graph and annotating clusters with a language model follow that question.
+Course project for Clustering Algorithms (Missouri S&T, Fall 2026). We study scMINER, a mutual
+information based framework for clustering single-cell RNA data
+([Pan et al., Nature Communications 2025](https://doi.org/10.1038/s41467-025-59620-6)), and its
+clustering module MICA.
 
-Team: Utshab Kumar Ghosh (lead), Laraib Khan and Rhea Eckman.
+**The question.** Published benchmarks fix each method's setting with the reference labels, either
+by supplying the true number of cell types or by keeping the run that reproduces it. A user has no
+labels. So when the same label-free rule has to choose the setting for both methods, does MICA
+still beat a standard pipeline of principal components and Leiden?
+
+**What we found.** On the nine small benchmark datasets the answer depends on the rule, not the
+method. Reading one published rule (chooseR) two defensible ways reverses the ranking: MICA leads
+0.661 to 0.632 under the authors' reading and trails 0.473 to 0.635 under the other, on the same
+scores. The cause is measurable. Among settings the rule treats as equivalent, the span of cluster
+counts averages 7.3 for MICA against 2.7 for the baseline, and on two datasets the rule cannot
+separate 2 clusters from 20.
+
+That failure turns out to belong to one specific pipeline. Running both of MICA's modes on a single
+fixed pool of 2,500 cells, holding the data, the size and the subsamples constant, the ambiguity is
+present in small-data mode and absent in graph mode. It is not an effect of dataset size, and not a
+property of mutual information, since both arms use the same distance on the same cells. It is
+MICA's small-data mode, which is the mode nine of the ten benchmark datasets run in.
+
+## Quick start
+
+Rebuild every table and figure in the report from saved results, without rerunning an experiment:
+
+```bash
+conda env create -f envs/scminer.yml        # or envs/scminer.lock.yml for exact pins
+conda activate scminer
+python scripts/a3_report.py                 # writes latex/tables/*.tex, latex/figures/*, results/a3_*.json
+pytest tests/ -q                            # 4 tests, about 6 seconds
+```
+
+`notebooks/assignment3_results.ipynb` runs the same thing and displays each table and figure next to
+the rows behind it. Both read only from `results/`, which is committed.
 
 ## Layout
 
-- `envs/`: conda environment files
-- `scripts/`: download and run scripts
-- `src/`: project code
-- `results/`: small tables and figures that everyone can browse on GitHub
-- `notebooks/`: notebooks that rebuild the report's tables and figures from `results/`
-- `latex/`: the current report, with the submitted proposal in `latex/archive/proposal/`
-- `docs/dataset_cards/`: one page per dataset
-- `docs/research/`: literature review and notes
+| Path | What is in it |
+|---|---|
+| `src/scminer_clust/` | project code: the MI distance (`mi.py`), the clustering pipelines (`cluster.py`), the selection rules (`selection.py`, `stability.py`), metrics |
+| `scripts/` | one runner per experiment, each writing a folder under `results/` |
+| `results/` | one folder per run, each with `metrics.csv` and a `params.json` recording its settings, seed and candidate grid |
+| `notebooks/` | rebuild the report's displays from `results/` |
+| `latex/` | the current report, with earlier submissions under `latex/archive/` |
+| `docs/` | dataset cards, a primer for non-specialists, literature notes |
+| `tests/` | the two properties the experiments rely on |
+| `envs/` | conda environments |
 
-Datasets live outside the repo, on the lab workstation's shared disk at `/media/20TB/shared/sides_data/43.scMINER-Clustering/`. The `data` link in the repo points there. They are never stored on GitHub.
+## Reproducing the experiments
 
-## Running jobs
+These rerun the clustering and take minutes to hours. The stability rule is the main one.
 
-Every run happens on the lab workstation inside a conda environment. Long jobs go in a detached byobu session and write a log file:
+```bash
+python scripts/run_rule_stability.py <dataset> [n_hvg] [flavor] [seed]   # the nine small datasets
+python scripts/run_rule_stability_graph.py [seed] [b_subsamples]         # PBMC14K, MICA graph mode
+python scripts/run_rule_mode_size.py [n_pool] [seed] [b_subsamples]      # mode against size, one fixed pool
+python scripts/run_rule_silhouette.py                                    # silhouette in one shared space
+python scripts/run_rule_default.py                                       # each method's shipped default
+```
+
+`scripts/run_rules_small.sh` and the other `run_rules_*.sh` wrappers call these once per dataset and
+seed. MICA's graph mode needs the authors' own environment, `envs/mica-legacy.lock.yml`, because the
+node2vec step runs there as a subprocess.
+
+Two things make the stability rule affordable. MICA's distance between two cells depends only on
+those two cells, so the full matrix is computed once per dataset and subsampled, which is exact
+rather than an approximation and is checked by `tests/test_subsample_invariance.py`. And our
+implementation of the distance agrees with the authors' code to within `1e-6`
+(`tests/test_mi_matches_mica.py`).
+
+## Data
+
+Datasets are not in this repository. They live on the lab workstation's shared disk at
+`/media/20TB/shared/sides_data/43.scMINER-Clustering/`, which the gitignored `data` symlink points
+to. The ten benchmark datasets are used in the processed form the scMINER authors released, so any
+difference from their published numbers cannot come from our preprocessing. `scripts/` holds the
+download and preprocessing steps, and `docs/dataset_facts.csv` records the cell and gene counts
+after filtering for every dataset.
+
+Long runs go in a detached byobu session with a log:
 
 ```bash
 byobu new-session -d -s scm-<task> "bash -lc 'source ~/anaconda3/etc/profile.d/conda.sh && conda activate scminer && <command> 2>&1 | tee logs/<task>.log'"
 ```
 
-Use `byobu list-sessions` to see running jobs and `byobu attach -t scm-<task>` to look at one.
-
-Setup steps for the environments will be added here once they are built.
-
 ## Where to look first
 
+- [PROGRESS.md](PROGRESS.md): what has actually been done, newest first, with the numbers.
 - [WORKPLAN.md](WORKPLAN.md): who does what, by when, and how a task counts as finished.
-- [PROGRESS.md](PROGRESS.md): what has actually been done, newest first.
-- `notebooks/assignment2_preliminary.ipynb`: rebuilds every table and figure in the Assignment 2 report from saved results.
+- [docs/primer.md](docs/primer.md): the data, the methods and the question, assuming no background.
+- `notebooks/assignment3_results.ipynb`: every current result, rebuilt from saved files.
+
+## Team
+
+Utshab Kumar Ghosh (lead, all code and experiments), Laraib Khan, Rhea Eckman.

@@ -34,6 +34,20 @@ __pycache__/
 # raw MICA output (per-resolution tables and plots); scored copies live in results/reproduction_<name>/
 results/reproduction/
 
-# local compile preview of the Assignment 2 report (the real build is on Overleaf)
+# local compile previews (the submitted build is made on Overleaf)
 latex/a2_report_preview.pdf
 latex/a3_report_preview.pdf
+latex/assignment3_draft.pdf
+latex/*.aux
+latex/*.log
+latex/*.out
+latex/*.bbl
+latex/*.blg
+
+scratchpad/
+
+# course material we did not write, kept locally only
+docs/Project_Paper_Writing_Guide.docx
+
+# working notes for the next session, not part of the project
+RESUME.md

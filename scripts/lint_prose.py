@@ -21,7 +21,7 @@ STOCK = ["moreover", "furthermore", "in conclusion", "it is worth noting", "delv
          "leverage", "crucial", "comprehensive"]
 PATTERN = re.compile(r"[—–]|;|,\"|,''|(?<![-%!])---?(?![->])|\b(" + "|".join(STOCK) + r")\b", re.I)
 SEPARATOR = re.compile(r"[\s|:+-]*$")
-DEFAULT = ["latex/sections", "latex/tables", "README.md", "PROGRESS.md", "WORKPLAN.md", "RESUME.md",
+DEFAULT = ["latex/sections", "latex/tables", "README.md", "PROGRESS.md", "WORKPLAN.md",
            "docs/primer.md", "docs/dataset_cards", "docs/allen_pilot.md", "docs/minutes"]
 SKIP_SUFFIX = {".bib", ".csv", ".json", ".cls", ".png", ".pdf", ".docx", ".ipynb", ".xlsx", ".txt", ".js"}
 # docs/research holds raw saved literature sweeps, not prose we write or hand in
