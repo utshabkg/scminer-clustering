@@ -286,7 +286,7 @@ dependencies:
       - pytest==9.1.1
       - rdata==1.1.0
       - scikit-misc==0.5.2
-      - scminer-clust==0.1.0
+      - -e .
       - setuptools==78.1.0
       - sympy==1.14.0
       - tabulate==0.10.0

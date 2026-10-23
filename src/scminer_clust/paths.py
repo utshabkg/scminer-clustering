@@ -6,7 +6,6 @@ DATA = REPO / "data"          # symlink to /media/20TB/shared/sides_data/43.scMI
 RAW = DATA / "raw"
 PROCESSED = DATA / "processed"
 RESULTS = REPO / "results"
-CONFIGS = REPO / "configs"
 
 
 def results_dir(exp_id: str) -> Path:

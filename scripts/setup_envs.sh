@@ -11,8 +11,13 @@ case "${1:-}" in
     # The default PyPI torch wheel is built for CUDA 13.0, which this driver
     # (CUDA 12.9) cannot load. Install the cu128 build instead.
     pip install --index-url https://download.pytorch.org/whl/cu128 --force-reinstall torch
+    # The project itself, so scripts/ notebooks/ and tests/ can import scminer_clust.
+    pip install -e "$ROOT"
     python -c "import scanpy, torch; print('scanpy', scanpy.__version__, 'torch', torch.__version__, 'cuda', torch.cuda.is_available(), torch.cuda.device_count())"
     conda env export -n scminer --no-builds > "$ROOT/envs/scminer.lock.yml"
+    # conda records the editable install as `scminer-clust==0.1.0`, a name that exists on no
+    # index, which makes the lock file impossible to build from. Put the editable install back.
+    sed -i 's/^      - scminer-clust==.*$/      - -e ./' "$ROOT/envs/scminer.lock.yml"
     ;;
   mica)
     # MICA 1.0.0 from source, following the authors' README (Python 3.9.2).

@@ -17,6 +17,7 @@ dependencies:
   - seaborn
   - psutil
   - ipykernel
+  - pytest
   - pip
   - pip:
       - torch

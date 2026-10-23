@@ -35,8 +35,9 @@ pytest tests/ -q                       # 4 tests, about 6 seconds
 ```
 
 Run both from the repository root. If `scminer_clust` fails to import, the project was not
-installed into the environment: `pip install -e .` fixes it. `envs/scminer.lock.yml` has exact
-pins if you need to match our runs byte for byte.
+installed into the environment: `pip install -e .` fixes it. `envs/*.lock.yml` record the exact
+versions our runs used, for reference rather than for building: the torch pin is a CUDA 12.8
+local wheel that no index serves.
 
 `notebooks/assignment3_results.ipynb` runs the same thing and displays each table and figure next to
 the rows behind it. Both read only from `results/`, which is committed.
@@ -62,13 +63,20 @@ These rerun the clustering and take minutes to hours. The stability rule is the 
 python scripts/run_rule_stability.py <dataset> [n_hvg] [flavor] [seed]   # the nine small datasets
 python scripts/run_rule_stability_graph.py [seed] [b_subsamples]         # PBMC14K, MICA graph mode
 python scripts/run_rule_mode_size.py [n_pool] [seed] [b_subsamples]      # mode against size, one fixed pool
-python scripts/run_rule_silhouette.py                                    # silhouette in one shared space
+python scripts/run_rule_silhouette.py <dataset> [n_hvg] [flavor]        # silhouette in one shared space
 python scripts/run_rule_default.py                                       # each method's shipped default
 ```
 
-`scripts/run_rules_small.sh` and the other `run_rules_*.sh` wrappers call these once per dataset and
-seed. MICA's graph mode needs the authors' own environment, `envs/mica-legacy.lock.yml`, because the
-node2vec step runs there as a subprocess.
+`scripts/run_rules_small.sh` runs the nine small datasets at seed 0 and
+`scripts/run_rules_repeats.sh` supplies seeds 1 and 2. MICA's graph mode needs the authors' own
+environment, because the node2vec step runs there as a subprocess:
+
+```bash
+bash scripts/setup_envs.sh mica   # clones MICA 1.0.0 and builds the mica-legacy env
+```
+
+`envs/mica-legacy.lock.yml` records that environment rather than building it, since MICA is
+installed from source.
 
 Two things make the stability rule affordable. MICA's distance between two cells depends only on
 those two cells, so the full matrix is computed once per dataset and subsampled, which is exact
