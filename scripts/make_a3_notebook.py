@@ -18,10 +18,11 @@ This notebook rebuilds every table and figure in the Assignment 3 manuscript fro
 
 | Display | Produced by |
 |---|---|
-| Table I, the datasets | `scripts/dataset_facts.py` |
-| Table II, ARI under each label-free rule | `scripts/run_rule_stability.py`, `run_rule_silhouette.py`, `run_rule_default.py` |
-| Table III, the cluster counts chosen | the same runs |
+| Table I, ARI and chosen cluster count under each rule | `scripts/run_rule_stability.py`, `run_rule_stability_graph.py`, `run_rule_silhouette.py`, `run_rule_default.py` |
+| Table II, the datasets | `scripts/dataset_facts.py` |
+| Table III, adjusted mutual information | the same runs as Table I |
 | Figure 1, stability against cluster count | the stability runs |
+| Mode against size on one fixed pool of cells | `scripts/run_rule_mode_size.py` |
 | The mechanism numbers | `scripts/a3_report.py` |
 
 The environment is `envs/scminer.yml`. Data live outside the repository, as described in `README.md`."""),
@@ -33,7 +34,7 @@ sys.path.insert(0, str(REPO / "scripts"))
 import a3_report
 a3_report.main()   # rewrites latex/tables/a3_*.tex, the figure, and results/a3_report_numbers.json
 nums = json.loads((RESULTS / "a3_report_numbers.json").read_text())"""),
-    ("md", "## Table II. ARI of the partition each rule chose\n\nNo reference labels are used to make the choice. Median over the repeats, with the observed range."),
+    ("md", "## Table I. ARI of the partition each rule chose\n\nNo reference labels are used to make the choice. Median over the repeats, with the observed range. The means quoted in the paper cover the nine small-data datasets, so PBMC14K is listed but excluded from them."),
     ("code", """rows = []
 for rule in ["default", "silhouette_shared", "stability_finest", "stability_most"]:
     if rule not in nums or "per_dataset" not in nums[rule]:

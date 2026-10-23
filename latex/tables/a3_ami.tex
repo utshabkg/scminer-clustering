@@ -1,0 +1,27 @@
+\begin{table*}[t]
+\centering
+\caption{Adjusted mutual information for the same chosen partitions as Table~\ref{tab:rules}, on the same runs. AMI is more forgiving than ARI when a true type is split across several clusters, so the gap between this table and Table~\ref{tab:rules} is itself a reading of how a rule is failing: the stability rule's overclustered MICA partitions lose far less here than they do under ARI.}
+\label{tab:ami}
+\footnotesize
+\setlength{\tabcolsep}{4pt}
+\begin{tabular}{lcccccccc}
+\toprule
+ & \multicolumn{2}{c}{Default} & \multicolumn{2}{c}{Silhouette} & \multicolumn{2}{c}{Finest stable} & \multicolumn{2}{c}{Most stable} \\
+\cmidrule(lr){2-3}\cmidrule(lr){4-5}\cmidrule(lr){6-7}\cmidrule(lr){8-9}
+Dataset (types) & MICA & Leiden & MICA & Leiden & MICA & Leiden & MICA & Leiden \\
+\midrule
+Yan (8) & 0.804 & 0.846 & 0.817 & 0.804 & 0.721 & 0.846 & 0.652 & 0.804 \\
+Goolam (5) & 0.749 & 0.587 & 0.679 & 0.652 & 0.771 & 0.584 & 0.679 & 0.652 \\
+Buettner (3) & 0.884 & 0.272 & 0.590 & 0.304 & 0.904 & 0.287 & 0.590 & 0.283 \\
+Pollen (11) & 0.731 & 0.917 & 0.943 & 0.924 & 0.913 & 0.890 & 0.318 & 0.890 \\
+Chung (4) & 0.762 & 0.738 & 0.725 & 0.128 & 0.709 & 0.339 & 0.292 & 0.339 \\
+Usoskin (4) & 0.798 & 0.624 & 0.508 & 0.755 & 0.821 & 0.709 & 0.821 & 0.747 \\
+Kolodziejczyk (3) & 0.888 & 0.723 & 0.784 & 0.723 & 0.822 & 0.896 & 0.757 & 0.896 \\
+Klein (4) & 0.963 & 0.700 & 0.664 & 0.890 & 0.664 & 0.956 & 0.664 & 0.890 \\
+Zeisel (7) & 0.565 & 0.644 & 0.495 & 0.580 & 0.648 & 0.815 & 0.648 & 0.815 \\
+PBMC14K (7) & n/a & 0.893 & n/a & n/a & 0.790 & 0.725 & 0.790 & 0.725 \\
+\midrule
+\textit{Mean, nine small} & \textbf{0.794} & \textbf{0.672} & \textbf{0.689} & \textbf{0.640} & \textbf{0.775} & \textbf{0.702} & \textbf{0.602} & \textbf{0.702} \\
+\bottomrule
+\end{tabular}
+\end{table*}

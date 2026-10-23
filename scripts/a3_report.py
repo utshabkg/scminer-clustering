@@ -25,6 +25,10 @@ NAMES = {"yan": "Yan", "goolam": "Goolam", "buettner": "Buettner", "pollen": "Po
          "pbmc14k": "PBMC14K"}
 RULES = [("default", "Default"), ("silhouette_shared", "Silhouette"),
          ("stability_finest", "Finest stable"), ("stability_most", "Most stable")]
+# PBMC14K runs MICA's graph mode and is reported on its own. Every mean, win count and
+# mechanism figure in the text is over the nine small-data datasets only, so adding it
+# here must not change them.
+SMALL = [x for x in ORDER if x != "pbmc14k"]
 BLUE, ORANGE, INK, MUTED = "#2a78d6", "#eb6834", "#0b0b0b", "#52514e"
 
 
@@ -108,35 +112,105 @@ def main():
         "Smallest (\\%) & Zeros (\\%) \\\\\n\\midrule\n" + "\n".join(lines) +
         "\n\\bottomrule\n\\end{tabular}\n\\end{table}\n")
 
-    # ---------- headline rule table ----------
+    # ---------- rule tables ----------
+    # The body carries the two stability readings, which is the argument the paper makes and
+    # the only place the chosen cluster count matters. All four rules go to the appendix.
     tabs = {r: agg(d, r) for r, _ in RULES}
     have = [(r, lab) for r, lab in RULES if len(tabs[r])]
-    body = []
+
+    def rule_table(rules, label, caption, star):
+        rows = []
+        for x in present:
+            cells = []
+            for r, _ in rules:
+                t = tabs[r]
+                for m in ("mica", "leiden_pca"):
+                    sel = t[(t.ds == x) & (t.method == m)] if len(t) else None
+                    if sel is None or not len(sel):
+                        cells.append("n/a")
+                        continue
+                    v = sel.iloc[0]
+                    k = f"{int(v.k)}" if v.k_min == v.k_max else f"{int(v.k_min)}\\textrm{{-}}{int(v.k_max)}"
+                    cells.append(f"{v.ari:.3f}\\,({k})")
+            rows.append(f"{NAMES[x]} ({truth_k[x]}) & " + " & ".join(cells) + " \\\\")
+        means = []
+        for r, _ in rules:
+            t = tabs[r]
+            for m in ("mica", "leiden_pca"):
+                sel = t[(t.ds.isin(SMALL)) & (t.method == m)]
+                means.append(f"\\textbf{{{sel.ari.mean():.3f}}}" if len(sel) else "n/a")
+        rows.append("\\midrule\n\\textit{Mean, nine small} & " + " & ".join(means) + " \\\\")
+        g = " & ".join(f"\\multicolumn{{2}}{{c}}{{{lab}}}" for _, lab in rules)
+        cm = "".join(f"\\cmidrule(lr){{{2 + 2 * i}-{3 + 2 * i}}}" for i in range(len(rules)))
+        hd = " & ".join(["MICA & Leiden"] * len(rules))
+        env = "table*" if star else "table"
+        return (f"\\begin{{{env}}}[t]\n\\centering\n\\caption{{{caption}}}\n\\label{{{label}}}\n"
+                "\\footnotesize\n\\setlength{\\tabcolsep}{4pt}\n"
+                f"\\begin{{tabular}}{{l{'cc' * len(rules)}}}\n\\toprule\n & {g} \\\\\n{cm}\n"
+                f"Dataset (types) & {hd} \\\\\n\\midrule\n" + "\n".join(rows) +
+                f"\n\\bottomrule\n\\end{{tabular}}\n\\end{{{env}}}\n")
+
+    stab = [(r, lab) for r, lab in have if r.startswith("stability")]
+    (TABLES / "a3_rules.tex").write_text(rule_table(
+        stab, "tab:rules",
+        "ARI of the partition the stability rule chose under each of its two readings, with "
+        "the number of clusters chosen in parentheses and the true number of cell types after "
+        "each dataset name. No reference labels are used in the choice. Values are medians "
+        "over three seeds, and a pair such as (15-18) gives the smallest and largest count "
+        "over those seeds. The mean row covers the nine small-data datasets, the set every "
+        "mean in the text refers to. PBMC14K runs in MICA\'s graph mode and is discussed in "
+        "Section~\\ref{sec:pbmc}. The other two rules are in Table~\\ref{tab:rulesall}.",
+        star=False))
+    (TABLES / "a3_rules_all.tex").write_text(rule_table(
+        have, "tab:rulesall",
+        "ARI under all four label-free rules, with the chosen cluster count in parentheses. "
+        "The two stability columns repeat Table~\\ref{tab:rules} and are included so the four "
+        "rules can be compared in one place. The Default and Silhouette rules are "
+        "deterministic given the input and were run once, so they carry no seed range. "
+        "PBMC14K was run under the stability rule only for MICA, its shipped small-data "
+        "default not applying in graph mode.",
+        star=True))
+
+    # ---------- AMI, promised in the Measures subsection ----------
+    arows = []
     for x in present:
         cells = []
         for r, _ in have:
             t = tabs[r]
             for m in ("mica", "leiden_pca"):
-                sel = t[(t.ds == x) & (t.method == m)] if len(t) else None
-                if sel is None or not len(sel):
-                    cells.append("n/a")
-                    continue
-                v = sel.iloc[0]
-                k = f"{int(v.k)}" if v.k_min == v.k_max else f"{int(v.k_min)}\\textrm{{-}}{int(v.k_max)}"
-                cells.append(f"{v.ari:.3f}\\,({k})")
-        body.append(f"{NAMES[x]} ({truth_k[x]}) & " + " & ".join(cells) + " \\\\")
+                sel = t[(t.ds == x) & (t.method == m)]
+                cells.append(f"{sel.iloc[0].ami:.3f}" if len(sel) and sel.iloc[0].ami == sel.iloc[0].ami
+                             else "n/a")
+        arows.append(f"{NAMES[x]} ({truth_k[x]}) & " + " & ".join(cells) + " \\\\")
+    ameans = []
+    for r, _ in have:
+        t = tabs[r]
+        for m in ("mica", "leiden_pca"):
+            sel = t[(t.ds.isin(SMALL)) & (t.method == m)].dropna(subset=["ami"])
+            ameans.append(f"\\textbf{{{sel.ami.mean():.3f}}}" if len(sel) else "n/a")
+    arows.append("\\midrule\n\\textit{Mean, nine small} & " + " & ".join(ameans) + " \\\\")
     groups = " & ".join(f"\\multicolumn{{2}}{{c}}{{{lab}}}" for _, lab in have)
     cmid = "".join(f"\\cmidrule(lr){{{2 + 2 * i}-{3 + 2 * i}}}" for i in range(len(have)))
     heads = " & ".join(["MICA & Leiden"] * len(have))
-    (TABLES / "a3_rules.tex").write_text(
-        "\\begin{table*}[t]\n\\centering\n\\caption{ARI of the partition each label-free rule chose, with the number "
-        "of clusters it chose in brackets, and the true number of cell types after each dataset name. No reference "
-        "labels are used in the choice. Values are the median over three seeds. Both methods saw the same input, the "
-        "same candidate range of 2 to 20 clusters and the same subsamples. A rule can reach a fair ARI with a badly "
-        "wrong cluster count, which a user would notice.}\n\\label{tab:rules}\n\\footnotesize\n"
-        "\\setlength{\\tabcolsep}{4pt}\n"
+    (TABLES / "a3_ami.tex").write_text(
+        "\\begin{table*}[t]\n\\centering\n\\caption{Adjusted mutual information for the same chosen partitions "
+        "as Table~\\ref{tab:rules}, on the same runs. AMI is more forgiving than ARI when a true type is split "
+        "across several clusters, so the gap between this table and Table~\\ref{tab:rules} is itself a reading of "
+        "how a rule is failing: the stability rule\'s overclustered MICA partitions lose far less here than they do "
+        "under ARI.}\n\\label{tab:ami}\n\\footnotesize\n\\setlength{\\tabcolsep}{4pt}\n"
         f"\\begin{{tabular}}{{l{'cc' * len(have)}}}\n\\toprule\n & {groups} \\\\\n{cmid}\nDataset (types) & "
-        f"{heads} \\\\\n\\midrule\n" + "\n".join(body) + "\n\\bottomrule\n\\end{tabular}\n\\end{table*}\n")
+        f"{heads} \\\\\n\\midrule\n" + "\n".join(arows) + "\n\\bottomrule\n\\end{tabular}\n\\end{table*}\n")
+
+    # ---------- per-dataset seed variation, which the main table has no room for ----------
+    sv = d[d.k_setting.isin(["stability_finest", "stability_most"])].groupby(
+        ["ds", "method", "k_setting"]).agg(
+        runs=("ari", "size"), ari_median=("ari", "median"), ari_min=("ari", "min"),
+        ari_max=("ari", "max"), k_median=("n_clusters", "median"), k_min=("n_clusters", "min"),
+        k_max=("n_clusters", "max")).round(4).reset_index()
+    sv["ari_range"] = (sv.ari_max - sv.ari_min).round(4)
+    sv.to_csv(RESULTS / "a3_seed_variation.csv", index=False)
+    print(f"seed variation: largest ARI range {sv.ari_range.max():.3f} "
+          f"({sv.loc[sv.ari_range.idxmax(), 'ds']}, {sv.loc[sv.ari_range.idxmax(), 'method']})")
 
     # ---------- numbers for the text ----------
     for r, _ in RULES:
@@ -146,6 +220,7 @@ def main():
         piv = t.pivot_table(index="ds", columns="method", values="ari")
         if {"mica", "leiden_pca"} <= set(piv.columns):
             piv = piv.dropna()
+            piv = piv[piv.index.isin(SMALL)]
             nums[r] = {"per_dataset": piv.round(4).to_dict(),
                        "mica_mean": round(float(piv.mica.mean()), 4),
                        "leiden_mean": round(float(piv.leiden_pca.mean()), 4),
@@ -169,11 +244,13 @@ def main():
                       "k_tied_span": int(tied.n_clusters.max() - tied.n_clusters.min()),
                       "spread": round(float(g.stability.max() - g.stability.min()), 3),
                       "spearman_stability_ari": round(float(rho), 3) if rho == rho else None})
-    mech = pd.DataFrame(mrows)
+    mech_all = pd.DataFrame(mrows)
     chosen = d[d.k_setting == "stability_finest"].groupby(["ds", "method"]).n_clusters.median().rename("chosen_k")
-    mech = mech.merge(chosen.reset_index(), on=["ds", "method"], how="left")
-    mech["true_k"] = mech.ds.map(truth_k)
-    mech["excess_clusters"] = mech.chosen_k - mech.true_k
+    mech_all = mech_all.merge(chosen.reset_index(), on=["ds", "method"], how="left")
+    mech_all["true_k"] = mech_all.ds.map(truth_k)
+    mech_all["excess_clusters"] = mech_all.chosen_k - mech_all.true_k
+    # Aggregates are over the nine small-data datasets, the set the text quotes.
+    mech = mech_all[mech_all.ds.isin(SMALL)].reset_index(drop=True)
     nums["mechanism"] = {
         "tie_window": TIE,
         "mean_share_tied": mech.groupby("method").share_tied.mean().round(3).to_dict(),
@@ -185,7 +262,7 @@ def main():
             for m, g in mech.dropna(subset=["excess_clusters"]).groupby("method") if len(g) > 3},
         "n_datasets": int(mech.ds.nunique()),
         "table": mech.to_dict(orient="records")}
-    mech.to_csv(RESULTS / "a3_mechanism.csv", index=False)
+    mech_all.to_csv(RESULTS / "a3_mechanism.csv", index=False)
     print("mechanism: share of settings tied with the best " + str(nums["mechanism"]["mean_share_tied"]))
     print("mechanism: mean span of cluster counts among tied settings " + str(nums["mechanism"]["mean_k_span_among_tied"]))
 
@@ -227,10 +304,13 @@ def main():
                       "changed": any(v is not None and v != base for v in shifted.values())})
     sens = pd.DataFrame(srows)
     if len(sens):
+        # Headline over the nine small-data datasets, to match every other aggregate.
+        sm = sens[sens.ds.isin(SMALL)]
         nums["threshold_sensitivity"] = {
             "shifts": [-0.01, -0.02],
-            "changed_of_total": f"{int(sens.changed.sum())} of {len(sens)}",
-            "by_method": sens.groupby("method").changed.sum().to_dict(),
+            "changed_of_total": f"{int(sm.changed.sum())} of {len(sm)}",
+            "by_method": sm.groupby("method").changed.sum().to_dict(),
+            "pbmc14k": sens[sens.ds == "pbmc14k"].set_index("method").changed.to_dict(),
             "table": sens.to_dict(orient="records")}
         sens.to_csv(RESULTS / "a3_threshold_sensitivity.csv", index=False)
         print(f"threshold sensitivity: the chosen cluster count changes in "
@@ -245,7 +325,7 @@ def main():
     if len(curve):
         show = [x for x in ["buettner", "pollen", "zeisel"] if x in set(curve.ds)][:3]
         if show:
-            fig, axes = plt.subplots(1, len(show), figsize=(7.0, 2.1), sharey=True)
+            fig, axes = plt.subplots(1, len(show), figsize=(7.0, 1.85), sharey=True)
             axes = np.atleast_1d(axes)
             plt.rcParams.update({"font.size": 7, "font.family": "serif", "pdf.fonttype": 42})
             for ax, x in zip(axes, show):

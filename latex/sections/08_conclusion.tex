@@ -2,35 +2,30 @@
 We asked whether the advantage scMINER reports for mutual information clustering survives
 when the method must choose its own clustering without reference labels. Applying one
 published label-free rule identically to MICA and to a principal component and Leiden
-pipeline, on nine datasets with repeats, we find that the ranking depends on how the rule
-resolves settings it cannot distinguish, and that it cannot distinguish a wide span of
-cluster counts for MICA. The published benchmark score is therefore not a quantity a user
-inherits, and the uncertainty introduced by the selection rule is larger on these datasets
-than the difference between the two methods.
+pipeline, on ten datasets with repeats, we find that on the nine small ones the ranking
+depends on how the rule resolves settings it cannot distinguish, and that it cannot
+distinguish a wide span of cluster counts for MICA. On the tenth, the only one above 5,000
+cells and the only one whose labels do not come from clustering, the ambiguity is absent
+and MICA wins outright. Running both of MICA's modes on one fixed pool of 2,500 cells
+locates the cause in the pipeline rather than the dataset size. The published benchmark
+score is therefore not a quantity a user inherits in MICA's small-data mode, where nine of
+the ten benchmark datasets sit, and the uncertainty the selection rule introduces there is
+larger than the difference between the two methods.
 
-Three pieces of work remain before the complete draft on November 18, and they are chosen
-to address the limitations above rather than to add scope.
-
-First, PBMC14K under MICA's graph mode. It is the only dataset in our set above the 5,000
-cell threshold and the only one whose labels do not come from clustering, so it tests
-whether the ambiguity we measured is a property of small datasets or of the method. The run
-is implemented and queued.
-
-Second, a transfer rule, in which each dataset receives the setting that worked best on the
-others. It is the remedy Ullmann et al. recommend for exactly the bias we are studying, and
-it also offers a way to check whether MICA's shipped default carries information from these
-benchmark datasets.
-
-Third, the scaling result from Assignment 2 needs its cost argument completed rather
-than extended. We already match MICA's own neighbour search accuracy at a fraction of
-its cost on 13,605 and 100,000 cells, but what that is worth depends on whether the
-resulting clustering is one a user would have selected, which is the question this
-submission has been asking. We will not add the retrieval and language model component
-unless the clustering results are settled first.
+One experiment and one piece of analysis remain, for the main experiment deadline of
+November 4 and the complete draft on November 18. They address the limitations above rather
+than add scope. The experiment is a transfer rule, in which each dataset receives the
+setting that worked best on the others. It is the remedy Ullmann et al. recommend for the
+bias we are studying, and it checks whether MICA's shipped default carries information from
+these benchmark datasets. The analysis is the Assignment 2 scaling result, which needs its
+cost argument completed rather than extended: we match MICA's neighbour search accuracy at
+a fraction of its cost on 13,605 and 100,000 cells, but what that is worth depends on
+whether the resulting clustering is one a user would have selected. We will not add the
+retrieval and language model component unless the clustering results settle first.
 
 \section*{Completion plan}
-\textbf{Utshab} runs the PBMC14K graph-mode experiment and the transfer rule, completes the
-cost analysis, and drafts the methods, experimental design and results sections. All
+\textbf{Utshab} runs the transfer rule, completes the cost analysis, and drafts the methods,
+experimental design and results sections. All
 computation runs on the one workstation he has access to.
 
 \textbf{Laraib} completes the dataset cards for PBMC14K and the Allen atlas from the

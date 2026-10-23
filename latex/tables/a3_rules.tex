@@ -1,25 +1,27 @@
-\begin{table*}[t]
+\begin{table}[t]
 \centering
-\caption{ARI of the partition each label-free rule chose, with the number of clusters it chose in brackets, and the true number of cell types after each dataset name. No reference labels are used in the choice. Values are the median over three seeds. Both methods saw the same input, the same candidate range of 2 to 20 clusters and the same subsamples. A rule can reach a fair ARI with a badly wrong cluster count, which a user would notice.}
+\caption{ARI of the partition the stability rule chose under each of its two readings, with the number of clusters chosen in parentheses and the true number of cell types after each dataset name. No reference labels are used in the choice. Values are medians over three seeds, and a pair such as (15-18) gives the smallest and largest count over those seeds. The mean row covers the nine small-data datasets, the set every mean in the text refers to. PBMC14K runs in MICA's graph mode and is discussed in Section~\ref{sec:pbmc}. The other two rules are in Table~\ref{tab:rulesall}.}
 \label{tab:rules}
 \footnotesize
 \setlength{\tabcolsep}{4pt}
-\begin{tabular}{lcccccccc}
+\begin{tabular}{lcccc}
 \toprule
- & \multicolumn{2}{c}{Default} & \multicolumn{2}{c}{Silhouette} & \multicolumn{2}{c}{Finest stable} & \multicolumn{2}{c}{Most stable} \\
-\cmidrule(lr){2-3}\cmidrule(lr){4-5}\cmidrule(lr){6-7}\cmidrule(lr){8-9}
-Dataset (types) & MICA & Leiden & MICA & Leiden & MICA & Leiden & MICA & Leiden \\
+ & \multicolumn{2}{c}{Finest stable} & \multicolumn{2}{c}{Most stable} \\
+\cmidrule(lr){2-3}\cmidrule(lr){4-5}
+Dataset (types) & MICA & Leiden & MICA & Leiden \\
 \midrule
-Yan (8) & 0.765\,(4) & 0.845\,(5) & 0.794\,(5) & 0.765\,(4) & 0.496\,(19\textrm{-}20) & 0.845\,(5\textrm{-}8) & 0.496\,(3) & 0.765\,(4\textrm{-}5) \\
-Goolam (5) & 0.582\,(4) & 0.349\,(6) & 0.630\,(2) & 0.619\,(2) & 0.593\,(6\textrm{-}7) & 0.429\,(2\textrm{-}3) & 0.630\,(2\textrm{-}3) & 0.619\,(2\textrm{-}3) \\
-Buettner (3) & 0.919\,(4) & 0.237\,(4) & 0.474\,(2) & 0.154\,(2) & 0.934\,(3) & 0.232\,(3) & 0.474\,(2\textrm{-}3) & 0.134\,(2\textrm{-}3) \\
-Pollen (11) & 0.493\,(4) & 0.865\,(9) & 0.942\,(12) & 0.870\,(9) & 0.898\,(15\textrm{-}18) & 0.755\,(7\textrm{-}11) & 0.087\,(2) & 0.755\,(5\textrm{-}11) \\
-Chung (4) & 0.655\,(4) & 0.567\,(7) & 0.551\,(9) & 0.046\,(2) & 0.474\,(11\textrm{-}12) & 0.129\,(3\textrm{-}4) & 0.100\,(2) & 0.129\,(3) \\
-Usoskin (4) & 0.839\,(4) & 0.393\,(10\textrm{-}11) & 0.347\,(2) & 0.761\,(3) & 0.818\,(3) & 0.633\,(6) & 0.818\,(3) & 0.757\,(3\textrm{-}6) \\
-Kolodziejczyk (3) & 0.834\,(4) & 0.525\,(7) & 0.727\,(3) & 0.525\,(7) & 0.722\,(3\textrm{-}5) & 0.838\,(4) & 0.630\,(2) & 0.838\,(4) \\
-Klein (4) & 0.980\,(4) & 0.469\,(10\textrm{-}11) & 0.501\,(2) & 0.859\,(3) & 0.501\,(2\textrm{-}3) & 0.973\,(4) & 0.501\,(2) & 0.859\,(3\textrm{-}4) \\
-Zeisel (7) & 0.478\,(4) & 0.378\,(21) & 0.386\,(2) & 0.473\,(3) & 0.518\,(3) & 0.855\,(8\textrm{-}9) & 0.518\,(2\textrm{-}3) & 0.855\,(8) \\
-PBMC14K (7) & n/a & 0.866\,(8) & n/a & n/a & n/a & n/a & n/a & n/a \\
+Yan (8) & 0.496\,(19\textrm{-}20) & 0.845\,(5\textrm{-}8) & 0.496\,(3) & 0.765\,(4\textrm{-}5) \\
+Goolam (5) & 0.593\,(6\textrm{-}7) & 0.429\,(2\textrm{-}3) & 0.630\,(2\textrm{-}3) & 0.619\,(2\textrm{-}3) \\
+Buettner (3) & 0.934\,(3) & 0.232\,(3) & 0.474\,(2\textrm{-}3) & 0.134\,(2\textrm{-}3) \\
+Pollen (11) & 0.898\,(15\textrm{-}18) & 0.755\,(7\textrm{-}11) & 0.087\,(2) & 0.755\,(5\textrm{-}11) \\
+Chung (4) & 0.474\,(11\textrm{-}12) & 0.129\,(3\textrm{-}4) & 0.100\,(2) & 0.129\,(3) \\
+Usoskin (4) & 0.818\,(3) & 0.633\,(6) & 0.818\,(3) & 0.757\,(3\textrm{-}6) \\
+Kolodziejczyk (3) & 0.722\,(3\textrm{-}5) & 0.838\,(4) & 0.630\,(2) & 0.838\,(4) \\
+Klein (4) & 0.501\,(2\textrm{-}3) & 0.973\,(4) & 0.501\,(2) & 0.859\,(3\textrm{-}4) \\
+Zeisel (7) & 0.518\,(3) & 0.855\,(8\textrm{-}9) & 0.518\,(2\textrm{-}3) & 0.855\,(8) \\
+PBMC14K (7) & 0.629\,(5) & 0.397\,(4) & 0.629\,(5) & 0.397\,(4) \\
+\midrule
+\textit{Mean, nine small} & \textbf{0.661} & \textbf{0.632} & \textbf{0.473} & \textbf{0.635} \\
 \bottomrule
 \end{tabular}
-\end{table*}
+\end{table}

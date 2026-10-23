@@ -1,23 +1,16 @@
 \section{Experimental Design}\label{sec:design}
-The experiment asks one question: when the same label-free rule picks the setting for
-both methods, which method's chosen partition agrees better with the reference labels?
-The comparison is paired. For every dataset and rule, the input matrix, the gene set,
-the candidate range and the scoring are fixed, and only the method differs.
+The comparison is paired. For every dataset and rule, the input matrix, the gene set, the
+candidate range and the scoring are fixed, and only the method differs.
 
 \subsection{Data}
 We use the ten labelled datasets of the scMINER benchmark in the processed form the
 authors released, so differences from their reported numbers cannot come from our
-preprocessing. They span 124 to 13,605 cells and 3 to 11 cell types, the range over
-which the published claim was made, and are listed with their sizes, label counts and
-sparsity in Table~\ref{tab:data}.
-
-
-
-Two of them carry most of the weight. PBMC14K is the only dataset whose labels are
-independent of clustering, since its populations were sorted with antibodies before
-sequencing \cite{zheng2017massively}. Zeisel's labels came from the original authors
-clustering the same data \cite{zeisel2015cell}, so any method resembling theirs is
-flattered. We say which is which whenever a conclusion rests on one of them.
+preprocessing. They span 124 to 13,605 cells and 3 to 11 cell types, the range over which
+the published claim was made (Table~\ref{tab:data}). Two carry most of the weight. PBMC14K
+is the only dataset whose labels are independent of clustering, its populations having been
+sorted with antibodies before sequencing \cite{zheng2017massively}, while Zeisel's labels
+came from the original authors clustering the same data \cite{zeisel2015cell}, so any
+method resembling theirs is flattered.
 
 \subsection{What is held fixed}
 Both methods receive the same matrix with all genes retained, and both choose among
@@ -25,32 +18,42 @@ settings whose full-data partition has 2 to 20 clusters, so neither can win by s
 a wider range. The true number of types is never supplied. Both see the same $B = 25$
 subsamples within a seed, which makes the comparison paired at the level of the draw.
 
+chooseR specifies $B = 100$. We use 25 because the rule costs $B + 1$ clusterings per
+candidate setting, so 100 would take roughly four times the compute for every result here.
+The reduction widens the bootstrap intervals and lowers the threshold, which could change
+which settings clear it, so rather than assume it is harmless we test the selection's
+sensitivity to the threshold directly in Section~\ref{sec:results}.
+
 \subsection{Use of labels}
-Labels are used in two places only. They score the chosen partition, after selection.
-And they define the label-informed reference, which reproduces the published protocol by
-letting the labels pick the setting. That is an upper bound on what each method could
-achieve, not a result a user could obtain.
+Labels are used in two places only. They score the chosen partition after selection, and
+they fix the setting in the reproduction of the published protocol reported in
+Section~\ref{sec:results}, which is an upper bound on what MICA could achieve rather than
+a result a user could obtain.
 
 \subsection{Runs and variation}
 Every stochastic comparison is repeated. The stability rule is run with three independent
 seeds, which redraw the subsamples and reinitialise the clustering, and we report the
-median and the full range across those runs. Within a run, MICA's $k$-means uses 50
-restarts, enough to reach its own optimum reliably. Those are restarts inside one run and
-are not counted as repeats. Leiden is run at three seeds per setting under the fixed-setting
-protocols. Where a range is reported it is the observed minimum and maximum, not a
-confidence interval, because three runs are too few to justify one.
+median across those runs with the full range of chosen cluster counts. Per-dataset ARI
+ranges are in Appendix~\ref{app:repro}. MICA's $k$-means uses 50 restarts within a run,
+enough to reach its own optimum reliably, which are restarts rather than repeats. The
+silhouette and default rules are deterministic given the input and were run once.
+Where a range is reported it is the observed minimum and maximum, not a confidence
+interval, because three runs are too few to justify one.
 
 \subsection{Measures}
-Agreement with the labels is the adjusted Rand index (ARI) and the adjusted mutual
-information (AMI). We report both because ARI penalises splitting a true type across
-clusters more sharply than AMI does, so a gap between them is itself evidence about how a
-method is failing. We also report $|P_{\hat{s}}|$, the number of clusters the rule chose,
-because a rule can reach a respectable ARI with a badly wrong number of clusters, and a
-user would notice the latter.
+Agreement with the labels is the ARI in the main table, because it penalises splitting a
+true type across clusters more sharply than the adjusted mutual information does, and
+splitting is the failure mode these rules produce. The AMI for every run is in
+Table~\ref{tab:ami}, and the gap between the two is itself evidence about how a method is
+failing. We also report $|P_{\hat{s}}|$, the number of clusters the rule chose, because a
+rule can reach a respectable ARI with a badly wrong number of clusters, and a user would
+notice the latter.
 
 \subsection{Cost}
-Cost is wall-clock time on one shared workstation with 120 cores and 754 GB of memory,
-every job capped at 8 threads and no GPU used. It counts everything a rule needs: the
-candidate partitions, the subsample reruns and the scoring. MICA's one-off distance
-matrix is shared across all settings and seeds and is reported separately. We also give
-the number of clustering calls, as a hardware-independent companion to the timings.
+We time the stability rule, the only one of the four whose cost is more than a single
+sweep. Cost is wall-clock time on one shared workstation with 120 cores and 754 GB of
+memory, every job capped at 8 threads and no GPU used. It counts everything the rule
+needs: the candidate partitions, the subsample reruns and the scoring. MICA's one-off
+distance matrix is shared across all settings and seeds and is reported separately. We
+also give the number of clustering calls, as a hardware-independent companion to the
+timings.

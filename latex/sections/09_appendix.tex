@@ -2,23 +2,60 @@
 The manuscript source is in the Overleaf project linked \overleaflink. The code, the saved
 result files and the notebook are at \url{https://github.com/utshabkg/scminer-clustering}.
 
-Table~\ref{tab:rules} and Fig.~\ref{fig:curve} are regenerated
-from the saved results by \texttt{scripts/a3\_report.py}, and
-\texttt{notebooks/assignment3\_results.ipynb} runs that script and displays each table and
-figure with the underlying rows, so the main displays can be reproduced without rerunning
-any experiment. The per-run outputs they read are committed under \texttt{results/}, one
-folder per run holding \texttt{metrics.csv} and a \texttt{params.json} that records the
-settings, seed and candidate grid of that run. \texttt{results/a3\_report\_numbers.json}
-holds every number quoted in the text.
+\texttt{notebooks/assignment3\_results.ipynb} rebuilds every table and figure in this
+paper from the saved result files and displays them with the rows behind them, so the
+displays can be checked without rerunning an experiment. Appendix~\ref{app:repro} gives
+the layout of those files and the commands that produced them.
 
 \section{The datasets}\label{app:data}
+Table~\ref{tab:data} lists the ten benchmark datasets with their sizes, label counts and
+sparsity. Nine fall below the 5,000 cell point at which MICA switches from its small-data
+mode to its graph mode, and PBMC14K is the only one above it, which is why mode and size
+move together in the runs as shipped.
+
 \input{tables/a3_datasets}
 
+\section{All four rules in one table}\label{app:rulesall}
+Table~\ref{tab:rulesall} puts the two stability readings of Table~\ref{tab:rules} beside
+the shipped defaults and the shared-space silhouette, so the spread across rules quoted in
+Section~\ref{sec:results} can be read off directly.
+
+\input{tables/a3_rules_all}
+
+\section{The two secondary rules}\label{app:secondary}
+The body concentrates on the stability rule. The other two carry choices of their own, and
+both favour MICA for reasons that have little to do with its clustering.
+
+\textbf{The shipped default.}
+MICA's best result comes from its own shipped default, which returns four clusters whatever
+the dataset: a mean ARI of 0.727, leading on seven of nine datasets. The median number of
+cell types across these datasets is also four, and three have exactly four. Split by that,
+the default scores 0.802 where the true count is 3 to 5 and 0.579 outside. We cannot show
+how it was chosen, so its apparent strength is a property of this benchmark's composition
+rather than of the method, and it would not transfer to tissue with a different number of
+types. The baseline's default is a resolution rather than a count, and it overclusters
+badly here, reaching 21 clusters on Zeisel.
+
+\textbf{The silhouette rule.} It carries a third such choice. Scoring the same partitions in the 50
+principal components rather than in MICA's own embedding changes the selected ARI by 0.13
+on average for MICA and 0.16 for the baseline, reaching 0.52, with only the space changing
+(Appendix~\ref{app:repro}).
+
+\section{Adjusted mutual information}\label{app:ami}
+Table~\ref{tab:ami} gives the AMI for the same chosen partitions as
+Table~\ref{tab:rules}. The two measures agree on the ranking under every rule, but the
+gap between them is largest exactly where the stability rule overclusters: on Pollen,
+MICA's 17-cluster partition scores 0.898 under ARI and 0.913 under AMI, while its
+2-cluster partition scores 0.087 and 0.318. AMI's tolerance for split types is why we
+report ARI in the main table.
+
+\input{tables/a3_ami}
+
 \section{Reproducing the results}\label{app:repro}
-Everything below is in the project repository. The main table and figure are rebuilt
-from saved result files by \texttt{scripts/a3\_report.py}, which also writes
-\texttt{results/a3\_report\_numbers.json} holding every number quoted in the text, so
-each can be traced to the run that produced it.
+\texttt{scripts/a3\_report.py} rebuilds the tables and the figure from the saved result
+files and writes \texttt{results/a3\_report\_numbers.json}, which holds the aggregate
+figures quoted in the text, each traceable to the run that produced it. Per-dataset ARI
+ranges across seeds are in \texttt{results/a3\_seed\_variation.csv}.
 
 \textbf{Software.} Two conda environments, both pinned in \texttt{envs/}. The analysis
 environment has Python 3.11, Scanpy 1.11.5 and scikit-learn. The second reproduces the
@@ -30,8 +67,11 @@ is used whenever MICA's own code runs. MICA is the released version at commit
 \texttt{scripts/run\_rules\_small.sh}, which calls
 \texttt{scripts/run\_rule\_stability.py} once per dataset and seed. PBMC14K needs MICA's
 graph mode and runs through \texttt{scripts/run\_rule\_stability\_graph.py}, which shells
-out to the legacy environment for the node2vec step. The silhouette rule is
-\texttt{scripts/run\_rule\_silhouette.py}. Each writes a folder under \texttt{results/}
+out to the legacy environment for the node2vec step. The mode against size comparison of
+Section~\ref{sec:modesize} is \texttt{scripts/run\_rule\_mode\_size.py}, which draws the
+pool once and calls both pipelines on it. The silhouette rule is
+\texttt{scripts/run\_rule\_silhouette.py} and the shipped defaults are
+\texttt{scripts/run\_rule\_default.py}. Each writes a folder under \texttt{results/}
 containing \texttt{metrics.csv} and a \texttt{params.json} recording the settings, seed
 and candidate grid of that run.
 
@@ -50,8 +90,8 @@ remaining in our implementation, and settling it needs a run against chooseR's o
 code.
 
 \textbf{Scale of the computation.} Each dataset and seed runs $B+1$ clusterings per
-candidate setting for each method, which is 494 for MICA over 19 values of $k$ and about
-1,040 for Leiden over its grid. The reported cost excludes the one-off mutual information
+candidate setting for each method, which is 494 for MICA over 19 values of $k$ and 468 to
+1,040 for Leiden, whose grid loses settings that fall outside 2 to 20 clusters. The reported cost excludes the one-off mutual information
 distance matrix, which is computed once per dataset, cached, and shared by every setting
 and seed.
 
@@ -60,7 +100,7 @@ and seed.
 methods was scored both in the 50 principal components and in MICA's multidimensional
 scaling embedding. The selected ARI differs between the two spaces by 0.13 on average
 for MICA and 0.16 for the baseline, with the largest differences on Goolam, 0.39 for
-MICA, and Usoskin, 0.48 for the baseline. The partitions, the candidate settings and the
+MICA, and Chung, 0.52 for the baseline. The partitions, the candidate settings and the
 methods are identical across the two, so the difference is attributable to the space
 alone. Per-dataset values are in the \texttt{rule\_silhouette} folders under
 \texttt{results/}.
@@ -86,9 +126,11 @@ A team member reviewing the result tables flagged six values as possible data ha
 errors. Each was checked against the stored partitions and gene sets, and all six are
 genuine results. We record them here because two are informative.
 
-Identical scores in different gene settings do not indicate reused results. On Goolam the
-three highly variable gene sets give hierarchical clustering partitions that agree at
-ARI 1.000 with each other, so the repeated 0.910 is one partition found three times. On
+Identical scores in different gene settings do not indicate reused results. Assignment 2
+also ran each method on the 2,000 most variable genes under three different selectors,
+where this paper keeps all genes. On Goolam those three gene sets give hierarchical
+clustering partitions that agree at ARI 1.000 with each other, so the repeated 0.910 is one
+partition found three times. On
 Pollen the three MICA partitions are different from one another, agreeing at ARI 0.91 to
 0.95, yet each scores 0.942 against the labels, which is a coincidence of equal agreement
 rather than a copied value.

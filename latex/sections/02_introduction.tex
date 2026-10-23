@@ -2,9 +2,9 @@
 A biologist who has sequenced a new tissue wants to know which cell types are in it. The
 standard route is to cluster the cells and inspect the groups. Every clustering method used
 for this has a setting that controls how finely it divides the data, and the result depends
-on it strongly: on Zeisel, which has 7
-annotated cell types, MICA returns between 7 and 59 clusters as that setting moves across
-its own default range, and Leiden between 1 and 33. Choosing it is therefore not a
+on it strongly. On Zeisel, which has 7 annotated cell types, the baseline returns 2
+clusters at the low end of its resolution grid and 21 at the setting its software ships
+with. Choosing it is therefore not a
 detail of tuning but the main decision, and it has to be made without knowing the answer,
 because the number of cell types is usually what the experiment is trying to establish.
 
@@ -24,47 +24,53 @@ labels.
 does MICA, the mutual information clustering in scMINER, produce partitions closer to the
 known cell types than a principal component and Leiden pipeline on the same genes?
 
+Two supporting questions follow from it. How much of the answer is set by the rule rather
+than by either method, and under what conditions does the answer hold?
+
 Our approach holds everything except the method fixed. Both receive the same matrix,
 choose among settings yielding 2 to 20 clusters, and are selected by the same rule. The
-main rule is a published one, subsampling stability as specified by chooseR
-\cite{pattersoncross2021chooser}, which reruns each method on 25 random 80 percent
+main rule is a published one, subsampling stability in the style of chooseR
+\cite{pattersoncross2021chooser}, which reruns each method on random 80 percent
 subsamples per candidate setting and prefers settings whose clusters survive resampling.
-Labels are used only afterwards, to score what the rule chose. The experiment covers
-nine of the ten benchmark datasets, three seeds, with cost recorded.
+We use 25 subsamples where chooseR specifies 100, a reduction we justify and test in
+Section~\ref{sec:design}. Labels are used only afterwards, to score what the rule chose.
+The experiment covers all ten benchmark datasets at three seeds, with cost recorded.
 
 The result is not the one we expected. MICA has the higher mean under three of the four
-rules we applied, which on its own would read as support for the published claim. But
-its mean ranges from 0.473 to 0.727 across those rules, a spread of 0.255, where the
-baseline's is 0.120. Two readings of one rule reverse the ranking outright: MICA leads
-0.661 to 0.632 when chooseR is read as its authors specify, and trails 0.473 to 0.635
-when the same scores are read with a different tie-break. Nothing about the data or
-either method differs between them.
-We traced this to a measurable property: among settings the rule scores as equivalent,
-the span of cluster counts averages 7.3 for MICA and 2.7 for the baseline, so for MICA
-the tie-break rather than the data usually decides. On one dataset the rule cannot
-distinguish 3 clusters from 19. Our initial explanation, that stability would simply be less informative for MICA,
-turned out to be wrong: it correlates slightly better with accuracy for MICA than for
-the baseline. The signal is present but compressed into a band too narrow for a
-threshold to act on. A further prediction we drew from that account also failed its
-test, and we report it as failed.
+rules, which on its own would read as support for the published claim, but its mean moves
+by 0.255 across those rules where the baseline's moves by 0.120. Two readings of one rule
+reverse the ranking outright, with nothing about the data or either method differing
+between them. The reason is measurable: among settings the rule scores as equivalent, the
+span of cluster counts averages 7.3 for MICA against 2.7 for the baseline, so the
+tie-break rather than the data usually decides. Our first explanation, that stability
+would simply be less informative for MICA, was wrong, and a second prediction about
+overclustering failed too.
+
+The effect has a boundary, and we found it. On PBMC14K, the one dataset large enough to
+put MICA in its graph mode, the ambiguity is absent: the tied settings all return the same
+number of clusters, both readings agree, and MICA leads 0.629 to 0.397. Running both modes
+on one fixed pool of 2,500 cells then shows it is the mode rather than the size that
+matters. The failure belongs to MICA's small-data pipeline, which nine of the ten benchmark
+datasets and most of the published claim rest on.
 
 This submission makes two contributions.
 
-\textbf{A measurement of what label-free selection costs, and of how unstable that cost is.}
-The closest work establishes that benchmarks which tune on the labels are optimistic
-\cite{ullmann2023overoptimistic}, and supplies rules intended to replace that tuning
-\cite{pattersoncross2021chooser,liu2021multik}, but no study applies such a rule to mutual
-information clustering, and the scMINER benchmark reports no label-free result at all. We supply that measurement and find that three incidental choices inside a single rule,
-its tie-break, its threshold and its random subsample draw, each move the result by as
-much as the gap between the two methods. A benchmark reporting one label-free rule could
-obtain either ranking.
+\textbf{A measurement of what label-free selection costs, and of how unstable that cost
+is.} The closest work establishes that benchmarks tuned on labels are optimistic
+\cite{ullmann2023overoptimistic} and supplies rules meant to replace that tuning
+\cite{pattersoncross2021chooser,liu2021multik}, but none has been applied to mutual
+information clustering, and the scMINER benchmark reports no label-free result at all. We
+supply that measurement, and find that the tie-break, the threshold and the random
+subsample draw inside a single rule each move the result by as much as the gap between the
+two methods.
 
-\textbf{An account of why reproducibility fails as a criterion for this method.} MICA's
-partitions are unusually reproducible under subsampling, including those that split a
-true cell type several ways, because its distance is computed per cell pair and does not
-move when the sample changes. Splitting is then as repeatable as recovering, and a rule
-rewarding repeatability cannot tell them apart. We state the property behind this,
-verify it as an exact identity, and use it to make the experiment affordable.
+\textbf{Evidence on why reproducibility fails as a criterion here, and on where it stops
+failing.} MICA's partitions are unusually reproducible under subsampling, including those
+that split a true cell type several ways, because its distance is computed per cell pair
+and does not move when the sample changes. Splitting is then as repeatable as recovering,
+and a rule rewarding repeatability cannot tell them apart. We state that property, verify
+it as an exact identity, use it to make the experiment affordable, and show that the
+ambiguity it produces is confined to the small-data mode.
 
 Section~\ref{sec:related} covers the closest work. Section~\ref{sec:method} defines the
 methods and the selection rules. Section~\ref{sec:design} gives the experimental design,

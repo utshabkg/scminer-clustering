@@ -1,8 +1,4 @@
 \section{Problem and Method}\label{sec:method}
-This section states the selection problem, describes the two clustering pipelines we
-compare, and defines the label-free rules that choose a final partition. The rules are
-the part that differs from the published benchmark, so they are given in full.
-
 \subsection{Setup and notation}
 The input is a matrix $X \in \mathbb{R}^{n \times g}$ after preprocessing, with $n$
 cells and $g$ genes. A clustering method takes $X$ and one setting $s$ and returns a
@@ -10,7 +6,8 @@ partition $P_s$ of the cells, with $|P_s|$ clusters. For MICA in small-data mode
 setting is the number of clusters $k \in \{2,\dots,20\}$, so $|P_s| = k$. For Leiden and
 for MICA in graph mode it is a resolution $r > 0$, and $|P_s|$ is whatever community
 detection returns, rising with $r$. Reference labels $y \in \{1,\dots,c\}^n$ exist for
-every dataset but are used only for scoring.
+every dataset, where $c$ is the number of annotated cell types, and are used only for
+scoring.
 
 \subsection{MICA, the method under test}
 MICA is the clustering module of scMINER \cite{pan2025scminer}. We run the authors'
@@ -29,12 +26,11 @@ joint entropy puts $D$ in $[0,1]$ and makes it a metric \cite{vinh2010informatio
 MICA then takes one of two paths, switching at 5,000 cells. Below that, \emph{small-data
 mode} applies classical multidimensional scaling to 19 dimensions and runs $k$-means.
 Above it, \emph{graph mode} builds an 80 nearest neighbour graph under $D$ with HNSW
-\cite{malkov2020efficient}, embeds it with node2vec, and runs Louvain over a resolution
-grid. Nine of our ten datasets fall in small-data mode, which is why the setting is $k$
-for most results.
-
-Our own implementation of Eq.~\ref{eq:mi} agrees with the authors' code to within
-$10^{-6}$, and is used only where the released code offers no entry point.
+\cite{malkov2020efficient}, embeds that graph with node2vec random walks, and runs Louvain
+over a resolution grid. Nine of our ten datasets fall in small-data mode, which is why the
+setting is $k$ for most results. Our own implementation of Eq.~\ref{eq:mi} agrees with the
+authors' code to within $10^{-6}$ and is used only where the released code offers no entry
+point.
 
 \subsection{The baseline}
 The baseline is the pipeline most practitioners run: principal component analysis to 50
@@ -44,12 +40,10 @@ detection \cite{traag2019louvain} through Scanpy. Its setting is the resolution.
 \subsection{The selection problem}
 The published benchmark fixes the setting with the labels: every method is either given
 the true number of types $c$, or has its resolution swept and keeps only runs with
-$|P_s| = c$, breaking ties by agreement with $y$. That answers a well-posed question,
-how the clustering machinery compares when the cluster count is held at the truth, but
-not what a user obtains when the cell types are unknown. We therefore require a
-\emph{selection rule}: a function mapping the candidate set $\{P_s\}$ to one setting
-$\hat{s}$ using $X$ alone. The same rule is applied to both methods, and only afterwards
-is $P_{\hat{s}}$ scored against $y$.
+$|P_s| = c$, breaking ties by agreement with $y$. That is a well-posed question, but not
+the one a user faces. We therefore require a \emph{selection rule}: a function mapping the
+candidate set $\{P_s\}$ to one setting $\hat{s}$ using $X$ alone. The same rule is applied
+to both methods, and only afterwards is $P_{\hat{s}}$ scored against $y$.
 
 \subsection{The selection rules}
 \textbf{Default.} The setting the software ships with: resolution 1.0 for Scanpy's
@@ -64,28 +58,25 @@ space. Here it is computed for both methods in one shared space, the 50 principa
 components, so that only the partitions differ.
 
 \textbf{Stability.} Rerun the method on $B$ random subsamples of $80\%$ of the cells and
-prefer settings whose clusters survive resampling. We follow chooseR
+prefer settings whose clusters survive resampling, following chooseR
 \cite{pattersoncross2021chooser}. For setting $s$, let $f_{ij}$ be the fraction of
-subsamples containing both cells $i$ and $j$ in which they were placed in the same
-cluster. Treating $1 - f_{ij}$ as a distance, compute each cell's silhouette with respect
-to the full-data partition $P_s$, average within each cluster, and take the median across
-clusters as the score $\sigma_s$. A percentile bootstrap over cells gives an interval for
-$\sigma_s$. The threshold is the largest lower bound over all settings, and chooseR then
-keeps the setting with the most clusters whose score clears it.
+subsamples containing both cells $i$ and $j$ that place them in the same cluster. Treating
+$1 - f_{ij}$ as a distance, the score $\sigma_s$ is the median across clusters of the mean
+within-cluster silhouette taken against the full-data partition $P_s$. A bootstrap over
+cells gives an interval for $\sigma_s$. The threshold is the largest lower bound over all
+settings, and chooseR keeps the setting with the most clusters clearing it
+(Appendix~\ref{app:repro} gives the estimator).
 
-That last step encodes a preference for fine partitions, and its authors note it leans
-toward overclustering. Because reproducibility says nothing about whether a split is
-real, we also report the plain maximum, $\hat{s} = \arg\max_s \sigma_s$ with ties going
-to fewer clusters. The two readings share all the computation. We call them \emph{finest
-stable} and \emph{most stable}.
+That last step encodes a preference for fine partitions. Because reproducibility says
+nothing about whether a split is real, we also report the plain maximum,
+$\hat{s} = \arg\max_s \sigma_s$ with ties going to fewer clusters. The two readings share
+all the computation. We call them \emph{finest stable} and \emph{most stable}.
 
-\subsection{An exactness property that makes the stability rule affordable}
-The stability rule reruns each method on every subsample, and for MICA a rerun would
-appear to need a new distance matrix, which is the dominant cost. It does not. In
-Eq.~\ref{eq:mi} the bin edges for cell $i$ come from that cell's own range and the
-histogram is taken over genes, so no term depends on any third cell. The distance matrix
-restricted to a subset of cells therefore equals the matrix computed from that subset
-alone. We compute it once per dataset and take submatrices, which is exact rather than
-an approximation, and is checked by a test rather than assumed
+\subsection{An exactness property that makes the rule affordable}
+For MICA, rerunning on a subsample would appear to need a new distance matrix, the
+dominant cost. It does not. In Eq.~\ref{eq:mi} cell $i$'s bins come from its own range and
+the histogram runs over genes, so no term depends on a third cell, and the matrix
+restricted to a subset equals the matrix computed from that subset alone. We compute it
+once per dataset and take submatrices, which a test checks rather than assumes
 (Appendix~\ref{app:exact}). Every later step, the multidimensional scaling included, is
-redone on each subsample.
+redone per subsample.

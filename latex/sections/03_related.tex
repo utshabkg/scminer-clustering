@@ -1,69 +1,53 @@
 \section{Closest Work}\label{sec:related}
-Three bodies of work bound this study: the method we test, the rules we use to select a
-clustering without labels, and the argument that benchmarks which tune on the ground truth
-overstate what users get. We treat each in the detail needed to see what is already
-established and what remains.
-
 \subsection{The method under test}
-scMINER \cite{pan2025scminer} introduces MICA and reports a mean ARI of 0.84 across ten
-labelled datasets, against 0.73 for Seurat and 0.68 for Scanpy. Every setting in that
-benchmark is fixed with the labels, and nine of the ten datasets sit below the 5,000
-cell threshold, so nine of the ten headline scores come from MICA given the true number
-of clusters. In the authors' own benchmark files MICA trails Scanpy on the three larger
-datasets, which were used for runtime rather than accuracy. Asked during peer review how
-a user should choose the resolution without labels, the authors pointed to silhouette
-scores and marker genes but tested neither, and MICA's shipped defaults appear only in
-its source code. We found no independent benchmark that includes MICA, so its behaviour
-outside the published protocol was open before this work.
+scMINER \cite{pan2025scminer} introduces MICA and reports a mean adjusted Rand index
+(ARI) of 0.84 across ten labelled datasets, against 0.73 for Seurat and 0.68 for Scanpy,
+the two standard analysis toolkits. Every setting in that benchmark is fixed with the
+labels, and nine of the ten datasets sit below the 5,000 cell threshold, so almost all of
+the headline scores come from MICA given the true number of clusters. In the authors' own
+benchmark files MICA trails Scanpy on the three larger datasets, which were used for
+runtime rather than accuracy. Asked during peer review how a user should choose the
+resolution without labels, the authors pointed to silhouette scores and marker genes but
+tested neither, and MICA's shipped defaults appear only in its source code. We found no
+independent benchmark that includes MICA.
 
 \subsection{Choosing a clustering without labels}
 chooseR \cite{pattersoncross2021chooser} is the rule we adopt. It reruns a pipeline on 100
 random 80 percent subsamples per candidate setting, scores each setting by how reliably
 cells co-cluster, and keeps the finest setting that stays above a threshold derived from
-the settings themselves. It was demonstrated on Seurat and scVI pipelines at roughly 11,000
-cells, where it selected 29 and 30 clusters, and the authors note that preferring the
-finest acceptable setting leans toward mild overclustering. It has not been applied to a
-mutual information method, and its behaviour on datasets of a few hundred cells was not
-examined. Both gaps matter here, since nine of our ten datasets are smaller than the ones
-it was shown on.
+the settings themselves. Its authors note that preferring the finest acceptable setting
+leans toward mild overclustering. It has not been applied to a mutual information method,
+and the data it was demonstrated on, roughly 11,000 cells, is an order of magnitude larger
+than nine of our ten datasets.
 
-MultiK \cite{liu2021multik} pools 4,000 subsampled Seurat runs by the number of clusters
-they produce and returns two or three candidate counts rather than one. Yu et al.
-\cite{yu2022benchmarking} benchmarked 14 methods that estimate the number of cell types
-and found that most underestimate it, with the error growing as the true number rises.
-One conclusion bears directly on our design: a good ARI did not imply a correct cluster
-count, which is why we report the chosen count beside the score. None of these includes
-a mutual information method.
-
-A second family tests whether a split is real rather than reproducible. sc-SHC
-\cite{grabski2023significance} compares each split against a one-population null model,
-and on data from a single cell line returned one cluster where Seurat's Louvain and
-Leiden defaults both returned nine. CHOIR \cite{sant2025choir} overclusters, then merges
-neighbouring clusters a random forest cannot separate better than chance. The
-distinction matters here: a partition can be perfectly reproducible without being real.
+Two relatives return several answers instead of one: MultiK \cite{liu2021multik} pools
+4,000 subsampled Seurat runs by cluster count, and Yu et al. \cite{yu2022benchmarking}
+benchmarked 14 methods that estimate the number of cell types, finding that most
+underestimate it and that a good ARI did not imply a correct count. That last point is why
+we report the chosen count beside the score. A second family asks whether a split is real
+rather than merely reproducible: sc-SHC \cite{grabski2023significance} tests each split
+against a one-population null, returning one cluster on a single cell line where Seurat's
+defaults returned nine, and CHOIR \cite{sant2025choir} overclusters then merges clusters a
+random forest cannot separate. None of these covers a mutual information method, and the
+distinction they draw matters here, because a partition can be perfectly reproducible
+without being real.
 
 \subsection{Tuning on the ground truth}
-Ullmann et al. \cite{ullmann2023overoptimistic} set out to make a recently published
-clustering algorithm look good by tuning its hyperparameters and the data settings
-against the known labels, then showed how much of that advantage disappeared when the
-choices moved. They state that tuning on the ground truth is common in the literature
-and overstates what a user without labels obtains, and recommend tuning on separate
-datasets. Their study used toy and UCI data and one algorithm, with no single-cell data
-and no label-free rule tested as the remedy. A
-2025 preprint \cite{szmigiel2025benchmarking} swept Leiden and Louvain over a very large
-grid on 16 single-cell datasets and reports that on six of them the Scanpy default did no
-better than a typical random setting, which is evidence that the default is a weak rule but
-not a study of label-free selection either.
+Ullmann et al. \cite{ullmann2023overoptimistic} tuned a published clustering algorithm
+against known labels to make it look good, then showed how much of that advantage
+disappeared when the choices moved. They argue the practice is common and overstates what
+a user without labels obtains, and recommend tuning on separate datasets. Their study used
+toy and UCI data and one algorithm, with no single-cell data and no label-free rule tested
+as the remedy. A 2025 preprint \cite{szmigiel2025benchmarking} swept Leiden and Louvain
+over a large grid on 16 single-cell datasets and found that on six the Scanpy default did
+no better than a typical random setting, which shows the default is weak without studying
+label-free selection either.
 
-Our question sits in the gap these three lines leave. Ullmann et al. establish the bias in
-principle. chooseR and its relatives supply rules but have not been applied to mutual
-information clustering, and the scMINER benchmark reports no label-free result at all. What
-is missing is a direct measurement: hold the rule fixed, apply it identically to both
-methods, and see what survives.
+What is missing is the measurement itself.
 
-\subsection{Scaling the neighbour graph} The secondary question is unchanged since
-Assignment 2. Proposing candidate neighbours cheaply and rescoring them exactly is
-standard in nearest neighbour search, as in the refinement step of Faiss
-\cite{douze2024faiss}, and MICA itself uses HNSW \cite{malkov2020efficient}. Song et al.
-\cite{song2012comparison} found that binned mutual information tracks correlation
-closely for gene pairs, which is what suggested correlation as the cheap stage.
+\subsection{Scaling the neighbour graph} Our Assignment 2 result on the cost of MICA's
+neighbour search is unchanged. Proposing candidate neighbours cheaply and rescoring them
+exactly is standard in nearest neighbour search, as in the refinement step of Faiss
+\cite{douze2024faiss}, over the HNSW graph index \cite{malkov2020efficient} MICA itself
+uses. Song et al. \cite{song2012comparison} found that binned mutual information tracks
+correlation closely for gene pairs, which is what suggested correlation as the cheap stage.

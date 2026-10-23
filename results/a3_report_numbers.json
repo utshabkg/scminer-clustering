@@ -156,6 +156,7 @@
     "goolam": 3.0,
     "klein": 4.0,
     "kolodziejczyk": 4.0,
+    "pbmc14k": 4.0,
     "pollen": 7.0,
     "usoskin": 6.0,
     "yan": 5.0,
@@ -167,6 +168,7 @@
     "goolam": 6.0,
     "klein": 2.0,
     "kolodziejczyk": 5.0,
+    "pbmc14k": 5.0,
     "pollen": 17.0,
     "usoskin": 3.0,
     "yan": 19.0,
@@ -174,8 +176,8 @@
    }
   },
   "seconds_median": {
-   "leiden_pca": 18.7,
-   "mica": 21.0
+   "leiden_pca": 25.1,
+   "mica": 31.6
   }
  },
  "stability_most": {
@@ -215,6 +217,7 @@
     "goolam": 2.0,
     "klein": 3.0,
     "kolodziejczyk": 4.0,
+    "pbmc14k": 4.0,
     "pollen": 7.0,
     "usoskin": 3.0,
     "yan": 4.0,
@@ -226,6 +229,7 @@
     "goolam": 2.0,
     "klein": 2.0,
     "kolodziejczyk": 2.0,
+    "pbmc14k": 5.0,
     "pollen": 2.0,
     "usoskin": 3.0,
     "yan": 3.0,
@@ -233,8 +237,8 @@
    }
   },
   "seconds_median": {
-   "leiden_pca": 18.7,
-   "mica": 21.0
+   "leiden_pca": 25.1,
+   "mica": 31.6
   }
  },
  "mechanism": {
@@ -539,6 +543,10 @@
    "leiden_pca": 6,
    "mica": 8
   },
+  "pbmc14k": {
+   "leiden_pca": true,
+   "mica": false
+  },
   "table": [
    {
     "ds": "buettner",
@@ -619,6 +627,22 @@
     "minus_0.01": 5,
     "minus_0.02": 8,
     "changed": true
+   },
+   {
+    "ds": "pbmc14k",
+    "method": "leiden_pca",
+    "chosen_k": 4,
+    "minus_0.01": 5,
+    "minus_0.02": 6,
+    "changed": true
+   },
+   {
+    "ds": "pbmc14k",
+    "method": "mica",
+    "chosen_k": 5,
+    "minus_0.01": 5,
+    "minus_0.02": 5,
+    "changed": false
    },
    {
     "ds": "pollen",
