@@ -18,8 +18,9 @@ since been settled by our own runs.
 | `workflow_paused_2026-09-16/research_llm-rag-annotation.md` | retrieval and language model approaches to annotating clusters, for the component we have not yet run |
 
 `ideate_*.json` in the same folder holds the three project directions we weighed before settling
-on the one in the report. `journal.jsonl` and `workflow_script*.js` are the machine artifacts
-that produced these notes, kept only for provenance.
+on the one in the report. The run telemetry and orchestration scripts that produced these notes
+are no longer tracked, since they are machine artifacts with nothing to read. They remain in
+git history.
 
 ## Verification (October 2026)
 

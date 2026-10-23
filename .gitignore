@@ -51,3 +51,9 @@ docs/Project_Paper_Writing_Guide.docx
 
 # working notes for the next session, not part of the project
 RESUME.md
+
+# agent orchestration artifacts from the planning stage; the readable notes beside them
+# are tracked, and git history keeps these
+docs/research/**/journal.jsonl
+docs/research/**/workflow_script*.js
+docs/research/**/verify_*_workflow.js
