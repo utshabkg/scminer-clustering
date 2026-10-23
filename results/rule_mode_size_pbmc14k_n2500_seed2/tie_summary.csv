@@ -1,0 +1,4 @@
+method,mode,n_cells,n_settings,n_tied,share_tied,k_tied_min,k_tied_max,k_tied_span
+mica,small,2500,19,5,0.263,2,6,4
+mica,graph,2500,37,6,0.162,4,5,1
+leiden_pca,pca,2500,40,7,0.175,4,5,1

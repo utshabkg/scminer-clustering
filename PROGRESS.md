@@ -53,21 +53,26 @@ one in MICA's graph mode, so the result above could not be attributed to either.
 `scripts/run_rule_mode_size.py` draws one fixed pool of 2,500 PBMC14K cells and runs the
 same rule on those same cells through both of MICA's modes, which holds the data, the size,
 the subsamples and the labels fixed. The graph-mode distance is an exact submatrix of the
-cached full matrix. Both arms are done and the answer is the mode, not the size.
+cached full matrix. All three arms are done at three seeds, and the answer is the mode, not the size. Each seed
+redraws the pool as well as the subsamples, so this is three independent pools, not three
+resamples of one.
 
-| arm on the same 2,500 cells | settings tied | cluster counts among tied | finest stable | most stable |
+| arm on the same 2,500 cells | share tied | span of cluster counts, median (range) | readings differ | median gap |
 |---|---|---|---|---|
-| MICA small-data mode | 6 of 19 | 2 to 7 | 0.675 at k=5 | 0.219 at k=3 |
-| MICA graph mode | 6 of 37 | 5 to 5 | 0.608 at k=5 | 0.608 at k=5 |
-| Leiden, as a control | 6 of 40 | 4 to 5 | 0.609 at k=5 | 0.390 at k=4 |
+| MICA small-data mode | 0.26 | 4 (2 to 5) | 3 of 3 pools | 0.319 |
+| MICA graph mode | 0.16 | 0 (0 to 1) | 0 of 3 pools | 0.000 |
+| Leiden, as a control | 0.15 | 1 (1 to 1) | 1 of 3 pools | 0.000 |
 
-At the same size, on the same cells, with the same subsamples, small-data mode ties
-settings spanning 5 cluster counts and its two readings disagree by 0.456, while graph mode
-ties only settings that return the same count and both readings give 0.608. Graph mode is
-unambiguous at 2,500 cells and at 13,605 alike, so size is not the variable. The ambiguity
-belongs to MICA's small-data pipeline. It is not a property of mutual information either,
-since both arms use the same distance on the same cells and only the embedding and the
-normalisation differ.
+At the same size, on the same cells, the two readings of the rule choose differently on
+every pool under small-data mode, by a median of 0.319 ARI, and never under graph mode.
+Graph mode is unambiguous at 2,500 cells and at 13,605 alike, so size is not the variable.
+The ambiguity belongs to MICA's small-data pipeline. It is not a property of mutual
+information either, since both arms use the same distance on the same cells and only the
+embedding and the normalisation differ.
+
+The per-pool ARIs vary a lot, 0.401 to 0.675 for the small-data arm's finest-stable pick,
+because a 2,500 cell draw is harder or easier depending on which cells it gets. The
+structural result, the span and whether the two readings agree, is what is stable.
 
 This corrects what I wrote in Assignment 3 before the arm finished. The draft had attributed
 the PBMC14K result to dataset size, which the experiment rules out. The abstract,

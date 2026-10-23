@@ -8,6 +8,7 @@ be checked. Nothing here reruns an experiment.
 import json
 import sys
 from glob import glob
+from pathlib import Path
 
 import matplotlib
 
@@ -211,6 +212,56 @@ def main():
     sv.to_csv(RESULTS / "a3_seed_variation.csv", index=False)
     print(f"seed variation: largest ARI range {sv.ari_range.max():.3f} "
           f"({sv.loc[sv.ari_range.idxmax(), 'ds']}, {sv.loc[sv.ari_range.idxmax(), 'method']})")
+
+    # ---------- mode against size, one fixed pool of cells run through both pipelines ----------
+    pool = sorted(glob(str(RESULTS / "rule_mode_size_pbmc14k_n*_seed*")))
+    if pool:
+        trows, prows = [], []
+        for run in pool:
+            seed = int(run.split("seed")[-1])
+            t = pd.read_csv(Path(run) / "tie_summary.csv"); t["seed"] = seed
+            trows.append(t)
+            m = pd.read_csv(Path(run) / "metrics.csv")
+            m = m[m.k_setting.isin(["stability_finest", "stability_most"])]
+            for _, r in m.iterrows():
+                prows.append({"seed": seed, "arm": f"{r.method}/{r.mica_mode}",
+                              "rule": r.k_setting, "k": int(r.n_clusters), "ari": r.ari})
+        T, P = pd.concat(trows), pd.DataFrame(prows)
+        w = P.pivot_table(index=["arm", "seed"], columns="rule", values="ari")
+        w["gap"] = w.stability_finest - w.stability_most
+        ARMS = [("mica", "small", "MICA, small-data mode"), ("mica", "graph", "MICA, graph mode"),
+                ("leiden_pca", "pca", "Leiden, as a control")]
+        body, ms = [], {}
+        for meth, mode, label in ARMS:
+            g = T[(T.method == meth) & (T["mode"] == mode)]
+            if not len(g):
+                continue
+            arm = f"{meth}/{mode}"
+            gaps = w.loc[arm, "gap"] if arm in w.index.get_level_values(0) else pd.Series(dtype=float)
+            span = f"{int(g.k_tied_span.median())} ({int(g.k_tied_span.min())}\\textrm{{-}}{int(g.k_tied_span.max())})"
+            dis = int((gaps > 0.001).sum())
+            body.append(f"{label} & {g.share_tied.median():.2f} & {span} & "
+                        f"{dis} of {len(gaps)} & {gaps.median():.3f} \\\\")
+            ms[arm] = {"share_tied_median": round(float(g.share_tied.median()), 3),
+                       "k_tied_span_median": int(g.k_tied_span.median()),
+                       "k_tied_span_range": [int(g.k_tied_span.min()), int(g.k_tied_span.max())],
+                       "readings_disagree": f"{dis} of {len(gaps)}",
+                       "gap_median": round(float(gaps.median()), 3),
+                       "gaps": [round(float(x), 3) for x in gaps]}
+        (TABLES / "a3_mode_size.tex").write_text(
+            "\\begin{table}[t]\n\\centering\n\\caption{Mode against size. One fixed pool of 2,500 PBMC14K "
+            "cells, drawn afresh at each of three seeds, run through both of MICA\'s pipelines and the "
+            "baseline under the same rule. The data, the size, the subsamples and the labels are identical "
+            "across the three rows, so only the pipeline differs. Tied settings are those within 0.01 of the "
+            "best. The span is the range of cluster counts among them, reported as the median over the three "
+            "pools with the observed range. The last two columns say how often the two readings of the rule "
+            "chose differently and by how much in ARI.}\n\\label{tab:modesize}\n\\footnotesize\n"
+            "\\setlength{\\tabcolsep}{4pt}\n\\begin{tabular}{lcccc}\n\\toprule\n"
+            "Pipeline & Share tied & Span & Readings differ & Median gap \\\\\n\\midrule\n"
+            + "\n".join(body) + "\n\\bottomrule\n\\end{tabular}\n\\end{table}\n")
+        nums["mode_size"] = {"n_pool": 2500, "seeds": sorted(P.seed.unique().tolist()), "arms": ms}
+        print("mode against size: " + ", ".join(
+            f"{k} span {v['k_tied_span_median']} disagree {v['readings_disagree']}" for k, v in ms.items()))
 
     # ---------- numbers for the text ----------
     for r, _ in RULES:

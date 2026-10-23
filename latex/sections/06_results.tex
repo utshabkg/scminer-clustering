@@ -118,20 +118,23 @@ biology.
 
 \subsection{Mode or size: the same cells, run both ways}\label{sec:modesize}
 PBMC14K differs from the nine small datasets in two ways at once, its size and MICA's
-pipeline, so it cannot on its own say which removes the ambiguity. We therefore drew one
+pipeline, so it cannot on its own say which removes the ambiguity. We therefore drew a
 fixed pool of 2,500 PBMC14K cells and ran the same rule on those same cells under both of
-MICA's modes, leaving the data, the size, the subsamples and the labels identical across
-the two arms. Mode here means the whole path scMINER takes, since its two modes normalise
-the mutual information differently as well as embedding it differently.
+MICA's modes, repeating it at three seeds that redraw the pool as well as the subsamples.
+Within a seed the data, the size, the subsamples and the labels are identical across the
+arms. Mode here means the whole path scMINER takes, since its two modes normalise the
+mutual information differently as well as embedding it differently.
 
-The answer is the mode. In small-data mode the ambiguity is fully present: 6 of the 19
-candidate settings tie with the best, they span 2 to 7 clusters, and the two readings
-disagree by 0.456, scoring 0.675 at 5 clusters against 0.219 at 3. In graph mode on the
-same 2,500 cells, 6 of 37 settings tie and every one of them returns 5 clusters, so the
-span is 0 and both readings give 0.608. The baseline, run on the same pool as a control,
-sits between the two with a span of 1 and a gap of 0.219. Graph mode is therefore
-unambiguous at 2,500 cells and at 13,605 alike, and size is not what sets
-Section~\ref{sec:pbmc} apart.
+\input{tables/a3_mode_size}
+
+The answer is the mode, and it does not depend on which cells we drew.
+Table~\ref{tab:modesize} gives the three arms. In small-data mode the settings that tie
+with the best span 4 cluster counts at the median and never fewer than 2, and the two
+readings of the rule choose differently on every one of the three pools, by a median of
+0.319 ARI. In graph mode on the same cells the median span is 0 and the two readings never
+disagree. The baseline sits between them, with a span of 1 on every pool and one
+disagreement in three. Graph mode is unambiguous at 2,500 cells and at 13,605 alike, so
+size is not what sets Section~\ref{sec:pbmc} apart.
 
 So the ambiguity is neither a peculiarity of the benchmark's datasets, since it appears on
 PBMC14K once PBMC14K is cut to their size, nor a property of mutual information clustering,

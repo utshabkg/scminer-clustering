@@ -20,10 +20,10 @@ discriminate, so splitting a true type survives resampling as readily as recover
 The rule's tie-break, its threshold and its random draw each move the result by as much as
 the gap between the methods. The effect is bounded. On the one dataset above 5,000 cells,
 where MICA switches to its graph mode, the ambiguity disappears and MICA leads outright,
-0.629 against 0.397. Running both of MICA's modes on one fixed pool of 2,500 cells shows
-that the mode and not the dataset size is what matters: at the same size, on the same
-cells, the tied settings span 5 cluster counts under small-data mode and 1 under graph
-mode. The failure therefore belongs to MICA's small-data pipeline, which nine of the ten
+0.629 against 0.397. Running both of MICA's modes on one fixed pool of 2,500 cells, at
+three seeds, shows that the mode and not the dataset size is what matters: on the same
+cells the two readings of the rule disagree on every pool under small-data mode and on none
+under graph mode. The failure therefore belongs to MICA's small-data pipeline, which nine of the ten
 benchmark datasets use, rather than to mutual information clustering itself.
 \end{abstract}
 

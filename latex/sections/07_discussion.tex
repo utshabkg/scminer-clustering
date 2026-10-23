@@ -35,8 +35,8 @@ The competing explanation we flagged in Assignment 2 has now been tested, and it
 wrong. We had supposed the ambiguity might be a small-sample effect, since nine of our
 datasets fall well below the size chooseR was demonstrated on. Running both of MICA's modes
 on one fixed pool of 2,500 cells (Section~\ref{sec:modesize}) rules that out: at the same
-size, on the same cells, small-data mode ties settings spanning 5 cluster counts while
-graph mode ties only settings returning the same count. What we measured belongs to MICA's
+size, on the same cells, and across three draws of that pool, the two readings of the rule
+disagree every time under small-data mode and never under graph mode. What we measured belongs to MICA's
 small-data pipeline, not to the size of the data and not to mutual information clustering,
 whose distance is common to both arms. That pipeline is the one nine of the ten benchmark
 datasets run in, so the finding still covers most of the published claim.
