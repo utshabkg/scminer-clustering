@@ -43,11 +43,17 @@ over a large grid on 16 single-cell datasets and found that on six the Scanpy de
 no better than a typical random setting, which shows the default is weak without studying
 label-free selection either.
 
-What is missing is the measurement itself.
+These studies establish the general concern: tuning on the labels flatters a method, and
+shipped defaults are weak stand-ins for a choice. None measures it for MICA, whose published
+scores were all obtained with label-informed settings. Our contribution is that measurement,
+and with it something the general concern does not predict: the effect depends on which
+cluster counts each method's grid can offer, so holding methods to a common cap on the number
+of clusters is not enough to compare them.
 
-\subsection{Scaling the neighbour graph} Our Assignment 2 result on the cost of MICA's
-neighbour search is unchanged. Proposing candidate neighbours cheaply and rescoring them
-exactly is standard in nearest neighbour search, as in the refinement step of Faiss
-\cite{douze2024faiss}, over the HNSW graph index \cite{malkov2020efficient} MICA itself
-uses. Song et al. \cite{song2012comparison} found that binned mutual information tracks
+\subsection{Scaling the neighbour graph} MICA's graph mode finds neighbours with the HNSW
+graph index \cite{malkov2020efficient}. Proposing candidates cheaply and rescoring them
+exactly is the standard alternative in nearest neighbour search, as in the refinement step
+of Faiss \cite{douze2024faiss}, and like any shortlist it finds only the true neighbours that
+land in it. Section~\ref{sec:graph} compares the two on cost and on the clustering each
+yields. Song et al. \cite{song2012comparison} found that binned mutual information tracks
 correlation closely for gene pairs, which is what suggested correlation as the cheap stage.

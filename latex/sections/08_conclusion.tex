@@ -1,43 +1,62 @@
 \section{Conclusion and Remaining Work}\label{sec:conclusion}
-We asked whether the advantage scMINER reports for mutual information clustering survives
-when the method must choose its own clustering without reference labels. Applying one
-published label-free rule identically to MICA and to a principal component and Leiden
-pipeline, on ten datasets with repeats, we find that on the nine small ones the ranking
-depends on how the rule resolves settings it cannot distinguish, and that it cannot
-distinguish a wide span of cluster counts for MICA. On the tenth, the only one above 5,000
-cells and the only one whose labels do not come from clustering, the ambiguity is absent
-and MICA wins outright. Running both of MICA's modes on one fixed pool of 2,500 cells
-locates the cause in the pipeline rather than the dataset size. The published benchmark
-score is therefore not a quantity a user inherits in MICA's small-data mode, where nine of
-the ten benchmark datasets sit, and the uncertainty the selection rule introduces there is
-larger than the difference between the two methods.
+We asked whether the advantage scMINER reports for mutual information clustering survives when
+the method must choose its own clustering without reference labels. Under one published
+label-free rule, applied identically to MICA and to a principal component and Leiden pipeline
+on ten datasets with repeats, part of it does. On the nine small datasets MICA leads under three
+of four rules by small margins, and when its saved scores are restricted after the fact to the
+cluster counts the baseline produced it leads under both readings. The size of that lead depends
+on the rule's
+tie-break, threshold and random draw, and most of all on which counts each method's grid
+offers, which a cap of 20 clusters does not equalise. The same confound accounts for the
+difference we first saw between MICA's two pipelines, and on PBMC14K, the one large benchmark dataset,
+the ranking turns on the threshold. These findings are about one rule, and we do not extend
+them to mutual information clustering under other rules.
 
-One experiment and one piece of analysis remain, for the main experiment deadline of
-November 4 and the complete draft on November 18. They address the limitations above rather
-than add scope. The experiment is a transfer rule, in which each dataset receives the
-setting that worked best on the others. It is the remedy Ullmann et al. recommend for the
-bias we are studying, and it checks whether MICA's shipped default carries information from
-these benchmark datasets. The analysis is the Assignment 2 scaling result, which needs its
-cost argument completed rather than extended: we match MICA's neighbour search accuracy at
-a fraction of its cost on 13,605 and 100,000 cells, but what that is worth depends on
-whether the resulting clustering is one a user would have selected. We will not add the
-retrieval and language model component unless the clustering results settle first.
+The faster neighbour graph is a faster graph rather than a better one. It gives the same
+recall and clustering as MICA's on PBMC14K at a fraction of the build time, and on the Allen
+cells higher recall in less than half the build time, without a better clustering. On both it needs
+three to four times the memory.
+
+\subsection*{Plan through November 4}
+The main experiments are due on November 4 and the complete draft on November 18. Three items
+remain before November 4, and each answers a limitation above rather than adding scope.
+
+\textbf{Matched candidate grids.} Extend the baseline's resolution grid until it reaches 2 to
+20 clusters on every dataset, and MICA's graph-mode grid until it reaches 2, then rerun the
+stability comparison and the mode test. The common-range result above comes from restricting
+saved scores after the fact, and it should rest on runs designed for it.
+
+\textbf{A transfer comparison, reported apart from the label-free rules.} Each dataset takes
+the setting that scored best on the other nine. Because that choice uses the other datasets'
+labels it is not label-free, and it answers a different question: how far a setting tuned on
+labelled benchmarks carries to a new one. It also tests whether MICA's shipped default of
+four clusters behaves like such a tuned setting.
+
+\textbf{The final comparison table} across the ten datasets, every rule with its repeats and
+costs, with no win-count criterion. The question is how the ranking moves with the rule, not
+whether MICA reaches a fixed number of wins.
+
+\textbf{Deferred until those are complete:} cluster annotation with a language model, the hub
+correction for the mutual information graph, and GPU work, as the feedback advised.
+
+\textbf{The full atlas.} Our 100,000-cell pilot of MICA as shipped took 7.1 hours and peaked
+at 140 GB, which scales to about 6 to 8 days and 3.2 TB for all 2.3 million cells, against the
+754 GB on our machine. A faster graph does not close that gap. Our shortlist build alone
+peaked at 80 GB on the same cells, about 1.8 TB in proportion, so the whole atlas would need a
+sketch, clustering a sample and assigning the rest. We will not change the course-scale plan
+for the atlas without first discussing it with the instructor.
 
 \section*{Completion plan}
-\textbf{Utshab} runs the transfer rule, completes the cost analysis, and drafts the methods,
-experimental design and results sections. All
-computation runs on the one workstation he has access to.
+\textbf{Utshab} reruns the stability comparison on matched grids, runs the transfer comparison
+and builds the final table, drafts the methods, design and results sections, and raises the
+full-atlas question with the instructor. All computation runs on the one workstation he has access to.
 
-\textbf{Laraib} completes the dataset cards for PBMC14K and the Allen atlas from the
-generated dataset summary, finishes the related work comparison table, and rewrites the
-introduction and related work from it. She proofreads the full manuscript against the
-writing guide before submission.
+\textbf{Laraib} completes the dataset cards for PBMC14K and the Allen subset, finishes the
+related work comparison table and revises the introduction and related work from it, and
+checks independently that the interpretation in the discussion follows from the exported
+results.
 
-\textbf{Rhea} regenerates the result tables as new runs land, checks every number in the
-text against its source table, keeps the schedule and risk list current, and assembles the
-slides. She raised six anomalies against the Assignment 2 tables, all of which are resolved
-in Appendix~\ref{app:anomalies}.
-
-\textbf{Laraib and Rhea} together write the scoring rubric for the annotation comparison,
-should that component run, and would score its statements independently so that agreement
-between them can be reported.
+\textbf{Rhea} regenerates the result tables as new runs land, checks every number in the text
+against the exported results without relying on the author's reading of them, keeps the
+schedule and risk list current, and assembles the slides. She raised six anomalies against
+the Assignment 2 tables, all of which are resolved in Appendix~\ref{app:anomalies}.

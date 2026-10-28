@@ -5,7 +5,7 @@ cells and $g$ genes. A clustering method takes $X$ and one setting $s$ and retur
 partition $P_s$ of the cells, with $|P_s|$ clusters. For MICA in small-data mode the
 setting is the number of clusters $k \in \{2,\dots,20\}$, so $|P_s| = k$. For Leiden and
 for MICA in graph mode it is a resolution $r > 0$, and $|P_s|$ is whatever community
-detection returns, rising with $r$. Reference labels $y \in \{1,\dots,c\}^n$ exist for
+detection returns, rising with $r$ for Leiden and falling with it in MICA's Louvain. Reference labels $y \in \{1,\dots,c\}^n$ exist for
 every dataset, where $c$ is the number of annotated cell types, and are used only for
 scoring.
 
@@ -14,23 +14,31 @@ MICA is the clustering module of scMINER \cite{pan2025scminer}. We run the autho
 released implementation at commit \texttt{54fae81}, not a reimplementation. It scores a
 pair of cells by binned mutual information. Each cell is discretised into
 $b = \lfloor g^{1/3} \rfloor$ equal-width bins between that cell's own minimum and maximum
-value, giving a discrete variable $C_i$ per cell, and the distance is
+value, giving a discrete variable $C_i$ per cell. MICA turns the mutual information between two
+cells into a distance in two ways. Graph mode uses
 \begin{equation}
 D(i,j) \;=\; 1 - \frac{I(C_i; C_j)}{H(C_i, C_j)},
 \label{eq:mi}
 \end{equation}
-where $I$ is mutual information and $H$ the joint entropy, both in nats, estimated from
-the joint histogram of the two cells' bin codes across the $g$ genes. Dividing by the
-joint entropy puts $D$ in $[0,1]$ and makes it a metric \cite{vinh2010information}.
+and small-data mode uses
+\begin{equation}
+D_{\mathrm{sd}}(i,j) \;=\; 1 - \frac{I(C_i; C_j)}{\sqrt{H(C_i)\,H(C_j)}},
+\label{eq:misd}
+\end{equation}
+where $I$ is mutual information and $H$ entropy, in nats, estimated from the joint histogram of
+the two cells' bin codes across the $g$ genes. Both lie in $[0,1]$. Dividing by the joint entropy
+makes Eq.~\ref{eq:mi} a metric \cite{vinh2010information}, which Eq.~\ref{eq:misd} is not
+guaranteed to be, and the two modes also round the bin edges slightly differently.
 
 MICA then takes one of two paths, switching at 5,000 cells. Below that, \emph{small-data
-mode} applies classical multidimensional scaling to 19 dimensions and runs $k$-means.
-Above it, \emph{graph mode} builds an 80 nearest neighbour graph under $D$ with HNSW
+mode} applies classical multidimensional scaling to the matrix of Eq.~\ref{eq:misd}, keeping 19
+dimensions, and runs $k$-means. Above it, \emph{graph mode} builds an 80 nearest neighbour graph
+under Eq.~\ref{eq:mi} with HNSW
 \cite{malkov2020efficient}, embeds that graph with node2vec random walks, and runs Louvain
 over a resolution grid. Nine of our ten datasets fall in small-data mode, which is why the
-setting is $k$ for most results. Our own implementation of Eq.~\ref{eq:mi} agrees with the
-authors' code to within $10^{-6}$ and is used only where the released code offers no entry
-point.
+setting is $k$ for most results. Our own implementation of both forms agrees with the authors'
+code to within $10^{-6}$ on Zeisel, where a test enforces it, and within $10^{-4}$ on the other
+inputs we compared. It is used only where the released code offers no entry point.
 
 \subsection{The baseline}
 The baseline is the pipeline most practitioners run: principal component analysis to 50

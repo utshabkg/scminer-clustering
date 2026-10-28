@@ -2,8 +2,8 @@
 A biologist who has sequenced a new tissue wants to know which cell types are in it. The
 standard route is to cluster the cells and inspect the groups. Every clustering method used
 for this has a setting that controls how finely it divides the data, and the result depends
-on it strongly. On Zeisel, which has 7 annotated cell types, the baseline returns 2
-clusters at the low end of its resolution grid and 21 at the setting its software ships
+on it strongly. On Zeisel, which has 7 annotated cell types, the baseline returns 3
+clusters at the low end of the resolution grid we use and 21 at the setting its software ships
 with. Choosing it is therefore not a
 detail of tuning but the main decision, and it has to be made without knowing the answer,
 because the number of cell types is usually what the experiment is trying to establish.
@@ -28,7 +28,7 @@ Two supporting questions follow from it. How much of the answer is set by the ru
 than by either method, and under what conditions does the answer hold?
 
 Our approach holds everything except the method fixed. Both receive the same matrix,
-choose among settings yielding 2 to 20 clusters, and are selected by the same rule. The
+choose among settings yielding at most 20 clusters, and are selected by the same rule. The
 main rule is a published one, subsampling stability in the style of chooseR
 \cite{pattersoncross2021chooser}, which reruns each method on random 80 percent
 subsamples per candidate setting and prefers settings whose clusters survive resampling.
@@ -36,41 +36,43 @@ We use 25 subsamples where chooseR specifies 100, a reduction we justify and tes
 Section~\ref{sec:design}. Labels are used only afterwards, to score what the rule chose.
 The experiment covers all ten benchmark datasets at three seeds, with cost recorded.
 
-The result is not the one we expected. MICA has the higher mean under three of the four
-rules, which on its own would read as support for the published claim, but its mean moves
-by 0.255 across those rules where the baseline's moves by 0.120. Two readings of one rule
-reverse the ranking outright, with nothing about the data or either method differing
-between them. The reason is measurable: among settings the rule scores as equivalent, the
-span of cluster counts averages 7.3 for MICA against 2.7 for the baseline, so the
-tie-break rather than the data usually decides. Our first explanation, that stability
-would simply be less informative for MICA, was wrong, and a second prediction about
-overclustering failed too.
+The result is not the one we expected. MICA leads under three of the four rules, which on its
+own would read as support for the published claim, but its mean moves by 0.255 across them
+against 0.120 for the baseline, and two readings of one rule reverse the ranking. Checking why
+exposed a confound. Capping both methods at 20 clusters does not give them the same
+candidates, and restricting MICA after the fact to the cluster counts the baseline produced
+removes the reversal, though the tie-break still moves MICA more than the baseline. The same
+confound accounts for an
+apparent difference between MICA's two pipelines, and on PBMC14K, the one large benchmark dataset, the
+ranking turns on the rule's threshold. Our first two explanations for the ambiguity also
+failed their tests.
 
-The effect has a boundary, and we found it. On PBMC14K, the one dataset large enough to
-put MICA in its graph mode, the ambiguity is absent: the tied settings all return the same
-number of clusters, both readings agree, and MICA leads 0.629 to 0.397. Running both modes
-on one fixed pool of 2,500 cells, at three seeds, then shows it is the mode rather than the
-size that matters. The failure belongs to MICA's small-data pipeline, which nine of the ten benchmark
-datasets and most of the published claim rest on.
-
-This submission makes two contributions.
+This submission makes three contributions.
 
 \textbf{A measurement of what label-free selection costs, and of how unstable that cost
 is.} The closest work establishes that benchmarks tuned on labels are optimistic
 \cite{ullmann2023overoptimistic} and supplies rules meant to replace that tuning
 \cite{pattersoncross2021chooser,liu2021multik}, but none has been applied to mutual
 information clustering, and the scMINER benchmark reports no label-free result at all. We
-supply that measurement, and find that the tie-break, the threshold and the random
-subsample draw inside a single rule each move the result by as much as the gap between the
-two methods.
+supply that measurement, and find that the tie-break and the random subsample draw inside a
+single rule each move the result by as much as the gap between the two methods, and that a
+small change in its threshold changes the chosen cluster count in most cases. Section~\ref{sec:discussion} turns this into what a user choosing a method for
+unlabelled data should do differently.
 
-\textbf{Evidence on why reproducibility fails as a criterion here, and on where it stops
-failing.} MICA's partitions are unusually reproducible under subsampling, including those
-that split a true cell type several ways, because its distance is computed per cell pair
-and does not move when the sample changes. Splitting is then as repeatable as recovering,
-and a rule rewarding repeatability cannot tell them apart. We state that property, verify
-it as an exact identity, use it to make the experiment affordable, and show that the
-ambiguity it produces is confined to the small-data mode.
+\textbf{Evidence that the rule's ambiguity tracks the candidate range.} MICA's stability scores
+are flat at the top across much of the range, and the rule's two readings break that tie in
+opposite directions, so they are sent to opposite ends of whatever range of cluster counts is
+on offer. Comparing methods by such a rule therefore needs their candidate counts matched, not
+only capped. We show this on the nine small datasets and again on MICA's two pipelines, and we
+prove and test an exact identity, that MICA's distance on a subset of cells equals the
+corresponding submatrix of the full one, which makes the experiment affordable.
+
+\textbf{A cost and quality comparison of a faster neighbour graph.} A correlation shortlist
+rescored with the exact MICA distance builds PBMC14K's graph in seconds rather than minutes
+with the same recall and clustering, and the graph of 100,000 Allen cells in less than half the
+time. It is not guaranteed to find every true neighbour, it needs three to four times the
+memory, and on the larger dataset higher recall gave no better clustering, so it is a faster
+graph rather than a better one.
 
 Section~\ref{sec:related} covers the closest work. Section~\ref{sec:method} defines the
 methods and the selection rules. Section~\ref{sec:design} gives the experimental design,

@@ -22,9 +22,30 @@ Section~\ref{sec:results} can be read off directly.
 
 \input{tables/a3_rules_all}
 
-\section{The two secondary rules}\label{app:secondary}
-The body concentrates on the stability rule. The other two carry choices of their own, and
-both favour MICA for reasons that have little to do with its clustering.
+\section{The stability rule on a common range}\label{app:common}
+The 2 to 20 filter caps both grids without matching them. Table~\ref{tab:common} gives, for each
+dataset, the span of cluster counts the baseline's resolution grid produced, and the stability
+rule re-applied to MICA's saved scores restricted to the set of counts the baseline produced in
+the same run. That set can have gaps: on Yan the baseline makes 2 and 4 to 8 clusters but never
+3. Nothing is rerun and no labels are used to restrict, but the restriction was chosen after the
+results were seen and is applied to MICA only. The largest gains in MICA's finest-stable ARI are
+on Yan, where its pick falls from 19 clusters to 7 and its ARI rises from 0.496 to 0.925, and on
+Klein, by 0.36. On Pollen the pick falls from 17 to the true 11 at 0.969, though 11 is also the
+most clusters the baseline makes there.
+
+\input{tables/a3_common_range}
+
+\section{Mode against size}\label{app:modesize}
+Table~\ref{tab:modesize} gives the three arms of the test in Section~\ref{sec:modesize}. Within a
+seed the cells, the subsamples and the labels are shared. The pipelines differ in their
+normalisation of the mutual information and in the cluster counts their grids reach.
+
+\input{tables/a3_mode_size}
+
+\section{The default and silhouette rules}\label{app:secondary}
+The body concentrates on the stability rule's two readings. The default and the silhouette rule
+carry choices of their own, and both favour MICA for reasons that have little to do with its
+clustering.
 
 \textbf{The shipped default.}
 MICA's best result comes from its own shipped default, which returns four clusters whatever
@@ -42,12 +63,13 @@ on average for MICA and 0.16 for the baseline, reaching 0.52, with only the spac
 (Appendix~\ref{app:repro}).
 
 \section{Adjusted mutual information}\label{app:ami}
-Table~\ref{tab:ami} gives the AMI for the same chosen partitions as
-Table~\ref{tab:rules}. The two measures agree on the ranking under every rule, but the
-gap between them is largest exactly where the stability rule overclusters: on Pollen,
-MICA's 17-cluster partition scores 0.898 under ARI and 0.913 under AMI, while its
-2-cluster partition scores 0.087 and 0.318. AMI's tolerance for split types is why we
-report ARI in the main table.
+Table~\ref{tab:ami} gives the AMI for the same chosen partitions as Table~\ref{tab:rulesall}.
+The two measures agree on which method leads under every rule. The AMI sits above the ARI
+whenever the chosen count is wrong, by 0.17 on average across MICA's stability picks with too
+many clusters and 0.12 with too few, and it can be far more forgiving of a partition that merges
+types: on Pollen MICA's 17-cluster partition scores 0.898 under ARI and 0.913 under AMI, while
+its 2-cluster partition scores 0.087 and 0.318. Being the stricter of the two in both
+directions is why we report the ARI in the main table.
 
 \input{tables/a3_ami}
 
@@ -100,7 +122,7 @@ and seed.
 \textbf{The silhouette rule and the space it is scored in.} Each partition from both
 methods was scored both in the 50 principal components and in MICA's multidimensional
 scaling embedding. The selected ARI differs between the two spaces by 0.13 on average
-for MICA and 0.16 for the baseline, with the largest differences on Goolam, 0.39 for
+for MICA and 0.16 for the baseline, with the largest differences on Goolam, 0.38 for
 MICA, and Chung, 0.52 for the baseline. The partitions, the candidate settings and the
 methods are identical across the two, so the difference is attributable to the space
 alone. Per-dataset values are in the \texttt{rule\_silhouette} folders under
@@ -113,7 +135,8 @@ Eq.~\ref{eq:mi} involves only the two cells being compared. Cell $i$ is discreti
 its own minimum and maximum across genes, so its bin codes $C_i$ do not change when other
 cells are removed. The joint histogram of $C_i$ and $C_j$ is taken over the $g$ genes, which
 are also unchanged. Hence every term in $I(C_i; C_j)$ and $H(C_i, C_j)$ is a function of
-cells $i$ and $j$ alone.
+cells $i$ and $j$ alone. The same holds for the small-data form, Eq.~\ref{eq:misd}, whose
+marginal entropies $H(C_i)$ and $H(C_j)$ are each computed from one cell's bin codes.
 
 This fails for any method that standardises genes across cells, principal components
 included, which is why the baseline is fully recomputed on every subsample while MICA's

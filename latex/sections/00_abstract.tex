@@ -1,30 +1,25 @@
 \begin{abstract}
-Benchmarks for single-cell clustering commonly fix each method's setting using the
-reference labels, either by supplying the true number of cell types or by keeping the run
-that reproduces it. The scores that result are conditional on information a user does not
-have. We ask what happens to one such published advantage, that of the mutual information
-clustering MICA in scMINER over a principal component and Leiden pipeline, when the same
-label-free rule chooses the setting for both methods. We apply four rules to nine
-datasets and the main rule to a tenth and much larger one. The main rule is subsampling
-stability in the style of chooseR, reduced to 25 subsamples per setting from the 100 it
-specifies and repeated at three seeds. Across the nine, MICA leads under three of the four
-rules, but by amounts the rule rather than the method decides.
-Its mean adjusted Rand index ranges from 0.473 to 0.727 across rules, a spread of 0.255,
-against 0.120 for the baseline. Two readings of the same stability scores reverse the
-ranking, MICA leading 0.661 to 0.632 under the published reading and trailing 0.473 to
-0.635 under the other, a move of 0.189 for MICA against 0.003 for the baseline. The cause
-is measurable: among settings the rule treats as equivalent, the span of cluster counts
-averages 7.3 for MICA and 2.7 for the baseline, and on two datasets the rule cannot
-separate 2 clusters from 20. MICA's partitions are too reproducible for reproducibility to
-discriminate, so splitting a true type survives resampling as readily as recovering it.
-The rule's tie-break, its threshold and its random draw each move the result by as much as
-the gap between the methods. The effect is bounded. On the one dataset above 5,000 cells,
-where MICA switches to its graph mode, the ambiguity disappears and MICA leads outright,
-0.629 against 0.397. Running both of MICA's modes on one fixed pool of 2,500 cells, at
-three seeds, shows that the mode and not the dataset size is what matters: on the same
-cells the two readings of the rule disagree on every pool under small-data mode and on none
-under graph mode. The failure therefore belongs to MICA's small-data pipeline, which nine of the ten
-benchmark datasets use, rather than to mutual information clustering itself.
+Benchmarks for single-cell clustering usually fix each method's setting with the reference
+labels, so their scores assume information a user does not have. We ask what happens to the
+advantage scMINER reports for its mutual information clustering, MICA, over a principal
+component and Leiden pipeline when one label-free rule chooses the setting for both. The rule
+is subsampling stability in the style of chooseR, fixed before scoring and run at three seeds
+on all ten benchmark datasets. On the nine small datasets MICA leads narrowly under three of
+four rules, but its mean adjusted Rand index moves by 0.255 across rules against 0.120 for the
+baseline, and two readings of the same stability scores reverse the ranking. The reversal comes
+from the candidates. Capping both methods at 20 clusters does not give them the same cluster
+counts, and MICA's two readings land at extremes the baseline cannot reach. Restricting MICA's
+saved scores after the fact to the counts the baseline produced removes it, with MICA ahead
+under both readings, though its finest-stable picks then often sit at the edge of that range, so
+this shows what the reversal depends on rather than giving a clean ranking. The tie-break still
+moves MICA more than the baseline, 0.12 against 0.07 per dataset. The same confound
+explains an apparent difference between MICA's two pipelines run on the same 2,500 cells. On
+PBMC14K, the one large benchmark dataset, both methods choose the coarsest partition their grid allows,
+and a 0.02 change in the rule's threshold reverses which leads. We also compare a faster
+neighbour graph, a correlation shortlist rescored exactly, with MICA's own search. On PBMC14K
+it matches MICA's recall and clustering in a small fraction of the build time. On 100,000
+Allen cells it takes less than half the build time and reaches higher recall, but gives no better
+clustering. On both it needs three to four times the memory.
 \end{abstract}
 
 \begin{IEEEkeywords}

@@ -1,16 +1,12 @@
 \section*{Changes since Assignment 2}
-Assignment 2 compared MICA and a principal component and Leiden pipeline under two
-label-free rules: each method's default setting, and the best silhouette in its own
-embedding. Both rules were weak. The default is a single arbitrary point, and the
-silhouette was computed in two different spaces, so it partly measured the space
-rather than the partition.
-
-This submission adds the experiment those results pointed to. We apply a published
-label-free selection rule, subsampling stability in the style of chooseR
-\cite{pattersoncross2021chooser}, to both methods under identical conditions, on
-ten datasets, with repeats. Section~\ref{sec:results} reports it. The result is
-not the one we expected, and it changes what we think the honest answer to our main
-question is. We also timed the stability rule, corrected the silhouette rule to use one
-shared space, and resolved six anomalies a team member raised against the Assignment 2
-result tables. The scaling work is unchanged since Assignment 2 and is
-summarised in Section~\ref{sec:related} rather than repeated.
+The feedback on Assignment 2 asked for one fair label-free rule applied identically to both
+methods, a comparison of the faster neighbour graph on quality and cost, and a plan through
+November 4, and this submission adds all three. The selection comparison rests on one primary
+rule, subsampling stability in the style of chooseR \cite{pattersoncross2021chooser}, fixed
+before any partition was scored and run on all ten datasets, PBMC14K and Zeisel first, with
+selection time reported apart from clustering time and the earlier rules kept under shared
+conditions. The graph comparison covers build time, total runtime, peak memory, recall and
+the final clustering at a declared candidate count. We also separated the proposed transfer
+rule from the label-free ones, since it uses other datasets' labels, dropped the win-count
+criterion, deferred annotation, hub correction and GPU work, and resolved six anomalies a
+team member raised against the Assignment 2 tables.
