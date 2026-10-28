@@ -1,9 +1,10 @@
 \begin{table}[t]
 \centering
-\caption{ARI of the partition the stability rule chose under each of its two readings, with the number of clusters chosen in parentheses and the true number of cell types after each dataset name. No reference labels are used in the choice. Values are medians over three seeds, and a pair such as (15-18) gives the smallest and largest count over those seeds. The mean row covers the nine small-data datasets, the set every mean in the text refers to. PBMC14K runs in MICA's graph mode and is discussed in Section~\ref{sec:pbmc}. The other two rules are in Table~\ref{tab:rulesall}.}
+\caption{ARI of the partition the stability rule chose under each of its two readings, with the number of clusters chosen in parentheses and the true number of cell types after each dataset name. No reference labels are used in the choice. Values are medians over three seeds, and a pair such as (15-18) gives the smallest and largest count over those seeds. The mean row covers the nine small-data datasets, the set every mean in the text refers to. PBMC14K runs in MICA's graph mode and is discussed in Section~\ref{sec:pbmc}. The other two rules are in Table~\ref{tab:rulesall}, and Table~\ref{tab:common} gives this rule on the cluster counts the baseline produces.}
 \label{tab:rules}
 \footnotesize
 \setlength{\tabcolsep}{4pt}
+\resizebox{\columnwidth}{!}{%
 \begin{tabular}{lcccc}
 \toprule
  & \multicolumn{2}{c}{Finest stable} & \multicolumn{2}{c}{Most stable} \\
@@ -24,4 +25,5 @@ PBMC14K (7) & 0.629\,(5) & 0.397\,(4) & 0.629\,(5) & 0.397\,(4) \\
 \textit{Mean, nine small} & \textbf{0.661} & \textbf{0.632} & \textbf{0.473} & \textbf{0.635} \\
 \bottomrule
 \end{tabular}
+}
 \end{table}

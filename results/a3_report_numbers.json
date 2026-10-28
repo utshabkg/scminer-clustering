@@ -1,4 +1,162 @@
 {
+ "common_range": {
+  "restriction": "set of cluster counts the baseline produced in the same run",
+  "mean_abs_reading_change": {
+   "leiden": 0.0673,
+   "mica_common": 0.1234,
+   "mica_own": 0.1971
+  },
+  "finest_pick_at_edge": {
+   "leiden": "7 of 27 runs",
+   "mica_common": "13 of 27 runs",
+   "mica_own": "3 of 27 runs"
+  },
+  "means": {
+   "leiden": {
+    "finest": 0.6322,
+    "most": 0.6347,
+    "gap": -0.0025,
+    "tied_span": 2.33
+   },
+   "mica_common": {
+    "finest": 0.7721,
+    "most": 0.6647,
+    "gap": 0.1075,
+    "tied_span": 3.44
+   },
+   "mica_own": {
+    "finest": 0.6615,
+    "most": 0.4727,
+    "gap": 0.1888,
+    "tied_span": 6.89
+   }
+  },
+  "baseline_reach": {
+   "buettner": [
+    2,
+    14
+   ],
+   "chung": [
+    2,
+    11
+   ],
+   "goolam": [
+    2,
+    8
+   ],
+   "klein": [
+    3,
+    17
+   ],
+   "kolodziejczyk": [
+    4,
+    12
+   ],
+   "pollen": [
+    4,
+    11
+   ],
+   "usoskin": [
+    3,
+    18
+   ],
+   "yan": [
+    2,
+    8
+   ],
+   "zeisel": [
+    3,
+    20
+   ]
+  },
+  "pooled_tied_span": {
+   "leiden_pca": 2.67,
+   "mica": 4.11
+  }
+ },
+ "mode_size_common_range": {
+  "graph": {
+   "readings_disagree": "0 of 3",
+   "gaps": [
+    -0.0029,
+    -0.0109,
+    0.0
+   ],
+   "spans": [
+    0,
+    0,
+    1
+   ],
+   "graph_reach": [
+    [
+     5,
+     18
+    ],
+    [
+     5,
+     19
+    ],
+    [
+     4,
+     20
+    ]
+   ]
+  },
+  "small_common": {
+   "readings_disagree": "0 of 3",
+   "gaps": [
+    0.0,
+    0.0,
+    0.0
+   ],
+   "spans": [
+    2,
+    1,
+    2
+   ],
+   "graph_reach": [
+    [
+     5,
+     18
+    ],
+    [
+     5,
+     19
+    ],
+    [
+     4,
+     20
+    ]
+   ]
+  },
+  "small_own": {
+   "readings_disagree": "3 of 3",
+   "gaps": [
+    0.4561,
+    0.1719,
+    0.3193
+   ],
+   "spans": [
+    5,
+    2,
+    4
+   ],
+   "graph_reach": [
+    [
+     5,
+     18
+    ],
+    [
+     5,
+     19
+    ],
+    [
+     4,
+     20
+    ]
+   ]
+  }
+ },
  "mode_size": {
   "n_pool": 2500,
   "seeds": [
@@ -54,6 +212,68 @@
    }
   }
  },
+ "graph_cost": {
+  "paper_pbmc14k/mica_hnsw": {
+   "seconds_build_with_load": 429.8,
+   "peak_rss_gb": 1.16,
+   "recall": 0.9732,
+   "seconds_downstream_median": 359.65,
+   "ari": [
+    0.8518509665203775,
+    0.8519701124318079
+   ],
+   "ami": [
+    0.8701401608615195,
+    0.8716502867744532
+   ],
+   "seconds_candidates": null
+  },
+  "paper_pbmc14k/corr800": {
+   "seconds_build_with_load": 17.9,
+   "peak_rss_gb": 3.64,
+   "recall": 0.9735,
+   "seconds_downstream_median": 363.55,
+   "ari": [
+    0.8525219538306585,
+    0.8526784895020296
+   ],
+   "ami": [
+    0.8729055605546393,
+    0.8748769419730086
+   ],
+   "seconds_candidates": 3.8
+  },
+  "allen_100k/mica_hnsw": {
+   "seconds_build_with_load": 13634.7,
+   "peak_rss_gb": 21.64,
+   "recall": 0.9028,
+   "seconds_downstream_median": 3974.95,
+   "ari": [
+    0.6408486865555603,
+    0.6174242988808712
+   ],
+   "ami": [
+    0.834561983125284,
+    0.8308165265960182
+   ],
+   "seconds_candidates": null
+  },
+  "allen_100k/corr3200": {
+   "seconds_build_with_load": 6224.2,
+   "peak_rss_gb": 80.08,
+   "recall": 0.9456,
+   "seconds_downstream_median": 3917.25,
+   "ari": [
+    0.6024242397548906,
+    0.6273259630499081
+   ],
+   "ami": [
+    0.8191603917800265,
+    0.8249145053515646
+   ],
+   "seconds_candidates": 443.6
+  }
+ },
  "default": {
   "per_dataset": {
    "leiden_pca": {
@@ -103,7 +323,7 @@
     "goolam": 4.0,
     "klein": 4.0,
     "kolodziejczyk": 4.0,
-    "pbmc14k": NaN,
+    "pbmc14k": 7.0,
     "pollen": 4.0,
     "usoskin": 4.0,
     "yan": 4.0,
@@ -593,18 +813,32 @@
    -0.01,
    -0.02
   ],
-  "changed_of_total": "14 of 18",
+  "unit": "runs, each with its own curve",
+  "changed_of_total": "35 of 54",
   "by_method": {
-   "leiden_pca": 6,
-   "mica": 8
+   "leiden_pca": "15 of 27",
+   "mica": "20 of 27"
   },
   "pbmc14k": {
-   "leiden_pca": true,
-   "mica": false
+   "leiden_pca": "3 of 3",
+   "mica": "0 of 3"
+  },
+  "pbmc14k_shifted_counts": {
+   "leiden_pca": [
+    6,
+    7,
+    7
+   ],
+   "mica": [
+    5,
+    5,
+    5
+   ]
   },
   "table": [
    {
     "ds": "buettner",
+    "run": "buettner",
     "method": "leiden_pca",
     "chosen_k": 3,
     "minus_0.01": 3,
@@ -613,6 +847,43 @@
    },
    {
     "ds": "buettner",
+    "run": "buettner",
+    "method": "mica",
+    "chosen_k": 3,
+    "minus_0.01": 4,
+    "minus_0.02": 4,
+    "changed": true
+   },
+   {
+    "ds": "buettner",
+    "run": "buettner_seed1",
+    "method": "leiden_pca",
+    "chosen_k": 3,
+    "minus_0.01": 3,
+    "minus_0.02": 3,
+    "changed": false
+   },
+   {
+    "ds": "buettner",
+    "run": "buettner_seed1",
+    "method": "mica",
+    "chosen_k": 3,
+    "minus_0.01": 3,
+    "minus_0.02": 3,
+    "changed": false
+   },
+   {
+    "ds": "buettner",
+    "run": "buettner_seed2",
+    "method": "leiden_pca",
+    "chosen_k": 3,
+    "minus_0.01": 3,
+    "minus_0.02": 3,
+    "changed": false
+   },
+   {
+    "ds": "buettner",
+    "run": "buettner_seed2",
     "method": "mica",
     "chosen_k": 3,
     "minus_0.01": 4,
@@ -621,14 +892,52 @@
    },
    {
     "ds": "chung",
+    "run": "chung",
     "method": "leiden_pca",
     "chosen_k": 3,
+    "minus_0.01": 7,
+    "minus_0.02": 8,
+    "changed": true
+   },
+   {
+    "ds": "chung",
+    "run": "chung",
+    "method": "mica",
+    "chosen_k": 12,
+    "minus_0.01": 12,
+    "minus_0.02": 12,
+    "changed": false
+   },
+   {
+    "ds": "chung",
+    "run": "chung_seed1",
+    "method": "leiden_pca",
+    "chosen_k": 3,
+    "minus_0.01": 7,
+    "minus_0.02": 8,
+    "changed": true
+   },
+   {
+    "ds": "chung",
+    "run": "chung_seed1",
+    "method": "mica",
+    "chosen_k": 11,
+    "minus_0.01": 11,
+    "minus_0.02": 12,
+    "changed": true
+   },
+   {
+    "ds": "chung",
+    "run": "chung_seed2",
+    "method": "leiden_pca",
+    "chosen_k": 4,
     "minus_0.01": 7,
     "minus_0.02": 7,
     "changed": true
    },
    {
     "ds": "chung",
+    "run": "chung_seed2",
     "method": "mica",
     "chosen_k": 11,
     "minus_0.01": 12,
@@ -637,6 +946,43 @@
    },
    {
     "ds": "goolam",
+    "run": "goolam",
+    "method": "leiden_pca",
+    "chosen_k": 3,
+    "minus_0.01": 3,
+    "minus_0.02": 3,
+    "changed": false
+   },
+   {
+    "ds": "goolam",
+    "run": "goolam",
+    "method": "mica",
+    "chosen_k": 6,
+    "minus_0.01": 6,
+    "minus_0.02": 7,
+    "changed": true
+   },
+   {
+    "ds": "goolam",
+    "run": "goolam_seed1",
+    "method": "leiden_pca",
+    "chosen_k": 3,
+    "minus_0.01": 3,
+    "minus_0.02": 3,
+    "changed": false
+   },
+   {
+    "ds": "goolam",
+    "run": "goolam_seed1",
+    "method": "mica",
+    "chosen_k": 6,
+    "minus_0.01": 8,
+    "minus_0.02": 8,
+    "changed": true
+   },
+   {
+    "ds": "goolam",
+    "run": "goolam_seed2",
     "method": "leiden_pca",
     "chosen_k": 2,
     "minus_0.01": 3,
@@ -645,22 +991,61 @@
    },
    {
     "ds": "goolam",
+    "run": "goolam_seed2",
     "method": "mica",
-    "chosen_k": 6,
+    "chosen_k": 7,
     "minus_0.01": 8,
-    "minus_0.02": 8,
+    "minus_0.02": 9,
     "changed": true
    },
    {
     "ds": "klein",
+    "run": "klein",
     "method": "leiden_pca",
     "chosen_k": 4,
-    "minus_0.01": 4,
+    "minus_0.01": 5,
     "minus_0.02": 5,
     "changed": true
    },
    {
     "ds": "klein",
+    "run": "klein",
+    "method": "mica",
+    "chosen_k": 2,
+    "minus_0.01": 6,
+    "minus_0.02": 8,
+    "changed": true
+   },
+   {
+    "ds": "klein",
+    "run": "klein_seed1",
+    "method": "leiden_pca",
+    "chosen_k": 4,
+    "minus_0.01": 5,
+    "minus_0.02": 5,
+    "changed": true
+   },
+   {
+    "ds": "klein",
+    "run": "klein_seed1",
+    "method": "mica",
+    "chosen_k": 3,
+    "minus_0.01": 6,
+    "minus_0.02": 7,
+    "changed": true
+   },
+   {
+    "ds": "klein",
+    "run": "klein_seed2",
+    "method": "leiden_pca",
+    "chosen_k": 4,
+    "minus_0.01": 5,
+    "minus_0.02": 5,
+    "changed": true
+   },
+   {
+    "ds": "klein",
+    "run": "klein_seed2",
     "method": "mica",
     "chosen_k": 2,
     "minus_0.01": 6,
@@ -669,14 +1054,52 @@
    },
    {
     "ds": "kolodziejczyk",
+    "run": "kolodziejczyk",
     "method": "leiden_pca",
     "chosen_k": 4,
-    "minus_0.01": 6,
+    "minus_0.01": 5,
     "minus_0.02": 7,
     "changed": true
    },
    {
     "ds": "kolodziejczyk",
+    "run": "kolodziejczyk",
+    "method": "mica",
+    "chosen_k": 3,
+    "minus_0.01": 5,
+    "minus_0.02": 7,
+    "changed": true
+   },
+   {
+    "ds": "kolodziejczyk",
+    "run": "kolodziejczyk_seed1",
+    "method": "leiden_pca",
+    "chosen_k": 4,
+    "minus_0.01": 7,
+    "minus_0.02": 7,
+    "changed": true
+   },
+   {
+    "ds": "kolodziejczyk",
+    "run": "kolodziejczyk_seed1",
+    "method": "mica",
+    "chosen_k": 5,
+    "minus_0.01": 5,
+    "minus_0.02": 10,
+    "changed": true
+   },
+   {
+    "ds": "kolodziejczyk",
+    "run": "kolodziejczyk_seed2",
+    "method": "leiden_pca",
+    "chosen_k": 4,
+    "minus_0.01": 7,
+    "minus_0.02": 7,
+    "changed": true
+   },
+   {
+    "ds": "kolodziejczyk",
+    "run": "kolodziejczyk_seed2",
     "method": "mica",
     "chosen_k": 5,
     "minus_0.01": 5,
@@ -685,14 +1108,52 @@
    },
    {
     "ds": "pbmc14k",
+    "run": "pbmc14k_graph_seed0",
     "method": "leiden_pca",
     "chosen_k": 4,
-    "minus_0.01": 5,
+    "minus_0.01": 6,
     "minus_0.02": 6,
     "changed": true
    },
    {
     "ds": "pbmc14k",
+    "run": "pbmc14k_graph_seed0",
+    "method": "mica",
+    "chosen_k": 5,
+    "minus_0.01": 5,
+    "minus_0.02": 5,
+    "changed": false
+   },
+   {
+    "ds": "pbmc14k",
+    "run": "pbmc14k_graph_seed1",
+    "method": "leiden_pca",
+    "chosen_k": 4,
+    "minus_0.01": 5,
+    "minus_0.02": 7,
+    "changed": true
+   },
+   {
+    "ds": "pbmc14k",
+    "run": "pbmc14k_graph_seed1",
+    "method": "mica",
+    "chosen_k": 5,
+    "minus_0.01": 5,
+    "minus_0.02": 5,
+    "changed": false
+   },
+   {
+    "ds": "pbmc14k",
+    "run": "pbmc14k_graph_seed2",
+    "method": "leiden_pca",
+    "chosen_k": 4,
+    "minus_0.01": 5,
+    "minus_0.02": 7,
+    "changed": true
+   },
+   {
+    "ds": "pbmc14k",
+    "run": "pbmc14k_graph_seed2",
     "method": "mica",
     "chosen_k": 5,
     "minus_0.01": 5,
@@ -701,14 +1162,52 @@
    },
    {
     "ds": "pollen",
+    "run": "pollen",
     "method": "leiden_pca",
-    "chosen_k": 10,
+    "chosen_k": 7,
+    "minus_0.01": 10,
+    "minus_0.02": 11,
+    "changed": true
+   },
+   {
+    "ds": "pollen",
+    "run": "pollen",
+    "method": "mica",
+    "chosen_k": 18,
+    "minus_0.01": 18,
+    "minus_0.02": 18,
+    "changed": false
+   },
+   {
+    "ds": "pollen",
+    "run": "pollen_seed1",
+    "method": "leiden_pca",
+    "chosen_k": 7,
     "minus_0.01": 11,
     "minus_0.02": 11,
     "changed": true
    },
    {
     "ds": "pollen",
+    "run": "pollen_seed1",
+    "method": "mica",
+    "chosen_k": 17,
+    "minus_0.01": 20,
+    "minus_0.02": 20,
+    "changed": true
+   },
+   {
+    "ds": "pollen",
+    "run": "pollen_seed2",
+    "method": "leiden_pca",
+    "chosen_k": 11,
+    "minus_0.01": 11,
+    "minus_0.02": 11,
+    "changed": false
+   },
+   {
+    "ds": "pollen",
+    "run": "pollen_seed2",
     "method": "mica",
     "chosen_k": 15,
     "minus_0.01": 15,
@@ -717,6 +1216,25 @@
    },
    {
     "ds": "usoskin",
+    "run": "usoskin",
+    "method": "leiden_pca",
+    "chosen_k": 6,
+    "minus_0.01": 6,
+    "minus_0.02": 9,
+    "changed": true
+   },
+   {
+    "ds": "usoskin",
+    "run": "usoskin",
+    "method": "mica",
+    "chosen_k": 3,
+    "minus_0.01": 3,
+    "minus_0.02": 4,
+    "changed": true
+   },
+   {
+    "ds": "usoskin",
+    "run": "usoskin_seed1",
     "method": "leiden_pca",
     "chosen_k": 6,
     "minus_0.01": 6,
@@ -725,6 +1243,25 @@
    },
    {
     "ds": "usoskin",
+    "run": "usoskin_seed1",
+    "method": "mica",
+    "chosen_k": 3,
+    "minus_0.01": 3,
+    "minus_0.02": 3,
+    "changed": false
+   },
+   {
+    "ds": "usoskin",
+    "run": "usoskin_seed2",
+    "method": "leiden_pca",
+    "chosen_k": 6,
+    "minus_0.01": 6,
+    "minus_0.02": 6,
+    "changed": false
+   },
+   {
+    "ds": "usoskin",
+    "run": "usoskin_seed2",
     "method": "mica",
     "chosen_k": 3,
     "minus_0.01": 3,
@@ -733,14 +1270,16 @@
    },
    {
     "ds": "yan",
+    "run": "yan",
     "method": "leiden_pca",
-    "chosen_k": 4,
-    "minus_0.01": 5,
-    "minus_0.02": 5,
-    "changed": true
+    "chosen_k": 8,
+    "minus_0.01": 8,
+    "minus_0.02": 8,
+    "changed": false
    },
    {
     "ds": "yan",
+    "run": "yan",
     "method": "mica",
     "chosen_k": 19,
     "minus_0.01": 19,
@@ -748,7 +1287,80 @@
     "changed": true
    },
    {
+    "ds": "yan",
+    "run": "yan_seed1",
+    "method": "leiden_pca",
+    "chosen_k": 5,
+    "minus_0.01": 7,
+    "minus_0.02": 7,
+    "changed": true
+   },
+   {
+    "ds": "yan",
+    "run": "yan_seed1",
+    "method": "mica",
+    "chosen_k": 19,
+    "minus_0.01": 19,
+    "minus_0.02": 19,
+    "changed": false
+   },
+   {
+    "ds": "yan",
+    "run": "yan_seed2",
+    "method": "leiden_pca",
+    "chosen_k": 5,
+    "minus_0.01": 5,
+    "minus_0.02": 5,
+    "changed": false
+   },
+   {
+    "ds": "yan",
+    "run": "yan_seed2",
+    "method": "mica",
+    "chosen_k": 20,
+    "minus_0.01": 20,
+    "minus_0.02": 20,
+    "changed": false
+   },
+   {
     "ds": "zeisel",
+    "run": "zeisel",
+    "method": "leiden_pca",
+    "chosen_k": 8,
+    "minus_0.01": 8,
+    "minus_0.02": 8,
+    "changed": false
+   },
+   {
+    "ds": "zeisel",
+    "run": "zeisel",
+    "method": "mica",
+    "chosen_k": 3,
+    "minus_0.01": 7,
+    "minus_0.02": 7,
+    "changed": true
+   },
+   {
+    "ds": "zeisel",
+    "run": "zeisel_seed1",
+    "method": "leiden_pca",
+    "chosen_k": 8,
+    "minus_0.01": 9,
+    "minus_0.02": 9,
+    "changed": true
+   },
+   {
+    "ds": "zeisel",
+    "run": "zeisel_seed1",
+    "method": "mica",
+    "chosen_k": 3,
+    "minus_0.01": 7,
+    "minus_0.02": 7,
+    "changed": true
+   },
+   {
+    "ds": "zeisel",
+    "run": "zeisel_seed2",
     "method": "leiden_pca",
     "chosen_k": 9,
     "minus_0.01": 9,
@@ -757,10 +1369,11 @@
    },
    {
     "ds": "zeisel",
+    "run": "zeisel_seed2",
     "method": "mica",
     "chosen_k": 3,
     "minus_0.01": 7,
-    "minus_0.02": 7,
+    "minus_0.02": 8,
     "changed": true
    }
   ]

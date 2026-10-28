@@ -1,0 +1,26 @@
+\begin{table*}[t]
+\centering
+\caption{The stability rule on its own grids and on a common range. The second column is the span of cluster counts the baseline's resolution grid produced over the three seeds. MICA's $k$ covers 2 to 20 on every dataset. The middle pair re-applies the rule's own selection to MICA's saved scores restricted to the set of counts the baseline produced in the same run, which can have gaps within that span. The restriction uses no labels but was chosen after the results were seen and applies to MICA only. Values are medians over three seeds, F the finest-stable reading and M the plain maximum.}
+\label{tab:common}
+\footnotesize
+\setlength{\tabcolsep}{4pt}
+\begin{tabular}{lccccccc}
+\toprule
+ & & \multicolumn{2}{c}{MICA, own grid} & \multicolumn{2}{c}{MICA, common range} & \multicolumn{2}{c}{Leiden} \\
+\cmidrule(lr){3-4}\cmidrule(lr){5-6}\cmidrule(lr){7-8}
+Dataset (types) & Baseline span & F & M & F & M & F & M \\
+\midrule
+Yan (8) & 2\textrm{-}8 & 0.496 & 0.496 & 0.925 & 0.765 & 0.845 & 0.765 \\
+Goolam (5) & 2\textrm{-}8 & 0.593 & 0.630 & 0.593 & 0.630 & 0.429 & 0.619 \\
+Buettner (3) & 2\textrm{-}14 & 0.934 & 0.474 & 0.934 & 0.474 & 0.232 & 0.134 \\
+Pollen (11) & 4\textrm{-}11 & 0.898 & 0.087 & 0.969 & 0.549 & 0.755 & 0.755 \\
+Chung (4) & 2\textrm{-}11 & 0.474 & 0.100 & 0.477 & 0.512 & 0.129 & 0.129 \\
+Usoskin (4) & 3\textrm{-}18 & 0.818 & 0.818 & 0.818 & 0.818 & 0.633 & 0.757 \\
+Kolodziejczyk (3) & 4\textrm{-}12 & 0.722 & 0.630 & 0.722 & 0.722 & 0.838 & 0.838 \\
+Klein (4) & 3\textrm{-}17 & 0.501 & 0.501 & 0.863 & 0.863 & 0.973 & 0.859 \\
+Zeisel (7) & 3\textrm{-}20 & 0.518 & 0.518 & 0.648 & 0.648 & 0.855 & 0.855 \\
+\midrule
+\textit{Mean} & & \textbf{0.661} & \textbf{0.473} & \textbf{0.772} & \textbf{0.665} & \textbf{0.632} & \textbf{0.635} \\
+\bottomrule
+\end{tabular}
+\end{table*}

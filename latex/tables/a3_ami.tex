@@ -1,6 +1,6 @@
 \begin{table*}[t]
 \centering
-\caption{Adjusted mutual information for the same chosen partitions as Table~\ref{tab:rules}, on the same runs. AMI is more forgiving than ARI when a true type is split across several clusters, so the gap between this table and Table~\ref{tab:rules} is itself a reading of how a rule is failing: the stability rule's overclustered MICA partitions lose far less here than they do under ARI.}
+\caption{Adjusted mutual information for the same chosen partitions as Table~\ref{tab:rulesall}, on the same runs. The AMI and the ARI agree on which method leads under every rule. The AMI sits above the ARI whenever the chosen count is wrong, in either direction, and it is much more forgiving of a partition that merges cell types, such as MICA's 2-cluster pick on Pollen.}
 \label{tab:ami}
 \footnotesize
 \setlength{\tabcolsep}{4pt}
@@ -19,7 +19,7 @@ Usoskin (4) & 0.798 & 0.624 & 0.508 & 0.755 & 0.821 & 0.709 & 0.821 & 0.747 \\
 Kolodziejczyk (3) & 0.888 & 0.723 & 0.784 & 0.723 & 0.822 & 0.896 & 0.757 & 0.896 \\
 Klein (4) & 0.963 & 0.700 & 0.664 & 0.890 & 0.664 & 0.956 & 0.664 & 0.890 \\
 Zeisel (7) & 0.565 & 0.644 & 0.495 & 0.580 & 0.648 & 0.815 & 0.648 & 0.815 \\
-PBMC14K (7) & n/a & 0.893 & n/a & n/a & 0.790 & 0.725 & 0.790 & 0.725 \\
+PBMC14K (7) & 0.868 & 0.893 & n/a & n/a & 0.790 & 0.725 & 0.790 & 0.725 \\
 \midrule
 \textit{Mean, nine small} & \textbf{0.794} & \textbf{0.672} & \textbf{0.689} & \textbf{0.640} & \textbf{0.775} & \textbf{0.702} & \textbf{0.602} & \textbf{0.702} \\
 \bottomrule

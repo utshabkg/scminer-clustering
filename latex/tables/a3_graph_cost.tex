@@ -1,0 +1,18 @@
+\begin{table*}[t]
+\centering
+\caption{Graph quality and cost. MICA's own HNSW search against a correlation shortlist of $c$ candidates per cell rescored with the exact MICA distance, which keeps each cell's 79 closest. Nothing guarantees the shortlist holds every true neighbour, so recall is measured against brute force on 500 query cells. Graph build times are on 8 workers and include loading the data and, for the shortlist, binning it once, which MICA's search does inside its distance. The cost of generating the shortlist is in parentheses. Peak memory covers the same steps. For MICA, recall, ARI and AMI come from the graph it built in Assignment 2, and time and memory from a rebuild with the same settings. Total adds MICA's node2vec and Louvain, which run unchanged on either graph. ARI and AMI are from two runs of that downstream pipeline on each graph. They let the labels pick the resolution, as in the published protocol, because this table compares graphs and not selection rules.}
+\label{tab:graph}
+\footnotesize
+\setlength{\tabcolsep}{4pt}
+\begin{tabular}{llcccccc}
+\toprule
+Data & Graph & Build (shortlist) & Peak GB & Recall@79 & Total & ARI, two runs & AMI, two runs \\
+\midrule
+PBMC14K & MICA HNSW & 7.2 min & 1.2 & 0.973 & 13.2 min & 0.852 / 0.852 & 0.870 / 0.872 \\
+PBMC14K & Shortlist, $c=800$ & 18 s (4 s) & 3.6 & 0.974 & 6.4 min & 0.853 / 0.853 & 0.873 / 0.875 \\
+\midrule
+Allen 100k & MICA HNSW & 3.8 h & 21.6 & 0.903 & 4.9 h & 0.641 / 0.617 & 0.835 / 0.831 \\
+Allen 100k & Shortlist, $c=3200$ & 1.7 h (7.4 min) & 80.1 & 0.946 & 2.8 h & 0.602 / 0.627 & 0.819 / 0.825 \\
+\bottomrule
+\end{tabular}
+\end{table*}

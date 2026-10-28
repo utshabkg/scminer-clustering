@@ -53,7 +53,12 @@ def load_stability():
     lei = t[(t.k_setting == "default_resolution_1") & (t.gene_setting == "all genes")
             & t.dataset.str.startswith("paper_") & (t.method == "leiden_pca")].copy()
     lei["k_setting"] = "default"
-    d = pd.concat([d, lei], ignore_index=True)
+    # MICA's graph-mode default (resolution 1.822, scored at 1.8) on PBMC14K, the one dataset
+    # where MICA runs in graph mode. Its small-data default lives in results/rule_default_*.
+    mge = t[(t.k_setting == "default_resolution_1.8") & (t.gene_setting == "all genes")
+            & (t.dataset == "paper_pbmc14k") & (t.method == "mica")].copy()
+    mge["k_setting"] = "default"
+    d = pd.concat([d, lei, mge], ignore_index=True)
     d["ds"] = d.dataset.map(short)
     return d
 
@@ -145,11 +150,13 @@ def main():
         cm = "".join(f"\\cmidrule(lr){{{2 + 2 * i}-{3 + 2 * i}}}" for i in range(len(rules)))
         hd = " & ".join(["MICA & Leiden"] * len(rules))
         env = "table*" if star else "table"
+        # A single-column table is scaled to the column width so it can never overflow it.
+        open_box, close_box = ("", "") if star else ("\\resizebox{\\columnwidth}{!}{%\n", "}\n")
         return (f"\\begin{{{env}}}[t]\n\\centering\n\\caption{{{caption}}}\n\\label{{{label}}}\n"
-                "\\footnotesize\n\\setlength{\\tabcolsep}{4pt}\n"
+                "\\footnotesize\n\\setlength{\\tabcolsep}{4pt}\n" + open_box +
                 f"\\begin{{tabular}}{{l{'cc' * len(rules)}}}\n\\toprule\n & {g} \\\\\n{cm}\n"
                 f"Dataset (types) & {hd} \\\\\n\\midrule\n" + "\n".join(rows) +
-                f"\n\\bottomrule\n\\end{{tabular}}\n\\end{{{env}}}\n")
+                f"\n\\bottomrule\n\\end{{tabular}}\n" + close_box + f"\\end{{{env}}}\n")
 
     stab = [(r, lab) for r, lab in have if r.startswith("stability")]
     (TABLES / "a3_rules.tex").write_text(rule_table(
@@ -160,16 +167,17 @@ def main():
         "over three seeds, and a pair such as (15-18) gives the smallest and largest count "
         "over those seeds. The mean row covers the nine small-data datasets, the set every "
         "mean in the text refers to. PBMC14K runs in MICA\'s graph mode and is discussed in "
-        "Section~\\ref{sec:pbmc}. The other two rules are in Table~\\ref{tab:rulesall}.",
+        "Section~\\ref{sec:pbmc}. The other two rules are in Table~\\ref{tab:rulesall}, and "
+        "Table~\\ref{tab:common} gives this rule on the cluster counts the baseline produces.",
         star=False))
     (TABLES / "a3_rules_all.tex").write_text(rule_table(
         have, "tab:rulesall",
         "ARI under all four label-free rules, with the chosen cluster count in parentheses. "
         "The two stability columns repeat Table~\\ref{tab:rules} and are included so the four "
-        "rules can be compared in one place. The Default and Silhouette rules are "
-        "deterministic given the input and were run once, so they carry no seed range. "
-        "PBMC14K was run under the stability rule only for MICA, its shipped small-data "
-        "default not applying in graph mode.",
+        "rules can be compared in one place. The default rule was run at three seeds and the "
+        "silhouette rule at one. On PBMC14K MICA runs in graph mode, so its default there is "
+        "the graph-mode resolution, 1.822 scored at 1.8, from one Assignment 2 run, and the "
+        "silhouette rule was not run.",
         star=True))
 
     # ---------- AMI, promised in the Measures subsection ----------
@@ -195,10 +203,10 @@ def main():
     heads = " & ".join(["MICA & Leiden"] * len(have))
     (TABLES / "a3_ami.tex").write_text(
         "\\begin{table*}[t]\n\\centering\n\\caption{Adjusted mutual information for the same chosen partitions "
-        "as Table~\\ref{tab:rules}, on the same runs. AMI is more forgiving than ARI when a true type is split "
-        "across several clusters, so the gap between this table and Table~\\ref{tab:rules} is itself a reading of "
-        "how a rule is failing: the stability rule\'s overclustered MICA partitions lose far less here than they do "
-        "under ARI.}\n\\label{tab:ami}\n\\footnotesize\n\\setlength{\\tabcolsep}{4pt}\n"
+        "as Table~\\ref{tab:rulesall}, on the same runs. The AMI and the ARI agree on which method leads under "
+        "every rule. The AMI sits above the ARI whenever the chosen count is wrong, in either direction, and it is "
+        "much more forgiving of a partition that merges cell types, such as MICA\'s 2-cluster pick on "
+        "Pollen.}\n\\label{tab:ami}\n\\footnotesize\n\\setlength{\\tabcolsep}{4pt}\n"
         f"\\begin{{tabular}}{{l{'cc' * len(have)}}}\n\\toprule\n & {groups} \\\\\n{cmid}\nDataset (types) & "
         f"{heads} \\\\\n\\midrule\n" + "\n".join(arows) + "\n\\bottomrule\n\\end{tabular}\n\\end{table*}\n")
 
@@ -212,6 +220,121 @@ def main():
     sv.to_csv(RESULTS / "a3_seed_variation.csv", index=False)
     print(f"seed variation: largest ARI range {sv.ari_range.max():.3f} "
           f"({sv.loc[sv.ari_range.idxmax(), 'ds']}, {sv.loc[sv.ari_range.idxmax(), 'method']})")
+
+    # ---------- the same rule on the cluster counts both methods can reach ----------
+    # The 2 to 20 filter caps the candidates but does not match them: MICA's k covers 2 to 20
+    # on every dataset, while the baseline's resolution grid reaches only part of that range.
+    # Re-applying the rule's own selection (stability.pick) to MICA's saved curve, restricted to
+    # the set of cluster counts the baseline's partitions produced in the same run, separates the
+    # method from the range. It is the set, not the interval between the fewest and most: on Yan
+    # the baseline makes 2 and 4 to 8 clusters but never 3. Restricting uses no labels, since it
+    # depends only on which counts each grid produced. It is done after the results were seen.
+    def repick(c):
+        c = c[c.n_clusters >= 2]
+        thr = c.ci_low.max()
+        pas = c[c.stability >= thr]
+        pas = pas if len(pas) else c
+        fin = pas.sort_values(["n_clusters", "stability"]).iloc[-1]
+        most = c.sort_values(["stability", "n_clusters"], ascending=[False, True]).iloc[0]
+        tied = c[c.stability >= c.stability.max() - TIE_WINDOW]
+        return fin, most, int(tied.n_clusters.max() - tied.n_clusters.min())
+
+    TIE_WINDOW = 0.01
+    crows = []
+    for f in sorted(glob(str(RESULTS / "rule_stability_paper_*" / "metrics.csv"))):
+        if "graph" in f:
+            continue
+        run = Path(f).parent.name.replace("rule_stability_paper_", "")
+        x = run.split("_seed")[0]
+        cur = pd.read_csv(f)
+        cur = cur[cur.k_setting == "stability_curve"]
+        mi, le = cur[cur.method == "mica"], cur[cur.method == "leiden_pca"]
+        lo, hi = int(le.n_clusters.min()), int(le.n_clusters.max())
+        made = set(le.n_clusters.astype(int))
+        for arm, c in [("mica_own", mi), ("mica_common", mi[mi.n_clusters.isin(made)]), ("leiden", le)]:
+            fin, most, span = repick(c)
+            avail = set(c.n_clusters.astype(int))
+            crows.append({"ds": x, "run": run, "arm": arm, "reach_lo": lo, "reach_hi": hi,
+                          "baseline_counts": " ".join(map(str, sorted(made))),
+                          "finest_ari": fin.ari, "finest_k": int(fin.n_clusters),
+                          "most_ari": most.ari, "most_k": int(most.n_clusters), "tied_span": span,
+                          # is the finest-stable pick at an end of what this arm could choose from?
+                          "finest_at_edge": int(fin.n_clusters) in (min(avail), max(avail))})
+    C = pd.DataFrame(crows)
+    C.to_csv(RESULTS / "a3_common_range.csv", index=False)
+    cm = C.groupby(["ds", "arm"])[["finest_ari", "most_ari", "tied_span"]].median().reset_index()
+    cmean = cm.groupby("arm")[["finest_ari", "most_ari", "tied_span"]].mean()
+    reach = C[C.arm == "leiden"].groupby("ds").agg(lo=("reach_lo", "min"), hi=("reach_hi", "max"))
+    cm["abs_gap"] = (cm.finest_ari - cm.most_ari).abs()
+    abs_gap = cm.groupby("arm").abs_gap.mean()
+    edges = C.groupby("arm").finest_at_edge.agg(["sum", "size"])
+    nums["common_range"] = {
+        "restriction": "set of cluster counts the baseline produced in the same run",
+        "mean_abs_reading_change": {a: round(float(v), 4) for a, v in abs_gap.items()},
+        "finest_pick_at_edge": {a: f"{int(r['sum'])} of {int(r['size'])} runs" for a, r in edges.iterrows()},
+        "means": {a: {"finest": round(float(r.finest_ari), 4), "most": round(float(r.most_ari), 4),
+                      "gap": round(float(r.finest_ari - r.most_ari), 4), "tied_span": round(float(r.tied_span), 2)}
+                  for a, r in cmean.iterrows()},
+        "baseline_reach": {k: [int(v.lo), int(v.hi)] for k, v in reach.iterrows()}}
+    # The span quoted in the text pools the three seeds before taking the window (see the
+    # mechanism block), so the common-range span is computed the same way to be comparable.
+    made_any = {x: set().union(*[set(map(int, b.split())) for b in g_.baseline_counts])
+                for x, g_ in C[C.arm == "leiden"].groupby("ds")}
+    pooled = {}
+    for (x, m_), g in d[(d.k_setting == "stability_curve") & d.ds.isin(SMALL)].dropna(subset=["stability"]).groupby(["ds", "method"]):
+        if m_ == "mica":
+            g = g[g.n_clusters.isin(made_any[x])]
+        t_ = g[g.stability >= g.stability.max() - TIE_WINDOW]
+        pooled.setdefault(m_, []).append(int(t_.n_clusters.max() - t_.n_clusters.min()))
+    nums["common_range"]["pooled_tied_span"] = {m_: round(float(np.mean(v)), 2) for m_, v in pooled.items()}
+    crow = []
+    for x in [d_ for d_ in ORDER if d_ in set(cm.ds)]:
+        g = cm[cm.ds == x].set_index("arm")
+        r_ = reach.loc[x]
+        crow.append(f"{NAMES[x]} ({truth_k[x]}) & {int(r_.lo)}\\textrm{{-}}{int(r_.hi)} & "
+                    f"{g.loc['mica_own'].finest_ari:.3f} & {g.loc['mica_own'].most_ari:.3f} & "
+                    f"{g.loc['mica_common'].finest_ari:.3f} & {g.loc['mica_common'].most_ari:.3f} & "
+                    f"{g.loc['leiden'].finest_ari:.3f} & {g.loc['leiden'].most_ari:.3f} \\\\")
+    mrow = " & ".join(f"\\textbf{{{cmean.loc[a][col]:.3f}}}" for a in ("mica_own", "mica_common", "leiden")
+                      for col in ("finest_ari", "most_ari"))
+    crow.append("\\midrule\n\\textit{Mean} & & " + mrow + " \\\\")
+    (TABLES / "a3_common_range.tex").write_text(
+        "\\begin{table*}[t]\n\\centering\n\\caption{The stability rule on its own grids and on a common "
+        "range. The second column is the span of cluster counts the baseline's resolution grid produced over "
+        "the three seeds. MICA's $k$ covers 2 to 20 on every dataset. The middle pair re-applies the rule's own "
+        "selection to MICA's saved scores restricted to the set of counts the baseline produced in the same run, "
+        "which can have gaps within that span. The restriction uses no labels but was chosen after the results "
+        "were seen and applies to MICA only. Values are medians over three seeds, F the finest-stable reading and "
+        "M the plain maximum.}\n\\label{tab:common}\n\\footnotesize\n\\setlength{\\tabcolsep}{4pt}\n"
+        "\\begin{tabular}{lccccccc}\n\\toprule\n & & \\multicolumn{2}{c}{MICA, own grid} & "
+        "\\multicolumn{2}{c}{MICA, common range} & \\multicolumn{2}{c}{Leiden} \\\\\n"
+        "\\cmidrule(lr){3-4}\\cmidrule(lr){5-6}\\cmidrule(lr){7-8}\n"
+        "Dataset (types) & Baseline span & F & M & F & M & F & M \\\\\n\\midrule\n"
+        + "\n".join(crow) + "\n\\bottomrule\n\\end{tabular}\n\\end{table*}\n")
+    print("common range, pooled tied span: " + str(nums["common_range"]["pooled_tied_span"]))
+    print("common range: " + ", ".join(f"{a} F {v['finest']:.3f} M {v['most']:.3f} span {v['tied_span']}"
+                                       for a, v in nums["common_range"]["means"].items()))
+
+    # the mode test on a common range: the small-data arm held to the counts the graph arm reaches
+    mrange = []
+    for run in sorted(glob(str(RESULTS / "rule_mode_size_pbmc14k_n*_seed*"))):
+        m = pd.read_csv(Path(run) / "metrics.csv")
+        cur = m[m.k_setting == "stability_curve"]
+        sm = cur[(cur.method == "mica") & (cur.mica_mode == "small")]
+        gr = cur[(cur.method == "mica") & (cur.mica_mode == "graph")]
+        lo, hi = int(gr.n_clusters.min()), int(gr.n_clusters.max())
+        for arm, c in [("small_own", sm), ("small_common", sm[sm.n_clusters.between(lo, hi)]), ("graph", gr)]:
+            fin, most, span = repick(c)
+            mrange.append({"seed": int(run.split("seed")[-1]), "arm": arm, "graph_lo": lo, "graph_hi": hi,
+                           "gap": round(float(fin.ari - most.ari), 4), "tied_span": span})
+    M = pd.DataFrame(mrange)
+    nums["mode_size_common_range"] = {
+        a: {"readings_disagree": f"{int((g.gap.abs() > 0.02).sum())} of {len(g)}",
+            "gaps": g.gap.tolist(), "spans": g.tied_span.tolist(),
+            "graph_reach": [[int(r.graph_lo), int(r.graph_hi)] for _, r in g.iterrows()]}
+        for a, g in M.groupby("arm")}
+    print("mode test on a common range: " + ", ".join(
+        f"{a} disagree {v['readings_disagree']} spans {v['spans']}" for a, v in nums["mode_size_common_range"].items()))
 
     # ---------- mode against size, one fixed pool of cells run through both pipelines ----------
     pool = sorted(glob(str(RESULTS / "rule_mode_size_pbmc14k_n*_seed*")))
@@ -252,16 +375,93 @@ def main():
             "\\begin{table}[t]\n\\centering\n\\caption{Mode against size. One fixed pool of 2,500 PBMC14K "
             "cells, drawn afresh at each of three seeds, run through both of MICA\'s pipelines and the "
             "baseline under the same rule. The data, the size, the subsamples and the labels are identical "
-            "across the three rows, so only the pipeline differs. Tied settings are those within 0.01 of the "
+            "across the three rows. The pipelines differ, and so do the cluster counts their grids reach: "
+            "graph mode cannot make fewer than 4 or 5 clusters here, and Section~\\ref{sec:modesize} shows "
+            "that this, not the mode, accounts for the difference. Tied settings are those within 0.01 of the "
             "best. The span is the range of cluster counts among them, reported as the median over the three "
             "pools with the observed range. The last two columns say how often the two readings of the rule "
             "chose differently and by how much in ARI.}\n\\label{tab:modesize}\n\\footnotesize\n"
-            "\\setlength{\\tabcolsep}{4pt}\n\\begin{tabular}{lcccc}\n\\toprule\n"
+            "\\setlength{\\tabcolsep}{4pt}\n\\resizebox{\\columnwidth}{!}{%\n\\begin{tabular}{lcccc}\n\\toprule\n"
             "Pipeline & Share tied & Span & Readings differ & Median gap \\\\\n\\midrule\n"
-            + "\n".join(body) + "\n\\bottomrule\n\\end{tabular}\n\\end{table}\n")
+            + "\n".join(body) + "\n\\bottomrule\n\\end{tabular}}\n\\end{table}\n")
         nums["mode_size"] = {"n_pool": 2500, "seeds": sorted(P.seed.unique().tolist()), "arms": ms}
         print("mode against size: " + ", ".join(
             f"{k} span {v['k_tied_span_median']} disagree {v['readings_disagree']}" for k, v in ms.items()))
+
+    # ---------- graph quality and cost: correlation shortlist against MICA's own HNSW ----------
+    # Graph build time and memory come from scripts/measure_graph_cost.py and measure_mica_hnsw.py,
+    # recall from the brute-force audits, and the final clustering from MICA's own node2vec and
+    # Louvain run on each graph (results/rq2_downstream_*). The downstream ARIs let the labels pick
+    # the resolution, because this compares graphs, not selection rules.
+    GRAPHS = [("paper_pbmc14k", "PBMC14K", 800, "rq2_large_paper_pbmc14k"),
+              ("allen_100k", "Allen 100k", 3200, "rq2_allen_100k")]
+    grows, gnums = [], {}
+    for ds, label, c, audit in GRAPHS:
+        aud = pd.read_csv(RESULTS / audit / "metrics.csv")
+        mica_recall = float(aud[aud.candidates.astype(str).str.startswith("MICA HNSW")].recall_at_k.iloc[0])
+        for kind, gtag, cost_dir in [("MICA HNSW", "mica_hnsw", f"graph_cost_{ds}_mica_hnsw"),
+                                     (f"Shortlist, $c={c}$", f"corr{c}", f"graph_cost_{ds}_corr{c}")]:
+            f = RESULTS / cost_dir / "metrics.csv"
+            cost = pd.read_csv(f).iloc[0] if f.exists() else None
+            down = []
+            for rep in (1, 2):
+                df = RESULTS / f"rq2_downstream_{ds}_{gtag}_rep{rep}" / "metrics.csv"
+                if df.exists():
+                    down.append(pd.read_csv(df).iloc[0])
+            # MICA's recall comes from the Assignment 2 audit and does not need the cost run.
+            if gtag == "mica_hnsw":
+                recall = mica_recall
+            elif cost is not None:
+                recall = float(cost.recall_500_queries)
+            else:
+                recall = None
+            # MICA's search takes the raw matrix and bins inside its distance, while the shortlist bins
+            # once up front, so both builds count loading (and binning) to cover the same work.
+            g_s = float(cost.seconds_load_and_bin) + float(cost.seconds_graph) if cost is not None else None
+            mem = float(cost.peak_rss_gb) if cost is not None else None
+            d_s = float(np.median([x.seconds_downstream for x in down])) if down else None
+            aris = [x.ari for x in down]
+            amis = [x.ami for x in down]
+
+            def fmt_s(v):
+                if v is None:
+                    return "pending"
+                return f"{v / 3600:.1f} h" if v >= 3600 else (f"{v / 60:.1f} min" if v >= 120 else f"{v:.0f} s")
+
+            cand = (f" ({fmt_s(float(cost.seconds_candidates))})"
+                    if cost is not None and str(cost.seconds_candidates) not in ("", "nan") else "")
+            grows.append(f"{label} & {kind} & {fmt_s(g_s)}{cand} & "
+                         f"{'pending' if mem is None else f'{mem:.1f}'} & "
+                         f"{'pending' if recall is None else f'{recall:.3f}'} & "
+                         f"{fmt_s(None if g_s is None or d_s is None else g_s + d_s)} & "
+                         f"{' / '.join(f'{a:.3f}' for a in aris) or 'n/a'} & "
+                         f"{' / '.join(f'{a:.3f}' for a in amis) or 'n/a'} \\\\")
+            gnums[f"{ds}/{gtag}"] = {"seconds_build_with_load": g_s, "peak_rss_gb": mem, "recall": recall,
+                                     "seconds_downstream_median": d_s, "ari": aris, "ami": amis,
+                                     "seconds_candidates": (None if cost is None or
+                                                            str(cost.seconds_candidates) in ("", "nan")
+                                                            else float(cost.seconds_candidates))}
+        if label == "PBMC14K":
+            grows.append("\\midrule")
+    (TABLES / "a3_graph_cost.tex").write_text(
+        "\\begin{table*}[t]\n\\centering\n\\caption{Graph quality and cost. MICA's own HNSW search against "
+        "a correlation shortlist of $c$ candidates per cell rescored with the exact MICA distance, which keeps "
+        "each cell's 79 closest. Nothing guarantees the shortlist holds every true neighbour, so recall is "
+        "measured against brute force on 500 query cells. Graph build times are on 8 workers and include loading "
+        "the data and, for the shortlist, binning it once, which MICA's search does inside its distance. The cost "
+        "of generating the shortlist is in parentheses. Peak memory covers the same steps. For MICA, recall, ARI "
+        "and AMI come from the graph it built in Assignment 2, and time and memory from a rebuild with the same "
+        "settings. "
+        "Total adds MICA's node2vec and Louvain, which run unchanged on either graph. ARI and AMI are from two "
+        "runs of that downstream pipeline on each graph. They let the labels pick the resolution, as in the "
+        "published protocol, because this table compares graphs and not selection rules.}\n"
+        "\\label{tab:graph}\n\\footnotesize\n\\setlength{\\tabcolsep}{4pt}\n"
+        "\\begin{tabular}{llcccccc}\n\\toprule\n"
+        "Data & Graph & Build (shortlist) & Peak GB & Recall@79 & Total & ARI, two runs & AMI, two runs "
+        "\\\\\n\\midrule\n" + "\n".join(grows) + "\n\\bottomrule\n\\end{tabular}\n\\end{table*}\n")
+    nums["graph_cost"] = gnums
+    print("graph cost: " + "; ".join(f"{k} build {v['seconds_build_with_load']} s, {v['peak_rss_gb']} GB, recall "
+                                      f"{v['recall']}" for k, v in gnums.items()))
 
     # ---------- numbers for the text ----------
     for r, _ in RULES:
@@ -318,7 +518,8 @@ def main():
     print("mechanism: mean span of cluster counts among tied settings " + str(nums["mechanism"]["mean_k_span_among_tied"]))
 
     # ---------- does MICA's shipped default suit this benchmark in particular? ----------
-    dflt = d[(d.k_setting == "default") & (d.method == "mica")]
+    # The k=4 analysis is about MICA's small-data default, so PBMC14K's graph-mode default stays out.
+    dflt = d[(d.k_setting == "default") & (d.method == "mica") & d.ds.isin(SMALL)]
     if len(dflt):
         g = dflt.groupby("ds").agg(ari=("ari", "median")).reset_index()
         g["true_k"] = g.ds.map(truth_k)
@@ -346,22 +547,31 @@ def main():
         if not len(passing):
             return None
         return int(passing.sort_values(["n_clusters", "stability"], ascending=[False, False]).iloc[0].n_clusters)
+    # The check is applied to each run's own curve, setting by setting, exactly as the rule ran,
+    # so its starting pick is the chosen count in Table I. An earlier version pooled the seeds
+    # into a median curve per cluster count, which is not the rule and disagreed with Table I.
     srows = []
-    for (ds_, m), g in curve0.groupby(["ds", "method"]):
-        g = g.groupby("n_clusters", as_index=False).agg({"stability": "median", "ci_low": "median"})
-        base = finest_at(g, 0.0)
-        shifted = {f"minus_{abs(b):.2f}": finest_at(g, b) for b in (-0.01, -0.02)}
-        srows.append({"ds": ds_, "method": m, "chosen_k": base, **shifted,
-                      "changed": any(v is not None and v != base for v in shifted.values())})
+    for f in sorted(glob(str(RESULTS / "rule_stability_paper_*" / "metrics.csv"))):
+        run = Path(f).parent.name.replace("rule_stability_paper_", "")
+        ds_ = run.split("_graph")[0].split("_seed")[0]
+        g_all = pd.read_csv(f)
+        g_all = g_all[g_all.k_setting == "stability_curve"]
+        for m, g in g_all.groupby("method"):
+            base = finest_at(g, 0.0)
+            shifted = {f"minus_{abs(b):.2f}": finest_at(g, b) for b in (-0.01, -0.02)}
+            srows.append({"ds": ds_, "run": run, "method": m, "chosen_k": base, **shifted,
+                          "changed": any(v is not None and v != base for v in shifted.values())})
     sens = pd.DataFrame(srows)
     if len(sens):
         # Headline over the nine small-data datasets, to match every other aggregate.
         sm = sens[sens.ds.isin(SMALL)]
+        pb = sens[sens.ds == "pbmc14k"]
         nums["threshold_sensitivity"] = {
-            "shifts": [-0.01, -0.02],
+            "shifts": [-0.01, -0.02], "unit": "runs, each with its own curve",
             "changed_of_total": f"{int(sm.changed.sum())} of {len(sm)}",
-            "by_method": sm.groupby("method").changed.sum().to_dict(),
-            "pbmc14k": sens[sens.ds == "pbmc14k"].set_index("method").changed.to_dict(),
+            "by_method": {k: f"{int(v.sum())} of {len(v)}" for k, v in sm.groupby("method").changed},
+            "pbmc14k": {k: f"{int(v.sum())} of {len(v)}" for k, v in pb.groupby("method").changed},
+            "pbmc14k_shifted_counts": {k: v["minus_0.02"].tolist() for k, v in pb.groupby("method")},
             "table": sens.to_dict(orient="records")}
         sens.to_csv(RESULTS / "a3_threshold_sensitivity.csv", index=False)
         print(f"threshold sensitivity: the chosen cluster count changes in "

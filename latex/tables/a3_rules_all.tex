@@ -1,6 +1,6 @@
 \begin{table*}[t]
 \centering
-\caption{ARI under all four label-free rules, with the chosen cluster count in parentheses. The two stability columns repeat Table~\ref{tab:rules} and are included so the four rules can be compared in one place. The Default and Silhouette rules are deterministic given the input and were run once, so they carry no seed range. PBMC14K was run under the stability rule only for MICA, its shipped small-data default not applying in graph mode.}
+\caption{ARI under all four label-free rules, with the chosen cluster count in parentheses. The two stability columns repeat Table~\ref{tab:rules} and are included so the four rules can be compared in one place. The default rule was run at three seeds and the silhouette rule at one. On PBMC14K MICA runs in graph mode, so its default there is the graph-mode resolution, 1.822 scored at 1.8, from one Assignment 2 run, and the silhouette rule was not run.}
 \label{tab:rulesall}
 \footnotesize
 \setlength{\tabcolsep}{4pt}
@@ -19,7 +19,7 @@ Usoskin (4) & 0.839\,(4) & 0.393\,(10\textrm{-}11) & 0.347\,(2) & 0.761\,(3) & 0
 Kolodziejczyk (3) & 0.834\,(4) & 0.525\,(7) & 0.727\,(3) & 0.525\,(7) & 0.722\,(3\textrm{-}5) & 0.838\,(4) & 0.630\,(2) & 0.838\,(4) \\
 Klein (4) & 0.980\,(4) & 0.469\,(10\textrm{-}11) & 0.501\,(2) & 0.859\,(3) & 0.501\,(2\textrm{-}3) & 0.973\,(4) & 0.501\,(2) & 0.859\,(3\textrm{-}4) \\
 Zeisel (7) & 0.478\,(4) & 0.378\,(21) & 0.386\,(2) & 0.473\,(3) & 0.518\,(3) & 0.855\,(8\textrm{-}9) & 0.518\,(2\textrm{-}3) & 0.855\,(8) \\
-PBMC14K (7) & n/a & 0.866\,(8) & n/a & n/a & 0.629\,(5) & 0.397\,(4) & 0.629\,(5) & 0.397\,(4) \\
+PBMC14K (7) & 0.846\,(7) & 0.866\,(8) & n/a & n/a & 0.629\,(5) & 0.397\,(4) & 0.629\,(5) & 0.397\,(4) \\
 \midrule
 \textit{Mean, nine small} & \textbf{0.727} & \textbf{0.514} & \textbf{0.595} & \textbf{0.564} & \textbf{0.661} & \textbf{0.632} & \textbf{0.473} & \textbf{0.635} \\
 \bottomrule

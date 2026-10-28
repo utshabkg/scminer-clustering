@@ -18,11 +18,14 @@ This notebook rebuilds every table and figure in the Assignment 3 manuscript fro
 
 | Display | Produced by |
 |---|---|
-| Table I, ARI and chosen cluster count under each rule | `scripts/run_rule_stability.py`, `run_rule_stability_graph.py`, `run_rule_silhouette.py`, `run_rule_default.py` |
-| Table II, the datasets | `scripts/dataset_facts.py` |
-| Table III, adjusted mutual information | the same runs as Table I |
+| Table I, ARI and chosen cluster count under the stability rule | `scripts/run_rule_stability.py`, `run_rule_stability_graph.py` |
+| Table II, graph quality and cost | `scripts/measure_graph_cost.py`, `measure_mica_hnsw.py`, the `rq2_*` audits and downstream runs |
 | Figure 1, stability against cluster count | the stability runs |
-| Mode against size on one fixed pool of cells | `scripts/run_rule_mode_size.py` |
+| Table III (appendix), the datasets | `scripts/dataset_facts.py` |
+| Table IV (appendix), all four rules | the stability runs plus `run_rule_silhouette.py` and `run_rule_default.py` |
+| Table V (appendix), the stability rule on a common range | `scripts/a3_report.py`, from the saved stability curves |
+| Table VI (appendix), mode against size on one fixed pool of cells | `scripts/run_rule_mode_size.py` |
+| Table VII (appendix), adjusted mutual information | the same runs as Table IV |
 | The mechanism numbers | `scripts/a3_report.py` |
 
 The environment is `envs/scminer.yml`. Data live outside the repository, as described in `README.md`."""),
@@ -34,7 +37,7 @@ sys.path.insert(0, str(REPO / "scripts"))
 import a3_report
 a3_report.main()   # rewrites latex/tables/a3_*.tex, the figure, and results/a3_report_numbers.json
 nums = json.loads((RESULTS / "a3_report_numbers.json").read_text())"""),
-    ("md", "## Table I. ARI of the partition each rule chose\n\nNo reference labels are used to make the choice. Median over the repeats, with the observed range. The means quoted in the paper cover the nine small-data datasets, so PBMC14K is listed but excluded from them."),
+    ("md", "## Table IV (appendix). ARI of the partition each rule chose\n\nNo reference labels are used to make the choice. Median over the repeats, with the observed range. The means quoted in the paper cover the nine small-data datasets, so PBMC14K is listed but excluded from them."),
     ("code", """rows = []
 for rule in ["default", "silhouette_shared", "stability_finest", "stability_most"]:
     if rule not in nums or "per_dataset" not in nums[rule]:
@@ -56,12 +59,20 @@ table2.round(3)"""),
 spread = summary[["MICA mean", "Leiden mean"]].max() - summary[["MICA mean", "Leiden mean"]].min()
 display(summary.round(3))
 print("spread across rules:", spread.round(3).to_dict())"""),
+    ("md", "## Table V (appendix). The stability rule on a common range\n\nThe 2 to 20 filter caps both grids without matching them. Here the rule is re-applied to MICA's saved scores restricted to the cluster counts the baseline reaches in the same run. Nothing is rerun and no labels are used. This is the analysis that removed the ranking reversal and the apparent mode effect."),
+    ("code", """cr = nums["common_range"]
+display(pd.DataFrame(cr["means"]).T.round(3))
+print("baseline reaches:", cr["baseline_reach"])
+print("pooled tied span:", cr["pooled_tied_span"])
+print("mode test on a common range:", json.dumps(nums["mode_size_common_range"], indent=1))"""),
     ("md", "## Why the rules disagree\n\nAmong settings the stability rule scores within 0.01 of its best, how wide a span of cluster counts remains?"),
     ("code", """mech = pd.read_csv(RESULTS / "a3_mechanism.csv")
 display(mech[["ds", "method", "share_tied", "k_tied_min", "k_tied_max", "chosen_k", "true_k"]])
 print({k: v for k, v in nums["mechanism"].items() if k != "table"})"""),
     ("md", "## Figure 1. Stability and accuracy against the number of clusters"),
     ("code", """display(Image(filename=str(REPO / "latex" / "figures" / "a3_stability_curve.png"), width=900))"""),
+    ("md", "## Table II. Graph quality and cost\n\nMICA's HNSW search against a correlation shortlist rescored exactly. The downstream ARIs let the labels pick the resolution, since this compares graphs rather than selection rules."),
+    ("code", """print(json.dumps(nums.get("graph_cost", {}), indent=1))"""),
     ("md", "## MICA's shipped default against this benchmark's cluster counts"),
     ("code", """print(json.dumps(nums.get("mica_default", {}), indent=1))
 print("true cluster counts:", sorted(nums["true_k"].values()))"""),
