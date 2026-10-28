@@ -26,7 +26,7 @@ The Leiden times include the full sweep of 200 resolutions, which alone takes ab
 
 The full atlas has 23 times as many cells. The numbers below are rough. They assume the neighbor search grows like n log n (as HNSW does), the other steps grow in proportion to the number of cells, and so does memory.
 
-- **MICA time.** The neighbor graph would take about 155 hours (5.3 h × 23 × 1.27). node2vec and Louvain would add about 15 hours each. That comes to 7 to 8 days without the plots.
+- **MICA time.** The neighbor graph would take about 155 hours (5.3 h × 23 × 1.27). node2vec and Louvain would add about 15 hours each. That comes to 7 to 8 days without the plots. (Added Oct 28: MICA's search alone took 3.8 h on the same cells when rerun for the graph comparison, which gives about 110 hours for the graph and about 6 days in all, so the paper now says 6 to 8 days.)
 - **MICA memory.** About 3.2 TB if it grows in proportion. The workstation has 754 GB, shared with other users. Part of the reason is that MICA holds the whole matrix as dense numbers. Its 100,000 cell output file is 11.4 GB, which is exactly a dense 100,000 by 28,536 table, and one such copy at 2.3 million cells is about 260 GB.
 - **Leiden.** About 9 to 10 hours for the whole run. Memory would be about 600 GB with 2,000 genes and 1.3 TB with all genes, because scaling the genes before PCA turns the sparse matrix dense. So the baseline also needs a sparse PCA at full size.
 

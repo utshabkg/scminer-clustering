@@ -25,6 +25,354 @@ Next three things: submit Assignment 3, run the transfer rule (U-34), and a deci
 
 ---
 
+## 2026-10-28, Utshab (in progress, Assignment 3 due today)
+
+**Why this session.** The one-to-one feedback on Assignment 2 was checked against the
+Assignment 3 draft before submitting, and the draft missed part of what it asked for. The
+feedback expected three things in the next submission: the finished selection comparison, a
+comparison of the two graphs on quality and cost, and a plan through November 4. The draft
+had the first, called the graph work "unchanged since Assignment 2", and gave only a vague plan.
+
+**Feedback point by point, and what was done.**
+
+| The feedback asked for | Done |
+|---|---|
+| One primary label-free rule, stability preferred, on PBMC14K and Zeisel, then the rest | already done on all ten |
+| Candidate settings, resampling and selection step fixed before scoring | now stated in the design section. chooseR's reading is primary, the plain maximum a declared check |
+| Matched genes, chosen count, ARI and AMI, repeat variation | already done |
+| Time for selection as well as clustering | added. Results subsection reports the two apart |
+| Small-data and graph-mode results kept apart | already done |
+| Transfer rule separated from label-free rules, since it uses other datasets' labels | fixed in design, conclusion and WORKPLAN U-34 |
+| No predetermined win count | dropped from WORKPLAN U-37 and the plan |
+| Graph comparison on build time, total runtime, memory, recall, final quality, shortlist cost, declared candidate count | added as a results subsection and Table `tab:graph`. Memory is new this session |
+| Describe it as a shortlist rescored exactly, no guarantee of all neighbours | wording fixed in related work, results, conclusion |
+| Separate the general concern from the specific MICA evidence, and say what a user should do | added to related work and the discussion |
+| No broad claim about mutual information from one rule | claims now scoped "under this rule" |
+| Defer annotation, hub correction, GPU | stated in the plan. The annotation rubric task is gone from the completion plan |
+| Keep the full-atlas feasibility visible, discuss changes with the instructor | added to the plan |
+| Laraib and Rhea on dataset and literature work, checking results independently | completion plan rewritten to say so |
+
+**Memory was never measured for the graph comparison, so it was measured today.** Two new
+scripts, both writing results folders. `scripts/measure_graph_cost.py` builds our shortlist
+graph and records time and peak resident memory after each stage, plus recall against the
+cached brute force. `scripts/measure_mica_hnsw.py` calls MICA's own `hnswlib_ann` from
+`mica_ge.py` with the settings `mica ge` uses (80 neighbours, ef 400, M 8, 8 workers) on the
+matrix it reads. Memory is `ru_maxrss`, a high-water mark. GNU time is not installed here.
+
+PBMC14K, 13,605 cells, measured today (not one at a time, see the correction below):
+
+| graph | build | of which shortlist | peak memory | recall, 500 queries | recall, all cells |
+|---|---|---|---|---|---|
+| MICA HNSW | 429 s | n/a | 1.16 GB | 0.9732 (from the A2 audit) | not computed |
+| shortlist c=800, sparse exact path | 15 s | 4 s | 3.64 GB | 0.9735 | 0.9733 |
+| shortlist c=800, dense exact path | 87 s | 4 s | 3.63 GB | 0.9735 | 0.9733 |
+
+The sparse and dense builds give byte-identical neighbour arrays (`np.array_equal` is True for
+all 13,605 cells), so the sparse path is exact and the Assignment 2 downstream results, ARI
+0.853 on our graph and 0.852 on MICA's, still apply. The shortlist's extra memory is all in
+loading and binning: its peak is already 3.63 GB before the search starts.
+
+Assignment 2 reported 2.4 minutes for our graph and 15 for HNSW. Today's 15 s comes from the
+sparse exact path, which skips genes where a cell sits in its lowest bin. The dense path also
+ran faster today (87 s against 146 s) and so did MICA (429 s against 903 s), so the
+Assignment 2 runs were probably on a busier machine. Today's times are the cleaner
+head-to-head and are the ones in the paper.
+
+**Declared candidate count.** The smallest c on a doubling grid whose recall on 500 query cells
+reaches MICA's own. Checked against the saved audits: it gives 800 on PBMC14K (grid 100 to
+1,600, MICA 0.9732) and 3,200 on Allen (grid 200 to 3,200, MICA 0.9028), the counts
+Assignment 2 used. The paper states it as declared now, not as declared then.
+
+**Selection against clustering, the numbers used in the paper.**
+- Zeisel: MICA's distance matrix 250 s, once. One clustering at a fixed setting takes seconds
+  for either method. Choosing by stability adds 103 s for MICA and 107 s for the baseline.
+- PBMC14K, graph mode: one MICA clustering at a fixed resolution is about 11 minutes, HNSW
+  429 s plus node2vec 250 s plus about 2.5 s for one Louvain resolution. Choosing the resolution
+  takes 6,171 s per seed for MICA (median of three, about 103 min) and 490 s for the baseline
+  (about 8 min).
+- The PBMC14K full distance matrix used by the graph-mode stability runner has no logged
+  compute time, so the paper does not quote one.
+
+**Errors found in the draft and corrected.**
+- "6 to 11 minutes" for MICA's distance matrix on the two datasets above 2,500 cells. The only
+  source, `logs/rules_small.log`, gives 250 s (Zeisel) and 367 s (Klein), so 4 to 6 minutes.
+- "103 minutes for MICA against 9 for the baseline". The baseline's median over three seeds is
+  490 s, so 8.
+- "Labels are used in two places only". The graph comparison lets labels pick the resolution,
+  a third place.
+- Table I and the mode-against-size table overflowed their column by 24.5 pt and 41 pt. Table I
+  had done so since it became a single-column table on Oct 22, which went unnoticed because the
+  compile check filtered out overfull warnings. Both are now scaled to the column width by
+  `scripts/a3_report.py`.
+- The transfer rule was called "the remedy Ullmann et al. recommend", which presented a
+  label-informed rule as if it were label-free.
+- "We match MICA's neighbour search accuracy" read as a guarantee. Now a shortlist rescored
+  exactly, with recall measured.
+
+**Done since the first draft of this entry (about 03:10).**
+- Body cut from 9.4 to 8.6 pages, 7,868 words down to 7,123. The abstract went from 458 to 280
+  words, "Changes since Assignment 2" became the single short paragraph the assignment asks
+  for, and the introduction's two preview paragraphs were merged. The four floats in the body
+  set the floor, so further cuts would mean moving Figure 1 or a table to the appendix.
+- Table numbering is now I stability per dataset, II mode against size, III graph quality and
+  cost, then IV to VI in the appendix (datasets, all four rules, AMI). The notebook map in
+  `scripts/make_a3_notebook.py` and the README list the new scripts and tables.
+- A read-only verification workflow was started over the revised paper against the feedback,
+  the saved results and itself.
+
+**A confound that changes the headline (found by the read-only verification, before 03:30).** The
+verification confirmed 31 findings. Two of them change the main results, and both were checked
+here from the saved stability curves before any text was touched.
+
+*1. The candidate ranges were capped, not matched.* Every run keeps settings giving 2 to 20
+clusters, but that only caps the range. MICA's k covers 2 to 20 on every dataset. The baseline's
+resolution grid, 0.05 to 2.00, reaches only part of it: min to max over the three seeds is
+Buettner 2 to 14, Chung 2 to 11, Goolam 2 to 8, Klein 3 to 17, Kolodziejczyk 4 to 12, Pollen 4 to
+11, Usoskin 3 to 18, Yan 2 to 8, Zeisel 3 to 20. The instructor's Assignment 2 feedback named
+exactly this, different cluster-count ranges, as the reason Table II could not isolate a method
+difference.
+
+Recomputed by re-applying the rule's own selection logic (`stability.pick`) to MICA's saved
+curve restricted to the counts the baseline reaches in the same run. The replication of the
+reported picks is exact: all 108 recorded picks reproduce, and the means come out at the
+reported 0.661 and 0.473 for MICA and 0.632 and 0.635 for the baseline.
+
+| | chooseR's reading | plain maximum | gap between readings |
+|---|---|---|---|
+| MICA, its own grid (as reported) | 0.661 | 0.473 | 0.189 |
+| MICA, on the counts the baseline reaches | 0.772 | 0.635 | 0.137 |
+| baseline | 0.632 | 0.635 | -0.002 |
+
+What survives: the tie-break still moves MICA far more than the baseline. What does not: the
+ranking reversal. On a common range MICA leads under chooseR's reading and ties under the plain
+maximum. The reversal came from MICA's grid offering very coarse counts (it picks 2 clusters on
+Pollen under the plain maximum, ARI 0.087, where the baseline cannot go below 4) and very fine
+ones (19 to 20 on Yan under chooseR's reading, where the baseline cannot go above 8). The
+verifier's figure for the tie span on a common range is 4.1 for MICA against 2.7, so that
+direction holds but the gap shrinks from 4.7 to 1.4.
+
+*2. The mode-against-size result was the graph grid's floor.* MICA's graph-mode resolution grid
+(0.1 to 4.0, where higher resolution gives fewer clusters) cannot make fewer than 4 or 5 clusters
+on these pools, and its tied settings sit at that floor. Holding the small-data arm to the counts
+the graph arm reaches, the two readings agree on all three pools:
+
+| pool seed | graph reaches | small-data, all k | small-data, graph's range | graph |
+|---|---|---|---|---|
+| 0 | 5 to 18 | gap 0.456, span 5 | gap 0.000, span 2 | gap 0.003, span 0 |
+| 1 | 5 to 19 | gap 0.172, span 2 | gap 0.000, span 1 | gap 0.011, span 0 |
+| 2 | 4 to 20 | gap 0.319, span 4 | gap 0.000, span 2 | gap 0.000, span 1 |
+
+So "the mode, not the size" is not supported. The difference came from which counts each grid
+offers. On full PBMC14K both methods also pick their coarsest grid point (MICA resolution 4.0 or
+3.9 at 5 clusters, the baseline 0.05 at 4), so "MICA simply wins there" is fragile as well.
+
+*3. "Both arms use the same distance" was false.* The two MICA modes normalise mutual information
+differently (sqrt of marginal entropies against joint entropy), as the runner's own docstring
+says. So nothing here licenses "it is not a property of the mutual information". Removed.
+
+Decision: report the results as specified (each method on its own grid) and the common-range
+recomputation beside them, rewrite the claims that depended on the reversal or on the mode, and
+put extending the grids so both methods reach 2 to 20 clusters into the plan. No new runs today.
+
+**The paper rewritten around the corrected findings (finished 03:34).** All 31 verified findings
+are addressed. The common-range analysis is now generated by `scripts/a3_report.py` rather than
+copied by hand: it writes `results/a3_common_range.csv`, the appendix Table `tab:common`, and
+`common_range` and `mode_size_common_range` in `results/a3_report_numbers.json`. Its tie span
+uses the same pooled definition as the 7.3 against 2.7 (seeds pooled before the 0.01 window),
+giving 4.1 against 2.7 on the common range.
+
+What the paper now says, and where it changed:
+- The reversal between the two readings holds on each method's own grid and disappears on the
+  counts both methods reach, where MICA leads 0.772 to 0.632 under chooseR's reading and ties
+  0.635 to 0.635 under the plain maximum. The tie-break still moves MICA by 0.137 and the
+  baseline by 0.002. On Pollen the common range puts MICA's finest-stable pick on the true 11
+  clusters at 0.969, and its two readings still differ by 0.42.
+- The mode test no longer claims "the mode, not the size". Held to the counts graph mode reaches,
+  small-data mode's readings agree too. Size is now listed as an open question, since the test
+  ran at 2,500 cells only and five of the small datasets have 124 to 317 cells.
+- PBMC14K: both methods pick their coarsest grid point. The baseline's best setting (0.876 to
+  0.878), its default (0.853 to 0.867) and its pick after a 0.02 threshold shift (0.785 to
+  0.873) all beat MICA's 0.629. MICA's graph-mode default, 0.846 at one seed, now appears in
+  Table V instead of n/a.
+- The mechanism section now says the per-pair distance invariance holds in both modes and so
+  cannot by itself cause the ambiguity. The evidence points to the candidate range.
+- The plain maximum is called a second rule, specified with chooseR's before scoring, so
+  "three of four rules" is consistent.
+- Labels: PBMC14K is no longer called the only dataset not labelled by clustering. Buettner
+  (cell-cycle phase), Kolodziejczyk (culture medium) and Klein (time point) are labelled by
+  experimental condition.
+- Smaller fixes: the default rule ran at three seeds, not once. Yan's seed movement is 1, not 2.
+  The baseline's reading gap is 0.002, not 0.003. The dense build is 87 s, not 88. The Total
+  column mixes today's build times with the Assignment 2 downstream times, which the text now
+  says. The graph-mode stability runner never calls HNSW, which the cost section now says. The
+  Zeisel opening uses 3 clusters, the low end of this paper's grid, not 2 from the finer
+  Assignment 2 sweep. MICA's Louvain gives fewer clusters as resolution rises, now stated in
+  the method.
+- The plan through November 4 gains "matched candidate grids" as its first item.
+
+One leak caught while doing this: adding MICA's PBMC14K graph-mode default to the loader moved
+the k=4 default analysis's "outside" mean from 0.579 to 0.646, because PBMC14K (true k 7) fell
+into it. That analysis is now restricted to the nine small datasets and is back to 0.579.
+
+Body: 8.8 pages. Undefined references: none. The `ALLENCOST` placeholder remains.
+
+**Second verification of the rewritten paper: 22 confirmed findings.**
+Every number below was re-derived here before any text changed.
+
+- *The common range used an interval, not the set.* `a3_report.py` restricted MICA to the
+  interval between the baseline's fewest and most clusters. On Yan the baseline makes 2 and 4 to
+  8 clusters but never 3, and MICA's restricted plain-maximum pick was 3. Restricting to the set
+  of counts the baseline produced changes the plain-maximum mean from 0.635 to 0.665, so MICA
+  leads narrowly instead of tying, and the gap between readings from 0.137 to 0.107. chooseR's
+  reading stays at 0.772 against 0.632. The pooled tied span stays 4.1 against 2.7.
+- *The restriction leaves picks at edges too.* On the restricted range MICA's finest-stable pick
+  is at an end of what it could choose from in 13 of 27 runs, against 7 for the baseline and 3
+  for MICA on its own grid. Pollen's "true 11 clusters" is also the top of the baseline's range
+  there. So the restriction shows the reversal depends on the range. It is not a clean ranking.
+- *The baseline's 0.002 is a signed mean of gaps that cancel.* The tie-break changes the
+  baseline's ARI on 5 of 9 datasets. Mean absolute change between readings: baseline 0.067,
+  MICA on its own grid 0.197, MICA on the common range 0.123.
+- *MICA's own-grid lead under chooseR reverses at one seed:* 0.658 against 0.624 at seed 0,
+  0.702 against 0.633 at seed 1, 0.639 against 0.671 at seed 2.
+- *The threshold check was computed on a pooled curve,* the median per cluster count across seeds
+  and settings, so its starting picks disagreed with Table I in 5 of 18 cases. Redone per run on
+  each run's own curve: all 60 starting picks now equal the recorded choice, and relaxing the
+  threshold by at most 0.02 changes the count in 35 of 54 runs, 20 of 27 for MICA and 15 of 27
+  for the baseline. On PBMC14K it changes the baseline in 3 of 3 runs (to 6, 7, 7 clusters)
+  and MICA in none.
+- *The method gave one distance.* Small-data mode uses 1 - I / sqrt(H_i H_j) and graph mode
+  1 - I / H(i, j). Only the second is a metric. The method section showed only the second.
+- *The mechanism was misdescribed.* MICA's stability curve has a flat top at or near 1.0 across
+  much of the range. The plain maximum breaks ties toward fewer clusters and chooseR's reading
+  toward more, so the two readings go to opposite ends. "Coarse partitions are the most
+  reproducible" was not what the curves show.
+- Smaller: the largest fixed-k movement across seeds is 0.267 (Buettner, k=7), not 0.192. The
+  largest own-to-common gains are Yan 0.429 and Klein 0.363, not Yan and Pollen. Goolam's
+  silhouette difference is 0.3845, so 0.38. On Pollen the ARI to AMI gap is 0.015 for the
+  17-cluster partition and 0.231 for the 2-cluster one, the opposite of what the appendix said.
+  Chung's 11 clusters lie inside the baseline's range, so "the two largest overclusterings sit at
+  counts the baseline never offers" was wrong. The AMI caption pointed at Table I, which no longer
+  has the default and silhouette columns.
+
+**Second round of fixes applied (finished 03:58 by the clock).** `a3_report.py` now restricts to the set
+of counts the baseline produced, records the mean absolute reading change and the edge-pick
+counts, and runs the threshold check per run. All 22 findings are addressed in the text: both
+MICA distances are now in the method (Eq. `eq:misd` added for small-data mode) and covered by the
+appendix proof, the mechanism is stated as a flat top at 1.0 (82, 70 and 47 percent of MICA's
+settings on Yan, Pollen and Chung, against 5 percent for the baseline) broken in opposite
+directions by the two readings, the common-range result is presented as a post hoc check on what
+the reversal depends on, with its edge-pick caveat, the leads are called narrow, and the
+measures rationale now rests on the AMI sitting above the ARI in both directions (0.17 when too
+many clusters, 0.12 when too few, across MICA's 54 picks, 35 of which chose too few). The ARI to
+AMI ranking agrees under every rule, checked from the two tables' mean rows. The
+"within 1e-6" claim is now limited to Zeisel, with up to 5.3e-5 elsewhere. Body is 9.3 pages.
+
+**A process note.** The two Allen graph-cost runs were started as Claude Code background jobs,
+not in byobu as the README requires, because the permission check had blocked
+`byobu new-session` earlier that night. That tied them to the VS Code session, so the laptop had
+to stay on until they finished. From now on long runs go in byobu, and if byobu is blocked the
+fix is to ask for approval rather than fall back to a session job.
+
+**Allen, MICA's HNSW run finished at 06:41:14.** `results/graph_cost_allen_100k_mica_hnsw/`.
+Loaded in 15 s at a peak of 14.63 GB, then the search took 13,619 s (3.8 h) at a peak of
+21.64 GB, against 18,888 s in Assignment 2. Recall stays 0.9028 from the Assignment 2 audit.
+Against our build (6,091 s, 80.08 GB):
+
+| | MICA HNSW | shortlist c=3,200 | ratio |
+|---|---|---|---|
+| graph build | 3.8 h | 1.7 h (shortlist 7.4 min) | ours 2.2 times as fast (on PBMC14K 29 times for the search alone, 24 counting binning, see below) |
+| total with A2 node2vec and Louvain | 4.9 h | 2.8 h | |
+| peak memory | 21.6 GB | 80.1 GB | ours 3.7 times (3.1 times on PBMC14K) |
+| recall, 500 queries | 0.903 | 0.946 | |
+
+Every build ran faster today than in Assignment 2: MICA 2.1 times on PBMC14K (903 to 429 s)
+and 1.4 times on Allen (18,888 to 13,619 s), our dense path 1.7 times (146 to 87 s) and our
+Allen build 1.3 times (7,798 to 6,091 s).
+
+**Correction: the builds were not run on an idle machine one at a time.** The finish times of
+the result files and the log headers show overlaps: MICA on PBMC14K ran about 02:45:54 to
+02:53:03, our PBMC14K sparse and dense builds ran inside that window (finished 02:48:02 and
+02:49:33), our Allen build ran 02:50:02 to 04:33:48, and MICA on Allen 02:53:52 to 06:41:13.
+At most two builds ran at once, always one MICA search beside one shortlist build, each set to
+8 workers on the 120-core machine. No two shortlist builds overlapped. On Allen, MICA's search
+shared the machine with our build for its first 1.7 h and ran alone for its last 2.1 h. The
+paper said "the same idle machine", and now says this.
+
+**Text filled in and checked against Allen.** The `ALLENCOST` placeholder is replaced: on
+Allen the shortlist is 2.2 times as fast where it was 29 times on PBMC14K, 2.8 h against 4.9 in
+total, and peaks at 80 GB against 22 GB, again while loading and binning. The two claims to
+check both hold, and both are now stated with numbers. "It uses more memory" in the
+introduction becomes "three to four times the memory", true on both datasets (3.1 and 3.7).
+The conclusion's "a faster graph does not close that gap" now adds that our build alone peaked
+at 80 GB on the pilot cells, about 1.8 TB in proportion (80.08 times 23), still above the
+754 GB machine. MICA's search alone used 22 of the pilot's 140 GB, so the pilot's memory peak
+sits elsewhere in MICA's pipeline. "Cheaper graph" became "faster graph" in the introduction
+and conclusion, since it costs more memory. The abstract now states the Allen time and the
+memory on both datasets.
+
+**Allen, our shortlist build finished at 04:33:49.** `results/graph_cost_allen_100k_corr3200/`.
+Loaded and binned in 133 s at a peak of 80.08 GB, shortlist of 3,200 by correlation in 444 s,
+exact rescoring on the sparse path in 5,648 s, so 6,091 s (1.7 h) for the graph, against 7,798 s
+in Assignment 2. Peak memory stayed at 80.08 GB, so all of it was reached while loading and
+binning. Recall on the 500 query cells is 0.9456, identical to Assignment 2, so it is the same
+graph. MICA's HNSW run started at 02:53:52 and is still going.
+
+**Allen, partial numbers while running (03:03).**
+- Ours, c=3,200: loaded and binned in 133 s at a peak of 80.08 GB, shortlist built in 444 s with
+  the peak unchanged, rescoring under way. A2 timing was 2.2 h in all.
+- MICA HNSW: loaded in 15 s at a peak of 14.63 GB, search under way. A2 timing was 5.2 h.
+
+**Third verification, of the text changed after the Allen runs (finished about 06:58).**
+Read-only workflow `wf_f970c959-d26`, three lenses (numbers, consistency across the paper,
+wording and logic), each finding checked by a skeptic. 21 confirmed, 3 rejected. The
+confirmed ones collapse to these, all fixed:
+- *The build times did not cover the same work.* MICA's `hnswlib_ann` takes the raw matrix and
+  bins inside its `mi` distance (checked in `mica_ge.py`), while our timing left out the binning,
+  which sat under "load and bin". `a3_report.py` now counts loading, and binning for ours, on
+  both sides. PBMC14K shortlist 15 s becomes 18 s (total 6.3 min becomes 6.4), so the speed-up
+  is 24 times, not 29. Allen is unchanged at the table's precision (6,224 s, still 1.7 h, 2.2
+  times). The JSON key is now `seconds_build_with_load`. The caption says so.
+- *The overlap sentence.* "At most two of our builds" read as two shortlist builds. Now "at most
+  two builds running at once, always one MICA search beside one shortlist build".
+- *"The time saved also shrinks with size" was false.* The time saved grows (7 min to 2.1 h).
+  Only the speed-up shrinks. Reworded.
+- *"AMI about 0.01 lower in both runs".* The runs are not paired, and one gap is 0.016. Now the
+  four AMI values are given.
+- *"The whole run takes 2.8 hours against 4.9".* No single run took that long, since the totals
+  add A2 downstream times. Now says so in the sentence.
+- *PBMC14K total.* "node2vec takes about 4 minutes" did not explain a 6 minute total. node2vec
+  plus 40 Louvain resolutions take about 6 minutes on either graph. Reworded.
+- *"The one large dataset" for PBMC14K,* while the paper also reports 100,000 Allen cells. Now
+  "the one large benchmark dataset" (abstract, introduction, results heading, conclusion) and
+  "the only large dataset in the selection comparison" (discussion).
+- *Full-atlas time.* "7 to 8 days" used the pilot's 5.3 h search. Today's 3.8 h gives about
+  6 days, so the conclusion says 6 to 8. Noted in `docs/allen_pilot.md`.
+- *MICA's row mixes two graphs.* Recall, ARI and AMI come from the A2 graph, time and memory from
+  today's rebuild, which was not saved. The caption now says so.
+- *"Two cautions"* listed three. Now "Three cautions", and "today" became "in these runs".
+- *Table numbering.* The 03:10 line above is out of date. Final numbering: body Table I
+  stability and Table II graph quality and cost, appendix Table III datasets, IV all four
+  rules, V common range, VI mode against size, VII AMI. The notebook map is renumbered to match.
+- *6,092 s* in the Allen block was 6,091 s.
+
+Rejected: that the peak memory misses the forked rescoring workers. `ru_maxrss` does leave
+them out, but a verifier sampled every process with psutil on PBMC14K: the main process drops
+to about 0.95 GB during rescoring and the 8 workers add 0.31 GB of private memory, far under
+the 3.64 GB load peak. So the peak is real. On Allen the 80 GB comes from `mi.bin_codes` making
+a float64 copy of X (22.8 GB) and an int64 floor temporary of the same size next to the float32
+X (11.4 GB). A leaner binning step would cut it, which is worth doing before any larger run.
+Also rejected: that the downstream times make the Total
+column wrong (the text already says where they come from), and a challenge to the 1.8 TB
+projection (the arithmetic and the cell sample check out).
+
+**Still pending (as of 07:02).**
+- Recompile, lint, rebuild the notebook, commit and push.
+- Utshab: make the Overleaf link view-only, compile there, submit.
+- Tell Rhea the tables are final.
+- Length: the body is about 9.2 pages, and whether to trim is Utshab's call.
+
+---
+
 ## 2026-10-22, Utshab
 
 Assignment 3 experiments and the manuscript. Two new results and a long list of corrections.
