@@ -1,0 +1,9 @@
+{
+  "dataset": "paper_pbmc14k",
+  "c": 800,
+  "k": 79,
+  "workers": 8,
+  "exact_path": "dense",
+  "pipeline": "MICodes, then candidates_correlation, then rerank. X dropped before rescoring",
+  "memory": "resource.getrusage(RUSAGE_SELF).ru_maxrss, a high-water mark"
+}

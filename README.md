@@ -65,6 +65,8 @@ python scripts/run_rule_stability_graph.py [seed] [b_subsamples]         # PBMC1
 python scripts/run_rule_mode_size.py [n_pool] [seed] [b_subsamples]      # mode against size, one fixed pool
 python scripts/run_rule_silhouette.py <dataset> [n_hvg] [flavor]        # silhouette in one shared space
 python scripts/run_rule_default.py                                       # each method's shipped default
+python scripts/measure_graph_cost.py <dataset> <c> [workers] [dense]     # shortlist graph: time, memory, recall
+python scripts/measure_mica_hnsw.py <dataset> [workers]                  # MICA's HNSW alone (mica-legacy env)
 ```
 
 `scripts/run_rules_small.sh` runs the nine small datasets at seed 0 and

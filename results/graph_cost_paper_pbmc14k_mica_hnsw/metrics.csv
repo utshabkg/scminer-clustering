@@ -1,0 +1,2 @@
+dataset,graph,k,workers,n_cells,n_genes,seconds_load_and_bin,seconds_candidates,seconds_rescoring,seconds_graph,peak_rss_gb_after_load,peak_rss_gb_after_candidates,peak_rss_gb
+paper_pbmc14k,mica_hnsw,79,8,13605,8846,0.3,,,429.5,0.75,,1.16

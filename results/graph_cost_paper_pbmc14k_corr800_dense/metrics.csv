@@ -1,0 +1,2 @@
+dataset,graph,exact_path,c,k,workers,n_cells,n_genes,seconds_load_and_bin,seconds_candidates,seconds_rescoring,seconds_graph,peak_rss_gb_after_load,peak_rss_gb_after_candidates,peak_rss_gb,recall_all_cells,recall_500_queries
+paper_pbmc14k,corr800_dense,dense,800,79,8,13605,8846,2.3,3.7,83.5,87.2,3.63,3.63,3.63,0.9733,0.9735

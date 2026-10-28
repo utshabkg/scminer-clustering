@@ -1,0 +1,2 @@
+dataset,graph,k,workers,n_cells,n_genes,seconds_load_and_bin,seconds_candidates,seconds_rescoring,seconds_graph,peak_rss_gb_after_load,peak_rss_gb_after_candidates,peak_rss_gb
+allen_100k,mica_hnsw,79,8,100000,28536,15.5,,,13619.2,14.63,,21.64

@@ -1,0 +1,11 @@
+{
+  "dataset": "allen_100k",
+  "workers": 8,
+  "num_neighbors": 80,
+  "ef": 400,
+  "M": 8,
+  "bin_power": 0,
+  "bin_size": 0,
+  "call": "MICA.mica_ge.hnswlib_ann on adata.to_df().to_numpy(), as mica_ge does",
+  "memory": "resource.getrusage(RUSAGE_SELF).ru_maxrss, a high-water mark"
+}
