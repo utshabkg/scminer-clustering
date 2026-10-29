@@ -38,7 +38,7 @@ The first task for each of you (L-1, L-7, R-1) is set so we can get moving. Ever
 
 ## Milestones
 
-There are 55 tasks: 39 for Utshab and 8 each for Laraib and Rhea. Three of them (L-7, R-3, R-8) repeat every week, and each of the other 52 belongs to the milestone in its row. U-25 and U-26 were added on Oct 2 to firm up the first finding, U-27 to U-30 came out of the Oct 2 review, and U-31 to U-38 come from the Assignment 2 feedback and our revised plan, and U-39 was added on Oct 22 because the PBMC14K result could not otherwise be attributed to size or to mode.
+There are 57 tasks: 40 for Utshab, 9 for Laraib and 8 for Rhea. Three of them (L-7, R-3, R-8) repeat every week, and each of the other 52 belongs to the milestone in its row. U-25 and U-26 were added on Oct 2 to firm up the first finding, U-27 to U-30 came out of the Oct 2 review, and U-31 to U-38 come from the Assignment 2 feedback and our revised plan, and U-39 was added on Oct 22 because the PBMC14K result could not otherwise be attributed to size or to mode. U-40 and L-9 were added on Oct 28, when Assignment 3 moved to Nov 4: U-40 runs the matched grids the report promised, and L-9 is the independent check the feedback asked for.
 
 | ID | By | What is true when it is done |
 |----|----|------------------------------|
@@ -94,6 +94,7 @@ There are 55 tasks: 39 for Utshab and 8 each for Laraib and Rhea. Three of them 
 | U-37 | Final comparison table across the ten benchmark sets: every rule with its repeats and costs, and no win-count criterion | U-32 to U-36 | `results/summary_label_free_rules.md` | one table, every rule, every dataset, with repeats | Nov 4 | M5 | `[ ]` |
 | U-38 | Optional checks if time allows: Leiden on the correlation neighbor graph, and a hub correction on the mutual information graph | U-19 | `results/rq2_swap/`, `results/rq2_hubness/` | both run or formally dropped at the Nov 4 meeting | Nov 11 | M6 | `[ ]` |
 | U-39 | Separate MICA's mode from the dataset size: one fixed pool of 2,500 PBMC14K cells run through both of MICA's modes under the same rule | U-32 | `scripts/run_rule_mode_size.py`, `results/rule_mode_size_pbmc14k_n2500_seed0/` | both arms report a tie span on the same cells, so mode and size are no longer confounded | Nov 4 | M5 | `[x]` |
+| U-40 | Matched candidate grids: rerun the stability comparison and the mode test with both methods offered the same cluster counts, one setting per count | U-32, U-39 | `src/scminer_clust/grids.py`, `results/rule_matched_*/` | both methods choose among the same cluster counts on all ten sets, and the mode test is repeated on them | Nov 4 | M5 | `[~]` |
 
 ## Tasks: Laraib
 
@@ -104,9 +105,10 @@ There are 55 tasks: 39 for Utshab and 8 each for Laraib and Rhea. Three of them 
 | L-3 | Dataset card: Allen brain atlas | Same template, plus the label levels (34 classes, 338 subclasses) and the license restriction | `docs/dataset_cards/allen_wmb.md` | every field filled | Oct 21 | M3 | `[ ]` |
 | L-4 | Related work comparison table | Using the saved reviews in `docs/research/`, build a table of about 15 papers with columns: paper, year, venue, what it does, biggest data it handled, does it use mutual information, does it choose cluster count without labels, does it use a language model, how ours differs | `docs/related_work_table.md` | 15 rows, each with a link | Oct 28 | M4 | `[ ]` |
 | L-5 | Rewrite the introduction and closest work | Use L-4 so the paper's story matches the table | `latex/sections/02_introduction.tex`, `latex/sections/03_related.tex` | sections updated and compiling | Nov 11 | M5 | `[ ]` |
-| L-6 | Marker check | For each cluster name our system proposes, look the markers up in CellMarker 2.0 and PanglaoDB on their websites, and record whether they agree, with the link you used | `results/rq3_rag/marker_check.csv` | every proposed name checked | Nov 18 | M6 | `[ ]` |
+| L-6 | Marker check | For each cluster name our system proposes, look the markers up in CellMarker 2.0 and PanglaoDB on their websites, and record whether they agree, with the link you used | `results/rq3_rag/marker_check.csv` | every proposed name checked | Nov 18 | M6 | `[!]` on hold, the annotation work is deferred |
 | L-7 | Meeting minutes | Short notes after each Wednesday meeting: decisions, who owns what next | `docs/minutes/YYYY-MM-DD.md` | one file per meeting | weekly | every week | `[ ]` |
 | L-8 | Proofread the paper | Check the writing rules we agreed on: no long dashes, no semicolons, plain words, consistent terms | the LaTeX sections | full read-through with fixes | Dec 2 | M8 | `[ ]` |
+| L-9 | Independent check of the discussion | For each claim in the Discussion section of the Assignment 3 report, check that it follows from the results and tables. Mark anything that overstates them or cannot be traced | the paper | every claim checked, problems listed | Nov 3 | M5 | `[ ]` |
 
 ## Tasks: Rhea
 
@@ -115,10 +117,10 @@ There are 55 tasks: 39 for Utshab and 8 each for Laraib and Rhea. Three of them 
 | R-1 | Results summary | Utshab refreshes `docs/results_for_pivot.csv` after every run. It holds only the main comparison, one row per run (the full `docs/results_tracker.csv` has every kind of row and is not meant for this). Download it from GitHub, open it in Excel or Google Sheets, and build a one-page pivot: rows are dataset and gene_setting, columns are method, values are the average of ari. Keep the two inputs (authors' data and our preprocessing) apart, for example with a filter on the input column. Mark anything that looks odd and bring it to the meeting | `docs/author_data_results_summary.csv` and `docs/our_preprocessing_results_summary.csv` | every run in `docs/results_for_pivot.csv` appears in the summary, with odd results marked | Oct 21 | M3 | `[x]` odd results marked in a new anomaly column of both CSVs |
 | R-2 | Turn results into paper tables | Take the result CSVs and format them as LaTeX tables with captions | `latex/tables/r2_*.tex`, made by `scripts/make_paper_tables.py` | tables compile in the draft | Oct 21 | M3 | `[x]` both tables compile with the report preamble. Rerun the script when the summary CSVs change |
 | R-3 | Keep this plan current | After each meeting, update statuses, the milestone table and the risk list | `WORKPLAN.md` | statuses match reality each week | weekly | every week | `[ ]` |
-| R-4 | Rare population sheets | From the per-cluster counts, work out how many reference cell types survive clustering and which ones vanish, then summarize | `results/rq2_atlas/rare_summary.csv` | summary table with a short written finding | Nov 18 | M6 | `[ ]` |
-| R-5 | Annotation audit | For about 50 sampled annotations, use the rubric to mark whether the quoted text really supports the proposed name, yes or no, with a reason | `results/rq3_rag/audit.csv` | 50 rows scored | Nov 25 | M7 | `[ ]` |
+| R-4 | Rare population sheets | From the per-cluster counts, work out how many reference cell types survive clustering and which ones vanish, then summarize | `results/rq2_atlas/rare_summary.csv` | summary table with a short written finding | Nov 18 | M6 | `[!]` on hold, the full atlas run is deferred |
+| R-5 | Annotation audit | For about 50 sampled annotations, use the rubric to mark whether the quoted text really supports the proposed name, yes or no, with a reason | `results/rq3_rag/audit.csv` | 50 rows scored | Nov 25 | M7 | `[!]` on hold, the annotation work is deferred |
 | R-6 | Slide outline | Draft 10 to 12 slides: problem, limitation, our questions, method, results, what we learned | `docs/slides_outline.md` | outline agreed in the meeting | Nov 25 | M7 | `[ ]` |
-| R-7 | Number consistency check | Every number in the text matches the tables, and every table is referenced somewhere | the paper | one pass with corrections listed | Dec 2 | M8 | `[ ]` |
+| R-7 | Number consistency check | Every number in the text matches the tables, and every table is referenced somewhere. A first pass on the Assignment 3 report by Nov 3, the full pass on the final draft | the paper | one pass with corrections listed | Nov 3, then Dec 2 | M8 | `[ ]` |
 | R-8 | Update the progress file | After each meeting, refresh the milestone status table at the top of the progress log | `PROGRESS.md` | percentages match the task statuses | weekly | every week | `[ ]` |
 
 ## Weekly schedule
@@ -212,3 +214,4 @@ Datasets never go into git. They live on the shared 20 TB disk, and the repo onl
 | Oct 14 | Move the full 2.3 million cell run to a stretch goal | The pilot projects 7 to 8 days and about 3.2 TB of memory, against our 754 GB |
 | Oct 3 | Fast neighbor search proposes candidates by correlation over all genes, then scores them exactly | 50 principal components miss most of MICA's neighbors on PBMC14K (33% found), correlation finds 97% with 800 candidates |
 | Oct 3 | Judge a fast graph by MICA's own later steps, not only by neighbor recall | Graphs that miss many exact neighbors can cluster as well or better, because MICA's graph has strong hub cells |
+| Oct 28 | Assignment 3 was not submitted on Oct 28. The deadline moved to Nov 4 | Announced on Oct 28. The week goes first to what the report itself says is weakest, before new tasks |

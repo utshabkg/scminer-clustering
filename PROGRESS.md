@@ -5,7 +5,7 @@ Utshab adds an entry at the end of each working session. Laraib and Rhea add a l
 
 ## Where we stand
 
-Updated: 2026-10-22. Counts follow the Milestone column in `WORKPLAN.md`.
+Updated: 2026-10-28. Counts follow the Milestone column in `WORKPLAN.md`.
 
 | Milestone | Due | Tasks done | Percent | State |
 |-----------|-----|------------|---------|-------|
@@ -13,13 +13,13 @@ Updated: 2026-10-22. Counts follow the Milestone column in `WORKPLAN.md`.
 | M2 reproduce the paper, Assignment 2 report | Oct 14 | 7 of 9 | 78% | Ten benchmark sets run, nine reproduce within 0.05. Report submitted (U-31). Left: contacting the authors (U-30), PBMC14K card (L-2) |
 | M3 cluster count without labels | Oct 21 | 7 of 9 | 78% | The stability rule (U-32) is done on all ten datasets, including PBMC14K in graph mode. The results summary (R-1) and paper tables (R-2) are done. Left: significance rule (U-33), Allen card (L-3) |
 | M4 what the similarity measures, atlas downloaded | Oct 28 | 5 of 7 | 71% | Diagnostics, atlas, pilot and the shared-space silhouette (U-35) done. Left: label-free Leiden on Allen (U-36), related work table (L-4) |
-| M5 main experiments complete | Nov 4 | 3 of 6 | 50% | Our distance matches the authors' (U-17), the CPU fast neighbor search is done (U-19), and mode against size (U-39) is finished. Left: transfer rule (U-34), final comparison table (U-37), GPU search (U-18) |
+| M5 main experiments complete | Nov 4 | 3 of 8 | 38% | Our distance matches the authors' (U-17), the CPU fast neighbor search is done (U-19), and mode against size (U-39) is finished. Running: matched grids (U-40). Left: transfer comparison (U-34), final comparison table (U-37), the discussion check (L-9), GPU search (U-18, deferred) |
 | M6 gated extras | Nov 11 | 0 of 6 | 0% | Not started. The GPU search (U-18), the annotation comparison (U-22, U-23) and the optional checks (U-38) all depend on the Nov 4 result |
 | M7 full manuscript draft | Nov 18 | 0 of 4 | 0% | Not started |
 | M8 revision and slides | Dec 2 | 0 of 3 | 0% | Not started |
 | Every week: notes, plan and progress updates | weekly | | | L-7, R-3 and R-8 |
 
-Overall: 30 of 55 tasks finished. Three of the 55 repeat every week. The counts above are read off the status markers in `WORKPLAN.md`.
+Overall: 30 of 57 tasks finished. Three of the 57 repeat every week. The counts above are read off the status markers in `WORKPLAN.md`.
 
 Next three things: submit Assignment 3, run the transfer rule (U-34), and a decision on whether to write to the scMINER authors (U-30).
 
@@ -364,6 +364,115 @@ X (11.4 GB). A leaner binning step would cut it, which is worth doing before any
 Also rejected: that the downstream times make the Total
 column wrong (the text already says where they come from), and a challenge to the 1.8 TB
 projection (the arithmetic and the cell sample check out).
+
+**Matched grids, declared before any matched run (written about 22:59, before the Yan test run at about 23:00 and the batch at 23:00:58).** Utshab gave the go-ahead at about
+22:50 to run the three Nov 4 items this week, everything in byobu. This block fixes the design
+before any matched stability score exists. We have already seen the post hoc common-range
+result, so the paper must say the matched design was chosen after it.
+
+*Why a new design and not just a wider grid.* Two probes on the full data, with no labels and
+no stability scores, show that no fixed grid reaches every count from 2 to 20.
+- `scripts/probe_grid_coverage.py fine` (`results/grid_coverage_fine/`): Leiden over 300
+  log-spaced resolutions from 0.001 to 50 still skips 0 to 5 of the 19 counts per run (Yan
+  misses 11, 12, 14, 18 at seed 0, PBMC14K misses 9, 10, 19), because Leiden jumps over some
+  counts as the resolution moves. The old 0.05 to 2.0 grid missed up to 13.
+- `scripts/probe_mica_graph_coverage.py 30` (`results/grid_coverage_mica_graph/`, finished
+  about 23:18): MICA's graph-mode Louvain from 0.1 up to 30 in steps of 0.1, on the full
+  PBMC14K data and on the three 2,500 cell pools. On the full data it never gives fewer than
+  4 clusters, even at 30, and the pools bottom out at 4, 3 and 2 (the last at 24.5). So MICA's
+  graph mode cannot be offered 2 or 3 clusters on PBMC14K at all, which no grid fixes. The 0.1
+  step also skips 7 to 9 counts between 10 and 20, where the count changes fastest.
+
+*The design (U-40).*
+1. Grids, in `src/scminer_clust/grids.py`: the baseline sweeps the 300-point Leiden grid above
+   on the full data. MICA's small-data k stays 2 to 20. MICA's graph-mode Louvain sweeps 263
+   resolutions: 0.01 steps from 0.1 to 2.0, MICA's own 0.1 steps to 4.0, then 0.5 steps to 30
+   (`grids.MICA_GRAPH_MATCHED`, set after the probe and before the PBMC14K runs).
+2. Candidate counts: in each run, the counts from 2 to 20 that every method (every arm, in the
+   mode test) reaches on the full data. Computed by `grids.common_counts`.
+3. One setting per count for each method: the middle setting, in grid order, of those whose
+   full-data partition has that count (`grids.one_per_count`). MICA's k grid already has one
+   per count. A dense resolution grid has several, and since the rule's threshold is the
+   highest lower bound among the candidates, more candidates would raise it by chance.
+4. The rule is unchanged: 25 subsamples of 80 percent, chooseR's finest-stable reading as the
+   primary, the plain maximum as the second reading, at seeds 0, 1 and 2.
+5. Runs: the nine small datasets (both methods, so MICA's unchanged results double as a
+   reproducibility check), PBMC14K in graph mode at three seeds, and the mode test on the
+   three 2,500 cell pools. Results go to `results/rule_matched_*`, and the original runs stay
+   as they are. The paper reports the original runs as specified and the matched runs as the
+   design that answers the confound.
+
+*Transfer comparison (U-34), declared now.* Uses the matched small-data runs, which record
+every setting's full-data ARI ("full_sweep" rows). For each of the nine small datasets and
+each seed, each method takes the setting with the highest mean ARI over the other eight
+datasets at the same seed (Leiden: a resolution on the 300-point grid, MICA: k), ties to the
+smaller setting, with no cap on the count it then gives. It is scored on the held-out dataset
+and reported apart from the label-free rules, since it uses the other datasets' labels. On
+PBMC14K the baseline takes the resolution best on the nine small datasets. MICA's graph mode
+has no setting that carries over from small-data k, so MICA is not transferred to PBMC14K.
+We also report whether MICA's transferred k equals its shipped default of 4.
+
+*Final table (U-37).* One summary table: each rule's mean ARI over the nine small datasets for
+both methods, with the range over seeds where there are seeds, and selection cost, plus
+PBMC14K apart. No win count.
+
+**Matched runs started.** A test of the matched small-data runner on Yan (seed 0, about
+23:00, 33 s) offered 15 of the 19 counts and wrote `results/rule_matched_stability_paper_yan/`.
+The batch for the nine small datasets started at 23:00:58, one byobu session per seed
+(`scm-matched-small-s0` to `s2`, `scripts/run_rules_matched.sh small <seed>`, logs
+`logs/matched_small_seed<seed>.log`). Its Yan seed 0 result is identical to the test run (Leiden
+10 clusters at resolution 2.39253, ARI 0.629), so the runner is deterministic. PBMC14K and the
+mode test wait for the MICA graph probe, which sets the upper end of MICA's Louvain grid.
+New code: `src/scminer_clust/grids.py`, a `--matched` switch on the three runners,
+`scripts/mica_downstream.py` taking a resolution list, the two probes, `scripts/run_rules_matched.sh`
+and `scripts/a3_matched.py` (matched table, transfer, summary table, `results/a3_matched_numbers.json`).
+Teammate messages for the new schedule are drafted in `scratchpad/teammate_replies.md`, and
+`WORKPLAN.md` gains U-40 and L-9, a first R-7 pass by Nov 3, and marks R-4, R-5 and L-6 on hold.
+
+**Matched results, nine small datasets (23:20).** From `scripts/a3_matched.py`
+(`results/a3_matched_numbers.json`, `latex/tables/a3_matched.tex`). Each run offered 14 to 19
+of the 19 counts (mean 17.1). Where all 19 were offered, MICA's picks equal the original runs in
+8 of 8 cases, so the runner changes nothing but the candidates.
+- *No reversal on matched candidates.* Finest-stable: MICA 0.662, baseline 0.543. Plain
+  maximum: MICA 0.473, baseline 0.452. MICA leads at 3 of 3 seeds under both readings, and on
+  5 of 9 datasets under each. On the original grids the baseline led under the plain maximum
+  (0.635 against 0.473). So the post hoc conclusion holds when the design is fixed in advance.
+- *The baseline fell, not MICA.* MICA's means barely move (0.661 to 0.662, 0.473 to 0.473),
+  since its k grid was already complete. The baseline drops from 0.632 to 0.543 and from 0.635
+  to 0.452 once it is offered the full range, with its plain maximum now going to 2 or 3
+  clusters on most datasets. Its old grid had been protecting it from coarse counts.
+- *The readings still move MICA more,* by 0.198 per dataset in absolute terms against 0.118.
+  The baseline's figure was 0.067 on its old grid.
+- *The flat top is MICA's own.* On matched candidates, with one setting per count for both,
+  40 percent of MICA's settings tie within 0.01 of its best against 17 percent for the
+  baseline, the tied counts span 6.7 against 2.6, and 29 percent of MICA's settings score
+  exactly 1.0 against 5 percent. This revises the discussion, which attributed most of the
+  ambiguity to the candidates.
+- *Edge picks:* MICA's finest-stable pick sits at an end of the offered counts in 3 of 27
+  runs, the baseline's in 7.
+
+**Transfer comparison, nine small datasets (23:20).** `results/a3_transfer.csv`. Tuned on the
+other eight datasets' labels, MICA takes k = 4, its shipped default, in 26 of 27 held-out
+choices (k = 3 once). So MICA's default behaves exactly like a setting tuned on this
+benchmark. Mean ARI: MICA 0.727, baseline 0.641 (resolutions 0.22 to 0.30, against its
+shipped 1.0, which scores 0.514). PBMC14K's transfer waits for the matched PBMC14K runs.
+
+**Summary table (U-37), first version.** `latex/tables/a3_summary.tex`, every rule for both
+methods, with the seed range of the mean and the selection time. MICA has the higher
+nine-dataset mean under every rule except the plain maximum on the original grids.
+
+**PBMC14K and mode test started.** The three matched PBMC14K seeds started at 23:17
+(`scm-matched-pbmc-s<seed>`, logs `logs/matched_pbmc_seed<seed>.log`) and the three mode-test
+pools at about 23:19 (`scm-matched-mode-s<seed>`, logs `logs/matched_mode_seed<seed>.log`).
+The nine small datasets finished at all three seeds by about 23:18, about 16 minutes each.
+
+**Deadline moved (22:46).** Utshab reports that Assignment 3 is now due on November 4, so it
+was not submitted tonight. The other dates stay: main experiments complete by November 4, full
+manuscript draft by November 18. So the report and the three items in its "Plan through
+November 4" (matched candidate grids, the transfer comparison, the final table) now fall due
+on the same day. Proposed: run those three this week, report them in Assignment 3, turn the
+plan section into a plan through November 18, and give Rhea (R-7) and Laraib time to check
+the results before submitting. Waiting on Utshab's go-ahead.
 
 **Evening (22:36).**
 - Rhea finished item 1 of the last message with no changes needed. The Chung log-base fix
