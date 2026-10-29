@@ -9,7 +9,8 @@ The rules: no em or en dashes, no semicolons, no comma placed inside quotation
 marks, and none of a short list of stock phrases. In LaTeX a double hyphen renders
 as an en dash and a triple as an em dash, so those are flagged too. Markdown table
 separators and horizontal rules are skipped, as are BibTeX page ranges, where a
-double hyphen is correct.
+double hyphen is correct. Code in Markdown (inline spans and fenced blocks) is not prose,
+so a command-line flag such as --matched is not flagged there.
 """
 import re
 import sys
@@ -36,6 +37,14 @@ def strip_math(text):
     return MATH.sub(lambda m: " " * len(m.group()), text)
 
 
+CODE = re.compile(r"```.*?```|`[^`\n]*`", re.S)
+
+
+def strip_code(text):
+    """Blank out Markdown code, keeping newlines so line numbers still match."""
+    return CODE.sub(lambda m: re.sub(r"[^\n]", " ", m.group()), text)
+
+
 def check(path):
     hits = []
     try:
@@ -44,6 +53,8 @@ def check(path):
         return hits
     if path.suffix == ".tex":
         text = strip_math(text)
+    if path.suffix == ".md":
+        text = strip_code(text)
     for i, line in enumerate(text.splitlines(), 1):
         stripped = line.strip()
         if SEPARATOR.fullmatch(stripped) or stripped.startswith("%"):

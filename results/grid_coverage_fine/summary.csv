@@ -1,0 +1,31 @@
+dataset,seed,n_cells,grid,n_resolutions,min_clusters,max_clusters,missing_2_to_20
+paper_yan,0,124,fine,300,2,123,11 12 14 18
+paper_yan,1,124,fine,300,2,123,12 14 18
+paper_yan,2,124,fine,300,2,123,14 18
+paper_goolam,0,124,fine,300,1,124,9 11 13 17 19
+paper_goolam,1,124,fine,300,1,124,9 13 18 20
+paper_goolam,2,124,fine,300,1,124,9 13 18
+paper_buettner,0,182,fine,300,1,170,5 12 13
+paper_buettner,1,182,fine,300,1,170,12 17
+paper_buettner,2,182,fine,300,1,170,9 14 20
+paper_pollen,0,249,fine,300,1,209,12 19
+paper_pollen,1,249,fine,300,1,209,19
+paper_pollen,2,249,fine,300,1,209,15
+paper_chung,0,317,fine,300,1,230,20
+paper_chung,1,317,fine,300,1,231,19 20
+paper_chung,2,317,fine,300,1,230,11 17 19 20
+paper_usoskin,0,622,fine,300,1,246,19
+paper_usoskin,1,622,fine,300,1,242,
+paper_usoskin,2,622,fine,300,1,246,
+paper_kolodziejczyk,0,704,fine,300,1,290,17
+paper_kolodziejczyk,1,704,fine,300,1,291,11 13 17 18
+paper_kolodziejczyk,2,704,fine,300,1,289,20
+paper_klein,0,2717,fine,300,2,430,11
+paper_klein,1,2717,fine,300,2,434,20
+paper_klein,2,2717,fine,300,2,440,17
+paper_zeisel,0,2903,fine,300,1,310,
+paper_zeisel,1,2903,fine,300,1,308,
+paper_zeisel,2,2903,fine,300,1,310,15
+paper_pbmc14k,0,13605,fine,300,2,930,9 10 19
+paper_pbmc14k,1,13605,fine,300,2,939,11 13 20
+paper_pbmc14k,2,13605,fine,300,2,930,11

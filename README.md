@@ -31,6 +31,7 @@ Rebuild every table and figure in the report from saved results, without rerunni
 conda env create -f envs/scminer.yml   # installs the project too, so scminer_clust imports
 conda activate scminer
 python scripts/a3_report.py            # rewrites latex/tables/*.tex, latex/figures/*, results/a3_*.json
+python scripts/a3_matched.py           # the matched-grid, transfer and summary tables
 pytest tests/ -q                       # 4 tests, about 6 seconds
 ```
 
@@ -67,7 +68,14 @@ python scripts/run_rule_silhouette.py <dataset> [n_hvg] [flavor]        # silhou
 python scripts/run_rule_default.py                                       # each method's shipped default
 python scripts/measure_graph_cost.py <dataset> <c> [workers] [dense]     # shortlist graph: time, memory, recall
 python scripts/measure_mica_hnsw.py <dataset> [workers]                  # MICA's HNSW alone (mica-legacy env)
+python scripts/probe_grid_coverage.py fine                               # cluster counts a Leiden grid reaches
+python scripts/probe_mica_graph_coverage.py [max_resolution]              # the same for MICA's graph mode
 ```
+
+The three stability runners take `--matched`, which offers both methods the same cluster
+counts with one setting per count (`src/scminer_clust/grids.py`) and writes to
+`results/rule_matched_*`. `scripts/run_rules_matched.sh small|pbmc|modesize <seed>` runs one
+part at one seed.
 
 `scripts/run_rules_small.sh` runs the nine small datasets at seed 0 and
 `scripts/run_rules_repeats.sh` supplies seeds 1 and 2. MICA's graph mode needs the authors' own

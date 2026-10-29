@@ -1,6 +1,6 @@
 """Separate MICA's mode from the dataset size, which every earlier run confounds (U-39).
 
-Usage: python scripts/run_rule_mode_size.py [n_pool] [seed] [b_subsamples]
+Usage: python scripts/run_rule_mode_size.py [n_pool] [seed] [b_subsamples] [--matched]
 
 The stability results so far compare nine datasets under 3,000 cells, all in MICA's
 small-data mode, against one dataset of 13,605 cells in its graph mode. Mode and size
@@ -21,6 +21,9 @@ The graph-mode distance comes from the cached full matrix by taking a submatrix,
 is exact (tests/test_subsample_invariance.py). The small-data distance uses the other
 normalisation, so it is computed on the pool directly.
 
+With --matched every arm uses the matched grids in src/scminer_clust/grids.py and the run
+writes results/rule_matched_mode_size_pbmc14k_n<pool>_seed<seed>/.
+
 Writes results/rule_mode_size_pbmc14k_n<pool>_seed<seed>/.
 """
 import sys
@@ -30,7 +33,7 @@ import anndata as ad
 import numpy as np
 from scipy import sparse
 
-from scminer_clust import cluster, metrics, mi, stability
+from scminer_clust import cluster, grids, metrics, mi, stability
 from scminer_clust.paths import DATA, PROCESSED
 
 sys.path.insert(0, str(__import__("pathlib").Path(__file__).resolve().parent))
@@ -61,17 +64,19 @@ def mds_distance_for_pool(X, tag):
     return D
 
 
-def run_arm(method, mode, maker, n, truth, seed, b):
+def run_arm(method, mode, maker, n, truth, seed, b, full=None, settings=None):
     """The stability rule for one arm. Mirrors the other two runners so results are comparable."""
     t0 = time.time()
-    full = maker(np.arange(n), "full")
-    settings = [s for s, lab in full.items() if 2 <= len(np.unique(lab)) <= 20]
+    if full is None:
+        full = maker(np.arange(n), "full")
+    if settings is None:
+        settings = [s for s, lab in full.items() if 2 <= len(np.unique(lab)) <= 20]
     print(f"  {method} ({mode}): {len(settings)} settings give 2 to 20 clusters", flush=True)
     ref = stability.reference_cells(n, seed=seed)
     co = {s: stability.CoClustering(ref) for s in settings}
     subs = stability.subsamples(n, b=b, seed=seed)
     for i, cells in enumerate(subs, 1):
-        parts = maker(cells, f"sub{i}")
+        parts = maker(cells, f"sub{i}", settings) if grids.matched() else maker(cells, f"sub{i}")
         for s in settings:
             if s in parts:
                 co[s].add(cells, parts[s])
@@ -126,17 +131,26 @@ def main(n_pool=N_POOL, seed=0, b=stability.B_SUBSAMPLES):
 
     rows, summary = [], []
     arms = [
-        ("mica", "small", lambda c, t: small.mica_partitions(Dmds, np.asarray(c), seed)[1]),
-        ("mica", "graph", lambda c, t: graph.mica_graph_partitions(Dge, c, f"ms{seed}_{t}")),
-        ("leiden_pca", "pca", lambda c, t: small.leiden_partitions(sub, np.asarray(c), seed)[1]),
+        ("mica", "small", lambda c, t, res=None: small.mica_partitions(Dmds, np.asarray(c), seed)[1]),
+        ("mica", "graph", lambda c, t, res=None: graph.mica_graph_partitions(Dge, c, f"ms{seed}_{t}",
+                                                                              resolutions=res)),
+        ("leiden_pca", "pca", lambda c, t, res=None: small.leiden_partitions(sub, np.asarray(c), seed, res)[1]),
     ]
+    fulls, chosen = {}, {}
+    if grids.matched():
+        # all three arms are offered the same cluster counts, one setting each
+        fulls = {mode: mk(np.arange(n_pool), "full") for _, mode, mk in arms}
+        common = grids.common_counts(*fulls.values())
+        chosen = {mode: list(grids.one_per_count(fulls[mode], common).values()) for mode in fulls}
+        print(f"  matched counts: {common} ({len(common)} of 19)", flush=True)
     for method, mode, maker in arms:
-        r, s = run_arm(method, mode, maker, n_pool, truth, seed, b)
+        r, s = run_arm(method, mode, maker, n_pool, truth, seed, b, fulls.get(mode), chosen.get(mode))
         rows += r
         summary.append(s)
 
-    d = metrics.write(f"rule_mode_size_pbmc14k_n{n_pool}_seed{seed}", rows,
+    d = metrics.write(grids.tag(f"rule_mode_size_pbmc14k_n{n_pool}_seed{seed}"), rows,
                       {"dataset": NAME, "question": "mode against size at fixed data",
+                       "grid": "matched" if grids.matched() else "original",
                        "n_pool": n_pool, "pool_seed": seed, "b_subsamples": b,
                        "fraction": stability.FRACTION, "seed": seed,
                        "k_range": list(small.K_RANGE),

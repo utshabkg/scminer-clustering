@@ -1,0 +1,6 @@
+{
+  "max_resolution": 30.0,
+  "step": 0.1,
+  "labels_used": false,
+  "pipeline": "run_rule_stability_graph.mica_graph_partitions"
+}

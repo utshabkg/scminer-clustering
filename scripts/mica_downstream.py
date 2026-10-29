@@ -1,15 +1,19 @@
 """Run MICA's own steps after the neighbor graph (node2vec, then Louvain) on any edge list (U-19).
 
 Run in the mica-legacy env:
-  python scripts/mica_downstream.py <graph_dir> <out_dir> [workers]
+  python scripts/mica_downstream.py <graph_dir> <out_dir> [workers] [max_resolution | r1,r2,...]
 <graph_dir> holds edgelist.txt and cells.txt, as written by export_fast_graph.py.
 Uses MICA's library functions and MICA's defaults (node2vec: 20 dimensions, walk
 length 60, 110 walks, window 10, p 2.8, q 0.4; Euclidean 20-neighbor graph on the
-embedding; Louvain from 0.1 to 4.0 in steps of 0.1, as in our MICA runs). The UMAP
+embedding; Louvain from 0.1 to 4.0 in steps of 0.1, as in our MICA runs, or up to
+max_resolution for the matched grid, since higher means fewer clusters here, or only the
+listed resolutions, through the same MICA functions). The UMAP
 plots are skipped. Writes one clustering_<resolution>.txt per resolution (ID, label).
 """
 import sys
 import time
+from functools import partial
+from multiprocessing import Pool
 from pathlib import Path
 
 import numpy as np
@@ -21,7 +25,7 @@ from MICA.lib import neighbor_graph as ng
 DIM = 20
 
 
-def main(graph_dir, out_dir, workers=8):
+def main(graph_dir, out_dir, workers=8, max_resolution=4.0):
     graph_dir, out_dir = Path(graph_dir), Path(out_dir)
     out_dir.mkdir(parents=True, exist_ok=True)
     cells = np.array(graph_dir.joinpath("cells.txt").read_text().split())
@@ -33,7 +37,14 @@ def main(graph_dir, out_dir, workers=8):
     emb = pd.read_csv(emb_file, delimiter=" ", skiprows=1, index_col=0, names=np.arange(1, DIM + 1)).sort_index()
     assert len(emb) == len(cells), f"embedding has {len(emb)} rows for {len(cells)} cells"
     G = ng.build_graph(emb.to_numpy(), dis_metric="euclidean", num_neighbors=20, num_jobs=workers)
-    parts = cl.graph_clustering_parallel(G, min_resolution=0.1, max_resolution=4.0, step_size=0.1, num_workers=workers)
+    if isinstance(max_resolution, list):
+        # what graph_clustering_parallel does, on a given list instead of a stepped range
+        with Pool(processes=workers) as pool:
+            found = pool.map(partial(cl.best_partition_wrapper, G), max_resolution)
+        parts = [(cl.cluster_rank(par), reso) for par, reso in found]
+    else:
+        parts = cl.graph_clustering_parallel(G, min_resolution=0.1, max_resolution=max_resolution, step_size=0.1,
+                                             num_workers=workers)
     for par, reso in parts:
         labels = [x + 1 for x in par.values()]
         pd.DataFrame({"label": labels}, index=pd.Index(cells[emb.index], name="ID")).to_csv(
@@ -45,4 +56,6 @@ def main(graph_dir, out_dir, workers=8):
 
 
 if __name__ == "__main__":
-    sys.exit(main(sys.argv[1], sys.argv[2], int(sys.argv[3]) if len(sys.argv) > 3 else 8))
+    reso = sys.argv[4] if len(sys.argv) > 4 else "4.0"
+    reso = [float(r) for r in reso.split(",") if r] if "," in reso else float(reso)  # "3.5," is a list of one
+    sys.exit(main(sys.argv[1], sys.argv[2], int(sys.argv[3]) if len(sys.argv) > 3 else 8, reso))

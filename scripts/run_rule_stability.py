@@ -1,6 +1,6 @@
 """Pick each method's clustering by subsampling stability, with no labels (U-32).
 
-Usage: python scripts/run_rule_stability.py <dataset> [n_hvg] [hvg_flavor]
+Usage: python scripts/run_rule_stability.py <dataset> [n_hvg] [hvg_flavor] [seed] [--matched]
 Runs the chooseR-style rule in src/scminer_clust/stability.py for MICA and for
 PCA plus Leiden on the same input, over a matched range of cluster counts (2 to
 20). Both methods are fully rerun on each of 25 random 80 percent subsamples.
@@ -12,7 +12,13 @@ is checked in tests/test_subsample_invariance.py. So the full matrix is computed
 once per dataset and cached, and each subsample takes a submatrix of it. Every
 other step, the MDS embedding included, is redone per subsample.
 
-Writes results/rule_stability_<exp>/.
+With --matched the baseline uses the widened Leiden grid in src/scminer_clust/grids.py, so
+both methods are offered the same cluster counts, and the run writes
+results/rule_matched_stability_<exp>/. MICA's k grid already reaches every count.
+
+Writes results/rule_stability_<exp>/. Besides the chosen settings and each setting's
+stability, it records every setting's full-data cluster count and ARI ("full_sweep" rows),
+which the transfer comparison needs.
 """
 import sys
 import time
@@ -22,12 +28,12 @@ import numpy as np
 import scanpy as sc
 from scipy import sparse
 
-from scminer_clust import cluster, diagnostics, metrics, mi, stability
+from scminer_clust import cluster, diagnostics, grids, metrics, mi, stability
 from scminer_clust.paths import DATA, PROCESSED
 
 K_RANGE = range(2, 21)
 N_INIT = 50  # as in diagnostics.KMEANS_RESTARTS, enough to reach MICA's own optimum
-RESOLUTIONS = np.round(np.arange(0.05, 2.0 + 1e-9, 0.05), 2)
+RESOLUTIONS = grids.leiden()
 SEED = 0
 
 
@@ -57,30 +63,40 @@ def mica_partitions(D, cells, seed=SEED):
     return emb, {k: KMeans(n_clusters=k, n_init=N_INIT, random_state=seed).fit_predict(emb) for k in K_RANGE}
 
 
-def leiden_partitions(adata, cells, seed=SEED):
-    """The Scanpy pipeline on a set of cells: principal components, neighbors, Leiden sweep."""
+def leiden_partitions(adata, cells, seed=SEED, resolutions=None):
+    """The Scanpy pipeline on a set of cells: principal components, neighbors, Leiden sweep.
+
+    Each resolution is a separate seeded Leiden run on the same graph, so sweeping only some
+    of them gives the same partitions as sweeping all.
+    """
     sub = adata[cells].copy()
     g, emb = cluster._graph(sub, seed=seed)
     out = {}
-    for r in RESOLUTIONS:
+    for r in (RESOLUTIONS if resolutions is None else resolutions):
         sc.tl.leiden(g, resolution=float(r), random_state=seed, flavor="igraph", n_iterations=2, directed=False)
         out[float(r)] = g.obs["leiden"].to_numpy().astype(str)
     return emb, out
 
 
-def run_method(name, adata, D, make_partitions, n, seed=SEED):
-    """The stability rule for one method: full-data partitions, then B subsample reruns."""
+def run_method(name, adata, D, make_partitions, n, seed=SEED, full=None, settings=None):
+    """The stability rule for one method: full-data partitions, then B subsample reruns.
+
+    The matched comparison passes the full-data partitions and the candidate settings in,
+    since they are chosen across both methods.
+    """
     t0 = time.time()
     allc = np.arange(n)
-    _, full = make_partitions(allc)
-    # Only settings whose full-data partition has 2 to 20 clusters, so both methods are
-    # judged over the same range of cluster counts.
-    settings = [s for s, lab in full.items() if 2 <= len(np.unique(lab)) <= 20]
+    if full is None:
+        _, full = make_partitions(allc)
+    if settings is None:
+        # Only settings whose full-data partition has 2 to 20 clusters, a cap shared by both
+        # methods. A cap is not a match, which the matched comparison fixes.
+        settings = [s for s, lab in full.items() if 2 <= len(np.unique(lab)) <= 20]
     ref = stability.reference_cells(n, seed=seed)
     co = {s: stability.CoClustering(ref) for s in settings}
     subs = stability.subsamples(n, seed=seed)
     for i, cells in enumerate(subs, 1):
-        _, parts = make_partitions(cells)
+        _, parts = make_partitions(cells, settings) if grids.matched() else make_partitions(cells)
         for s in settings:
             co[s].add(cells, parts[s])
         print(f"    subsample {i} of {len(subs)}", flush=True)
@@ -110,10 +126,18 @@ def main(name, n_hvg=None, flavor="seurat", seed=SEED):
     D = mica_distance(tag, X)
 
     rows = []
-    for method, maker in [("mica", lambda c: mica_partitions(D, c, seed)),
-                          ("leiden_pca", lambda c: leiden_partitions(adata, c, seed))]:
+    makers = [("mica", lambda c, res=None: mica_partitions(D, c, seed)),
+              ("leiden_pca", lambda c, res=None: leiden_partitions(adata, c, seed, res))]
+    fulls, chosen = {}, {}
+    if grids.matched():
+        # Both methods are offered the same cluster counts, one setting each.
+        fulls = {m: mk(np.arange(n))[1] for m, mk in makers}
+        common = grids.common_counts(*fulls.values())
+        chosen = {m: list(grids.one_per_count(fulls[m], common).values()) for m in fulls}
+        print(f"  matched counts: {common} ({len(common)} of 19)", flush=True)
+    for method, maker in makers:
         print(f"  {method}: stability rule")
-        picks, full, scores = run_method(name, adata, D, maker, n, seed)
+        picks, full, scores = run_method(name, adata, D, maker, n, seed, fulls.get(method), chosen.get(method))
         for rule, info in picks.items():
             rec = {"dataset": name, "method": method, "k_setting": rule, "seed": seed,
                    "genes": int(n_hvg) if n_hvg else "all", "hvg_flavor": flavor if n_hvg else "",
@@ -122,13 +146,20 @@ def main(name, n_hvg=None, flavor="seurat", seed=SEED):
             rows.append(rec)
             print(f"    {rule}: setting {info['chosen_setting']}, {rec['n_clusters']} clusters, "
                   f"ARI {rec['ari']:.3f}, {info['seconds']:.0f} s, {info['n_clusterings']} clusterings", flush=True)
+        # every setting's full-data count and ARI, in or out of the 2 to 20 range, for the
+        # transfer comparison, which tunes a setting on the other datasets' labels
+        for s, lab in full.items():
+            rows.append({"dataset": name, "method": method, "k_setting": "full_sweep", "setting": s,
+                         "seed": seed, "genes": int(n_hvg) if n_hvg else "all",
+                         "n_clusters": len(np.unique(lab)), "ari": metrics.score(truth, lab)["ari"]})
         # every setting's stability score, so the choice can be inspected
         for s, sc_ in scores.items():
             rows.append({"dataset": name, "method": method, "k_setting": "stability_curve", "setting": s,
                          "seed": seed, "genes": int(n_hvg) if n_hvg else "all", **sc_,
                          "ari": metrics.score(truth, full[s])["ari"]})
-    d = metrics.write(f"rule_stability_{exp_tag}", rows,
+    d = metrics.write(grids.tag(f"rule_stability_{exp_tag}"), rows,
                       {"dataset": name, "rule": "chooseR-style subsampling stability", "n_hvg": n_hvg,
+                       "grid": "matched" if grids.matched() else "original",
                        "b_subsamples": stability.B_SUBSAMPLES, "fraction": stability.FRACTION,
                        "k_range": [2, 20], "resolutions": RESOLUTIONS.tolist(), "seed": seed})
     print(f"wrote {d / 'metrics.csv'}")
