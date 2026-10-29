@@ -32,7 +32,7 @@ Answered by: cluster names proposed from retrieved literature using marker genes
 
 ## Who does what
 
-Utshab writes all the code and runs every experiment, because only he has access to the workstation. Laraib and Rhea own work that needs no coding: documenting data, building comparison tables, checking biological claims, writing, and keeping the plan and results organized.
+Utshab writes all the code and runs every experiment, since nobody else has access to the workstation. Laraib and Rhea own work that needs no coding: documenting data, building comparison tables, checking biological claims, writing, and keeping the plan and results organized.
 
 The first task for each of you (L-1, L-7, R-1) is set so we can get moving. Everything after that is a proposal: Rhea gets first pick at the Oct 7 meeting, and any task can be swapped between Laraib and Rhea. It should come to about 3 to 4 hours a week each.
 

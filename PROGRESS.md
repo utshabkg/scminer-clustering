@@ -365,6 +365,17 @@ Also rejected: that the downstream times make the Total
 column wrong (the text already says where they come from), and a challenge to the 1.8 TB
 projection (the arithmetic and the cell sample check out).
 
+**Evening (22:36).**
+- Rhea finished item 1 of the last message with no changes needed. The Chung log-base fix
+  (Oct 3) predates her pivots, so the summary CSVs and the r2 tables already carry the corrected
+  values, and tracker, pivot and summaries agree to three decimals.
+- Rhea's next job is the number check. The last message called it R-5, but in `WORKPLAN.md`
+  that is R-7 (R-5 is the annotation audit, which is deferred). The reply corrects the label.
+- The completion plan in the paper and one line of `WORKPLAN.md` used gendered pronouns for
+  Utshab and Rhea that nobody had stated. Both now use names. No numbers changed.
+- Not submitted yet. With the deadline today, Rhea's check feeds the November 4 revision
+  rather than this submission.
+
 **Still pending (as of 07:02).**
 - Recompile, lint, rebuild the notebook, commit and push.
 - Utshab: make the Overleaf link view-only, compile there, submit.
