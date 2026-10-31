@@ -13,14 +13,12 @@ Kolodziejczyk and time point on Klein, while Zeisel's labels came from the origi
 clustering the same data \cite{zeisel2015cell}, which flatters any method resembling theirs.
 
 \subsection{What is held fixed}
-Both methods receive the same matrix with all genes retained, and both choose among
-settings whose full-data partition has 2 to 20 clusters. That caps the range without matching
-it. MICA's $k$ covers all of it on every dataset, but the baseline's resolution grid reaches
-only part of it on most, so we also re-apply the rule to MICA's saved scores restricted to the
-counts the baseline produced (Table~\ref{tab:common}). That restriction is made after the
-results were seen and only to MICA, so it is a check on what the result depends on, not a
-second experiment. The true number of types is never supplied. Both see the same $B = 25$
-subsamples within a seed, which makes the comparison paired at the level of the draw.
+Both methods receive the same matrix with all genes retained. In the runs as first specified,
+both choose among settings whose full-data partition has 2 to 20 clusters. That caps the range
+without matching it: MICA's $k$ covers all of it on every dataset, but the baseline's
+resolution grid of 0.05 to 2.0 never reaches all of it. The matched runs below fix
+that. The true number of types is never supplied. Both see the same $B = 25$ subsamples within
+a seed, which makes the comparison paired at the level of the draw.
 
 chooseR specifies $B = 100$. We use 25 because the rule costs $B + 1$ clusterings per
 candidate setting, so 100 would take roughly four times the compute for every result here.
@@ -28,34 +26,61 @@ The reduction widens the bootstrap intervals and lowers the threshold, which cou
 which settings clear it, so rather than assume it is harmless we test the selection's
 sensitivity to the threshold directly in Section~\ref{sec:results}.
 
-The protocol was fixed before any partition was scored: the candidate grids, 25 subsamples
-of 80 percent at three seeds, and the selection step. chooseR's own reading is the primary
+For the runs as first specified, the protocol was fixed before any partition was scored: the
+candidate grids, 25 subsamples of 80 percent at three seeds, and the selection step. The
+matched grids came later (Section~\ref{sec:matcheddesign}). chooseR's own reading is the primary
 rule. The plain maximum, specified with it and computed from the same scores in the same run,
 is a second rule, and comparing the two measures how much the result depends on the
 tie-break.
 
-\subsection{Use of labels}
-Labels are used in three places, none of which feeds a label-free choice. They score the
+\subsection{Matched candidates}\label{sec:matcheddesign}
+Restricting MICA's saved scores to the counts the baseline produced (Table~\ref{tab:common})
+suggested the unmatched range mattered, but that restriction was chosen after the results were
+seen and applied to MICA only. We therefore fixed a matched design before running it. Two probes
+on the full data, which read no labels and score nothing, showed that no fixed grid reaches
+every count: 300 log-spaced Leiden resolutions from 0.001 to 50 still skip up to 5 of the 19
+counts in a run, because Leiden jumps over some counts as the resolution moves, and MICA's
+graph-mode Louvain never gives fewer than 4 clusters on PBMC14K, even at a resolution of 30. So
+in each run every method is offered the counts from 2 to 20 that all of them reach on the full
+data, with one setting per count, the middle of the settings in grid order that give it. One
+per count matters because the threshold is the highest lower bound among the candidates, and a
+dense grid would give the baseline several chances at it for every one of MICA's. The baseline
+sweeps the 300-point grid, MICA keeps $k$ from 2 to 20 in small-data mode, and in graph mode
+its Louvain runs in steps of 0.01 up to 2.0 and more coarsely up to 30. The rule, the
+subsamples and the seeds are unchanged, and the silhouette rule gets the same matched
+candidates. We report the runs as first specified and the matched runs side by side, and the
+matched design was chosen after the post hoc check.
+
+\subsection{Use of labels}\label{sec:labeluse}
+Labels are used in four places, none of which feeds a label-free choice. They score the
 chosen partition, they fix the setting in the reproduction of the published protocol, an
 upper bound rather than a result a user could obtain, and they pick the resolution in the
-graph comparison so that only the graph differs. The transfer rule in our plan picks each
-dataset's setting by its ARI on the others, so it is not label-free and will be reported
-apart.
+graph comparison so that only the graph differs. The transfer comparison also uses them, so
+it is not label-free and is reported apart: each small dataset takes the setting with the best
+mean ARI over the other eight at the same seed, $k$ for MICA and a resolution on the 300-point
+grid for the baseline, with ties going to the smaller setting. PBMC14K takes the baseline's
+resolution that is best on the nine. MICA's graph mode has no setting that carries over from
+$k$, so MICA is not transferred there. The Assignment 2 plan ran this rule in graph mode on
+three datasets. Transferring $k$ across the nine small datasets compares like with like and
+also tests MICA's shipped default.
 
 \subsection{Runs and variation}
-Every stochastic comparison is repeated. The stability rule is run with three independent
-seeds, which redraw the subsamples and reinitialise the clustering, and we report the
+Every stochastic comparison is repeated. The stability rule, as first specified and on matched
+candidates, is run with three independent seeds, which redraw the subsamples and reinitialise the clustering, and we report the
 median across those runs with the full range of chosen cluster counts. Per-dataset ARI
-ranges are in \texttt{results/a3\_seed\_variation.csv}. MICA's $k$-means uses 50 restarts
+ranges are in \texttt{results/a3\_seed\_variation.csv} for the runs as first specified and in
+\texttt{results/a3\_matched\_seed\_variation.csv} for the matched runs. MICA's $k$-means uses 50 restarts
 within a run, enough to reach its own optimum reliably, which are restarts rather than
-repeats. The default rule was run at three seeds and the silhouette rule at one.
+repeats. The default rule was run at three seeds and the silhouette rule, which involves no
+resampling, at one.
 Where a range is reported it is the observed minimum and maximum, not a confidence
 interval, because three runs are too few to justify one.
 
 \subsection{Measures}
-Agreement with the labels is the ARI in the main table, and the adjusted mutual information
-for every run is in Table~\ref{tab:ami}. The ARI is the stricter of the two here in both
-directions: across MICA's 54 stability picks the AMI sits above it by 0.17 on average when the
+Agreement with the labels is the ARI in the main table. The adjusted mutual information is in
+Table~\ref{tab:ami} for the rules as first specified and in Section~\ref{sec:matched} for the
+matched runs. The ARI is the stricter of the two here in both directions: across MICA's 54
+stability picks on the original grids the AMI sits above it by 0.17 on average when the
 rule chose too many clusters and by 0.12 when it chose too few, which it did in 35 of them. We also report $|P_{\hat{s}}|$, the number of clusters the rule chose, because a
 rule can reach a respectable ARI with a badly wrong number of clusters, and a user would
 notice the latter.
@@ -65,12 +90,14 @@ We report the cost of selecting a setting apart from the cost of clustering once
 user pays both. Cost is wall-clock time on one workstation with 120 cores and 754 GB, every
 job on 8 threads and no GPU. Selection counts the candidate partitions, the subsample reruns
 and the scoring. MICA's one-off distance matrix and the number of clustering calls are given
-separately.
+separately. In the matched runs the timer started after the full-data sweep that fixes the
+shared counts, so those times leave that sweep out, and we give its size from the logs.
 
 \subsection{Graph comparison}
 The faster neighbour graph is compared with MICA's own on PBMC14K and on 100,000 cells of the
 Allen brain atlas, both fed to MICA's own node2vec and Louvain so that only the graph differs.
-The candidate count follows one declared rule: the smallest value on a doubling grid whose
-recall on 500 brute-forced query cells reaches that of MICA's search. It gives the counts used
-in Assignment 2, 800 and 3,200, and stays fixed for any further dataset. Recall here is
+The candidate count follows one stated rule: the smallest value on a doubling grid whose
+recall on 500 brute-forced query cells reaches that of MICA's search. We wrote it after
+Assignment 2 had picked 800 and 3,200 from the same recall audits, and it gives those counts
+back. It stays fixed for any further dataset. Recall here is
 agreement with exact neighbours, so setting it uses no labels.

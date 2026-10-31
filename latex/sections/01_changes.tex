@@ -1,12 +1,19 @@
 \section*{Changes since Assignment 2}
 The feedback on Assignment 2 asked for one fair label-free rule applied identically to both
-methods, a comparison of the faster neighbour graph on quality and cost, and a plan through
-November 4, and this submission adds all three. The selection comparison rests on one primary
-rule, subsampling stability in the style of chooseR \cite{pattersoncross2021chooser}, fixed
-before any partition was scored and run on all ten datasets, PBMC14K and Zeisel first, with
-selection time reported apart from clustering time and the earlier rules kept under shared
-conditions. The graph comparison covers build time, total runtime, peak memory, recall and
-the final clustering at a declared candidate count. We also separated the proposed transfer
-rule from the label-free ones, since it uses other datasets' labels, dropped the win-count
-criterion, deferred annotation, hub correction and GPU work, and resolved six anomalies a
-team member raised against the Assignment 2 tables.
+methods, a comparison of the faster neighbour graph on quality and cost, and an updated plan
+through November 4. This submission was first due on October 28 and is now due on November 4,
+the date set for the main experiments, so it reports the work that plan scheduled and gives a
+plan through the November 18 draft instead. The selection comparison rests on one primary rule,
+subsampling stability in the style of chooseR \cite{pattersoncross2021chooser}, fixed before
+any partition was scored and run on all ten datasets, PBMC14K and Zeisel first, with selection
+time reported apart from clustering time. The feedback noted that our silhouette sweeps let the
+two methods reach different ranges of cluster counts. We found the same of the stability rule
+under a shared cap, so both rules are rerun on matched candidates, where both methods are
+offered the same counts. The transfer rule is reported apart from the label-free ones because it
+uses other datasets' labels, and one table gathers every rule with no win criterion. The graph
+comparison covers build time, total runtime, peak memory, recall and the final clustering at a
+candidate count set by a stated rule. We deferred annotation, hub correction and GPU work, set
+aside three parts of the Assignment 2 selection plan so that one rule could be completed on every
+dataset first (the significance rule, the runs on 2,000 variable genes and the label-free runs
+on the Allen subset), and resolved six anomalies a team member raised against the Assignment 2
+tables.

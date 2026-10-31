@@ -19,9 +19,9 @@ for MICA the choice of rule moves the score more than the choice of method does:
 ARI ranges from 0.473 to 0.727 depending only on which rule selects its setting, a spread of
 0.255, where the baseline's spread is 0.120. Under the rule most favourable to MICA it leads
 by 0.213, and under the least favourable, the plain maximum, it trails by 0.162. That last gap
-comes from the range of candidates, as the next subsection shows. The leads are also small and
-not all stable: under chooseR's reading MICA leads at two of the three seeds and trails at the
-third, 0.639 against 0.671. Differences here are computed from unrounded means, so they can
+comes from the range of candidates, as the next two subsections show. The other two leads are
+small, 0.031 under the silhouette rule and 0.029 under chooseR's reading, and the second is not
+stable: MICA leads at two of the three seeds and trails at the third, 0.639 against 0.671. Differences here are computed from unrounded means, so they can
 differ in the last digit from the rounded figures.
 
 \subsection{Two readings of one rule move MICA more than the baseline}
@@ -39,26 +39,45 @@ under the first reading and 0.087 at 2 under the second, while the baseline stay
 That reversal comes from the candidates rather than the method. The 2 to 20 filter caps both
 grids but does not match them. MICA's $k$ covers the whole range on every dataset, while the
 baseline's resolution grid produces only some of it, for example 2 and 4 to 8 clusters on Yan
-and 4 to 11 on Pollen (Table~\ref{tab:common}), and MICA's two readings land at counts the
-baseline cannot produce, 2 clusters on Pollen and 19 on Yan. We re-applied the rule, after the
-results were seen, to MICA's saved scores restricted to the counts the baseline produced in the
-same run, which uses no labels. MICA then leads under both readings, 0.772 to 0.632 and 0.665 to
-0.635, and the reversal is gone. This shows what the reversal depends on rather than giving a
-clean ranking, because MICA's finest-stable picks then often sit at an end of the restricted
-range, in 13 of 27 runs against 7 for the baseline. On Pollen, for instance, MICA's finest-stable pick moves to
-the true 11 clusters, which is also the most the baseline makes there. The tie-break still moves
-MICA more, 0.123 per dataset in absolute terms against 0.067, and on Pollen MICA's two readings
-still differ by 0.42.
+and 4 to 11 on Pollen, and MICA's two readings land at counts the baseline cannot produce, 2
+clusters on Pollen and 19 on Yan. Restricting MICA's saved scores after the fact to the counts
+the baseline produced removes the reversal (Appendix~\ref{app:common}), which is why we ran
+the matched design of Section~\ref{sec:matcheddesign}.
+
+\input{tables/a3_matched}
+
+\subsection{On matched candidates the reversal is gone}\label{sec:matched}
+Offered the same cluster counts with one setting each, MICA leads under both readings at every
+seed (Table~\ref{tab:matched}), 0.662 to 0.543 under chooseR's reading and 0.473 to 0.452 under
+the plain maximum. The AMI ranks them the same way, 0.775 against 0.646 and 0.602 against
+0.585. Each small-dataset run offered 14 to 19 of the 19 counts. The change is in the baseline,
+not in MICA. MICA's means barely move from its own grid, 0.661 to 0.662 and 0.473 to 0.473, and
+where all 19 counts were offered its picks are the same as before in 8 of 8 cases. The baseline
+falls from 0.632 to 0.543 and from 0.635 to 0.452 on the wider grid, and under the plain maximum
+its median pick is now 2 or 3 clusters on eight of the nine datasets. The wider range, not the
+single setting per count, causes the fall: in 13 of 27 runs the baseline's plain-maximum pick is
+a count its old grid never produced, while keeping one setting per count on its old grid leaves
+its plain-maximum mean at 0.656 against 0.635. Its old grid had kept it away from the coarse
+partitions the plain maximum favours.
+
+Three qualifications keep this from being a clean win. The tie-break still moves MICA more,
+0.197 per dataset in absolute terms against 0.118. That is the same 0.197 as on the original
+grids, so the gap narrowed only because the baseline's figure rose from 0.067. MICA leads on five of the nine datasets under each reading, so the mean
+rests on a few large gaps, such as Buettner at 0.934 against 0.263 and Pollen at 0.898 against
+0.500. And the matched design was chosen after the post hoc check. That check had suggested a
+larger lead, 0.772 under chooseR's reading, because it held MICA to the baseline's narrow range,
+on Yan 2 and 4 to 8 clusters, where MICA's finest-stable pick fell from 19 to 7. Offered the full range
+again, MICA picks 19 or 20 clusters on Yan.
 
 \subsection{The chosen cluster counts} The counts in Table~\ref{tab:rules} show why the
 scores alone understate the problem. Under the published stability reading MICA chooses 19
 clusters on Yan, which has 8 types, 17 on Pollen, which has 11, and 11 on Chung, which has
 4, and errs the other way on Zeisel with 3 where there are 7. The counts also move with the
 seed, by 3 clusters on Pollen and 1 on Yan, so the overclustering is not a single bad draw.
-The two highest counts, 19 on Yan and 17 on Pollen, are ones the baseline's grid never produces
-there. Chung's 11 is not, and held to the baseline's counts MICA still picks 10 or 11 clusters
-there for 4 types. A user would see all of this at once, which is the argument for reporting the
-count beside the score.
+On matched candidates, where the baseline can produce the same counts, MICA still picks 19 or
+20 clusters on Yan, 14 to 18 on Pollen and 10 to 12 on Chung, so the overclustering is MICA's
+and not an artefact of the range. A user would see all of this at once, which is the argument
+for reporting the count beside the score.
 
 \begin{figure*}[t]
 \centering
@@ -82,10 +101,13 @@ it is in the wrong place.
 
 Across the nine small datasets, 38 percent of MICA's candidate settings score within 0.01 of
 its best, against 22 percent for the baseline. Among the settings that tie with the best, the
-span of cluster counts averages 7.3 for MICA and 2.7 for the baseline, or 4.1 against 2.7
-when MICA is held to the counts the baseline produced. On Yan and on Pollen MICA's tied
-settings run from 2 clusters to 20, the full width of its range, most of which the baseline
-cannot reach there.
+span of cluster counts averages 7.3 for MICA and 2.7 for the baseline. Matching the candidates
+does not change this. With one setting per count for both, 40 percent of MICA's settings tie
+against 14 percent, over a span of 7.3 against 2.9, and 29 percent of MICA's score exactly 1.0
+against 5 percent. Buettner aside, the flat top sits in the smallest datasets. On the five with 124 to 317
+cells the tied span is 10.6 for MICA against 4.2, and 81, 72 and 52 percent of MICA's settings
+score 1.0 on Yan, Pollen and Chung. On the four with 622 to 2,903 cells the spans are 3.3
+against 1.3, and at most 16 percent of MICA's settings score 1.0.
 
 Two explanations we expected do not hold. Stability does not carry less information about
 accuracy for MICA: the rank correlation between stability and ARI across settings averages
@@ -97,40 +119,46 @@ measured above is an observation and does not rest on either.
 
 The threshold check points the same way. The threshold is the largest lower bootstrap bound
 across settings, and relaxing it by at most 0.02 changes the chosen cluster count in 35 of 54
-runs, 20 of 27 for MICA and 15 of 27 for the baseline. That is the size of
+runs, 20 of 27 for MICA and 15 of 27 for the baseline, and in 38 of 54 on matched candidates. That is the size of
 difference the choice of bootstrap could itself produce. We had assumed this detail would not
 matter. It does.
 
-\subsection{On the one large benchmark dataset, both methods choose at the edge of their grids}\label{sec:pbmc}
+\subsection{On the one large benchmark dataset, both methods choose at or near the coarsest count on offer}\label{sec:pbmc}
 Everything above comes from MICA's small-data mode. PBMC14K has 13,605 cells, which puts it
 in graph mode, and its labels are cell types fixed by antibody sorting rather than by
-clustering. On it the settings tied with MICA's best all return 5 clusters on all three
-seeds, both readings select the same setting, and MICA scores 0.629 against the baseline's
-0.397, with AMI 0.790 against 0.725.
+clustering. On the original grids both readings select 5 clusters for MICA at all three seeds,
+and MICA scores 0.629 against the baseline's 0.397, with AMI 0.790 against 0.725.
 
-That lead is weaker than it looks. Both methods pick the coarsest partition their grid
-allows: MICA at resolution 4.0 or 3.9, the top of its grid, since in MICA's Louvain a higher
-resolution gives fewer clusters, and the baseline at 0.05, the bottom of its own, at 4
-clusters. The rule prefers coarse partitions for both and underclusters the baseline more.
-The baseline's best setting scores 0.876 to 0.878 and its shipped default 0.853 to 0.867,
-both above MICA's pick, and MICA's own graph-mode default scores 0.846. Relaxing the
-threshold by 0.02 leaves MICA's choice unchanged but moves the baseline to 6 or 7 clusters
-at 0.785 to 0.873, ahead of MICA. So the rule is decisive for MICA here, but which method it
-favours turns on an incidental choice, and neither pick is right: MICA's ARI peaks at the
-true 7 clusters, at 0.851 to 0.859.
+That lead is weaker than it looks. Both methods pick the coarsest partition their grid allows:
+MICA at resolution 4.0 or 3.9, the top of its grid, since in MICA's Louvain a higher resolution
+gives fewer clusters, and the baseline at 0.05, the bottom of its own, at 4 clusters. On matched
+candidates both are offered 14 to 16 of the 17 counts from 4 to 20, none below 4 since MICA's
+graph mode makes no fewer than 4 clusters here, and the plain maximum sends both to 4 clusters
+at every seed, where they tie at 0.395 against 0.397, with AMI 0.720 against 0.725. chooseR's reading keeps MICA at 5 clusters on two seeds, for a median of 0.623,
+and moves it to 4 on the third. The baseline's best setting scores 0.876 to 0.878 and its
+shipped default 0.853 to 0.867, above any pick here, and MICA's own graph-mode default scores
+0.846. On either grid, relaxing the threshold by 0.02 moves the baseline to 6 or 7 clusters at
+0.785 to 0.875, ahead of MICA. So which method the rule favours here turns on its reading and its
+threshold, and neither pick is right: MICA's ARI peaks at the true 7 clusters, at 0.851 to
+0.859 on the original grid and 0.856 to 0.864 on the matched runs' longer one.
 
 \subsection{Mode or size: the same cells, run both ways}\label{sec:modesize}
 To separate MICA's pipeline from the dataset size, we drew a fixed pool of 2,500 PBMC14K cells
 and ran the rule on those same cells under both of MICA's modes, at three seeds that redraw the
-pool (Table~\ref{tab:modesize}, Appendix~\ref{app:modesize}). At first this suggests a mode
-effect: in small-data mode the two readings choose differently on every pool, by a median of
-0.319 ARI, and in graph mode on none. But graph mode's grid cannot make fewer than 4 or 5
-clusters here and its tied settings sit at that floor, while small-data mode's $k$ reaches 2.
-Holding small-data mode to the counts graph mode reaches, its readings agree on all three pools
-too. So the range alone accounts for the difference, the test cannot attribute any of it to the
-mode, and since the two modes also normalise differently it says nothing about the mutual
-information distance. It does show the pattern behind the main result: here the readings part
-company only when very coarse partitions are among the candidates.
+pool (Table~\ref{tab:modesize}, Appendix~\ref{app:modesize}). On the original grids this
+suggests a mode effect: in small-data mode the two readings choose differently on every pool,
+by a median of 0.319 ARI, and in graph mode on none. But graph mode makes few coarse
+partitions. On MICA's own grid, up to a resolution of 4.0, it made no fewer than 4 or 5
+clusters on these pools. Extending the resolution to 30 reaches 3 clusters on two pools and 2 on
+one, while small-data mode's $k$ reaches 2 on every pool. On matched candidates, the
+counts all three arms reach, the difference shrinks but does not vanish. The two readings now
+differ on 2 of 3 pools in small-data mode, by a median of 0.185 ARI, against 1 of 3 in graph
+mode and for the baseline. The tied counts span 3, 1 and 3 in small-data mode against 1, 1 and 1
+in graph mode and 1, 1 and 2 for the baseline, and every arm picks 3 to 5 clusters where there
+are 7 types. With three pools the test leaves at most a small effect of the mode, and since the
+two modes also normalise differently it says nothing about the mutual information distance
+itself. Neither mode shows the flat top of the
+smallest datasets at 2,500 cells, which fits the pattern above.
 
 \subsection{The default and silhouette rules favour MICA for reasons of their own}
 MICA's best mean, 0.727, comes from its own shipped default, which returns four clusters
@@ -139,6 +167,29 @@ the default scores 0.802 where the true count is 3 to 5 against 0.579 outside, s
 strength reflects this benchmark's composition rather than the method.
 Appendix~\ref{app:secondary} gives that analysis and the silhouette rule's dependence on
 the space it scores in.
+
+\subsection{A setting tuned on the other datasets, which uses their labels}\label{sec:transfer}
+The transfer comparison asks how far a setting tuned on labelled benchmarks carries to a new
+one, so it is not label-free and we keep it apart (Table~\ref{tab:transfer},
+Appendix~\ref{app:transfer}). Tuned on the other eight datasets' labels, MICA takes $k = 4$,
+its shipped default, in 26 of 27 held-out choices, and $k = 3$ once. Its default is therefore
+what tuning on this benchmark's labels picks, so its strong score here is the score of a setting
+fitted to these datasets. That matches the composition explanation above and is not evidence
+that four clusters carry over to other tissue. The baseline's tuned resolution, 0.22 to 0.30 against its shipped 1.0, lifts its
+mean from 0.514 to 0.641, and MICA's is 0.727, so MICA still leads when both are tuned the same
+way. On PBMC14K the baseline's transferred resolution gives 6 clusters at 0.786, well above
+either method's label-free pick, and MICA's graph mode has no setting to transfer.
+
+\input{tables/a3_summary}
+
+\subsection{Every rule in one table}
+Table~\ref{tab:summary} gathers each rule's mean for both methods. MICA has the higher mean
+under every rule except the plain maximum on the original grids, by margins from 0.020 to
+0.213, and its own mean moves by 0.255 across the label-free rules. The silhouette rule on
+matched candidates follows the stability rule: MICA's mean holds at 0.593 while the baseline's
+falls from 0.564 to 0.478, as it now picks 2 clusters on seven of the nine datasets. We set no
+win criterion in advance, because the point of the table is how far each method's score moves
+with the rule.
 
 \subsection{The rule is also sensitive to the subsample draw} Repeating the rule at three
 independent seeds, which redraw the subsamples and reinitialise the clustering, moves the
@@ -159,7 +210,11 @@ from one full distance matrix computed once. Across the nine small datasets sele
 17 to 109 s for MICA and 14 to 225 s for the baseline, on 494 clusterings for MICA and 468 to
 1,040 for the baseline, and MICA's distance matrix, 4 to 6 minutes on the two datasets above
 2,500 cells, is shared across every setting and seed. Without the exactness property it would
-be rebuilt for each of the 25 subsamples. Cost is no reason to prefer either method at this
+be rebuilt for each of the 25 subsamples. On matched candidates, with one setting per count,
+selection takes a median of 24 s for MICA and 9 s for the baseline per small-dataset run, and 93
+and 7.5 minutes per seed on PBMC14K. These matched times leave out the full-data sweep that
+fixes the shared counts, which the log timestamps put, with loading, at 10 to 36 s per
+small-dataset run and about 16 minutes per PBMC14K seed. Cost is no reason to prefer either method at this
 size, but it bounds the study: graph-mode selection is why the large-dataset evidence rests on
 one dataset.
 

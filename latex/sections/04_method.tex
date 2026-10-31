@@ -6,8 +6,8 @@ partition $P_s$ of the cells, with $|P_s|$ clusters. For MICA in small-data mode
 setting is the number of clusters $k \in \{2,\dots,20\}$, so $|P_s| = k$. For Leiden and
 for MICA in graph mode it is a resolution $r > 0$, and $|P_s|$ is whatever community
 detection returns, rising with $r$ for Leiden and falling with it in MICA's Louvain. Reference labels $y \in \{1,\dots,c\}^n$ exist for
-every dataset, where $c$ is the number of annotated cell types, and are used only for
-scoring.
+every dataset, where $c$ is the number of annotated cell types. In the label-free comparison
+they are used only for scoring, and Section~\ref{sec:labeluse} lists every other use.
 
 \subsection{MICA, the method under test}
 MICA is the clustering module of scMINER \cite{pan2025scminer}. We run the authors'

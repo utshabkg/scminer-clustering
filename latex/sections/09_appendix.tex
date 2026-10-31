@@ -28,7 +28,8 @@ dataset, the span of cluster counts the baseline's resolution grid produced, and
 rule re-applied to MICA's saved scores restricted to the set of counts the baseline produced in
 the same run. That set can have gaps: on Yan the baseline makes 2 and 4 to 8 clusters but never
 3. Nothing is rerun and no labels are used to restrict, but the restriction was chosen after the
-results were seen and is applied to MICA only. The largest gains in MICA's finest-stable ARI are
+results were seen and is applied to MICA only, which is why the matched runs of
+Section~\ref{sec:matched} replace it as the comparison we rely on. The largest gains in MICA's finest-stable ARI are
 on Yan, where its pick falls from 19 clusters to 7 and its ARI rises from 0.496 to 0.925, and on
 Klein, by 0.36. On Pollen the pick falls from 17 to the true 11 at 0.969, though 11 is also the
 most clusters the baseline makes there.
@@ -52,15 +53,27 @@ MICA's best result comes from its own shipped default, which returns four cluste
 the dataset: a mean ARI of 0.727, leading on seven of nine datasets. The median number of
 cell types across these datasets is also four, and three have exactly four. Split by that,
 the default scores 0.802 where the true count is 3 to 5 and 0.579 outside. We cannot show
-how it was chosen, so its apparent strength is a property of this benchmark's composition
-rather than of the method, and it would not transfer to tissue with a different number of
-types. The baseline's default is a resolution rather than a count, and it overclusters
+how it was chosen, but tuning $k$ on the other eight datasets' labels picks 4 in 26 of 27 cases
+(Appendix~\ref{app:transfer}), so the default is what tuning on this benchmark would select.
+Its apparent strength is a property of this benchmark's composition rather than of the method,
+and it would not carry over to tissue with a different number of types. The baseline's default is a resolution rather than a count, and it overclusters
 badly here, reaching 21 clusters on Zeisel.
 
 \textbf{The silhouette rule.} It carries a third such choice. Scoring the same partitions in the 50
 principal components rather than in MICA's own embedding changes the selected ARI by 0.13
 on average for MICA and 0.16 for the baseline, reaching 0.52, with only the space changing
-(Appendix~\ref{app:repro}).
+(Appendix~\ref{app:repro}). On matched candidates, where both methods are offered the same
+counts, MICA's mean holds at 0.593 while the baseline's falls from 0.564 to 0.478, since it then
+picks 2 clusters on seven of the nine datasets.
+
+\section{The transfer comparison}\label{app:transfer}
+Table~\ref{tab:transfer} gives the transfer comparison of Section~\ref{sec:transfer} per
+dataset. It uses the other datasets' labels to choose each setting, so it answers how far a
+setting tuned on labelled benchmarks carries to a new one, not what a user could do without
+labels. MICA's tuned $k$ is 4 on every held-out dataset except Yan at one seed, where it is 3.
+The baseline's tuned resolution lies between 0.22 and 0.30 and gives 2 to 8 clusters.
+
+\input{tables/a3_transfer}
 
 \section{Adjusted mutual information}\label{app:ami}
 Table~\ref{tab:ami} gives the AMI for the same chosen partitions as Table~\ref{tab:rulesall}.
@@ -74,10 +87,13 @@ directions is why we report the ARI in the main table.
 \input{tables/a3_ami}
 
 \section{Reproducing the results}\label{app:repro}
-\texttt{scripts/a3\_report.py} rebuilds the tables and the figure from the saved result
-files and writes \texttt{results/a3\_report\_numbers.json}, which holds the aggregate
-figures quoted in the text, each traceable to the run that produced it. Per-dataset ARI
-ranges across seeds are in \texttt{results/a3\_seed\_variation.csv}.
+\texttt{scripts/a3\_report.py} rebuilds the figure and the tables of the runs as first
+specified from the saved result files and writes \texttt{results/a3\_report\_numbers.json}.
+\texttt{scripts/a3\_matched.py} builds Tables~\ref{tab:matched}, \ref{tab:summary} and
+\ref{tab:transfer} from the matched runs and writes \texttt{results/a3\_matched\_numbers.json}.
+Between them the two files hold every aggregate figure quoted in the text, each traceable to the
+run that produced it. Per-dataset ARI ranges across seeds are in
+\texttt{results/a3\_seed\_variation.csv} and \texttt{results/a3\_matched\_seed\_variation.csv}.
 
 \textbf{Software.} Two conda environments, both pinned in \texttt{envs/}. The analysis
 environment has Python 3.11, Scanpy 1.11.5 and scikit-learn. The second reproduces the
@@ -96,13 +112,22 @@ pool once and calls both pipelines on it. The silhouette rule is
 \texttt{scripts/run\_rule\_silhouette.py} and the shipped defaults are
 \texttt{scripts/run\_rule\_default.py}. Each writes a folder under \texttt{results/}
 containing \texttt{metrics.csv} and a \texttt{params.json} recording the settings, seed
-and candidate grid of that run.
+and candidate grid of that run. The matched runs of Section~\ref{sec:matcheddesign} use the
+same stability, mode and silhouette runners with \texttt{-{}-matched} on the command line,
+called through \texttt{scripts/run\_rules\_matched.sh} once per part and seed, and write to
+folders starting \texttt{rule\_matched\_}. Their grids are in
+\texttt{src/scminer\_clust/grids.py}, fixed beforehand from the label-free sweeps of
+\texttt{scripts/probe\_grid\_coverage.py} and \texttt{scripts/probe\_mica\_graph\_coverage.py}.
 
 \textbf{Settings.} Subsamples: $B = 25$ at 80 percent of cells, redrawn per seed, shared
-between the two methods within a seed. Candidate settings: $k \in \{2,\dots,20\}$ for MICA
+between the two methods within a seed. Candidate settings in the runs as first specified:
+$k \in \{2,\dots,20\}$ for MICA
 in small-data mode, resolutions 0.05 to 2.00 in steps of 0.05 for Leiden, and 0.1 to 4.0 in
 steps of 0.1 for MICA in graph mode, which is MICA's own grid. Only settings whose
-full-data partition yields 2 to 20 clusters enter the comparison. $k$-means uses 50
+full-data partition yields 2 to 20 clusters enter the comparison. The matched runs sweep 300
+log-spaced Leiden resolutions from 0.001 to 50 and, in MICA's graph mode, 0.1 to 2.0 in steps
+of 0.01, then to 4.0 in steps of 0.1 and to 30 in steps of 0.5, and keep one setting per count
+among the counts every method reaches. $k$-means uses 50
 restarts. The bootstrap for the stability threshold is a percentile bootstrap over cells with
 2,000 resamples, where chooseR specifies BCa with 25,000. The two differ only in the
 lower bound they give, which is what sets the threshold. We first assumed this would not
@@ -114,7 +139,8 @@ code.
 
 \textbf{Scale of the computation.} Each dataset and seed runs $B+1$ clusterings per
 candidate setting for each method, which is 494 for MICA over 19 values of $k$ and 468 to
-1,040 for Leiden, whose grid loses settings that fall outside 2 to 20 clusters. The reported cost excludes the one-off mutual information
+1,040 for Leiden, whose grid loses settings that fall outside 2 to 20 clusters, and 364 to 494
+for either method on matched candidates. The reported cost excludes the one-off mutual information
 distance matrix, which is computed once per dataset, cached, and shared by every setting
 and seed.
 
