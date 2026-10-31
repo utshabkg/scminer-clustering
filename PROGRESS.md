@@ -92,10 +92,38 @@ matched runs, the graph candidate rule says it was written after Assignment 2, a
 row shows its seed range. Compiles, lint clean, notebook 11 cells with no errors. Body about 11.2
 pages.
 
-**Still pending (as of 13:28).**
-- Commit and push, then tell Rhea and Laraib the results are final (promised for today, Oct 31).
-- A short re-check of the passages changed in this round.
+**Pushed at about 13:35** (`c110c2e` to `dab8c92`, then `f287dec` for the statuses), after
+rebasing onto Laraib's Oct 30 commits (PBMC14K and Allen dataset cards, L-2 and L-3 done).
+Laraib's cards have 15 lint hits (long dashes and semicolons), left for her or for a mechanical
+fix with her agreement.
+
+**Re-check of the changed passages (workflow `wf_ee54d6a0-4dc`, done about 13:49): 23 confirmed,
+6 rejected.** All fixed:
+- *The win count.* The text said no win criterion was set in advance, but the Assignment 2 plan
+  set one (MICA ahead on at least 7 of 11 sets and by 0.05 on average under the stability rule).
+  Now it says the count was dropped after the feedback and would not have been met on any
+  reading: MICA leads on at most 6 of the 10 datasets (checked here: 6, 4, 6 and 5 of 10 for F
+  and M on the original and matched grids). The summary caption says the same.
+- *Three seeds against the plan's five.* The Assignment 2 plan promised at least five runs per
+  setting. The changes section now says we ran three.
+- *The mode-test floor.* On the matched candidates the shared counts start at 4, 4 and 3, so 2
+  clusters are never offered and 3 only on one pool. The text now says so, and no longer claims
+  three pools bound the mode effect.
+- *"Every aggregate figure"* in the reproduction appendix became "most", with the other sources
+  named (per-run metrics, log timestamps, the graph-mode probe).
+- Smaller: "0.772 to 0.632" (a lead needs both numbers), "proposed" not "ran" for the Assignment 2
+  transfer plan, a section pointer, the AMI pointer now includes `sec:pbmc`, "duration from the
+  log timestamps", a grammar slip, and the summary caption's range condition.
+- *Layout.* `\balance` before the bibliography overfilled appendix columns once appendices
+  followed the references: 16 overfull vbox warnings, 0 without it. Removed (commented in
+  `latex/main.tex`). Long paths in the appendix now use `\url` so they can break.
+Compiles with no overfull vbox and no undefined references, lint clean, notebook 11 cells with
+no errors. Body about 11.2 pages (16 pages with the appendix).
+
+**Still pending (as of 13:50).**
+- Send Rhea and Laraib the "results final" messages (`scratchpad/teammate_replies.md`).
 - Length: about 11.2 pages, Utshab's call.
+- Laraib's dataset cards: 15 lint hits.
 
 ---
 

@@ -34,8 +34,8 @@ cluster counts, those from 2 to 20 that every method reaches on the full data, w
 per count. The main rule is a published one, subsampling stability in the style of chooseR
 \cite{pattersoncross2021chooser}, which reruns each method on random 80 percent
 subsamples per candidate setting and prefers settings whose clusters survive resampling.
-We use 25 subsamples where chooseR specifies 100, a reduction we justify and test in
-Section~\ref{sec:design}. Labels are used only afterwards, to score what the rule chose.
+We use 25 subsamples where chooseR specifies 100, a reduction we justify in
+Section~\ref{sec:design} and test in Section~\ref{sec:results}. Labels are used only afterwards, to score what the rule chose.
 The experiment covers all ten benchmark datasets at three seeds, with cost recorded.
 
 The result is not the one we expected. MICA leads under three of the four rules, which on its

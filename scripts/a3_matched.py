@@ -386,13 +386,15 @@ def main():
         summ["Transfer"] = {k: round(float(v), 4) for k, v in tr.items()}
     (TABLES / "a3_summary.tex").write_text(
         "\\begin{table*}[t]\n\\centering\n\\caption{Every rule in one place. Mean ARI over the nine small datasets of "
-        "the per-dataset medians, with the range of that mean over the three seeds where a rule was run at three. "
+        "the per-dataset medians, with the range of that mean over the three seeds where a rule was run at three and the mean moved by at "
+        "least 0.005. "
         "PBMC14K is reported apart, as medians. Selection time is the median over the 27 small-dataset runs, in "
         "seconds, for the "
         "rules that select by rerunning. The matched times leave out the full-data sweep that fixes the shared "
         "counts, which with loading adds at most 36 s per run. The default rule and the transfer select nothing at "
         "run time, and the silhouette rule was not timed. "
-        "No win criterion was set in advance. The point is how far each method's mean moves with the rule.}\n"
+        "The win count planned in Assignment 2 was dropped after the feedback. The point is how far each method's "
+        "mean moves with the rule.}\n"
         "\\label{tab:summary}\n\\footnotesize\n\\setlength{\\tabcolsep}{4pt}\n"
         "\\begin{tabular}{lcccccc}\n\\toprule\n & \\multicolumn{2}{c}{Nine small datasets} & "
         "\\multicolumn{2}{c}{PBMC14K} & \\multicolumn{2}{c}{Selection (s)} \\\\\n"

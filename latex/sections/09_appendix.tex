@@ -87,13 +87,16 @@ directions is why we report the ARI in the main table.
 \input{tables/a3_ami}
 
 \section{Reproducing the results}\label{app:repro}
-\texttt{scripts/a3\_report.py} rebuilds the figure and the tables of the runs as first
-specified from the saved result files and writes \texttt{results/a3\_report\_numbers.json}.
-\texttt{scripts/a3\_matched.py} builds Tables~\ref{tab:matched}, \ref{tab:summary} and
-\ref{tab:transfer} from the matched runs and writes \texttt{results/a3\_matched\_numbers.json}.
-Between them the two files hold every aggregate figure quoted in the text, each traceable to the
-run that produced it. Per-dataset ARI ranges across seeds are in
-\texttt{results/a3\_seed\_variation.csv} and \texttt{results/a3\_matched\_seed\_variation.csv}.
+\url{scripts/a3_report.py} rebuilds the figure and the tables of the runs as first specified
+from the saved result files and writes \url{results/a3_report_numbers.json}.
+\url{scripts/a3_matched.py} builds Tables~\ref{tab:matched}, \ref{tab:summary} and
+\ref{tab:transfer} from the matched runs and writes \url{results/a3_matched_numbers.json}.
+Between them the two files hold most of the aggregate figures quoted in the text, each
+traceable to the run that produced it. The rest come from the per-run files: selection times and
+clustering counts from each run's \url{metrics.csv}, the matched sweep times from the timestamps
+in \url{logs/matched_*.log}, and graph mode's cluster counts above a resolution of 4.0 from
+\url{results/grid_coverage_mica_graph}. Per-dataset ARI ranges across seeds are in
+\url{results/a3_seed_variation.csv} and \url{results/a3_matched_seed_variation.csv}.
 
 \textbf{Software.} Two conda environments, both pinned in \texttt{envs/}. The analysis
 environment has Python 3.11, Scanpy 1.11.5 and scikit-learn. The second reproduces the

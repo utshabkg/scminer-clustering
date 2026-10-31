@@ -65,7 +65,7 @@ Three qualifications keep this from being a clean win. The tie-break still moves
 grids, so the gap narrowed only because the baseline's figure rose from 0.067. MICA leads on five of the nine datasets under each reading, so the mean
 rests on a few large gaps, such as Buettner at 0.934 against 0.263 and Pollen at 0.898 against
 0.500. And the matched design was chosen after the post hoc check. That check had suggested a
-larger lead, 0.772 under chooseR's reading, because it held MICA to the baseline's narrow range,
+larger lead, 0.772 to 0.632 under chooseR's reading, because it held MICA to the baseline's narrow range,
 on Yan 2 and 4 to 8 clusters, where MICA's finest-stable pick fell from 19 to 7. Offered the full range
 again, MICA picks 19 or 20 clusters on Yan.
 
@@ -149,15 +149,16 @@ pool (Table~\ref{tab:modesize}, Appendix~\ref{app:modesize}). On the original gr
 suggests a mode effect: in small-data mode the two readings choose differently on every pool,
 by a median of 0.319 ARI, and in graph mode on none. But graph mode makes few coarse
 partitions. On MICA's own grid, up to a resolution of 4.0, it made no fewer than 4 or 5
-clusters on these pools. Extending the resolution to 30 reaches 3 clusters on two pools and 2 on
-one, while small-data mode's $k$ reaches 2 on every pool. On matched candidates, the
-counts all three arms reach, the difference shrinks but does not vanish. The two readings now
+clusters on these pools. Extending the resolution to 30 lowers that floor to 4, 3 and 2
+clusters on the three pools, while small-data mode's $k$ reaches 2 on every pool. The matched
+candidates, the counts all three arms reach, start at 4, 4 and 3, so 2 clusters are never
+offered and 3 only on one pool. On them the difference shrinks but does not vanish. The two readings now
 differ on 2 of 3 pools in small-data mode, by a median of 0.185 ARI, against 1 of 3 in graph
 mode and for the baseline. The tied counts span 3, 1 and 3 in small-data mode against 1, 1 and 1
 in graph mode and 1, 1 and 2 for the baseline, and every arm picks 3 to 5 clusters where there
-are 7 types. With three pools the test leaves at most a small effect of the mode, and since the
-two modes also normalise differently it says nothing about the mutual information distance
-itself. Neither mode shows the flat top of the
+are 7 types. Three pools are too few to say whether what remains is an effect of the mode, and
+since the two modes also normalise differently the test says nothing about the mutual
+information distance itself. Neither mode shows the flat top of the
 smallest datasets at 2,500 cells, which fits the pattern above.
 
 \subsection{The default and silhouette rules favour MICA for reasons of their own}
@@ -187,9 +188,12 @@ Table~\ref{tab:summary} gathers each rule's mean for both methods. MICA has the 
 under every rule except the plain maximum on the original grids, by margins from 0.020 to
 0.213, and its own mean moves by 0.255 across the label-free rules. The silhouette rule on
 matched candidates follows the stability rule: MICA's mean holds at 0.593 while the baseline's
-falls from 0.564 to 0.478, as it now picks 2 clusters on seven of the nine datasets. We set no
-win criterion in advance, because the point of the table is how far each method's score moves
-with the rule.
+falls from 0.564 to 0.478, as it now picks 2 clusters on seven of the nine datasets. The
+Assignment 2 plan counted a win for MICA if, under the stability rule, its median ARI was higher
+on at least 7 of 11 sets and higher on average by 0.05. We dropped that count after the
+feedback, because the point of the table is how far each method's score moves with the rule. It
+would not have been met on any reading: under the stability rule MICA leads on at most 6 of the
+10 datasets run.
 
 \subsection{The rule is also sensitive to the subsample draw} Repeating the rule at three
 independent seeds, which redraw the subsamples and reinitialise the clustering, moves the

@@ -60,9 +60,9 @@ it is not label-free and is reported apart: each small dataset takes the setting
 mean ARI over the other eight at the same seed, $k$ for MICA and a resolution on the 300-point
 grid for the baseline, with ties going to the smaller setting. PBMC14K takes the baseline's
 resolution that is best on the nine. MICA's graph mode has no setting that carries over from
-$k$, so MICA is not transferred there. The Assignment 2 plan ran this rule in graph mode on
-three datasets. Transferring $k$ across the nine small datasets compares like with like and
-also tests MICA's shipped default.
+$k$, so MICA is not transferred there. The Assignment 2 plan proposed this rule in graph mode
+on Klein, Zeisel and PBMC14K. Transferring $k$ across the nine small datasets instead compares
+like with like and also tests MICA's shipped default.
 
 \subsection{Runs and variation}
 Every stochastic comparison is repeated. The stability rule, as first specified and on matched
@@ -78,8 +78,8 @@ interval, because three runs are too few to justify one.
 
 \subsection{Measures}
 Agreement with the labels is the ARI in the main table. The adjusted mutual information is in
-Table~\ref{tab:ami} for the rules as first specified and in Section~\ref{sec:matched} for the
-matched runs. The ARI is the stricter of the two here in both directions: across MICA's 54
+Table~\ref{tab:ami} for the rules as first specified and in Sections~\ref{sec:matched}
+and~\ref{sec:pbmc} for the matched runs. The ARI is the stricter of the two here in both directions: across MICA's 54
 stability picks on the original grids the AMI sits above it by 0.17 on average when the
 rule chose too many clusters and by 0.12 when it chose too few, which it did in 35 of them. We also report $|P_{\hat{s}}|$, the number of clusters the rule chose, because a
 rule can reach a respectable ARI with a badly wrong number of clusters, and a user would
@@ -91,7 +91,8 @@ user pays both. Cost is wall-clock time on one workstation with 120 cores and 75
 job on 8 threads and no GPU. Selection counts the candidate partitions, the subsample reruns
 and the scoring. MICA's one-off distance matrix and the number of clustering calls are given
 separately. In the matched runs the timer started after the full-data sweep that fixes the
-shared counts, so those times leave that sweep out, and we give its size from the logs.
+shared counts, so those times leave that sweep out, and we give its duration from the log
+timestamps.
 
 \subsection{Graph comparison}
 The faster neighbour graph is compared with MICA's own on PBMC14K and on 100,000 cells of the
