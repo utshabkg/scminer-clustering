@@ -1,0 +1,28 @@
+\begin{table}[t]
+\centering
+\caption{The stability rule on matched candidates. In each run both methods are offered the same cluster counts, those from 2 to 20 that both reach on the full data, with one setting per count. The second column is how many of the 19 counts that is, over the three seeds. ARI with the chosen count in parentheses, medians over three seeds, F the finest-stable reading and M the plain maximum. The design was fixed before these runs and after the post hoc check in Table~\ref{tab:common}.}
+\label{tab:matched}
+\footnotesize
+\setlength{\tabcolsep}{3pt}
+\resizebox{\columnwidth}{!}{%
+\begin{tabular}{lccccc}
+\toprule
+ & & \multicolumn{2}{c}{F} & \multicolumn{2}{c}{M} \\
+\cmidrule(lr){3-4}\cmidrule(lr){5-6}
+Dataset (types) & Counts & MICA & Leiden & MICA & Leiden \\
+\midrule
+Yan (8) & 15\textrm{-}17 & 0.496\,(19\textrm{-}20) & 0.765\,(4\textrm{-}10) & 0.496\,(3) & 0.496\,(3) \\
+Goolam (5) & 14\textrm{-}16 & 0.593\,(6\textrm{-}7) & 0.619\,(2) & 0.630\,(2\textrm{-}3) & 0.619\,(2) \\
+Buettner (3) & 16\textrm{-}17 & 0.934\,(3) & 0.263\,(3) & 0.474\,(2\textrm{-}3) & 0.134\,(2) \\
+Pollen (11) & 17\textrm{-}18 & 0.898\,(14\textrm{-}18) & 0.500\,(5\textrm{-}10) & 0.087\,(2) & 0.500\,(3\textrm{-}5) \\
+Chung (4) & 15\textrm{-}18 & 0.477\,(10\textrm{-}12) & 0.319\,(3\textrm{-}7) & 0.100\,(2) & 0.129\,(3) \\
+Usoskin (4) & 18\textrm{-}19 & 0.818\,(3) & 0.633\,(3\textrm{-}6) & 0.818\,(3) & 0.757\,(3\textrm{-}6) \\
+Kolodziejczyk (3) & 15\textrm{-}18 & 0.722\,(3\textrm{-}5) & 0.564\,(3\textrm{-}4) & 0.630\,(2) & 0.564\,(2\textrm{-}3) \\
+Klein (4) & 18 & 0.501\,(2\textrm{-}3) & 0.501\,(2) & 0.501\,(2) & 0.501\,(2) \\
+Zeisel (7) & 18\textrm{-}19 & 0.518\,(3) & 0.723\,(2\textrm{-}8) & 0.518\,(2\textrm{-}3) & 0.370\,(2\textrm{-}4) \\
+PBMC14K (7) & 14\textrm{-}16 & 0.623\,(4\textrm{-}5) & 0.397\,(4) & 0.395\,(4) & 0.397\,(4) \\
+\midrule
+\textit{Mean, nine small} & & \textbf{0.662} & \textbf{0.543} & \textbf{0.473} & \textbf{0.452} \\
+\bottomrule
+\end{tabular}}
+\end{table}

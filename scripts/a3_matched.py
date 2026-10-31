@@ -115,11 +115,52 @@ def main():
             out[f"{r}_mica_leads_at"] = f"{int((lead > 0).sum())} of {len(lead)} seeds"
     med = {r: tabs[r][tabs[r].ds.isin(small)].pivot(index="ds", columns="method", values="ari") for r, _ in READINGS}
     gap = (med["stability_finest"] - med["stability_most"]).abs()
-    out["mean_abs_reading_change"] = {meth: round(float(gap[meth].mean()), 4) for meth in gap.columns}
+    # rounded once, to the precision the text quotes, so the text never rounds a rounded value
+    out["mean_abs_reading_change"] = {meth: round(float(gap[meth].mean()), 3) for meth in gap.columns}
     out["sign_mean_reading_change"] = {meth: round(float((med["stability_finest"] - med["stability_most"])[meth].mean()), 4)
                                        for meth in gap.columns}
+    out["ami_means_nine_small"] = {f"{r}/{meth}": round(float(tabs[r][tabs[r].ds.isin(small) & (tabs[r].method == meth)].ami.mean()), 3)
+                                   for r, _ in READINGS for meth in ("mica", "leiden_pca")}
+    if "pbmc14k" in present:
+        out["pbmc14k_ami_median"] = {f"{r}/{meth}": round(float(tabs[r][(tabs[r].ds == "pbmc14k") & (tabs[r].method == meth)].ami.iloc[0]), 3)
+                                     for r, _ in READINGS for meth in ("mica", "leiden_pca")}
+        fs = m[(m.k_setting == "full_sweep") & (m.ds == "pbmc14k") & (m.method == "mica")]
+        best = fs.loc[fs.groupby("seed").ari.idxmax()]
+        out["pbmc14k_mica_best_on_full_sweep"] = {f"seed{int(r.seed)}": {"k": int(r.n_clusters), "ari": round(float(r.ari), 3)}
+                                                  for _, r in best.iterrows()}
+    # per-dataset variation over seeds, in the format of results/a3_seed_variation.csv
+    sv = picks.groupby(["ds", "method", "k_setting"]).agg(
+        runs=("ari", "size"), ari_median=("ari", "median"), ari_min=("ari", "min"), ari_max=("ari", "max"),
+        k_median=("n_clusters", "median"), k_min=("n_clusters", "min"), k_max=("n_clusters", "max")).round(4).reset_index()
+    sv["ari_range"] = (sv.ari_max - sv.ari_min).round(4)
+    sv.to_csv(RESULTS / "a3_matched_seed_variation.csv", index=False)
     out["datasets_where_mica_leads"] = {r: f"{int((med[r]['mica'] > med[r]['leiden_pca']).sum())} of {len(med[r])}"
                                         for r, _ in READINGS}
+    # Why did the baseline's plain maximum fall? Two things changed at once: the range of counts
+    # and one setting per count. Re-pick the original runs keeping one setting per count on the
+    # OLD grid (the middle in grid order, as grids.one_per_count does) to see the second alone,
+    # and count matched picks at a count the old grid never produced to see the first.
+    def most_pick(c):
+        c = c[c.n_clusters >= 2]
+        return c.sort_values(["stability", "n_clusters"], ascending=[False, True]).iloc[0]
+    cf = []
+    for f in sorted(glob(str(RESULTS / "rule_stability_paper_*" / "metrics.csv"))):
+        if "graph" in f:
+            continue
+        run = Path(f).parent.name.replace("rule_stability_paper_", "")
+        x, seed = run.split("_seed")[0], int(run.split("_seed")[1]) if "_seed" in run else 0
+        c = pd.read_csv(f)
+        c = c[(c.k_setting == "stability_curve") & (c.method == "leiden_pca")].sort_values("setting")
+        one = pd.concat([g.iloc[[(len(g) - 1) // 2]] for _, g in c.groupby("n_clusters")])
+        mp = picks[(picks.ds == x) & (picks.seed == seed) & (picks.method == "leiden_pca")
+                   & (picks.k_setting == "stability_most")]
+        cf.append({"ds": x, "seed": seed, "old_grid": most_pick(c).ari, "old_grid_one_per_count": most_pick(one).ari,
+                   "matched_new_count": int(mp.n_clusters.iloc[0]) not in set(c.n_clusters.astype(int))})
+    CF = pd.DataFrame(cf)
+    cfm = CF.groupby("ds")[["old_grid", "old_grid_one_per_count"]].median().mean()
+    out["baseline_plain_max_counterfactual"] = {
+        "old_grid_mean": round(float(cfm.old_grid), 3), "old_grid_one_per_count_mean": round(float(cfm.old_grid_one_per_count), 3),
+        "matched_picks_at_a_count_the_old_grid_never_produced": f"{int(CF.matched_new_count.sum())} of {len(CF)}"}
     # is the finest-stable pick at an end of the counts the run offered?
     edge = []
     for _, p in picks[(picks.k_setting == "stability_finest") & picks.ds.isin(small)].iterrows():
@@ -129,18 +170,28 @@ def main():
     E = pd.DataFrame(edge)
     out["finest_pick_at_edge"] = {meth: f"{int(g.edge.sum())} of {len(g)} runs, {int(g.top.sum())} at the top"
                                   for meth, g in E.groupby("method")}
-    # mechanism on matched candidates: how much of the curve ties with its best
+    # mechanism on matched candidates: how much of the curve ties with its best. Defined as in
+    # a3_report.py, pooling the three seeds' settings per dataset before taking the window, so
+    # the figures compare with the original grids'.
     mech = []
-    for (x, meth, s), g in curves[curves.ds.isin(small)].groupby(["ds", "method", "seed"]):
+    for (x, meth), g in curves[curves.ds.isin(small)].dropna(subset=["stability"]).groupby(["ds", "method"]):
         t = g[g.stability >= g.stability.max() - TIE_WINDOW]
-        mech.append({"ds": x, "method": meth, "seed": s, "share_tied": len(t) / len(g),
-                     "span": int(t.n_clusters.max() - t.n_clusters.min()),
+        mech.append({"ds": x, "method": meth, "n_cells": int(facts.loc[f"paper_{x}", "cells_after_filtering"]),
+                     "share_tied": len(t) / len(g), "span": int(t.n_clusters.max() - t.n_clusters.min()),
                      "share_at_one": float((g.stability >= 0.9999).mean())})
     K = pd.DataFrame(mech)
+    K.to_csv(RESULTS / "a3_matched_mechanism.csv", index=False)
     out["mechanism"] = {meth: {"share_tied": round(float(g.share_tied.mean()), 3),
                                "tied_span": round(float(g.span.mean()), 2),
                                "share_at_one": round(float(g.share_at_one.mean()), 3)}
                         for meth, g in K.groupby("method")}
+    # where the flat top sits: the five datasets of at most 317 cells against the four larger
+    K["size"] = np.where(K.n_cells <= 317, "at most 317 cells", "622 cells or more")
+    out["mechanism_by_size"] = {f"{sz}/{meth}": {"datasets": sorted(g.ds), "share_tied": round(float(g.share_tied.mean()), 3),
+                                                 "tied_span": round(float(g.span.mean()), 2),
+                                                 "share_at_one": round(float(g.share_at_one.mean()), 3)}
+                                for (sz, meth), g in K.groupby(["size", "method"])}
+    out["mechanism_per_dataset"] = K.round(3).to_dict(orient="records")
     out["offered_counts_per_run"] = {"min": int(n_off[n_off.index.get_level_values(0).isin(small)].min()),
                                      "max": int(n_off[n_off.index.get_level_values(0).isin(small)].max()),
                                      "mean": round(float(n_off[n_off.index.get_level_values(0).isin(small)].mean()), 1)}
@@ -162,7 +213,34 @@ def main():
             if len(a) and len(b):
                 chk.append(int(a.n_clusters.iloc[0]) == int(b.n_clusters.iloc[0]))
     out["mica_unchanged_where_all_counts_offered"] = f"{sum(chk)} of {len(chk)} picks identical"
+    # the threshold check of a3_report.py on the matched runs: relax the threshold by up to 0.02
+    # on each run's own curve and see whether the finest-stable pick moves, and to what ARI
+    def finest_at(g, bump):
+        u = g[g.n_clusters >= 2]
+        passing = u[u.stability >= u.ci_low.max() + bump]
+        if not len(passing):
+            return None
+        return passing.sort_values(["n_clusters", "stability"], ascending=[False, False]).iloc[0]
+    srows = []
+    for (x, meth, s_), g in curves.dropna(subset=["ci_low"]).groupby(["ds", "method", "seed"]):
+        base = finest_at(g, 0.0)
+        shifted = {b_: finest_at(g, b_) for b_ in (-0.01, -0.02)}
+        srows.append({"ds": x, "method": meth, "seed": s_, "chosen_k": int(base.n_clusters),
+                      "k_minus_0.02": int(shifted[-0.02].n_clusters), "ari_minus_0.02": float(shifted[-0.02].ari),
+                      "changed": any(int(v.n_clusters) != int(base.n_clusters) for v in shifted.values())})
+    S = pd.DataFrame(srows)
+    sm = S[S.ds.isin(small)]
+    out["threshold_sensitivity"] = {
+        "changed_of_total": f"{int(sm.changed.sum())} of {len(sm)}",
+        "by_method": {k: f"{int(v.sum())} of {len(v)}" for k, v in sm.groupby("method").changed},
+        "pbmc14k": {f"{r.method}/seed{r.seed}": {"k": r.chosen_k, "k_minus_0.02": r["k_minus_0.02"],
+                                                  "ari_minus_0.02": round(r["ari_minus_0.02"], 4)}
+                    for _, r in S[S.ds == "pbmc14k"].iterrows()}}
+    if "pbmc14k" in present:
+        sec = picks[(picks.ds == "pbmc14k") & (picks.k_setting == "stability_finest")]
+        out["pbmc14k_selection_seconds"] = {meth: float(g.seconds.median()) for meth, g in sec.groupby("method")}
     nums["matched"] = out
+    print("matched threshold check: " + json.dumps(out["threshold_sensitivity"]))
     print("matched means: " + ", ".join(f"{k} {v}" for k, v in out["means_nine_small"].items()))
     print("matched abs reading change: " + str(out["mean_abs_reading_change"]) + ", edges " + str(out["finest_pick_at_edge"]))
     print("matched mechanism: " + str(out["mechanism"]) + ", " + out["mica_unchanged_where_all_counts_offered"])
@@ -260,7 +338,14 @@ def main():
 
     # ---------- the summary table: every rule, both methods, no win count ----------
     o = rep.load_stability()
-    rows = [("Default", o, "default"), ("Silhouette, shared space", o, "silhouette_shared"),
+    sil = [pd.read_csv(f) for f in sorted(glob(str(RESULTS / "rule_matched_silhouette_paper_*" / "metrics.csv")))]
+    ms = pd.concat(sil, ignore_index=True) if sil else pd.DataFrame(columns=["dataset", "k_setting"])
+    if len(ms):
+        ms["ds"] = ms.dataset.map(rep.short)
+        ms["seed"] = 0
+        ms["seconds"] = np.nan  # the silhouette rule was not timed
+    rows = [("Default", o, "default"), ("Silhouette, shared cap", o, "silhouette_shared"),
+            ("Silhouette, matched", ms, "silhouette_shared"),
             ("Stability F, original grids", o, "stability_finest"), ("Stability M, original grids", o, "stability_most"),
             ("Stability F, matched", m, "stability_finest"), ("Stability M, matched", m, "stability_most")]
     lines, summ = [], {}
@@ -293,17 +378,21 @@ def main():
         tp = T_[T_.ds == "pbmc14k"]
         lines.append("\\midrule\n\\multicolumn{7}{l}{\\textit{Uses the other datasets' labels}} \\\\")
         tr = {meth: T_[(T_.method == meth) & T_.ds.isin(small)].groupby("ds").ari.median().mean() for meth in ("mica", "leiden_pca")}
-        lines.append(f"Transfer & {tr['mica']:.3f} & {tr['leiden_pca']:.3f} & n/a & "
+        T_["k_setting"] = "transfer"
+        trr = {meth: rng(T_, "transfer", meth) for meth in ("mica", "leiden_pca")}
+        lines.append(f"Transfer & {tr['mica']:.3f}{trr['mica']} & {tr['leiden_pca']:.3f}{trr['leiden_pca']} & n/a & "
                      f"{tp.ari.median():.3f} & none & none \\\\" if len(tp) else
-                     f"Transfer & {tr['mica']:.3f} & {tr['leiden_pca']:.3f} & n/a & n/a & none & none \\\\")
+                     f"Transfer & {tr['mica']:.3f}{trr['mica']} & {tr['leiden_pca']:.3f}{trr['leiden_pca']} & n/a & n/a & none & none \\\\")
         summ["Transfer"] = {k: round(float(v), 4) for k, v in tr.items()}
     (TABLES / "a3_summary.tex").write_text(
         "\\begin{table*}[t]\n\\centering\n\\caption{Every rule in one place. Mean ARI over the nine small datasets of "
         "the per-dataset medians, with the range of that mean over the three seeds where a rule was run at three. "
-        "PBMC14K is reported apart, as medians. Selection time is the median per small dataset in seconds, for the "
-        "rules that select by rerunning. The default rule and the transfer select nothing at run time, and the "
-        "silhouette rule was not timed. "
-        "There is no win count: the point is how far each method's mean moves with the rule.}\n"
+        "PBMC14K is reported apart, as medians. Selection time is the median over the 27 small-dataset runs, in "
+        "seconds, for the "
+        "rules that select by rerunning. The matched times leave out the full-data sweep that fixes the shared "
+        "counts, which with loading adds at most 36 s per run. The default rule and the transfer select nothing at "
+        "run time, and the silhouette rule was not timed. "
+        "No win criterion was set in advance. The point is how far each method's mean moves with the rule.}\n"
         "\\label{tab:summary}\n\\footnotesize\n\\setlength{\\tabcolsep}{4pt}\n"
         "\\begin{tabular}{lcccccc}\n\\toprule\n & \\multicolumn{2}{c}{Nine small datasets} & "
         "\\multicolumn{2}{c}{PBMC14K} & \\multicolumn{2}{c}{Selection (s)} \\\\\n"

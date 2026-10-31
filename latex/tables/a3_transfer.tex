@@ -1,0 +1,25 @@
+\begin{table}[t]
+\centering
+\caption{The transfer comparison, which is not label-free. Each small dataset takes the setting with the best mean ARI over the other eight at the same seed (MICA: $k$, Leiden: a resolution), and PBMC14K takes the baseline's resolution best on the nine. MICA's graph mode has no setting that carries over from $k$. ARI with the resulting cluster count in parentheses, medians over three seeds.}
+\label{tab:transfer}
+\footnotesize
+\setlength{\tabcolsep}{4pt}
+\begin{tabular}{lcc}
+\toprule
+Dataset (types) & MICA & Leiden \\
+\midrule
+Yan (8) & 0.765\,(3\textrm{-}4) & 0.765\,(4) \\
+Goolam (5) & 0.582\,(4) & 0.619\,(2) \\
+Buettner (3) & 0.919\,(4) & 0.134\,(2) \\
+Pollen (11) & 0.493\,(4) & 0.606\,(6\textrm{-}7) \\
+Chung (4) & 0.655\,(4) & 0.510\,(6) \\
+Usoskin (4) & 0.839\,(4) & 0.696\,(5) \\
+Kolodziejczyk (3) & 0.834\,(4) & 0.696\,(5) \\
+Klein (4) & 0.980\,(4) & 0.886\,(5) \\
+Zeisel (7) & 0.478\,(4) & 0.855\,(8) \\
+PBMC14K (7) & n/a & 0.786\,(6) \\
+\midrule
+\textit{Mean, nine small} & \textbf{0.727} & \textbf{0.641} \\
+\bottomrule
+\end{tabular}
+\end{table}
