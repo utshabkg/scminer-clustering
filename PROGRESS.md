@@ -25,7 +25,81 @@ Next three things: submit Assignment 3, run the transfer rule (U-34), and a deci
 
 ---
 
-## 2026-10-28, Utshab (in progress, Assignment 3 due today)
+## 2026-10-31, Utshab (Assignment 3 now due November 4)
+
+**The PBMC14K matched runs finished on Oct 29** at 01:12:57 (seed 1), 01:13:49 (seed 0) and
+01:14:38 (seed 2), in byobu, while this Claude Code session was down. byobu is why they
+survived. `results/rule_matched_stability_paper_pbmc14k_graph_seed*/`.
+- Offered counts 4 to 20 (14, 14 and 16 of 19), since MICA's graph mode makes no fewer than 4.
+- Plain maximum: both methods pick 4 clusters at every seed, MICA 0.395 against the baseline's
+  0.397. chooseR's reading: MICA 4, 5, 5 clusters (0.395, 0.628, 0.623, median 0.623), the
+  baseline 4 at every seed (0.397).
+- Threshold relaxed by 0.02 (new check in `a3_matched.py`, as in `a3_report.py`): the baseline
+  moves to 6, 7 and 6 clusters at 0.786, 0.875 and 0.786, ahead of MICA's 0.588 to 0.628. On the
+  small datasets the matched picks change in 38 of 54 runs (MICA 20 of 27, baseline 18 of 27).
+- Selection time per seed: MICA 5,599 s (93 min), baseline 448 s (7.5 min). On the small
+  datasets the matched medians are 24 s and 9 s per run.
+- Transfer on PBMC14K: the baseline's resolution best on the nine small datasets (0.283 or
+  0.293) gives 6 clusters at 0.786 at every seed. MICA's graph mode is not transferred.
+
+**Paper finished for the matched results (13:02).** The PBMC14K subsection (`sec:pbmc`) is
+rewritten and the five placeholders are filled (abstract, introduction, discussion, transfer
+subsection, conclusion), plus the matched selection cost and the matched threshold count.
+Compiles with no undefined references, lint clean. Table order in the PDF: I stability on the
+original grids, II matched, III every rule, IV graph cost, then V to X in the appendix
+(datasets, all four rules, common range, mode against size, transfer, AMI). The notebook map in
+`scripts/make_a3_notebook.py` follows it, and the notebook rebuilt with 11 code cells and no
+errors. The body is about 10.5 pages. `docs/Project_Paper_Writing_Guide.docx` sets no page
+limit, so length is Utshab's call.
+
+**Verification started (13:02).** Read-only workflow `wf_d51ab3b6-c55` over the revision, five
+lenses (numbers, consistency, claims, code, coverage of the instructor's feedback), each finding
+checked by a skeptic. Results go in the next block.
+
+**Verification found 57 confirmed issues, 3 rejected (finished about 13:19).** Many repeat across
+lenses. Every one is fixed. The ones that changed analysis or code:
+- *The silhouette rule was still capped, not matched.* The instructor's feedback named exactly this
+  for the Assignment 2 silhouette sweeps, and the Assignment 2 plan promised the silhouette rule
+  "over the same range of cluster counts for both methods". `scripts/run_rule_silhouette.py` now
+  takes `--matched` too, run on the nine small datasets at 13:21 to 13:23
+  (`results/rule_matched_silhouette_paper_*`, `logs/matched_silhouette.log`). Result: MICA 0.593,
+  baseline 0.478 (capped: 0.595 and 0.564). The baseline picks 2 clusters on 7 of 9 datasets, and
+  MICA leads on 7 of 9 with one tie. Added to the summary table and the text.
+- *No AMI for the matched runs.* `a3_matched.py` now gives it: F 0.775 against 0.646, M 0.602
+  against 0.585, PBMC14K plain maximum 0.720 against 0.725. Also a matched seed-variation file,
+  `results/a3_matched_seed_variation.csv`.
+- *Matched selection times left out the full-data sweep,* since the runners started the timer
+  after it. From the log timestamps, the sweep plus loading took about 950 s per PBMC14K seed and
+  10 to 36 s per small-dataset run. The text and caption now say so, and the three runners now
+  time the sweep and add it for any future run.
+- *Why the baseline fell.* A reviewer suggested one setting per count was part of the cause.
+  Checked by re-picking the original runs with one setting per count on the old grid: the
+  baseline's plain-maximum mean goes from 0.635 to 0.656, not down, and 13 of 27 matched picks are
+  counts the old grid never produced. So the wider range is the cause, and the text now gives
+  this evidence (now computed in `a3_matched.py`, key `baseline_plain_max_counterfactual`).
+- *0.198 was a double rounding of 0.19749,* so 0.197, the same as on the original grids. The
+  JSON now rounds once to 3 decimals.
+- *A claim of mine while fixing:* "graph mode reached 3 or 2 clusters at only a handful of
+  resolutions" was wrong. The probe has 3 clusters at 100 of 300 resolutions on the third pool.
+  Corrected before compiling.
+Text fixes: the mode test now says the difference "shrinks but does not vanish" (readings differ
+on 2 of 3 pools in small-data mode against 1 of 3), the Assignment 2 plan items set aside are
+named (significance rule, 2,000 variable genes, label-free Allen runs), the deadline move is
+explained, the defaults and the transfer are no longer counted as support, PBMC14K is kept apart
+from the small-data conclusion, "Buettner aside" for the flat top, the introduction describes the
+matched design, the method points to every use of labels, the reproduction appendix covers the
+matched runs, the graph candidate rule says it was written after Assignment 2, and the transfer
+row shows its seed range. Compiles, lint clean, notebook 11 cells with no errors. Body about 11.2
+pages.
+
+**Still pending (as of 13:28).**
+- Commit and push, then tell Rhea and Laraib the results are final (promised for today, Oct 31).
+- A short re-check of the passages changed in this round.
+- Length: about 11.2 pages, Utshab's call.
+
+---
+
+## 2026-10-28, Utshab (Assignment 3 work. That evening the deadline moved to November 4)
 
 **Why this session.** The one-to-one feedback on Assignment 2 was checked against the
 Assignment 3 draft before submitting, and the draft missed part of what it asked for. The
@@ -441,15 +515,39 @@ of the 19 counts (mean 17.1). Where all 19 were offered, MICA's picks equal the 
   since its k grid was already complete. The baseline drops from 0.632 to 0.543 and from 0.635
   to 0.452 once it is offered the full range, with its plain maximum now going to 2 or 3
   clusters on most datasets. Its old grid had been protecting it from coarse counts.
-- *The readings still move MICA more,* by 0.198 per dataset in absolute terms against 0.118.
+- *The readings still move MICA more,* by 0.197 per dataset in absolute terms against 0.118.
+  (First logged as 0.198, which rounded an already rounded 0.1975. Corrected Oct 31.)
   The baseline's figure was 0.067 on its old grid.
 - *The flat top is MICA's own.* On matched candidates, with one setting per count for both,
-  40 percent of MICA's settings tie within 0.01 of its best against 17 percent for the
-  baseline, the tied counts span 6.7 against 2.6, and 29 percent of MICA's settings score
-  exactly 1.0 against 5 percent. This revises the discussion, which attributed most of the
-  ambiguity to the candidates.
+  40 percent of MICA's settings tie within 0.01 of its best against 14 percent for the
+  baseline, the tied counts span 7.3 against 2.9, and 29 percent of MICA's settings score
+  exactly 1.0 against 5 percent. On the original grids the figures were 38 against 22 percent
+  and 7.3 against 2.7, so matching the candidates leaves MICA's flatness where it was. This
+  revises the discussion, which attributed most of the ambiguity to the candidates.
+  (Corrected at 23:49. The first version of this line averaged per run, which gave 17 percent
+  and 6.7 against 2.6. The original grids' figures pool the three seeds per dataset before
+  taking the window, so `a3_matched.py` now does the same and these are the comparable ones.)
 - *Edge picks:* MICA's finest-stable pick sits at an end of the offered counts in 3 of 27
   runs, the baseline's in 7.
+
+**Matched mode test (finished 23:46).** `results/rule_matched_mode_size_pbmc14k_n2500_seed*/`.
+All three arms on the same counts (15, 15 and 16 of 19, starting at 4, 4 and 3), one setting per
+count. (Corrected Oct 31: the floor of 3 on the third pool is set by the baseline, which never
+makes 2 there. MICA's graph mode reached 2 on that pool in the probe.) Tied span per pool: MICA small-data mode
+3, 1, 3, graph mode 1, 1, 1, baseline 1, 1, 2. The two readings disagree in 2 of 3 pools for
+small-data mode, 1 of 3 for graph mode and 1 of 3 for the baseline. Every arm picks 3 to 5
+clusters (true 7). So at 2,500 cells the mode makes little difference, and neither mode shows
+the flat top seen on the small datasets.
+
+**Where the flat top sits (23:46, corrected at 23:49).** Per dataset on matched candidates,
+seeds pooled as in `a3_report.py` (`results/a3_matched_mechanism.csv`), MICA's tied span
+against the baseline's: on the five datasets of 124 to 317 cells 10.6 against 4.2 (Yan 18,
+Pollen 18, Chung 10, Goolam 6, Buettner 1), on the four of 622 to 2,903 cells 3.3 against 1.3.
+Settings scoring exactly 1.0: 81, 72 and 52 percent of MICA's on Yan, Pollen and Chung, 48
+percent on average over the five small ones, at most 16 percent on the four larger datasets.
+(The first version averaged per run and gave 9.5 against 3.1 and 3.2 against 1.8.) With the mode test, this
+points to the small-sample explanation the paper had left open, though nine datasets cannot
+separate size from the datasets themselves.
 
 **Transfer comparison, nine small datasets (23:20).** `results/a3_transfer.csv`. Tuned on the
 other eight datasets' labels, MICA takes k = 4, its shipped default, in 26 of 27 held-out
@@ -460,6 +558,19 @@ shipped 1.0, which scores 0.514). PBMC14K's transfer waits for the matched PBMC1
 **Summary table (U-37), first version.** `latex/tables/a3_summary.tex`, every rule for both
 methods, with the seed range of the mean and the selection time. MICA has the higher
 nine-dataset mean under every rule except the plain maximum on the original grids.
+
+**Paper revised for the matched results, PBMC14K pending (23:53).** Design: new subsection
+`sec:matcheddesign` and the transfer definition (labels now used in four places). Results: the
+post hoc paragraph becomes a pointer, new subsection `sec:matched` with Table `tab:matched`, the
+counts, mechanism and mode-test paragraphs use the matched figures, and new subsections for the
+transfer (`sec:transfer`, Table `tab:transfer` in Appendix `app:transfer`) and every rule in one
+table (`tab:summary`). Discussion, abstract, introduction, changes and conclusion rewritten
+around the matched result, and the plan now runs to November 18, with a size test (pools of 150
+and 300 cells from Zeisel and PBMC14K) proposed for it. Checked while writing: the baseline's
+median pick under the plain maximum is 2 or 3 clusters on 8 of 9 datasets (first written as 6),
+and the smallest margin in the summary table is 0.020 (first written as 0.021). Placeholders
+left for PBMC14K: PBMCABS, PBMCINTRO, PBMCDISC, PBMCTRANSFER, PBMCCONC, plus the PBMC14K
+subsection `sec:pbmc` and the cost subsection. Body about 10.4 pages.
 
 **PBMC14K and mode test started.** The three matched PBMC14K seeds started at 23:17
 (`scm-matched-pbmc-s<seed>`, logs `logs/matched_pbmc_seed<seed>.log`) and the three mode-test
