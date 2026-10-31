@@ -5,23 +5,23 @@ Utshab adds an entry at the end of each working session. Laraib and Rhea add a l
 
 ## Where we stand
 
-Updated: 2026-10-28. Counts follow the Milestone column in `WORKPLAN.md`.
+Updated: 2026-10-31. Counts follow the Milestone column in `WORKPLAN.md`.
 
 | Milestone | Due | Tasks done | Percent | State |
 |-----------|-----|------------|---------|-------|
 | M1 software, small data ready | Oct 7 | 8 of 8 | 100% | Done. Laraib's Zeisel card (L-1) merged on Oct 14 |
-| M2 reproduce the paper, Assignment 2 report | Oct 14 | 7 of 9 | 78% | Ten benchmark sets run, nine reproduce within 0.05. Report submitted (U-31). Left: contacting the authors (U-30), PBMC14K card (L-2) |
-| M3 cluster count without labels | Oct 21 | 7 of 9 | 78% | The stability rule (U-32) is done on all ten datasets, including PBMC14K in graph mode. The results summary (R-1) and paper tables (R-2) are done. Left: significance rule (U-33), Allen card (L-3) |
+| M2 reproduce the paper, Assignment 2 report | Oct 14 | 8 of 9 | 89% | Ten benchmark sets run, nine reproduce within 0.05. Report submitted (U-31). Laraib's PBMC14K card (L-2) done Oct 30. Left: contacting the authors (U-30) |
+| M3 cluster count without labels | Oct 21 | 8 of 9 | 89% | The stability rule (U-32) is done on all ten datasets, including PBMC14K in graph mode. The results summary (R-1) and paper tables (R-2) are done. Laraib's Allen card (L-3) done Oct 30. Left: significance rule (U-33, set aside) |
 | M4 what the similarity measures, atlas downloaded | Oct 28 | 5 of 7 | 71% | Diagnostics, atlas, pilot and the shared-space silhouette (U-35) done. Left: label-free Leiden on Allen (U-36), related work table (L-4) |
-| M5 main experiments complete | Nov 4 | 3 of 8 | 38% | Our distance matches the authors' (U-17), the CPU fast neighbor search is done (U-19), and mode against size (U-39) is finished. Running: matched grids (U-40). Left: transfer comparison (U-34), final comparison table (U-37), the discussion check (L-9), GPU search (U-18, deferred) |
+| M5 main experiments complete | Nov 4 | 6 of 8 | 75% | Distance check (U-17), CPU fast neighbor search (U-19), mode against size (U-39), matched grids (U-40), transfer comparison (U-34, Allen part set aside) and the final table (U-37) done. Left: the discussion check (L-9), GPU search (U-18, deferred) |
 | M6 gated extras | Nov 11 | 0 of 6 | 0% | Not started. The GPU search (U-18), the annotation comparison (U-22, U-23) and the optional checks (U-38) all depend on the Nov 4 result |
 | M7 full manuscript draft | Nov 18 | 0 of 4 | 0% | Not started |
 | M8 revision and slides | Dec 2 | 0 of 3 | 0% | Not started |
 | Every week: notes, plan and progress updates | weekly | | | L-7, R-3 and R-8 |
 
-Overall: 30 of 57 tasks finished. Three of the 57 repeat every week. The counts above are read off the status markers in `WORKPLAN.md`.
+Overall: 35 of 57 tasks finished. Three of the 57 repeat every week. The counts above are read off the status markers in `WORKPLAN.md`.
 
-Next three things: submit Assignment 3, run the transfer rule (U-34), and a decision on whether to write to the scMINER authors (U-30).
+Next three things: Rhea's number check (R-7) and Laraib's discussion check (L-9) by Nov 3 noon, submit Assignment 3 on Nov 4, and a decision on whether to write to the scMINER authors (U-30).
 
 ---
 
