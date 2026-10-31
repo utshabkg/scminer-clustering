@@ -78,11 +78,12 @@ def leiden_partitions(adata, cells, seed=SEED, resolutions=None):
     return emb, out
 
 
-def run_method(name, adata, D, make_partitions, n, seed=SEED, full=None, settings=None):
+def run_method(name, adata, D, make_partitions, n, seed=SEED, full=None, settings=None, extra_seconds=0.0):
     """The stability rule for one method: full-data partitions, then B subsample reruns.
 
     The matched comparison passes the full-data partitions and the candidate settings in,
-    since they are chosen across both methods.
+    since they are chosen across both methods, with the time that sweep took (extra_seconds),
+    so the recorded selection time covers it as it does in the original runs.
     """
     t0 = time.time()
     allc = np.arange(n)
@@ -105,7 +106,7 @@ def run_method(name, adata, D, make_partitions, n, seed=SEED, full=None, setting
         lab_ref = np.asarray(full[s])[ref]
         scores[s] = stability.score_setting(co[s].distance(), lab_ref, seed=seed)
     picks = stability.pick(scores)
-    secs, nc = round(time.time() - t0, 1), len(settings) * (len(subs) + 1)
+    secs, nc = round(time.time() - t0 + extra_seconds, 1), len(settings) * (len(subs) + 1)
     for v in picks.values():
         v["seconds"], v["n_clusterings"] = secs, nc
     return picks, full, scores
@@ -128,16 +129,21 @@ def main(name, n_hvg=None, flavor="seurat", seed=SEED):
     rows = []
     makers = [("mica", lambda c, res=None: mica_partitions(D, c, seed)),
               ("leiden_pca", lambda c, res=None: leiden_partitions(adata, c, seed, res))]
-    fulls, chosen = {}, {}
+    fulls, chosen, t_full = {}, {}, {}
     if grids.matched():
-        # Both methods are offered the same cluster counts, one setting each.
-        fulls = {m: mk(np.arange(n))[1] for m, mk in makers}
+        # Both methods are offered the same cluster counts, one setting each. The full-data
+        # sweep is timed per method and added to that method's selection time.
+        for m, mk in makers:
+            tf = time.time()
+            fulls[m] = mk(np.arange(n))[1]
+            t_full[m] = time.time() - tf
         common = grids.common_counts(*fulls.values())
         chosen = {m: list(grids.one_per_count(fulls[m], common).values()) for m in fulls}
         print(f"  matched counts: {common} ({len(common)} of 19)", flush=True)
     for method, maker in makers:
         print(f"  {method}: stability rule")
-        picks, full, scores = run_method(name, adata, D, maker, n, seed, fulls.get(method), chosen.get(method))
+        picks, full, scores = run_method(name, adata, D, maker, n, seed, fulls.get(method), chosen.get(method),
+                                         t_full.get(method, 0.0))
         for rule, info in picks.items():
             rec = {"dataset": name, "method": method, "k_setting": rule, "seed": seed,
                    "genes": int(n_hvg) if n_hvg else "all", "hvg_flavor": flavor if n_hvg else "",

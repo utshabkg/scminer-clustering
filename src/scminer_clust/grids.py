@@ -21,7 +21,8 @@ MICA_GRAPH_MAX_OLD = 4.0  # MICA's Louvain from 0.1 in steps of 0.1. Higher mean
 # 5 of the 19 counts in a run, which common_counts handles.
 LEIDEN_MATCHED = np.round(np.geomspace(0.001, 50, 300), 5)
 # MICA's graph-mode Louvain, from results/grid_coverage_mica_graph: up to 30 it never gives
-# fewer than 4 clusters on PBMC14K or its 2,500 cell pools, and its 0.1 step skips counts
+# fewer than 4 clusters on the full PBMC14K data, while the 2,500 cell pools bottom out at 4,
+# 3 and 2 (the last at 24.5), and its 0.1 step skips counts
 # between 10 and 20, which change fastest at low resolution. So 0.01 steps up to 2.0, then
 # MICA's own 0.1 steps to 4.0, then 0.5 steps to 30.
 MICA_GRAPH_MATCHED = np.round(np.concatenate([np.arange(0.1, 2.0, 0.01), np.arange(2.0, 4.0, 0.1),

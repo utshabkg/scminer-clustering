@@ -116,8 +116,8 @@ def leiden_partitions(adata, cells, seed=0, resolutions=None):
     return out
 
 
-def run(method, maker, n, truth, seed, b, full=None, settings=None):
-    t0 = time.time()
+def run(method, maker, n, truth, seed, b, full=None, settings=None, extra_seconds=0.0):
+    t0 = time.time() - extra_seconds  # a matched run's full-data sweep, timed before this call
     if full is None:
         full = maker(np.arange(n), "full")
     if settings is None:
@@ -163,15 +163,18 @@ def main(seed=0, b=stability.B_SUBSAMPLES):
     D = full_distance(X)
     makers = [("mica", lambda c, t, res=None: mica_graph_partitions(D, c, f"s{seed}_{t}", resolutions=res)),
               ("leiden_pca", lambda c, t, res=None: leiden_partitions(a, c, seed, res))]
-    fulls, chosen = {}, {}
+    fulls, chosen, t_full = {}, {}, {}
     if grids.matched():
-        fulls = {m: mk(np.arange(n), "full") for m, mk in makers}
+        for m, mk in makers:
+            tf = time.time()
+            fulls[m] = mk(np.arange(n), "full")
+            t_full[m] = time.time() - tf
         common = grids.common_counts(*fulls.values())
         chosen = {m: list(grids.one_per_count(fulls[m], common).values()) for m in fulls}
         print(f"  matched counts: {common} ({len(common)} of 19)", flush=True)
     rows = []
     for m, mk in makers:
-        rows += run(m, mk, n, truth, seed, b, fulls.get(m), chosen.get(m))
+        rows += run(m, mk, n, truth, seed, b, fulls.get(m), chosen.get(m), t_full.get(m, 0.0))
     d = metrics.write(grids.tag(f"rule_stability_{NAME}_graph_seed{seed}"), rows,
                       {"dataset": NAME, "rule": "chooseR-style subsampling stability", "mica_mode": "graph",
                        "grid": "matched" if grids.matched() else "original",

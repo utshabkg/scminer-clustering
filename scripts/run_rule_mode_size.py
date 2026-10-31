@@ -64,9 +64,9 @@ def mds_distance_for_pool(X, tag):
     return D
 
 
-def run_arm(method, mode, maker, n, truth, seed, b, full=None, settings=None):
+def run_arm(method, mode, maker, n, truth, seed, b, full=None, settings=None, extra_seconds=0.0):
     """The stability rule for one arm. Mirrors the other two runners so results are comparable."""
-    t0 = time.time()
+    t0 = time.time() - extra_seconds  # a matched run's full-data sweep, timed before this call
     if full is None:
         full = maker(np.arange(n), "full")
     if settings is None:
@@ -136,15 +136,19 @@ def main(n_pool=N_POOL, seed=0, b=stability.B_SUBSAMPLES):
                                                                               resolutions=res)),
         ("leiden_pca", "pca", lambda c, t, res=None: small.leiden_partitions(sub, np.asarray(c), seed, res)[1]),
     ]
-    fulls, chosen = {}, {}
+    fulls, chosen, t_full = {}, {}, {}
     if grids.matched():
         # all three arms are offered the same cluster counts, one setting each
-        fulls = {mode: mk(np.arange(n_pool), "full") for _, mode, mk in arms}
+        for _, mode, mk in arms:
+            tf = time.time()
+            fulls[mode] = mk(np.arange(n_pool), "full")
+            t_full[mode] = time.time() - tf
         common = grids.common_counts(*fulls.values())
         chosen = {mode: list(grids.one_per_count(fulls[mode], common).values()) for mode in fulls}
         print(f"  matched counts: {common} ({len(common)} of 19)", flush=True)
     for method, mode, maker in arms:
-        r, s = run_arm(method, mode, maker, n_pool, truth, seed, b, fulls.get(mode), chosen.get(mode))
+        r, s = run_arm(method, mode, maker, n_pool, truth, seed, b, fulls.get(mode), chosen.get(mode),
+                       t_full.get(mode, 0.0))
         rows += r
         summary.append(s)
 
