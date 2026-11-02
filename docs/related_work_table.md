@@ -1,10 +1,3 @@
-# L-4: Related Work Comparison Table
-
-**Project:** scMINER clustering without reference labels  
-**Prepared for:** `docs/related_work_table.md`  
-**Basis:** The repository's archived literature reviews in `docs/research/workflow_paused_2026-09-16/`, especially `research_scminer-deep-read.md`, `research_resolution-validity.md`, `research_scalable-mi-clustering.md`, and `research_llm-rag-annotation.md`.
-
-**Reading guide.** “Chooses cluster count without labels” refers to whether the method provides a rule for choosing the final clustering without reference cell-type labels; this does not mean the paper never uses labels for evaluation. “Not stated” means the saved research reviews did not establish the requested value. Data sizes are published/claimed scales for the *listed method*, not the size used by our project. The language-model column concerns the listed method, not the studies' authors' use of writing tools.
 
 | Paper (link) | Year | Venue | What it does | Biggest data it handled (from saved reviews) | Uses mutual information? | Chooses cluster count without reference labels? | Uses a language model? | How our project differs |
 |---|---:|---|---|---|---|---|---|---|
@@ -23,14 +16,3 @@
 | [CASSIA](https://doi.org/10.1038/s41467-025-67084-x) | 2025 | *Nature Communications* | Multi-agent cell annotation with validator/scorer and optional retrieval-based agents (as described in preprint). | Not stated | No MI described | **Not as its primary task**; focuses on annotation/subclustering | **Yes**, multi-agent LLMs | Our current experiments focus on label-free MICA comparisons; a future interpretation arm could test **computed hidden-driver activity** as evidence, not only markers. |
 | [scRAG](https://aclanthology.org/2025.findings-acl.53/) | 2025 | *Findings of ACL* | Retrieves reference-cell and gene/cell-type relations from knowledge graphs to support cell-type interpretation. | Not stated | No MI described | **No**, cluster-count selection is not the reported task | **Yes**, retrieval-augmented language-model interpretation | Our proposed RAG component would study whether **scMINER's inferred regulatory drivers** add evidence beyond marker genes; this has not yet been run. |
 | [ReCellTy](https://arxiv.org/abs/2505.00017) | 2025 | arXiv / bioRxiv preprint | Uses GraphRAG over CellMarker-derived knowledge to improve cell-type annotation. | Not stated; evaluated on a human-scored Azimuth set | No MI described | **No**, focuses on annotation | **Yes**, GPT-4o-mini + GraphRAG | Our proposed interpretation would retrieve on **regulator activity and hidden drivers** as well as markers; current Assignment 3 findings concern selection, not RAG performance. |
-
-## Key takeaways for the Related Work section
-
-1. **Clustering without labels is already studied** (chooseR, MultiK, sc-SHC, CHOIR, scICE), but the archived review did not identify an independent assessment applying these choices to **MICA's cell–cell MI clustering**.
-2. **Scale and MI are not the same claim.** SHARP, SC3s, CHOIR and minicore reach millions of cells, while minicore uses *divergences*, not the pairwise cell–cell MI distance used by MICA. Our Assignment 3 graph comparison is on PBMC14K and Allen **100K**.
-3. **Annotation is a different stage from cluster-count selection.** GPTCelltype, AnnDictionary, CASSIA, scRAG and ReCellTy interpret existing clusters; they do not supply a head-to-head label-free MICA-versus-Leiden evaluation.
-4. **Our current demonstrated contribution** is the sensitivity of label-free selection to candidate grids, tie-breaks, thresholds and random draws. **Driver-grounded RAG remains proposed/deferred**, not a result to claim as completed.
-
-## Source and verification note
-
-This table summarizes the repository's **saved literature reviews**, not a new systematic screening of every publication. Entries listed as “not stated” must be checked against the original articles before replacing them with definitive yes/no or numerical claims. The saved review flags some literature metadata and large-scale results as partially verified; use the linked publications when preparing the final manuscript.
