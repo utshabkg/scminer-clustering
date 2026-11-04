@@ -37,6 +37,7 @@ reproducibility to discriminate, because its distance between two cells does not
 sample does. That property is exact in both modes and may matter most when cells are few, but we
 have not tested it in isolation. The $k$-means step that follows is not deterministic either: at
 a fixed $k$ MICA's ARI moves by as much as 0.267 across seeds, on Buettner at $k=7$.
+Appendix~\ref{app:repro} says where each of these figures is saved.
 
 \subsection{What it changes for someone using these tools}
 Within what we tested, a user should do five things differently. Compare methods on the same
@@ -57,9 +58,9 @@ choice among several. Even the matched grids reach 14 to 19 of the 19 counts per
 graph mode never makes fewer than 4 clusters on PBMC14K, so 2 and 3 clusters are never compared
 there. The mode test runs at a single size on a single dataset. Some datasets carry labels derived by clustering the same
 data, which flatters methods resembling the original pipeline, and PBMC14K is the only large
-dataset in the selection comparison. We use 25 subsamples where chooseR specifies 100, which widens the bootstrap intervals
-and lowers the threshold, and we report an observed range over three seeds rather than a
-confidence interval, because three runs do not support one. Our implementation follows
+dataset in the selection comparison. We use 25 subsamples where chooseR specifies 100, which may widen the bootstrap intervals
+and lower the threshold, and we did not rerun at 100. We report an observed range over three
+seeds rather than a confidence interval, because three runs do not support one. Our implementation follows
 chooseR's published description rather than running the authors' R code, and since the
 threshold check shows the choice is sensitive at the level a bootstrap difference could
 produce, a discrepancy in our reading would propagate to every stability result in the paper,

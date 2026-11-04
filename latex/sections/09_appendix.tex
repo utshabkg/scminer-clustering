@@ -28,7 +28,8 @@ dataset, the span of cluster counts the baseline's resolution grid produced, and
 rule re-applied to MICA's saved scores restricted to the set of counts the baseline produced in
 the same run. That set can have gaps: on Yan the baseline makes 2 and 4 to 8 clusters but never
 3. Nothing is rerun and no labels are used to restrict, but the restriction was chosen after the
-results were seen and is applied to MICA only, which is why the matched runs of
+results were seen and is applied to MICA only. It is a sensitivity check on what the candidate
+grids do to the ranking and not a fair comparison, which is why the matched runs of
 Section~\ref{sec:matched} replace it as the comparison we rely on. The largest gains in MICA's finest-stable ARI are
 on Yan, where its pick falls from 19 clusters to 7 and its ARI rises from 0.496 to 0.925, and on
 Klein, by 0.36. On Pollen the pick falls from 17 to the true 11 at 0.969, though 11 is also the
@@ -93,9 +94,11 @@ from the saved result files and writes \url{results/a3_report_numbers.json}.
 \ref{tab:transfer} from the matched runs and writes \url{results/a3_matched_numbers.json}.
 Between them the two files hold most of the aggregate figures quoted in the text, each
 traceable to the run that produced it. The rest come from the per-run files: selection times and
-clustering counts from each run's \url{metrics.csv}, the matched sweep times from the timestamps
-in \url{logs/matched_*.log}, and graph mode's cluster counts above a resolution of 4.0 from
-\url{results/grid_coverage_mica_graph}. Per-dataset ARI ranges across seeds are in
+clustering counts from each run's \url{metrics.csv}, the distance-matrix, node2vec and matched
+sweep times from the logs, saved in \url{results/a3_log_timings.csv} by
+\url{scripts/log_timings.py}, and graph mode's cluster counts above a resolution of 4.0 from
+\url{results/grid_coverage_mica_graph}. The tie figures per dataset on matched candidates are in
+\url{results/a3_matched_mechanism.csv}. Per-dataset ARI ranges across seeds are in
 \url{results/a3_seed_variation.csv} and \url{results/a3_matched_seed_variation.csv}.
 
 \textbf{Software.} Two conda environments, both pinned in \texttt{envs/}. The analysis

@@ -22,9 +22,10 @@ a seed, which makes the comparison paired at the level of the draw.
 
 chooseR specifies $B = 100$. We use 25 because the rule costs $B + 1$ clusterings per
 candidate setting, so 100 would take roughly four times the compute for every result here.
-The reduction widens the bootstrap intervals and lowers the threshold, which could change
-which settings clear it, so rather than assume it is harmless we test the selection's
-sensitivity to the threshold directly in Section~\ref{sec:results}.
+Fewer subsamples may widen the bootstrap intervals and so lower the threshold, which could
+change which settings clear it. We did not rerun at 100. Rather than assume the reduction is
+harmless, we test how sensitive the selection is to the threshold in
+Section~\ref{sec:results}, which is a related check and not the same comparison.
 
 For the runs as first specified, the protocol was fixed before any partition was scored: the
 candidate grids, 25 subsamples of 80 percent at three seeds, and the selection step. The
