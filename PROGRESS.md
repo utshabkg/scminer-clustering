@@ -32,7 +32,7 @@ changed. Rhea's PR #4 is merged.
 
 *Rhea's R-7 first pass, `docs/r7_number_check.md`. All confirmed:*
 - Subsample draw: the paragraph held only on the original grids. It now gives both: MICA 0.09 and
-  baseline 0.16 on matched candidates, up to 0.50 for the baseline on Zeisel (0.361 to 0.863), and
+  baseline 0.16 on matched candidates, up to 0.50 for the baseline on Zeisel (0.361 to 0.862), and
   the threshold at 35 and 38 of 54. Now in `seed_variation_nine_small` in both JSON files.
 - PBMC14K: each grid's range is separate, 0.785 to 0.873 (original) and 0.786 to 0.875 (matched).
   0.876 to 0.878 holds on both grids' full sweeps, and among the matched candidates offered it is
@@ -66,9 +66,43 @@ table appear in the paper up to commit `7d11f08` and not in the current text.
 - The completion plan no longer claims the discussion check covered this submission. It says the
   check covered an earlier version and will be repeated on the draft. L-9 stays open for that.
 
-**Still pending (16:25 CST).**
-- Utshab: pull the final text into Overleaf, confirm the PDF, submit.
-- Final independent check of the passages changed today.
+**Final check of today's changes and of readiness (workflow `wf_574261c5-5dc`, done about 16:46):
+26 confirmed, 3 rejected.** All fixed by 16:48 CST except the Overleaf step, which is Utshab's. The ones
+that mattered:
+- *The appendix bootstrap paragraph still said "then tested it".* Today's rewording had missed it,
+  and the discussion's limitation sentence had the same leftover. Both now say the bootstraps were
+  never compared and that 0.02 is an assumed size.
+- *"The AMI sits above the ARI whenever the chosen count is wrong" was false,* in the appendix and
+  the Table X caption. Checked: above in 156 of 168 wrong-count runs, below in 12, for example the
+  baseline's 8-cluster pick on Zeisel, 0.855 against 0.815. Now "usually", and the ARI is "on
+  average" the stricter.
+- *The silhouette lead depends on the space.* Scored in MICA's own embedding MICA trails, 0.493 against
+  0.549 under the cap and 0.493 against 0.497 on matched candidates. The discussion counted the lead
+  as support without saying so. Discussion, conclusion, appendix and the subsection heading now
+  name the space.
+- *The win count.* "Would not have been met on any reading" overreached, since the eleventh set was
+  never run under this rule. Now "not met on the datasets we ran", at most 6 of 10, one short of 7.
+- *The leftover instability was called MICA's alone.* After matching, the baseline's reading gap also
+  rose, and the subsample draw moves the baseline more. Discussion and introduction now say so, which
+  is also Laraib's point.
+- *Allen cells.* The paper never cited the atlas, or said these cells are our own preprocessing with
+  labels derived by clustering. Now in the design.
+- *Course guide.* It asks each main section to open with a short paragraph. Closest Work, Method and
+  Discussion now do.
+- *Time on PBMC14K.* The baseline's single-clustering time was never saved. The text now gives the
+  upper bound from the Assignment 2 sweep (119 to 198 s for 200 resolutions, `results/baselines_paper_pbmc14k`),
+  and says the distance matrix's compute time there was not logged.
+- Smaller: 0.863 was a double rounding of 0.86249, so 0.862. "We found no application" for chooseR on
+  mutual information, since we can only report our search. "Order of magnitude larger" was wrong for
+  Klein and Zeisel. The figure caption names its grid. "Cost is no reason" is scoped to the small
+  datasets. Two statements about Assignment 2 that could not be traced to it are reworded. The
+  Overleaf link now uses `nolinkurl`, because it would overflow its column in Overleaf's fonts.
+
+**Still pending (16:48 CST).**
+- Utshab: check Overleaf's history for edits made there, pull or upload the final text, confirm the PDF
+  contains "We did not rerun at 100", make the link view-only, submit.
+- Laraib: repeat L-9 on the current Discussion.
+- Length: about 11.1 pages, Utshab's call.
 
 ---
 
