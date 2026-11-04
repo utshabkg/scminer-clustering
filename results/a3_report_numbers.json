@@ -1,4 +1,17 @@
 {
+ "seed_variation_nine_small": {
+  "mean_ari_range": {
+   "leiden_pca": 0.093,
+   "mica": 0.085
+  },
+  "largest": {
+   "ds": "buettner",
+   "method": "mica",
+   "rule": "stability_most",
+   "ari_min": 0.4744,
+   "ari_max": 0.9339
+  }
+ },
  "common_range": {
   "restriction": "set of cluster counts the baseline produced in the same run",
   "mean_abs_reading_change": {
@@ -16,19 +29,19 @@
     "finest": 0.6322,
     "most": 0.6347,
     "gap": -0.0025,
-    "tied_span": 2.33
+    "tied_span_per_run": 2.33
    },
    "mica_common": {
     "finest": 0.7721,
     "most": 0.6647,
     "gap": 0.1075,
-    "tied_span": 3.44
+    "tied_span_per_run": 3.44
    },
    "mica_own": {
     "finest": 0.6615,
     "most": 0.4727,
     "gap": 0.1888,
-    "tied_span": 6.89
+    "tied_span_per_run": 6.89
    }
   },
   "baseline_reach": {
@@ -329,10 +342,6 @@
     "yan": 4.0,
     "zeisel": 4.0
    }
-  },
-  "seconds_median": {
-   "leiden_pca": NaN,
-   "mica": NaN
   }
  },
  "silhouette_shared": {
@@ -388,10 +397,6 @@
     "yan": 5.0,
     "zeisel": 2.0
    }
-  },
-  "seconds_median": {
-   "leiden_pca": NaN,
-   "mica": NaN
   }
  },
  "stability_finest": {
@@ -450,9 +455,9 @@
     "zeisel": 3.0
    }
   },
-  "seconds_median": {
-   "leiden_pca": 25.1,
-   "mica": 31.6
+  "seconds_median_over_small_runs": {
+   "leiden_pca": 18.7,
+   "mica": 21.8
   }
  },
  "stability_most": {
@@ -511,9 +516,9 @@
     "zeisel": 3.0
    }
   },
-  "seconds_median": {
-   "leiden_pca": 25.1,
-   "mica": 31.6
+  "seconds_median_over_small_runs": {
+   "leiden_pca": 18.7,
+   "mica": 21.8
   }
  },
  "mechanism": {
@@ -793,6 +798,73 @@
     "excess_clusters": -4.0
    }
   ]
+ },
+ "mica_largest_seed_range_at_fixed_k": {
+  "ds": "buettner",
+  "k": 7,
+  "ari_range": 0.267
+ },
+ "pbmc14k_original_grid": {
+  "leiden_pca": {
+   "best_setting": {
+    "0": {
+     "k": 7,
+     "ari": 0.878
+    },
+    "1": {
+     "k": 7,
+     "ari": 0.876
+    },
+    "2": {
+     "k": 7,
+     "ari": 0.876
+    }
+   },
+   "threshold_relaxed_by_0.02": {
+    "0": {
+     "k": 6,
+     "ari": 0.785
+    },
+    "1": {
+     "k": 7,
+     "ari": 0.873
+    },
+    "2": {
+     "k": 7,
+     "ari": 0.871
+    }
+   }
+  },
+  "mica": {
+   "best_setting": {
+    "0": {
+     "k": 7,
+     "ari": 0.851
+    },
+    "1": {
+     "k": 7,
+     "ari": 0.855
+    },
+    "2": {
+     "k": 7,
+     "ari": 0.859
+    }
+   },
+   "threshold_relaxed_by_0.02": {
+    "0": {
+     "k": 5,
+     "ari": 0.631
+    },
+    "1": {
+     "k": 5,
+     "ari": 0.628
+    },
+    "2": {
+     "k": 5,
+     "ari": 0.629
+    }
+   }
+  }
  },
  "mica_default": {
   "shipped_k": 4,

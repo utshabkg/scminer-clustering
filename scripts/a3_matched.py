@@ -134,6 +134,20 @@ def main():
         k_median=("n_clusters", "median"), k_min=("n_clusters", "min"), k_max=("n_clusters", "max")).round(4).reset_index()
     sv["ari_range"] = (sv.ari_max - sv.ari_min).round(4)
     sv.to_csv(RESULTS / "a3_matched_seed_variation.csv", index=False)
+    sv9 = sv[sv.ds.isin(small)]
+    top = sv9.loc[sv9.ari_range.idxmax()]
+    out["seed_variation_nine_small"] = {
+        "mean_ari_range": sv9.groupby("method").ari_range.mean().round(3).to_dict(),
+        "largest": {"ds": top.ds, "method": top.method, "rule": top.k_setting, "ari_min": float(top.ari_min),
+                    "ari_max": float(top.ari_max)}}
+    if "pbmc14k" in present:
+        # each method's best setting per seed, on the matched runs' whole grid and among the counts offered
+        sw_ = m[(m.ds == "pbmc14k") & (m.k_setting == "full_sweep")]
+        cu_ = curves[curves.ds == "pbmc14k"]
+        out["pbmc14k_best_setting"] = {meth: {
+            "whole_grid": {int(s_): round(float(g.ari.max()), 3) for s_, g in sw_[sw_.method == meth].groupby("seed")},
+            "among_offered": {int(s_): round(float(g.ari.max()), 3) for s_, g in cu_[cu_.method == meth].groupby("seed")}}
+            for meth in ("mica", "leiden_pca")}
     out["datasets_where_mica_leads"] = {r: f"{int((med[r]['mica'] > med[r]['leiden_pca']).sum())} of {len(med[r])}"
                                         for r, _ in READINGS}
     # Why did the baseline's plain maximum fall? Two things changed at once: the range of counts
@@ -356,7 +370,9 @@ def main():
 
     def secs(d, r, meth):
         s = d[(d.k_setting == r) & (d.method == meth) & d.ds.isin(small)]
-        return f"{s.seconds.median():.0f}" if "seconds" in s and s.seconds.notna().any() else ("none" if r == "default" else "n/a")
+        if "seconds" not in s or not s.seconds.notna().any():
+            return "none" if r == "default" else "n/a"
+        return f"{int(s.seconds.median() + 0.5)}"  # halves up, as in the text. Plain formatting gives 24.5 as 24
 
     def pbmc(d, r, meth):
         s = d[(d.k_setting == r) & (d.method == meth) & (d.ds == "pbmc14k")]

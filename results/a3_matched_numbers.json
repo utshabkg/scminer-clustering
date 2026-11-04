@@ -634,6 +634,45 @@
     "ari": 0.859
    }
   },
+  "seed_variation_nine_small": {
+   "mean_ari_range": {
+    "leiden_pca": 0.157,
+    "mica": 0.089
+   },
+   "largest": {
+    "ds": "zeisel",
+    "method": "leiden_pca",
+    "rule": "stability_finest",
+    "ari_min": 0.3607,
+    "ari_max": 0.8625
+   }
+  },
+  "pbmc14k_best_setting": {
+   "mica": {
+    "whole_grid": {
+     "0": 0.864,
+     "1": 0.856,
+     "2": 0.859
+    },
+    "among_offered": {
+     "0": 0.849,
+     "1": 0.847,
+     "2": 0.836
+    }
+   },
+   "leiden_pca": {
+    "whole_grid": {
+     "0": 0.876,
+     "1": 0.878,
+     "2": 0.876
+    },
+    "among_offered": {
+     "0": 0.871,
+     "1": 0.875,
+     "2": 0.872
+    }
+   }
+  },
   "datasets_where_mica_leads": {
    "stability_finest": "5 of 9",
    "stability_most": "5 of 9"

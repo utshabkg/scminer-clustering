@@ -32,6 +32,7 @@ conda env create -f envs/scminer.yml   # installs the project too, so scminer_cl
 conda activate scminer
 python scripts/a3_report.py            # rewrites latex/tables/*.tex, latex/figures/*, results/a3_*.json
 python scripts/a3_matched.py           # the matched-grid, transfer and summary tables
+python scripts/log_timings.py          # saves log-only timings to results/a3_log_timings.csv (needs logs/)
 pytest tests/ -q                       # 4 tests, about 6 seconds
 ```
 

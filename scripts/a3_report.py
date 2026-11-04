@@ -218,6 +218,12 @@ def main():
         k_max=("n_clusters", "max")).round(4).reset_index()
     sv["ari_range"] = (sv.ari_max - sv.ari_min).round(4)
     sv.to_csv(RESULTS / "a3_seed_variation.csv", index=False)
+    sv9 = sv[sv.ds.isin(SMALL)]
+    top = sv9.loc[sv9.ari_range.idxmax()]
+    nums["seed_variation_nine_small"] = {
+        "mean_ari_range": sv9.groupby("method").ari_range.mean().round(3).to_dict(),
+        "largest": {"ds": top.ds, "method": top.method, "rule": top.k_setting, "ari_min": float(top.ari_min),
+                    "ari_max": float(top.ari_max)}}
     print(f"seed variation: largest ARI range {sv.ari_range.max():.3f} "
           f"({sv.loc[sv.ari_range.idxmax(), 'ds']}, {sv.loc[sv.ari_range.idxmax(), 'method']})")
 
@@ -272,8 +278,10 @@ def main():
         "restriction": "set of cluster counts the baseline produced in the same run",
         "mean_abs_reading_change": {a: round(float(v), 4) for a, v in abs_gap.items()},
         "finest_pick_at_edge": {a: f"{int(r['sum'])} of {int(r['size'])} runs" for a, r in edges.iterrows()},
+        # tied_span_per_run averages over runs. The figures in the text pool the seeds first (see
+        # mechanism.mean_k_span_among_tied and pooled_tied_span), so they differ from these.
         "means": {a: {"finest": round(float(r.finest_ari), 4), "most": round(float(r.most_ari), 4),
-                      "gap": round(float(r.finest_ari - r.most_ari), 4), "tied_span": round(float(r.tied_span), 2)}
+                      "gap": round(float(r.finest_ari - r.most_ari), 4), "tied_span_per_run": round(float(r.tied_span), 2)}
                   for a, r in cmean.iterrows()},
         "baseline_reach": {k: [int(v.lo), int(v.hi)] for k, v in reach.iterrows()}}
     # The span quoted in the text pools the three seeds before taking the window (see the
@@ -312,7 +320,7 @@ def main():
         "Dataset (types) & Baseline span & F & M & F & M & F & M \\\\\n\\midrule\n"
         + "\n".join(crow) + "\n\\bottomrule\n\\end{tabular}\n\\end{table*}\n")
     print("common range, pooled tied span: " + str(nums["common_range"]["pooled_tied_span"]))
-    print("common range: " + ", ".join(f"{a} F {v['finest']:.3f} M {v['most']:.3f} span {v['tied_span']}"
+    print("common range: " + ", ".join(f"{a} F {v['finest']:.3f} M {v['most']:.3f} span {v['tied_span_per_run']}"
                                        for a, v in nums["common_range"]["means"].items()))
 
     # the mode test on a common range: the small-data arm held to the counts the graph arm reaches
@@ -481,7 +489,10 @@ def main():
         kp = t.pivot_table(index="ds", columns="method", values="k")
         if len(kp):
             nums.setdefault(r, {})["chosen_k"] = kp.round(1).to_dict()
-        nums.setdefault(r, {})["seconds_median"] = t.groupby("method").seconds.median().round(1).to_dict()
+        # over the 27 small-dataset runs, as the summary table reports it, and only for rules that were timed
+        runs = d[(d.k_setting == r) & d.ds.isin(SMALL)].dropna(subset=["seconds"])
+        if len(runs):
+            nums.setdefault(r, {})["seconds_median_over_small_runs"] = runs.groupby("method").seconds.median().round(1).to_dict()
     # ---------- mechanism: can the rule tell the settings apart at all? ----------
     from scipy.stats import spearmanr
     curve_all = d[d.k_setting == "stability_curve"].dropna(subset=["stability"])
@@ -515,6 +526,23 @@ def main():
         "n_datasets": int(mech.ds.nunique()),
         "table": mech.to_dict(orient="records")}
     mech_all.to_csv(RESULTS / "a3_mechanism.csv", index=False)
+    # how far k-means alone moves MICA's ARI: the same k across seeds on the same data
+    fx = curve_all[(curve_all.method == "mica") & curve_all.ds.isin(SMALL)].groupby(["ds", "setting"]).ari.agg(["min", "max"])
+    fx["range"] = fx["max"] - fx["min"]
+    ds_, k_ = fx["range"].idxmax()
+    nums["mica_largest_seed_range_at_fixed_k"] = {"ds": ds_, "k": int(k_), "ari_range": round(float(fx["range"].max()), 3)}
+    # PBMC14K: each method's best setting per seed, and where a threshold relaxed by 0.02 sends the rule
+    pb_ = curve_all[curve_all.ds == "pbmc14k"]
+    nums["pbmc14k_original_grid"] = {}
+    for m_, g_ in pb_.groupby("method"):
+        best, relaxed = {}, {}
+        for s_, c_ in g_.groupby("seed"):
+            b_ = c_.loc[c_.ari.idxmax()]
+            best[int(s_)] = {"k": int(b_.n_clusters), "ari": round(float(b_.ari), 3)}
+            u_ = c_[c_.n_clusters >= 2]
+            r_ = u_[u_.stability >= u_.ci_low.max() - 0.02].sort_values(["n_clusters", "stability"], ascending=False).iloc[0]
+            relaxed[int(s_)] = {"k": int(r_.n_clusters), "ari": round(float(r_.ari), 3)}
+        nums["pbmc14k_original_grid"][m_] = {"best_setting": best, "threshold_relaxed_by_0.02": relaxed}
     print("mechanism: share of settings tied with the best " + str(nums["mechanism"]["mean_share_tied"]))
     print("mechanism: mean span of cluster counts among tied settings " + str(nums["mechanism"]["mean_k_span_among_tied"]))
 
