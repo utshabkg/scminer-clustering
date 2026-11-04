@@ -83,7 +83,7 @@ for reporting the count beside the score.
 \centering
 \includegraphics[width=\textwidth]{figures/a3_stability_curve.pdf}
 \caption{Reproducibility and accuracy against the number of clusters, for both methods on
-three datasets. Solid lines are the stability score the rule maximises, dashed lines the
+three datasets, on the original grids. Solid lines are the stability score the rule maximises, dashed lines the
 ARI against the reference labels, and the dotted vertical line marks the true number of
 types. Where the solid line is flat, the rule has no basis for preferring one setting over
 another and its tie-break decides instead.}
@@ -162,7 +162,7 @@ since the two modes also normalise differently the test says nothing about the m
 information distance itself. Neither mode shows the flat top of the
 smallest datasets at 2,500 cells, which fits the pattern above.
 
-\subsection{The default and silhouette rules favour MICA for reasons of their own}
+\subsection{The default rule favours MICA for reasons of its own, and the silhouette rule depends on its space}
 MICA's best mean, 0.727, comes from its own shipped default, which returns four clusters
 whatever the dataset. The median number of cell types across these nine is also four, and
 the default scores 0.802 where the true count is 3 to 5 against 0.579 outside, so its
@@ -188,19 +188,19 @@ either method's label-free pick, and MICA's graph mode has no setting to transfe
 Table~\ref{tab:summary} gathers each rule's mean for both methods. MICA has the higher mean
 under every rule except the plain maximum on the original grids, by margins from 0.020 to
 0.213, and its own mean moves by 0.255 across the label-free rules. The silhouette rule on
-matched candidates follows the stability rule: MICA's mean holds at 0.593 while the baseline's
+matched candidates, scored in the principal components, follows the stability rule: MICA's mean holds at 0.593 while the baseline's
 falls from 0.564 to 0.478, as it now picks 2 clusters on seven of the nine datasets. The
 Assignment 2 plan counted a win for MICA if, under the stability rule, its median ARI was higher
 on at least 7 of 11 sets and higher on average by 0.05. We dropped that count after the
 feedback, because the point of the table is how far each method's score moves with the rule. It
-would not have been met on any reading: under the stability rule MICA leads on at most 6 of the
-10 datasets run.
+was not met on the datasets we ran: under the stability rule MICA leads on at most 6 of the 10,
+one short of 7, and the eleventh set, the Allen subset, was set aside for this rule.
 
 \subsection{The rule is also sensitive to the subsample draw} Repeating the rule at three
 independent seeds, which redraw the subsamples and reinitialise the clustering, moves the
 resulting ARI on the original grids by 0.09 on average for both methods and by as much as 0.46,
 from 0.474 to 0.934 for MICA on Buettner. On matched candidates it moves MICA by 0.09 and the
-baseline by 0.16 on average, and by as much as 0.50, from 0.361 to 0.863 for the baseline on
+baseline by 0.16 on average, and by as much as 0.50, from 0.361 to 0.862 for the baseline on
 Zeisel. The tie-break and the subsample draw each move ARI by about as much as the gap between
 the methods, and the threshold moves the chosen count in 35 of 54 runs on the original grids
 and 38 of 54 on matched candidates.
@@ -212,9 +212,13 @@ matrix exists, and that matrix takes 4 minutes and is computed once. On the orig
 choosing the setting by stability then adds 103 s for MICA and 107 s for the baseline. On
 PBMC14K one run of MICA as shipped at a fixed resolution takes under 12 minutes, almost all of it
 the HNSW search and node2vec, while the 13.2 minutes in Table~\ref{tab:graph} covers its sweep of
-40 Louvain resolutions. On the original grids, choosing the resolution took 103 minutes per seed
+40 Louvain resolutions. For the baseline we saved no time for a single clustering, but PCA, the
+neighbour graph and a sweep of 200 resolutions together took 2 to 3.3 minutes per seed in the
+Assignment 2 runs, so one clustering takes less than that. On the original grids, choosing the resolution took 103 minutes per seed
 for MICA against 8 for the baseline, even though our runner skips HNSW and takes exact neighbours for every subsample
-from one full distance matrix computed once. Across the nine small datasets selection takes
+from one full distance matrix computed once. MICA's selection times on PBMC14K leave that matrix
+out, as on every dataset, and its compute time here was not logged, so we cannot report it.
+Across the nine small datasets selection takes
 17 to 109 s for MICA and 14 to 225 s for the baseline, on 494 clusterings for MICA and 468 to
 1,040 for the baseline, and MICA's distance matrix, 4 to 6 minutes on the two datasets above
 2,500 cells, is shared across every setting and seed. Without the exactness property it would
@@ -222,8 +226,8 @@ be rebuilt for each of the 25 subsamples. On matched candidates, with one settin
 selection takes a median of 25 s for MICA and 9 s for the baseline per small-dataset run, and 93
 and 7.5 minutes per seed on PBMC14K. These matched times leave out the full-data sweep that
 fixes the shared counts, which the log timestamps put, with loading, at 10 to 36 s per
-small-dataset run and about 16 minutes per PBMC14K seed. Cost is no reason to prefer either method at this
-size, but it bounds the study: graph-mode selection is why the large-dataset evidence rests on
+small-dataset run and about 16 minutes per PBMC14K seed. Cost is no reason to prefer either method on the small
+datasets, but it bounds the study: graph-mode selection is why the large-dataset evidence rests on
 one dataset.
 
 \input{tables/a3_graph_cost}

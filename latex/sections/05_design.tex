@@ -71,8 +71,8 @@ candidates, is run with three independent seeds, which redraw the subsamples and
 median across those runs with the full range of chosen cluster counts. Per-dataset ARI
 ranges are in \texttt{results/a3\_seed\_variation.csv} for the runs as first specified and in
 \texttt{results/a3\_matched\_seed\_variation.csv} for the matched runs. MICA's $k$-means uses 50 restarts
-within a run, enough to reach its own optimum reliably, which are restarts rather than
-repeats. The default rule was run at three seeds and the silhouette rule, which involves no
+within a run, which are restarts rather than repeats, and its ARI at a fixed $k$ can still move
+across seeds (Section~\ref{sec:discussion}). The default rule was run at three seeds and the silhouette rule, which involves no
 resampling, at one.
 Where a range is reported it is the observed minimum and maximum, not a confidence
 interval, because three runs are too few to justify one.
@@ -80,7 +80,7 @@ interval, because three runs are too few to justify one.
 \subsection{Measures}
 Agreement with the labels is the ARI in the main table. The adjusted mutual information is in
 Table~\ref{tab:ami} for the rules as first specified and in Sections~\ref{sec:matched}
-and~\ref{sec:pbmc} for the matched runs. The ARI is the stricter of the two here in both directions: across MICA's 54
+and~\ref{sec:pbmc} for the matched runs. The ARI is on average the stricter of the two here, in both directions: across MICA's 54
 stability picks on the original grids the AMI sits above it by 0.17 on average when the
 rule chose too many clusters and by 0.12 when it chose too few, which it did in 35 of them. We also report $|P_{\hat{s}}|$, the number of clusters the rule chose, because a
 rule can reach a respectable ARI with a badly wrong number of clusters, and a user would
@@ -96,8 +96,12 @@ shared counts, so those times leave that sweep out, and we give its duration fro
 timestamps.
 
 \subsection{Graph comparison}
-The faster neighbour graph is compared with MICA's own on PBMC14K and on 100,000 cells of the
-Allen brain atlas, both fed to MICA's own node2vec and Louvain so that only the graph differs.
+The faster neighbour graph is compared with MICA's own on PBMC14K and on 100,000 cells drawn at
+random from the 10x v3 data of the Allen whole mouse brain atlas \cite{yao2023allen}, both fed to
+MICA's own node2vec and Louvain so that only the graph differs. Unlike the benchmark datasets, we
+preprocessed these cells ourselves from the raw counts ($\log_2(\mathrm{CPM}+1)$, with 100,000
+cells and 28,536 genes after filtering), and their ARI and AMI are scored against the atlas's 34
+cell classes, which its authors derived by clustering.
 The candidate count follows one stated rule: the smallest value on a doubling grid whose
 recall on 500 brute-forced query cells reaches that of MICA's search. We wrote it after
 Assignment 2 had picked 800 and 3,200 from the same recall audits, and it gives those counts

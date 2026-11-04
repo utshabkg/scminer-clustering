@@ -57,7 +57,7 @@ This submission makes three contributions.
 \textbf{A measurement of what label-free selection costs, and of how unstable that cost
 is.} The closest work establishes that benchmarks tuned on labels are optimistic
 \cite{ullmann2023overoptimistic} and supplies rules meant to replace that tuning
-\cite{pattersoncross2021chooser,liu2021multik}, but none has been applied to mutual
+\cite{pattersoncross2021chooser,liu2021multik}, but we found none applied to mutual
 information clustering, and the scMINER benchmark reports no label-free result at all. We
 supply that measurement, and find that the tie-break and the random subsample draw inside a
 single rule each move the result by as much as the gap between the two methods, and that a
@@ -67,7 +67,7 @@ unlabelled data should do differently.
 \textbf{Evidence that a cap is not a match, and of what remains once the candidates are
 matched.} The reversal came from candidate counts one method could reach and the other could
 not, and it disappears when both are offered the same counts, one setting each. What remains
-is MICA's: its stability scores are flat at the top, mostly on datasets of a few hundred cells,
+falls on both methods, but the ties are largely MICA's: its stability scores are flat at the top, mostly on datasets of a few hundred cells,
 and the rule's two readings break that tie in opposite directions. We also prove and test an
 exact identity, that MICA's distance on a subset of cells equals the
 corresponding submatrix of the full one, which makes the experiment affordable.

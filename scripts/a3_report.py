@@ -204,8 +204,8 @@ def main():
     (TABLES / "a3_ami.tex").write_text(
         "\\begin{table*}[t]\n\\centering\n\\caption{Adjusted mutual information for the same chosen partitions "
         "as Table~\\ref{tab:rulesall}, on the same runs. The AMI and the ARI agree on which method leads under "
-        "every rule. The AMI sits above the ARI whenever the chosen count is wrong, in either direction, and it is "
-        "much more forgiving of a partition that merges cell types, such as MICA\'s 2-cluster pick on "
+        "every rule. The AMI usually sits above the ARI when the chosen count is wrong, in either direction, and it "
+        "is much more forgiving of a partition that merges cell types, such as MICA\'s 2-cluster pick on "
         "Pollen.}\n\\label{tab:ami}\n\\footnotesize\n\\setlength{\\tabcolsep}{4pt}\n"
         f"\\begin{{tabular}}{{l{'cc' * len(have)}}}\n\\toprule\n & {groups} \\\\\n{cmid}\nDataset (types) & "
         f"{heads} \\\\\n\\midrule\n" + "\n".join(arows) + "\n\\bottomrule\n\\end{tabular}\n\\end{table*}\n")

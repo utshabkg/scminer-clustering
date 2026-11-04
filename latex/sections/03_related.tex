@@ -1,4 +1,10 @@
 \section{Closest Work}\label{sec:related}
+The Introduction asked whether MICA's reported advantage survives when no labels pick the
+setting. Four bodies of work bear on that question: MICA's own benchmark, rules that choose a
+clustering without labels, evidence that tuning on labels flatters a method, and ways to scale
+the neighbour graph. The first three lead to the measurement we make, and the fourth to our
+graph comparison.
+
 \subsection{The method under test}
 scMINER \cite{pan2025scminer} introduces MICA and reports a mean adjusted Rand index
 (ARI) of 0.84 across ten labelled datasets, against 0.73 for Seurat and 0.68 for Scanpy,
@@ -16,9 +22,9 @@ chooseR \cite{pattersoncross2021chooser} is the rule we adopt. It reruns a pipel
 random 80 percent subsamples per candidate setting, scores each setting by how reliably
 cells co-cluster, and keeps the finest setting that stays above a threshold derived from
 the settings themselves. Its authors note that preferring the finest acceptable setting
-leans toward mild overclustering. It has not been applied to a mutual information method,
-and the data it was demonstrated on, roughly 11,000 cells, is an order of magnitude larger
-than nine of our ten datasets.
+leans toward mild overclustering. We found no application of it to a mutual information
+method, and the main data it was demonstrated on, roughly 11,000 cells, is larger than nine of
+our ten datasets.
 
 Two relatives return several answers instead of one: MultiK \cite{liu2021multik} pools
 4,000 subsampled Seurat runs by cluster count, and Yu et al. \cite{yu2022benchmarking}

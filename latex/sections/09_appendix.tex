@@ -3,7 +3,7 @@ The manuscript source is in the Overleaf project linked \overleaflink. The code,
 result files and the notebook are at \url{https://github.com/utshabkg/scminer-clustering}.
 
 \texttt{notebooks/assignment3\_results.ipynb} rebuilds every table and figure in this
-paper from the saved result files and displays them with the rows behind them, so the
+paper from the saved result files and prints many of the numbers behind them, so the
 displays can be checked without rerunning an experiment. Appendix~\ref{app:repro} gives
 the layout of those files and the commands that produced them.
 
@@ -46,8 +46,8 @@ normalisation of the mutual information and in the cluster counts their grids re
 
 \section{The default and silhouette rules}\label{app:secondary}
 The body concentrates on the stability rule's two readings. The default and the silhouette rule
-carry choices of their own, and both favour MICA for reasons that have little to do with its
-clustering.
+carry choices of their own, and the default favours MICA for reasons that have little to do with
+its clustering.
 
 \textbf{The shipped default.}
 MICA's best result comes from its own shipped default, which returns four clusters whatever
@@ -57,13 +57,17 @@ the default scores 0.802 where the true count is 3 to 5 and 0.579 outside. We ca
 how it was chosen, but tuning $k$ on the other eight datasets' labels picks 4 in 26 of 27 cases
 (Appendix~\ref{app:transfer}), so the default is what tuning on this benchmark would select.
 Its apparent strength is a property of this benchmark's composition rather than of the method,
-and it would not carry over to tissue with a different number of types. The baseline's default is a resolution rather than a count, and it overclusters
+and the drop outside 3 to 5 types gives no reason to expect it to carry over to tissue with many
+more types. The baseline's default is a resolution rather than a count, and it overclusters
 badly here, reaching 21 clusters on Zeisel.
 
-\textbf{The silhouette rule.} It carries a third such choice. Scoring the same partitions in the 50
+\textbf{The silhouette rule.} It depends on the space it is scored in. Scoring the same partitions in the 50
 principal components rather than in MICA's own embedding changes the selected ARI by 0.13
 on average for MICA and 0.16 for the baseline, reaching 0.52, with only the space changing
-(Appendix~\ref{app:repro}). On matched candidates, where both methods are offered the same
+(Appendix~\ref{app:repro}). The order depends on it too: in MICA's own embedding MICA trails, 0.493
+against 0.549 under the shared cap and 0.493 against 0.497 on matched candidates, so the lead
+holds only for the 50 principal components we fixed as the shared space. In those components,
+on matched candidates, where both methods are offered the same
 counts, MICA's mean holds at 0.593 while the baseline's falls from 0.564 to 0.478, since it then
 picks 2 clusters on seven of the nine datasets.
 
@@ -78,12 +82,13 @@ The baseline's tuned resolution lies between 0.22 and 0.30 and gives 2 to 8 clus
 
 \section{Adjusted mutual information}\label{app:ami}
 Table~\ref{tab:ami} gives the AMI for the same chosen partitions as Table~\ref{tab:rulesall}.
-The two measures agree on which method leads under every rule. The AMI sits above the ARI
-whenever the chosen count is wrong, by 0.17 on average across MICA's stability picks with too
-many clusters and 0.12 with too few, and it can be far more forgiving of a partition that merges
-types: on Pollen MICA's 17-cluster partition scores 0.898 under ARI and 0.913 under AMI, while
-its 2-cluster partition scores 0.087 and 0.318. Being the stricter of the two in both
-directions is why we report the ARI in the main table.
+The two measures agree on which method leads under every rule. The AMI usually sits above the
+ARI when the chosen count is wrong, though not always: the baseline's 8-cluster pick on Zeisel
+scores 0.855 under ARI and 0.815 under AMI. On average it sits above by 0.17 across MICA's
+stability picks with too many clusters and 0.12 with too few, and it can be far more forgiving of
+a partition that merges types: on Pollen MICA's 17-cluster partition scores 0.898 under ARI and 0.913 under AMI, while
+its 2-cluster partition scores 0.087 and 0.318. Being the stricter of the two on average, in
+both directions, is why we report the ARI in the main table.
 
 \input{tables/a3_ami}
 
@@ -137,9 +142,10 @@ among the counts every method reaches. $k$-means uses 50
 restarts. The bootstrap for the stability threshold is a percentile bootstrap over cells with
 2,000 resamples, where chooseR specifies BCa with 25,000. The two differ only in the
 lower bound they give, which is what sets the threshold. We first assumed this would not
-matter and then tested it, with the result reported in Section~\ref{sec:results}: the
-chosen cluster count is sensitive to shifts of this size, so the difference between the
-two bootstraps could change the selection. This is the clearest unverified assumption
+matter, and we have not compared the two bootstraps. Section~\ref{sec:results} relaxes the
+threshold by at most 0.02, a size we took as plausible without measuring it, and the chosen
+cluster count is sensitive to that, so the difference between the two bootstraps could change the
+selection. This is the clearest unverified assumption
 remaining in our implementation, and settling it needs a run against chooseR's own R
 code.
 

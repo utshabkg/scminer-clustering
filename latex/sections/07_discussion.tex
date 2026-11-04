@@ -1,10 +1,15 @@
 \section{Discussion}\label{sec:discussion}
+The results answer the main question only in part. We state that answer first, then say why the
+results came out this way, what a user should change and what limits the findings.
+
 \subsection{What is now answered}
 On the nine small datasets MICA's reported advantage survives in direction under this rule,
 and the matched runs show it more cleanly than the runs as first specified. Offered the same
 cluster counts as the baseline, one setting each, MICA has the higher mean under both readings
 of the stability rule at every seed, 0.662 against 0.543 and 0.473 against 0.452, and under the
-silhouette rule on the same candidates, 0.593 against 0.478. It also has the higher mean under
+silhouette rule on the same candidates scored in the 50 principal components, 0.593 against
+0.478, a lead that does not hold in MICA's own embedding (Appendix~\ref{app:secondary}). It also
+has the higher mean under
 the shipped defaults and the label-informed transfer, but these add no support: the defaults
 favour MICA for reasons of their own (Appendix~\ref{app:secondary}), and the transfer picks
 MICA's default (Section~\ref{sec:transfer}). The reversal we first saw came from the candidates.
@@ -21,18 +26,21 @@ could not have produced. A cap on the range does not prevent it, and matching th
 
 \subsection{Why it happens}
 The matched runs separate two sources of ambiguity. The first is the candidates, which
-explained the reversal. The second belongs to MICA. Its stability scores are flat at the top,
+explained the reversal. The second is ties at the top of the stability scores, and it is mostly
+MICA's. Its scores are flat at the top,
 and matching the candidates leaves that unchanged, with 40 percent of its settings tied with
 the best against 14 percent for the baseline. The two readings break such a tie in opposite
 directions, the plain maximum toward fewer clusters and chooseR's toward more, which is why they
-move MICA's result further apart, 0.197 per dataset against 0.118.
+move MICA's result further apart, 0.197 per dataset against 0.118. The baseline is not free of
+this, since its own figure rose from 0.067 once matched, and the subsample draw, a separate
+source, moves the baseline more, 0.16 against 0.09.
 
 Buettner aside, the flat top is concentrated in the smallest datasets. On the five with 124 to 317 cells
 MICA's tied settings span 10.6 cluster counts against the baseline's 4.2, and on Yan 81 percent
 of its settings reproduce perfectly. On the four larger datasets the spans are 3.3 against 1.3,
-and on 2,500 PBMC14K cells neither of MICA's modes shows it. That favours the small-sample
-explanation we flagged in Assignment 2 over the mode, though nine datasets cannot separate size
-from the datasets themselves. We had proposed that MICA's partitions are too reproducible for
+and on 2,500 PBMC14K cells neither of MICA's modes shows it. That favours a small-sample
+explanation over the mode, though nine datasets cannot separate size from the datasets
+themselves. We had suspected that MICA's partitions are too reproducible for
 reproducibility to discriminate, because its distance between two cells does not change when the
 sample does. That property is exact in both modes and may matter most when cells are few, but we
 have not tested it in isolation. The $k$-means step that follows is not deterministic either: at
@@ -62,8 +70,8 @@ dataset in the selection comparison. We use 25 subsamples where chooseR specifie
 and lower the threshold, and we did not rerun at 100. We report an observed range over three
 seeds rather than a confidence interval, because three runs do not support one. Our implementation follows
 chooseR's published description rather than running the authors' R code, and since the
-threshold check shows the choice is sensitive at the level a bootstrap difference could
-produce, a discrepancy in our reading would propagate to every stability result in the paper,
+threshold check shows the choice is sensitive to a shift of 0.02, a size we assumed rather than
+measured, a discrepancy in our reading could propagate to every stability result in the paper,
 the matched comparison of Table~\ref{tab:matched} included. The graph comparison covers two datasets, lets the labels pick the
 resolution so that only the graph differs, and compares numpy against compiled code, so it
 bounds the cost of the two graphs on this machine rather than ranking the algorithms in
