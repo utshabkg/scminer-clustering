@@ -120,7 +120,7 @@ There are 57 tasks: 40 for Utshab, 9 for Laraib and 8 for Rhea. Three of them (L
 | R-4 | Rare population sheets | From the per-cluster counts, work out how many reference cell types survive clustering and which ones vanish, then summarize | `results/rq2_atlas/rare_summary.csv` | summary table with a short written finding | Nov 18 | M6 | `[!]` on hold, the full atlas run is deferred |
 | R-5 | Annotation audit | For about 50 sampled annotations, use the rubric to mark whether the quoted text really supports the proposed name, yes or no, with a reason | `results/rq3_rag/audit.csv` | 50 rows scored | Nov 25 | M7 | `[!]` on hold, the annotation work is deferred |
 | R-6 | Slide outline | Draft 10 to 12 slides: problem, limitation, our questions, method, results, what we learned | `docs/slides_outline.md` | outline agreed in the meeting | Nov 25 | M7 | `[ ]` |
-| R-7 | Number consistency check | Every number in the text matches the tables, and every table is referenced somewhere. A first pass on the Assignment 3 report by Nov 3, the full pass on the final draft | the paper | one pass with corrections listed | Nov 3, then Dec 2 | M8 | `[ ]` |
+| R-7 | Number consistency check | Every number in the text matches the tables, and every table is referenced somewhere. A first pass on the Assignment 3 report by Nov 3, the full pass on the final draft | the paper | one pass with corrections listed | Nov 3, then Dec 2 | M8 | `[~]` first pass done Nov 2, see `docs/r7_number_check.md`. Full pass on the final draft by Dec 2 |
 | R-8 | Update the progress file | After each meeting, refresh the milestone status table at the top of the progress log | `PROGRESS.md` | percentages match the task statuses | weekly | every week | `[ ]` |
 
 ## Weekly schedule

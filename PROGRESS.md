@@ -21,7 +21,20 @@ Updated: 2026-10-31. Counts follow the Milestone column in `WORKPLAN.md`.
 
 Overall: 35 of 57 tasks finished. Three of the 57 repeat every week. The counts above are read off the status markers in `WORKPLAN.md`.
 
-Next three things: Rhea's number check (R-7) and Laraib's discussion check (L-9) by Nov 3 noon, submit Assignment 3 on Nov 4, and a decision on whether to write to the scMINER authors (U-30).
+Next three things: confirm Overleaf has the final text and act on the R-7 flags, Laraib's discussion check (L-9) by Nov 3 noon, then submit Assignment 3 on Nov 4. Still open: whether to write to the scMINER authors (U-30).
+
+---
+
+## 2026-11-02, Rhea
+
+First pass of the number check (R-7) on the Assignment 3 report, flags only. Nothing in `latex/` was changed. The full list is in `docs/r7_number_check.md`.
+
+- Checked the repo `.tex` (last LaTeX change Oct 31) against `a3_report_numbers.json`, `a3_matched_numbers.json`, the two seed-variation CSVs and `a3_matched_mechanism.csv`, and recomputed from the per-run `metrics.csv` files anything missing from those. Tables I and II match the CSVs cell for cell, and every table and the figure is cited in the text.
+- **Most urgent:** the Overleaf PDF compiled on Nov 2 at 20:32 is the old draft, from before the matched runs: no matched, summary or transfer table, and it still has the "Plan through November 4" section. Check that Overleaf has the Oct 31 commits before submitting.
+- The subsample-draw subsection (Results) holds only on the original grids. On matched candidates the baseline's seed range averages 0.157 against MICA's 0.089, with a largest move of 0.50 for the baseline on Zeisel, and the threshold figure is 38 of 54, not 35.
+- On PBMC14K, one range ("0.785 to 0.875") mixes the two grids. One sentence ("0.876 to 0.878") gives the original-grid figure without saying so. "About 11 minutes" for one MICA run disagrees with Table IV's 13.2 min.
+- `a3_report_numbers.json` stores selection-time medians of 31.6 s and 25.1 s. The per-run files give 21.8 s and 18.7 s, which is what Table III prints. The JSON needs regenerating.
+- Not verifiable from the repo: the distance-matrix and matched-sweep times, which come from `logs/`, and that folder is not on GitHub.
 
 ---
 
