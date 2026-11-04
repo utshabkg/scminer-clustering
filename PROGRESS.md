@@ -5,23 +5,70 @@ Utshab adds an entry at the end of each working session. Laraib and Rhea add a l
 
 ## Where we stand
 
-Updated: 2026-10-31. Counts follow the Milestone column in `WORKPLAN.md`.
+Updated: 2026-11-04. Counts follow the Milestone column in `WORKPLAN.md`.
 
 | Milestone | Due | Tasks done | Percent | State |
 |-----------|-----|------------|---------|-------|
 | M1 software, small data ready | Oct 7 | 8 of 8 | 100% | Done. Laraib's Zeisel card (L-1) merged on Oct 14 |
 | M2 reproduce the paper, Assignment 2 report | Oct 14 | 8 of 9 | 89% | Ten benchmark sets run, nine reproduce within 0.05. Report submitted (U-31). Laraib's PBMC14K card (L-2) done Oct 30. Left: contacting the authors (U-30) |
 | M3 cluster count without labels | Oct 21 | 8 of 9 | 89% | The stability rule (U-32) is done on all ten datasets, including PBMC14K in graph mode. The results summary (R-1) and paper tables (R-2) are done. Laraib's Allen card (L-3) done Oct 30. Left: significance rule (U-33, set aside) |
-| M4 what the similarity measures, atlas downloaded | Oct 28 | 5 of 7 | 71% | Diagnostics, atlas, pilot and the shared-space silhouette (U-35) done. Left: label-free Leiden on Allen (U-36), related work table (L-4) |
+| M4 what the similarity measures, atlas downloaded | Oct 28 | 6 of 7 | 86% | Diagnostics, atlas, pilot and the shared-space silhouette (U-35) done. Laraib's related work table (L-4) done Nov 2. Left: label-free Leiden on Allen (U-36, set aside) |
 | M5 main experiments complete | Nov 4 | 6 of 8 | 75% | Distance check (U-17), CPU fast neighbor search (U-19), mode against size (U-39), matched grids (U-40), transfer comparison (U-34, Allen part set aside) and the final table (U-37) done. Left: the discussion check (L-9), GPU search (U-18, deferred) |
 | M6 gated extras | Nov 11 | 0 of 6 | 0% | Not started. The GPU search (U-18), the annotation comparison (U-22, U-23) and the optional checks (U-38) all depend on the Nov 4 result |
 | M7 full manuscript draft | Nov 18 | 0 of 4 | 0% | Not started |
 | M8 revision and slides | Dec 2 | 0 of 3 | 0% | Not started |
 | Every week: notes, plan and progress updates | weekly | | | L-7, R-3 and R-8 |
 
-Overall: 35 of 57 tasks finished. Three of the 57 repeat every week. The counts above are read off the status markers in `WORKPLAN.md`.
+Overall: 36 of 57 tasks finished. Three of the 57 repeat every week. The counts above are read off the status markers in `WORKPLAN.md`.
 
-Next three things: confirm Overleaf has the final text and act on the R-7 flags, Laraib's discussion check (L-9) by Nov 3 noon, then submit Assignment 3 on Nov 4. Still open: whether to write to the scMINER authors (U-30).
+Next three things: pull the final text into Overleaf and confirm the PDF, submit Assignment 3 today, and repeat Laraib's discussion check (L-9) on the current text. Still open: whether to write to the scMINER authors (U-30).
+
+---
+
+## 2026-11-04, Utshab (Assignment 3 due today)
+
+**Both teammate reviews are in and acted on (16:25 CST).** Every point was recomputed before any text
+changed. Rhea's PR #4 is merged.
+
+*Rhea's R-7 first pass, `docs/r7_number_check.md`. All confirmed:*
+- Subsample draw: the paragraph held only on the original grids. It now gives both: MICA 0.09 and
+  baseline 0.16 on matched candidates, up to 0.50 for the baseline on Zeisel (0.361 to 0.863), and
+  the threshold at 35 and 38 of 54. Now in `seed_variation_nine_small` in both JSON files.
+- PBMC14K: each grid's range is separate, 0.785 to 0.873 (original) and 0.786 to 0.875 (matched).
+  0.876 to 0.878 holds on both grids' full sweeps, and among the matched candidates offered it is
+  0.871 to 0.875. Now in the JSON files (`pbmc14k_original_grid`, `pbmc14k_best_setting`).
+- "About 11 minutes" against Table IV's 13.2: not a contradiction, since Table IV covers the sweep
+  of 40 Louvain resolutions. The text now says "under 12 minutes" for one fixed resolution and
+  explains the difference. HNSW 429 s, node2vec 250 to 257 s, at most about 20 s for one Louvain.
+- `a3_report_numbers.json` selection medians (31.6 and 25.1 s) were not stale. The script took a
+  median of per-dataset medians and included PBMC14K, so regenerating would not have fixed them.
+  It now uses the 27 small-dataset runs, 21.8 and 18.7 s as in Table III, under the key
+  `seconds_median_over_small_runs`, and no longer writes NaN for rules that were not timed.
+- Minor: the matched MICA median of 24.5 s now prints as 25 in text and table (plain formatting
+  rounded it down), the Zeisel cost sentence names its grid, and the per-run tied span in the
+  JSON is renamed `tied_span_per_run` so it cannot be quoted for the pooled figure.
+- What Rhea could not check, since `logs/` is not on GitHub, is confirmed: distance matrix 250 s on
+  Zeisel and 367 s on Klein, matched sweep plus loading 9.7 to 36.2 s per small run and 948 to 962 s
+  per PBMC14K seed. New `scripts/log_timings.py` saves these to `results/a3_log_timings.csv`.
+
+*Laraib's L-9 check reviewed the old Overleaf draft, from before the matched runs.* Rhea's flag about
+the old PDF explains it. "By small margins", 82/70/47 percent, 0.123 and Table IV as the four-rule
+table appear in the paper up to commit `7d11f08` and not in the current text.
+- Still applies, fixed: the bootstrap point. We never compared 25 and 100 subsamples, so design,
+  discussion and introduction now say fewer subsamples "may" widen the intervals, that we did not
+  rerun at 100, and that the threshold check is a related check. The results now also say 0.02 is
+  an assumed size, not a measured one.
+- Still applies, fixed: traceability. The 0.267 is now computed in `a3_report.py`
+  (`mica_largest_seed_range_at_fixed_k`), and the discussion points to the appendix for sources.
+- Already resolved by the matched runs: the sensitivity point, the point that candidates do not
+  remove all instability, and "by small margins". The appendix now also calls the post hoc
+  restriction a sensitivity check, in Laraib's words.
+- The completion plan no longer claims the discussion check covered this submission. It says the
+  check covered an earlier version and will be repeated on the draft. L-9 stays open for that.
+
+**Still pending (16:25 CST).**
+- Utshab: pull the final text into Overleaf, confirm the PDF, submit.
+- Final independent check of the passages changed today.
 
 ---
 
@@ -202,7 +249,7 @@ Assignment 2 used. The paper states it as declared now, not as declared then.
 - Zeisel: MICA's distance matrix 250 s, once. One clustering at a fixed setting takes seconds
   for either method. Choosing by stability adds 103 s for MICA and 107 s for the baseline.
 - PBMC14K, graph mode: one MICA clustering at a fixed resolution is about 11 minutes, HNSW
-  429 s plus node2vec 250 s plus about 2.5 s for one Louvain resolution. Choosing the resolution
+  429 s plus node2vec 250 s plus about 2.5 s for one Louvain resolution (corrected Nov 4: 2.5 s is the wall time per resolution shared across 8 workers, so one resolution alone takes up to about 20 s, and the run is under 12 minutes). Choosing the resolution
   takes 6,171 s per seed for MICA (median of three, about 103 min) and 490 s for the baseline
   (about 8 min).
 - The PBMC14K full distance matrix used by the graph-mode stability runner has no logged
