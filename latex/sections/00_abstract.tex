@@ -3,24 +3,18 @@ Benchmarks for single-cell clustering usually fix each method's setting with the
 labels, so their scores assume information a user does not have. We ask what happens to the
 advantage scMINER reports for its mutual information clustering, MICA, over a principal
 component and Leiden pipeline when one label-free rule chooses the setting for both. The rule
-is subsampling stability in the style of chooseR, fixed before scoring and run at three seeds
-on all ten benchmark datasets. As first specified, MICA leads under three of four rules on
-the nine small datasets, narrowly under two of them, but its mean adjusted Rand index moves by 0.255 across rules
-against 0.120 for the baseline, and two readings of the same stability scores reverse the
-ranking. The reversal comes from the candidates: capping both methods at 20 clusters does not
-give them the same cluster counts. Rerun with both offered the same counts, one setting each,
-MICA leads under both readings at every seed, 0.662 against 0.543 and 0.473 against 0.452,
-because the baseline falls once its grid reaches coarse partitions. MICA's own ambiguity
-remains. Its stability scores are flat at the top, mostly on datasets of a few hundred cells,
-and the tie-break still moves it more, 0.20 against 0.12 per dataset. Tuned on the other
-datasets' labels, MICA picks its shipped default of four clusters in 26 of 27 cases. On PBMC14K, the one large
-benchmark dataset, both methods choose at or near the coarsest count on offer, they tie under
-the plain maximum, and a 0.02 change in the rule's threshold reverses which leads. We also
-compare a faster
-neighbour graph, a correlation shortlist rescored exactly, with MICA's own search. On PBMC14K
-it matches MICA's recall and clustering in a small fraction of the build time. On 100,000
-Allen cells it takes less than half the build time and reaches higher recall, but gives no better
-clustering. On both it needs three to four times the memory.
+is subsampling stability in the style of chooseR, run at three seeds on all ten benchmark
+datasets. Under a shared cap of 20 clusters, two readings of the same stability scores reverse
+the ranking on the nine small datasets. The reversal comes from the candidates, because a cap
+does not give the methods the same cluster counts. Offered the same counts, one setting each,
+MICA leads under both readings at every seed, 0.662 against 0.543 and 0.473 against 0.452 in
+mean adjusted Rand index. Its own ambiguity remains. Its stability scores are flat at the top,
+mostly on datasets of a few hundred cells, and the choice of reading still moves it more than the
+baseline. On PBMC14K, the one large benchmark dataset, the methods tie under one reading, and
+under the other a 0.02 change in its threshold reverses which leads. We also compare a faster
+neighbour graph, a correlation shortlist rescored exactly, with MICA's own search. It builds the
+graph 24 times faster on PBMC14K and 2.2 times faster on 100,000 Allen cells, but needs three to
+four times the memory to build and gives no better clustering.
 \end{abstract}
 
 \begin{IEEEkeywords}

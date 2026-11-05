@@ -1,7 +1,4 @@
-\section{Code, data and the Overleaf project}\label{app:links}
-The manuscript source is in the Overleaf project linked \overleaflink. The code, the saved
-result files and the notebook are at \url{https://github.com/utshabkg/scminer-clustering}.
-
+\section{Code and data}\label{app:links}
 \texttt{notebooks/assignment3\_results.ipynb} rebuilds every table and figure in this
 paper from the saved result files and prints many of the numbers behind them, so the
 displays can be checked without rerunning an experiment. Appendix~\ref{app:repro} gives
@@ -16,9 +13,15 @@ move together in the runs as shipped.
 \input{tables/a3_datasets}
 
 \section{All four rules in one table}\label{app:rulesall}
-Table~\ref{tab:rulesall} puts the two stability readings of Table~\ref{tab:rules} beside
-the shipped defaults and the shared-space silhouette, so the spread across rules quoted in
-Section~\ref{sec:results} can be read off directly.
+Table~\ref{tab:rulesall} gives the per-dataset picks on each method's original grid under the two
+stability readings, the shipped defaults and the shared-space silhouette, so the spread across rules
+quoted in Section~\ref{sec:results} can be read off directly. The Assignment 2 plan counted a win for MICA
+if, under the stability rule, its median ARI was higher on at least 7 of 11 sets and higher on
+average by 0.05. We dropped that count after the feedback. It was not met on the datasets we ran:
+under the stability rule MICA leads on at most 6 of the 10, one short of 7, and the eleventh set,
+the Allen subset, was set aside for this rule. On the original grids the overclustering already
+shows, with 19 clusters on Yan, 17 on Pollen and 11 on Chung under chooseR's reading, and the counts
+move with the seed, by 3 clusters on Pollen and 1 on Yan.
 
 \input{tables/a3_rules_all}
 
@@ -33,14 +36,27 @@ grids do to the ranking and not a fair comparison, which is why the matched runs
 Section~\ref{sec:matched} replace it as the comparison we rely on. The largest gains in MICA's finest-stable ARI are
 on Yan, where its pick falls from 19 clusters to 7 and its ARI rises from 0.496 to 0.925, and on
 Klein, by 0.36. On Pollen the pick falls from 17 to the true 11 at 0.969, though 11 is also the
-most clusters the baseline makes there.
+most clusters the baseline makes there. This check suggested a larger lead than the matched runs
+give, 0.772 to 0.632 under chooseR's reading, because it held MICA to the baseline's narrow range.
+Offered the full range again, MICA picks 19 or 20 clusters on Yan. Where all 19 counts were offered
+in the matched runs, MICA's picks are the same as on its original grid in 8 of 8 cases.
 
 \input{tables/a3_common_range}
 
 \section{Mode against size}\label{app:modesize}
 Table~\ref{tab:modesize} gives the three arms of the test in Section~\ref{sec:modesize}. Within a
 seed the cells, the subsamples and the labels are shared. The pipelines differ in their
-normalisation of the mutual information and in the cluster counts their grids reach.
+normalisation of the mutual information and in the cluster counts their grids reach, so the test
+says nothing about the mutual information distance itself. On the original grids the difference
+looks like a mode effect: in small-data mode the two readings choose differently on every pool, by a
+median of 0.319 ARI, and in graph mode on none. But graph mode makes few coarse partitions. On MICA's
+own grid, up to a resolution of 4.0, it made no fewer than 4 or 5 clusters on these pools. Extending
+the resolution to 30 lowers that floor to 4, 3 and 2 clusters, while small-data mode's $k$ reaches 2
+on every pool. The matched candidates, the counts all three arms reach, start at 4, 4 and 3. On them
+the difference shrinks but does not vanish. The two readings now differ on 2 of 3 pools in small-data mode, by a
+median of 0.185 ARI, against 1 of 3 in graph mode and for the baseline. The tied counts span 3, 1 and 3 in small-data mode against
+1, 1 and 1 in graph mode and 1, 1 and 2 for the baseline, and every arm picks 3 to 5 clusters where
+there are 7 types.
 
 \input{tables/a3_mode_size}
 
@@ -50,33 +66,32 @@ carry choices of their own, and the default favours MICA for reasons that have l
 its clustering.
 
 \textbf{The shipped default.}
-MICA's best result comes from its own shipped default, which returns four clusters whatever
-the dataset: a mean ARI of 0.727, leading on seven of nine datasets. The median number of
-cell types across these datasets is also four, and three have exactly four. Split by that,
-the default scores 0.802 where the true count is 3 to 5 and 0.579 outside. We cannot show
-how it was chosen, but tuning $k$ on the other eight datasets' labels picks 4 in 26 of 27 cases
-(Appendix~\ref{app:transfer}), so the default is what tuning on this benchmark would select.
-Its apparent strength is a property of this benchmark's composition rather than of the method,
-and the drop outside 3 to 5 types gives no reason to expect it to carry over to tissue with many
-more types. The baseline's default is a resolution rather than a count, and it overclusters
-badly here, reaching 21 clusters on Zeisel.
+MICA's default of four clusters leads on seven of nine datasets, and three of them have exactly
+four types. We cannot show how it was chosen, but its apparent strength is a property of this
+benchmark's composition rather than of the method, and the drop outside 3 to 5 types gives no reason
+to expect it to carry over to tissue with many more types. The baseline's default is a resolution
+rather than a count, and it overclusters badly here, reaching 21 clusters on Zeisel.
 
 \textbf{The silhouette rule.} It depends on the space it is scored in. Scoring the same partitions in the 50
 principal components rather than in MICA's own embedding changes the selected ARI by 0.13
 on average for MICA and 0.16 for the baseline, reaching 0.52, with only the space changing
 (Appendix~\ref{app:repro}). The order depends on it too: in MICA's own embedding MICA trails, 0.493
 against 0.549 under the shared cap and 0.493 against 0.497 on matched candidates, so the lead
-holds only for the 50 principal components we fixed as the shared space. In those components,
-on matched candidates, where both methods are offered the same
-counts, MICA's mean holds at 0.593 while the baseline's falls from 0.564 to 0.478, since it then
-picks 2 clusters on seven of the nine datasets.
+holds only for the 50 principal components we fixed as the shared space. In those components, on
+matched candidates, the baseline's fall to 0.478 comes as it picks 2 clusters on seven of the nine
+datasets.
 
 \section{The transfer comparison}\label{app:transfer}
 Table~\ref{tab:transfer} gives the transfer comparison of Section~\ref{sec:transfer} per
 dataset. It uses the other datasets' labels to choose each setting, so it answers how far a
 setting tuned on labelled benchmarks carries to a new one, not what a user could do without
 labels. MICA's tuned $k$ is 4 on every held-out dataset except Yan at one seed, where it is 3.
-The baseline's tuned resolution lies between 0.22 and 0.30 and gives 2 to 8 clusters.
+The baseline's tuned resolution lies between 0.22 and 0.30 and gives 2 to 8 clusters. MICA's setting
+is $k$ and the baseline's a resolution on the 300-point grid. PBMC14K takes the baseline's resolution
+that is best on the nine, which gives 6 clusters at 0.786, well above either method's label-free pick. MICA's
+graph mode has no setting that carries over from $k$, so MICA is not transferred there. The Assignment 2 plan proposed this rule in graph mode on Klein, Zeisel and PBMC14K.
+Transferring $k$ across the nine small datasets instead compares like with like and also tests MICA's
+shipped default.
 
 \input{tables/a3_transfer}
 
@@ -85,12 +100,51 @@ Table~\ref{tab:ami} gives the AMI for the same chosen partitions as Table~\ref{t
 The two measures agree on which method leads under every rule. The AMI usually sits above the
 ARI when the chosen count is wrong, though not always: the baseline's 8-cluster pick on Zeisel
 scores 0.855 under ARI and 0.815 under AMI. On average it sits above by 0.17 across MICA's
-stability picks with too many clusters and 0.12 with too few, and it can be far more forgiving of
+54 stability picks on the original grids when the rule chose too many clusters and by 0.12 when it
+chose too few, which it did in 35 of them, and it can be far more forgiving of
 a partition that merges types: on Pollen MICA's 17-cluster partition scores 0.898 under ARI and 0.913 under AMI, while
 its 2-cluster partition scores 0.087 and 0.318. Being the stricter of the two on average, in
 both directions, is why we report the ARI in the main table.
 
 \input{tables/a3_ami}
+
+\section{Further detail on ties, thresholds and cost}\label{app:cost}
+\textbf{Ties and thresholds.} On the original grids 38 percent of MICA's candidate settings score
+within 0.01 of its best, against 22 percent for the baseline, over a span of 7.3 cluster counts against
+2.7. On the four datasets with 622 to 2,903 cells at most 16 percent of MICA's settings score 1.0.
+Relaxing the threshold changes the count in 20 of 27 runs for MICA and 15 of 27 for the baseline on the
+original grids. We took 0.02 as a plausible size for the difference the choice of bootstrap or the number
+of subsamples could make to the threshold, without measuring it. MICA's picks on PBMC14K sit at resolution
+4.0 or 3.9, the top of its original grid, and the baseline's at 0.05, the bottom of its own, at 4 clusters.
+The baseline's best setting there scores 0.876 to 0.878, and on the original grid relaxing the threshold
+moves it to 0.785 to 0.873, while MICA's ARI peaks at 0.851 to 0.859. The shipped defaults there, 0.846 for MICA and 0.853 to 0.867 for the baseline, score above anything the rule picks at its stated threshold. On that grid both of MICA's readings
+select 5 clusters at all three seeds, with AMI 0.790 against 0.725. Across seeds on the original grids the rule
+moves the ARI by 0.09 on average for both methods and by as much as 0.46, from 0.474 to 0.934 for MICA on Buettner.
+
+The $k$-means step is not deterministic either: at a fixed $k$ MICA's ARI moves by as much as 0.267 across seeds, on
+Buettner at $k=7$. The rank correlation in Section~\ref{sec:results} means the signal points the right way and only sits in a band too
+narrow for a threshold to act on. The ambiguity we report is an observation and does not rest on either failed
+explanation.
+
+\textbf{Cost of selection.} On Zeisel stability selection adds 103 s for MICA and 107 s for the baseline on the
+original grids. Each run takes 494 clusterings for MICA and 468 to 1,040 for the baseline on the
+original grids. MICA's distance matrix takes 4 to 6 minutes on Klein and Zeisel and is
+shared across every setting and seed. Without the exactness property it would be rebuilt for each of the 25
+subsamples. On PBMC14K the 13.2 minutes in Table~\ref{tab:graph} covers MICA's sweep of 40 Louvain
+resolutions, and almost all of a single run is the HNSW search and node2vec. Our selection runner there skips
+HNSW and takes exact neighbours for every subsample from one full distance matrix computed once.
+
+\textbf{Graph comparison.} Our rescoring is numpy while MICA's search is compiled, both on 8 workers. Build times in Table~\ref{tab:graph} include loading the data and, for the shortlist,
+binning it once, which MICA's search does inside its distance, and peak memory covers the same steps. For MICA, recall,
+ARI and AMI come from the graph it built in Assignment 2, and time and memory from a rebuild with the same settings.
+node2vec and Louvain run unchanged on either graph. We did not measure whole-run memory for the shortlist. Our build is faster than the 2.4 minutes we reported in Assignment 2 because rescoring
+now uses an exact distance that skips genes where a cell sits in its lowest bin. We checked it by building the
+PBMC14K graph both ways: the neighbour lists are identical for every cell, and the dense path takes 87 s for the
+search alone. The build times were measured on the same day on the 120-core machine, with at most two builds
+running at once, always one MICA search beside one shortlist build, while the node2vec and Louvain times inside
+the Total column come from the Assignment 2 runs. Counting the search alone, every build ran faster in these runs
+than in Assignment 2: MICA's 2.1 times on PBMC14K and 1.4 times on Allen, our dense path 1.7 times and our Allen
+build 1.3 times. We therefore attribute part of the old timings to a busier machine.
 
 \section{Reproducing the results}\label{app:repro}
 \url{scripts/a3_report.py} rebuilds the figure and the tables of the runs as first specified
@@ -102,7 +156,7 @@ traceable to the run that produced it. The rest come from the per-run files: sel
 clustering counts from each run's \url{metrics.csv}, the distance-matrix, node2vec and matched
 sweep times from the logs, saved in \url{results/a3_log_timings.csv} by
 \url{scripts/log_timings.py}, and graph mode's cluster counts above a resolution of 4.0 from
-\url{results/grid_coverage_mica_graph}. The tie figures per dataset on matched candidates are in
+\url{results/grid_coverage_mica_graph}. The label-fixed means in Section~\ref{sec:results} come from \url{results/a2_report_numbers.json}. The tie figures per dataset on matched candidates are in
 \url{results/a3_matched_mechanism.csv}. Per-dataset ARI ranges across seeds are in
 \url{results/a3_seed_variation.csv} and \url{results/a3_matched_seed_variation.csv}.
 
@@ -110,7 +164,8 @@ sweep times from the logs, saved in \url{results/a3_log_timings.csv} by
 environment has Python 3.11, Scanpy 1.11.5 and scikit-learn. The second reproduces the
 authors' published environment, Python 3.9.2 with MICA 1.0.0 and scikit-learn 0.24.1, and
 is used whenever MICA's own code runs. MICA is the released version at commit
-\texttt{54fae81}.
+\texttt{54fae81}. Our own implementation of both distance forms agrees with the authors' code to within
+$10^{-6}$ on Zeisel, where a test enforces it, and within $10^{-4}$ on the other inputs we compared. The label-free runs use it, with our own multidimensional scaling and scikit-learn's $k$-means at 50 starts in small-data mode, because the released code offers no entry point for rerunning on subsamples. On PBMC14K only node2vec and Louvain go through MICA's code.
 
 \textbf{Running the experiment.} The stability rule for the nine small-data datasets is
 \texttt{scripts/run\_rules\_small.sh}, which calls
@@ -145,9 +200,7 @@ lower bound they give, which is what sets the threshold. We first assumed this w
 matter, and we have not compared the two bootstraps. Section~\ref{sec:results} relaxes the
 threshold by at most 0.02, a size we took as plausible without measuring it, and the chosen
 cluster count is sensitive to that, so the difference between the two bootstraps could change the
-selection. This is the clearest unverified assumption
-remaining in our implementation, and settling it needs a run against chooseR's own R
-code.
+selection. This is the clearest unverified assumption remaining in our implementation, and settling it needs a run against chooseR's own R code. On PBMC14K, for both methods, the co-clustering counts, the score and the bootstrap are kept on a random 3,000 of the 13,605 cells, redrawn per seed, a second departure from chooseR made for cost and not tested separately. Clustering still runs on subsamples of all the cells.
 
 \textbf{Scale of the computation.} Each dataset and seed runs $B+1$ clusterings per
 candidate setting for each method, which is 494 for MICA over 19 values of $k$ and 468 to
@@ -173,7 +226,7 @@ Eq.~\ref{eq:mi} involves only the two cells being compared. Cell $i$ is discreti
 its own minimum and maximum across genes, so its bin codes $C_i$ do not change when other
 cells are removed. The joint histogram of $C_i$ and $C_j$ is taken over the $g$ genes, which
 are also unchanged. Hence every term in $I(C_i; C_j)$ and $H(C_i, C_j)$ is a function of
-cells $i$ and $j$ alone. The same holds for the small-data form, Eq.~\ref{eq:misd}, whose
+cells $i$ and $j$ alone. The same holds for the small-data form, whose
 marginal entropies $H(C_i)$ and $H(C_j)$ are each computed from one cell's bin codes.
 
 This fails for any method that standardises genes across cells, principal components
@@ -184,8 +237,7 @@ a dataset and asserts exact equality with the corresponding submatrix, in both o
 modes.
 
 \section{Anomalies raised against the Assignment 2 tables}\label{app:anomalies}
-A team member reviewing the result tables flagged six values as possible data handling
-errors. Each was checked against the stored partitions and gene sets, and all six are
+Rhea, reviewing the result tables, flagged six values as possible data handling errors. Each was checked against the stored partitions and gene sets, and all six are
 genuine results. We record them here because two are informative.
 
 Identical scores in different gene settings do not indicate reused results. Assignment 2

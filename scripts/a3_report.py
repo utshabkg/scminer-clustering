@@ -158,26 +158,17 @@ def main():
                 f"Dataset (types) & {hd} \\\\\n\\midrule\n" + "\n".join(rows) +
                 f"\n\\bottomrule\n\\end{{tabular}}\n" + close_box + f"\\end{{{env}}}\n")
 
-    stab = [(r, lab) for r, lab in have if r.startswith("stability")]
-    (TABLES / "a3_rules.tex").write_text(rule_table(
-        stab, "tab:rules",
-        "ARI of the partition the stability rule chose under each of its two readings, with "
-        "the number of clusters chosen in parentheses and the true number of cell types after "
-        "each dataset name. No reference labels are used in the choice. Values are medians "
-        "over three seeds, and a pair such as (15-18) gives the smallest and largest count "
-        "over those seeds. The mean row covers the nine small-data datasets, the set every "
-        "mean in the text refers to. PBMC14K runs in MICA\'s graph mode and is discussed in "
-        "Section~\\ref{sec:pbmc}. The other two rules are in Table~\\ref{tab:rulesall}, and "
-        "Table~\\ref{tab:common} gives this rule on the cluster counts the baseline produces.",
-        star=False))
     (TABLES / "a3_rules_all.tex").write_text(rule_table(
         have, "tab:rulesall",
-        "ARI under all four label-free rules, with the chosen cluster count in parentheses. "
-        "The two stability columns repeat Table~\\ref{tab:rules} and are included so the four "
-        "rules can be compared in one place. The default rule was run at three seeds and the "
-        "silhouette rule at one. On PBMC14K MICA runs in graph mode, so its default there is "
-        "the graph-mode resolution, 1.822 scored at 1.8, from one Assignment 2 run, and the "
-        "silhouette rule was not run.",
+        "ARI under all four label-free rules on each method's original grid, with the chosen "
+        "cluster count in parentheses and the true number of cell types after each dataset name. "
+        "The choice reads no labels at run time. Default and stability values are medians over "
+        "three seeds, and a pair such as (15-18) gives the smallest and largest count over those "
+        "seeds. The silhouette rule was run at one seed. The mean row covers the nine small-data "
+        "datasets. On PBMC14K MICA runs in graph mode, so its default there is the graph-mode "
+        "resolution, 1.822 scored at 1.8, from one Assignment 2 run, and the silhouette rule was "
+        "not run. Table~\\ref{tab:common} gives the stability rule on the cluster counts the "
+        "baseline produces.",
         star=True))
 
     # ---------- AMI, promised in the Measures subsection ----------
@@ -385,7 +376,7 @@ def main():
             "baseline under the same rule. The data, the size, the subsamples and the labels are identical "
             "across the three rows. The rows use each arm's original grid, and the cluster counts those grids "
             "reach differ: on MICA's own grid of 0.1 to 4.0, graph mode made no fewer than 4 or 5 clusters on these "
-            "pools. Section~\\ref{sec:modesize} shows that the difference shrinks but does not vanish when all "
+            "pools. Appendix~\\ref{app:modesize} shows that the difference shrinks but does not vanish when all "
             "three arms are offered the same counts. Tied settings are those within 0.01 of the "
             "best. The span is the range of cluster counts among them, reported as the median over the three "
             "pools with the observed range. The last two columns say how often the two readings of the rule "
@@ -456,17 +447,13 @@ def main():
         "\\begin{table*}[t]\n\\centering\n\\caption{Graph quality and cost. MICA's own HNSW search against "
         "a correlation shortlist of $c$ candidates per cell rescored with the exact MICA distance, which keeps "
         "each cell's 79 closest. Nothing guarantees the shortlist holds every true neighbour, so recall is "
-        "measured against brute force on 500 query cells. Graph build times are on 8 workers and include loading "
-        "the data and, for the shortlist, binning it once, which MICA's search does inside its distance. The cost "
-        "of generating the shortlist is in parentheses. Peak memory covers the same steps. For MICA, recall, ARI "
-        "and AMI come from the graph it built in Assignment 2, and time and memory from a rebuild with the same "
-        "settings. "
-        "Total adds MICA's node2vec and Louvain, which run unchanged on either graph. ARI and AMI are from two "
-        "runs of that downstream pipeline on each graph. They let the labels pick the resolution, as in the "
-        "published protocol, because this table compares graphs and not selection rules.}\n"
+        "measured against brute force on 500 query cells. Build times are on 8 workers, with the cost of "
+        "generating the shortlist in parentheses. Total adds MICA's node2vec and Louvain. ARI and AMI are from "
+        "two downstream runs on each graph, with the labels picking the resolution, because this table compares "
+        "graphs and not selection rules. Peak GB is the build alone, not the whole run (Appendix~\\ref{app:cost}).}\n"
         "\\label{tab:graph}\n\\footnotesize\n\\setlength{\\tabcolsep}{4pt}\n"
         "\\begin{tabular}{llcccccc}\n\\toprule\n"
-        "Data & Graph & Build (shortlist) & Peak GB & Recall@79 & Total & ARI, two runs & AMI, two runs "
+        "Data & Graph & Build (shortlist) & Build peak GB & Recall@79 & Total & ARI, two runs & AMI, two runs "
         "\\\\\n\\midrule\n" + "\n".join(grows) + "\n\\bottomrule\n\\end{tabular}\n\\end{table*}\n")
     nums["graph_cost"] = gnums
     print("graph cost: " + "; ".join(f"{k} build {v['seconds_build_with_load']} s, {v['peak_rss_gb']} GB, recall "
@@ -577,8 +564,8 @@ def main():
             return None
         return int(passing.sort_values(["n_clusters", "stability"], ascending=[False, False]).iloc[0].n_clusters)
     # The check is applied to each run's own curve, setting by setting, exactly as the rule ran,
-    # so its starting pick is the chosen count in Table I. An earlier version pooled the seeds
-    # into a median curve per cluster count, which is not the rule and disagreed with Table I.
+    # so its starting pick is the chosen count in the all-rules table. An earlier version pooled the
+    # seeds into a median curve per cluster count, which is not the rule and disagreed with that table.
     srows = []
     for f in sorted(glob(str(RESULTS / "rule_stability_paper_*" / "metrics.csv"))):
         run = Path(f).parent.name.replace("rule_stability_paper_", "")

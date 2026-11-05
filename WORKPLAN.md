@@ -108,7 +108,7 @@ There are 57 tasks: 40 for Utshab, 9 for Laraib and 8 for Rhea. Three of them (L
 | L-6 | Marker check | For each cluster name our system proposes, look the markers up in CellMarker 2.0 and PanglaoDB on their websites, and record whether they agree, with the link you used | `results/rq3_rag/marker_check.csv` | every proposed name checked | Nov 18 | M6 | `[!]` on hold, the annotation work is deferred |
 | L-7 | Meeting minutes | Short notes after each Wednesday meeting: decisions, who owns what next | `docs/minutes/YYYY-MM-DD.md` | one file per meeting | weekly | every week | `[ ]` |
 | L-8 | Proofread the paper | Check the writing rules we agreed on: no long dashes, no semicolons, plain words, consistent terms | the LaTeX sections | full read-through with fixes | Dec 2 | M8 | `[ ]` |
-| L-9 | Independent check of the discussion | For each claim in the Discussion section of the Assignment 3 report, check that it follows from the results and tables. Mark anything that overstates them or cannot be traced | the paper | every claim checked, problems listed | Nov 3 | M5 | `[~]` done on the old Overleaf draft, from before the matched runs. Repeat on the current text |
+| L-9 | Independent check of the discussion | For each claim in the Discussion section of the Assignment 3 report, check that it follows from the results and tables. Mark anything that overstates them or cannot be traced | the paper | every claim checked, problems listed | Nov 3 | M5 | `[~]` done on the old Overleaf draft, from before the matched runs. Repeat on the current text, cut to 7 pages on Nov 4 |
 
 ## Tasks: Rhea
 
@@ -215,3 +215,4 @@ Datasets never go into git. They live on the shared 20 TB disk, and the repo onl
 | Oct 3 | Fast neighbor search proposes candidates by correlation over all genes, then scores them exactly | 50 principal components miss most of MICA's neighbors on PBMC14K (33% found), correlation finds 97% with 800 candidates |
 | Oct 3 | Judge a fast graph by MICA's own later steps, not only by neighbor recall | Graphs that miss many exact neighbors can cluster as well or better, because MICA's graph has strong hub cells |
 | Oct 28 | Assignment 3 was not submitted on Oct 28. The deadline moved to Nov 4 | Announced on Oct 28. The week goes first to what the report itself says is weakest, before new tasks |
+| Nov 4 | Cut the Assignment 3 body to 7 pages and keep the long version at commit 4c6839c for the Nov 18 draft | The assignment asks for about 5 to 7 pages excluding references and appendix. The body had reached about 11.6, and the limit had never been written into this plan or PROGRESS |

@@ -360,8 +360,8 @@ def main():
         ms["seconds"] = np.nan  # the silhouette rule was not timed
     rows = [("Default", o, "default"), ("Silhouette, shared cap", o, "silhouette_shared"),
             ("Silhouette, matched", ms, "silhouette_shared"),
-            ("Stability F, original grids", o, "stability_finest"), ("Stability M, original grids", o, "stability_most"),
-            ("Stability F, matched", m, "stability_finest"), ("Stability M, matched", m, "stability_most")]
+            ("Finest stable, original grids", o, "stability_finest"), ("Most stable, original grids", o, "stability_most"),
+            ("Finest stable, matched", m, "stability_finest"), ("Most stable, matched", m, "stability_most")]
     lines, summ = [], {}
 
     def rng(d, r, meth):
@@ -405,12 +405,9 @@ def main():
         "the per-dataset medians, with the range of that mean over the three seeds where a rule was run at three and the mean moved by at "
         "least 0.005. "
         "PBMC14K is reported apart, as medians. Selection time is the median over the 27 small-dataset runs, in "
-        "seconds, for the "
-        "rules that select by rerunning. The matched times leave out the full-data sweep that fixes the shared "
-        "counts, which with loading adds at most 36 s per run. The default rule and the transfer select nothing at "
-        "run time, and the silhouette rule was not timed. "
-        "The win count planned in Assignment 2 was dropped after the feedback. The point is how far each method's "
-        "mean moves with the rule.}\n"
+        "seconds, for the rules that select by rerunning, and the matched times leave out the full-data sweep that "
+        "fixes the shared counts. The default rule and the transfer select nothing at run time, and the silhouette "
+        "rule was not timed.}\n"
         "\\label{tab:summary}\n\\footnotesize\n\\setlength{\\tabcolsep}{4pt}\n"
         "\\begin{tabular}{lcccccc}\n\\toprule\n & \\multicolumn{2}{c}{Nine small datasets} & "
         "\\multicolumn{2}{c}{PBMC14K} & \\multicolumn{2}{c}{Selection (s)} \\\\\n"

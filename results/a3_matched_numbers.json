@@ -1210,19 +1210,19 @@
    "mica": 0.5926,
    "leiden_pca": 0.4776
   },
-  "Stability F, original grids": {
+  "Finest stable, original grids": {
    "mica": 0.6615,
    "leiden_pca": 0.6322
   },
-  "Stability M, original grids": {
+  "Most stable, original grids": {
    "mica": 0.4727,
    "leiden_pca": 0.6347
   },
-  "Stability F, matched": {
+  "Finest stable, matched": {
    "mica": 0.6619,
    "leiden_pca": 0.5431
   },
-  "Stability M, matched": {
+  "Most stable, matched": {
    "mica": 0.4727,
    "leiden_pca": 0.4523
   },

@@ -18,17 +18,16 @@ This notebook rebuilds every table and figure in the Assignment 3 manuscript fro
 
 | Display | Produced by |
 |---|---|
-| Table I, ARI and chosen cluster count under the stability rule, original grids | `scripts/run_rule_stability.py`, `run_rule_stability_graph.py` |
-| Table II, the stability rule on matched candidates | the same runners with `--matched`, `scripts/a3_matched.py` |
-| Table III, every rule in one place | `scripts/a3_matched.py` |
-| Table IV, graph quality and cost | `scripts/measure_graph_cost.py`, `measure_mica_hnsw.py`, the `rq2_*` audits and downstream runs |
+| Table I, the stability rule on matched candidates | the same runners with `--matched`, `scripts/a3_matched.py` |
+| Table II, every rule in one place | `scripts/a3_matched.py` |
+| Table III, graph quality and cost | `scripts/measure_graph_cost.py`, `measure_mica_hnsw.py`, the `rq2_*` audits and downstream runs |
 | Figure 1, stability against cluster count | the stability runs |
-| Table V (appendix), the datasets | `scripts/dataset_facts.py` |
-| Table VI (appendix), all four rules | the stability runs plus `run_rule_silhouette.py` and `run_rule_default.py` |
-| Table VII (appendix), the stability rule on a common range | `scripts/a3_report.py`, from the saved stability curves |
-| Table VIII (appendix), mode against size on one fixed pool of cells | `scripts/run_rule_mode_size.py` |
-| Table IX (appendix), the transfer comparison | `scripts/a3_matched.py`, from the matched runs' full sweeps |
-| Table X (appendix), adjusted mutual information | the same runs as Table VI |
+| Table IV (appendix), the datasets | `scripts/dataset_facts.py` |
+| Table V (appendix), all four rules | the stability runs plus `run_rule_silhouette.py` and `run_rule_default.py` |
+| Table VI (appendix), the stability rule on a common range | `scripts/a3_report.py`, from the saved stability curves |
+| Table VII (appendix), mode against size on one fixed pool of cells | `scripts/run_rule_mode_size.py` |
+| Table VIII (appendix), the transfer comparison | `scripts/a3_matched.py`, from the matched runs' full sweeps |
+| Table IX (appendix), adjusted mutual information | the same runs as Table V |
 | The mechanism numbers | `scripts/a3_report.py` |
 
 The environment is `envs/scminer.yml`. Data live outside the repository, as described in `README.md`."""),
@@ -40,7 +39,7 @@ sys.path.insert(0, str(REPO / "scripts"))
 import a3_report
 a3_report.main()   # rewrites latex/tables/a3_*.tex, the figure, and results/a3_report_numbers.json
 nums = json.loads((RESULTS / "a3_report_numbers.json").read_text())"""),
-    ("md", "## Table VI (appendix). ARI of the partition each rule chose\n\nNo reference labels are used to make the choice. Median over the repeats, with the observed range. The means quoted in the paper cover the nine small-data datasets, so PBMC14K is listed but excluded from them."),
+    ("md", "## Table V (appendix). ARI of the partition each rule chose\n\nThe choice reads no labels at run time. Median over the repeats, with the observed range. The means quoted in the paper cover the nine small-data datasets, so PBMC14K is listed but excluded from them."),
     ("code", """rows = []
 for rule in ["default", "silhouette_shared", "stability_finest", "stability_most"]:
     if rule not in nums or "per_dataset" not in nums[rule]:
@@ -59,15 +58,15 @@ table2.round(3)"""),
     for r in ["default", "silhouette_shared", "stability_finest", "stability_most"]
     if r in nums and "mica_mean" in nums[r]])
 spread = summary[["MICA mean", "Leiden mean"]].max() - summary[["MICA mean", "Leiden mean"]].min()
-display(summary.round(3))
+display(summary.round(4))
 print("spread across rules:", spread.round(3).to_dict())"""),
-    ("md", "## Table VII (appendix). The stability rule on a common range\n\nThe 2 to 20 filter caps both grids without matching them. Here the rule is re-applied to MICA's saved scores restricted to the cluster counts the baseline reaches in the same run. Nothing is rerun and no labels are used. This is the analysis that removed the ranking reversal and the apparent mode effect."),
+    ("md", "## Table VI (appendix). The stability rule on a common range\n\nThe 2 to 20 filter caps both grids without matching them. Here the rule is re-applied to MICA's saved scores restricted to the cluster counts the baseline reaches in the same run. Nothing is rerun and no labels are used. This is the analysis that removed the ranking reversal and the apparent mode effect."),
     ("code", """cr = nums["common_range"]
 display(pd.DataFrame(cr["means"]).T.round(3))
 print("baseline reaches:", cr["baseline_reach"])
 print("pooled tied span:", cr["pooled_tied_span"])
 print("mode test on a common range:", json.dumps(nums["mode_size_common_range"], indent=1))"""),
-    ("md", "## Table II. The stability rule on matched candidates\n\nThe matched design, fixed before these runs: every method is offered the cluster counts from 2 to 20 that all methods reach on the full data, with one setting per count (`src/scminer_clust/grids.py`). Runs in `results/rule_matched_*`."),
+    ("md", "## Table I. The stability rule on matched candidates\n\nThe matched design, fixed before these runs: every method is offered the cluster counts from 2 to 20 that all methods reach on the full data, with one setting per count (`src/scminer_clust/grids.py`). Runs in `results/rule_matched_*`."),
     ("code", """sys.path.insert(0, str(REPO / "scripts"))
 import a3_matched
 a3_matched.main()   # rewrites the matched, transfer and summary tables and results/a3_matched_numbers.json
@@ -79,18 +78,18 @@ print("absolute change between readings:", m["mean_abs_reading_change"])
 print("ties, seeds pooled:", m["mechanism"])
 display(pd.read_csv(RESULTS / "a3_matched_mechanism.csv").sort_values("n_cells").round(2))
 print("mode test on matched candidates:", json.dumps(mn.get("matched_mode_size", {}), indent=1))"""),
-    ("md", "## Table IX (appendix). The transfer comparison, which uses the other datasets' labels\n\nEach held-out dataset takes the setting with the best mean ARI over the others at the same seed. Reported apart from the label-free rules."),
+    ("md", "## Table VIII (appendix). The transfer comparison, which uses the other datasets' labels\n\nEach held-out dataset takes the setting with the best mean ARI over the others at the same seed. Reported apart from the label-free rules."),
     ("code", """display(pd.read_csv(RESULTS / "a3_transfer.csv").pivot_table(index="ds", columns="method", values=["setting", "n_clusters", "ari"], aggfunc="median").round(3))
 print(json.dumps(mn.get("transfer", {}), indent=1))"""),
-    ("md", "## Table III. Every rule in one place\n\nMean ARI over the nine small datasets. No win count: the point is how far each method's mean moves with the rule."),
-    ("code", """display(pd.DataFrame(mn["summary"]).T.round(3))"""),
+    ("md", "## Table II. Every rule in one place\n\nMean ARI over the nine small datasets. No win count: the point is how far each method's mean moves with the rule."),
+    ("code", """display(pd.DataFrame(mn["summary"]).T.round(4))"""),
     ("md", "## Why the rules disagree\n\nAmong settings the stability rule scores within 0.01 of its best, how wide a span of cluster counts remains?"),
     ("code", """mech = pd.read_csv(RESULTS / "a3_mechanism.csv")
 display(mech[["ds", "method", "share_tied", "k_tied_min", "k_tied_max", "chosen_k", "true_k"]])
 print({k: v for k, v in nums["mechanism"].items() if k != "table"})"""),
     ("md", "## Figure 1. Stability and accuracy against the number of clusters"),
     ("code", """display(Image(filename=str(REPO / "latex" / "figures" / "a3_stability_curve.png"), width=900))"""),
-    ("md", "## Table IV. Graph quality and cost\n\nMICA's HNSW search against a correlation shortlist rescored exactly. The downstream ARIs let the labels pick the resolution, since this compares graphs rather than selection rules."),
+    ("md", "## Table III. Graph quality and cost\n\nMICA's HNSW search against a correlation shortlist rescored exactly. The downstream ARIs let the labels pick the resolution, since this compares graphs rather than selection rules."),
     ("code", """print(json.dumps(nums.get("graph_cost", {}), indent=1))"""),
     ("md", "## MICA's shipped default against this benchmark's cluster counts"),
     ("code", """print(json.dumps(nums.get("mica_default", {}), indent=1))

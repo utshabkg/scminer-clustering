@@ -21,11 +21,97 @@ Updated: 2026-11-04. Counts follow the Milestone column in `WORKPLAN.md`.
 
 Overall: 36 of 57 tasks finished. Three of the 57 repeat every week. The counts above are read off the status markers in `WORKPLAN.md`.
 
-Next three things: pull the final text into Overleaf and confirm the PDF, submit Assignment 3 today, and repeat Laraib's discussion check (L-9) on the current text. Still open: whether to write to the scMINER authors (U-30).
+Next three things: pull the 7-page report into Overleaf and confirm its length there, submit Assignment 3 today, and repeat Laraib's discussion check (L-9) on the condensed text.
 
 ---
 
 ## 2026-11-04, Utshab (Assignment 3 due today)
+
+**Report cut to the page limit (20:01 to 20:44 CST).** Utshab pasted the assignment text and asked
+whether the report met it. It did not. The text says about 5 to 7 pages excluding references and any
+necessary technical appendix, and the body had reached about 11.6. I had told Utshab no limit applied
+because I had only checked the writing guide. The limit was read on Oct 22 but never written into this
+file or WORKPLAN, so it was lost when context reset. The text is now in the gitignored
+`scratchpad/assignment3_instructions.md`, and the limit is in this entry.
+
+*How it was measured.* Pages from the title to the start of References. Overleaf uses Times and tectonic
+does not, so the check is a tectonic build with TeX Gyre Termes, which has Times metrics. Latin Modern
+runs longer.
+
+| Stage | Times-metric build | Latin Modern build |
+|---|---|---|
+| Before, commit 4c6839c | not measured | about 11.6 |
+| After condensing and all review fixes | 7.0 (References at the top of page 8) | about 7.3 |
+
+*What moved.* No experiment was rerun. A script compared the first cut with 4c6839c and found no number
+that was not already there. The review round then added four figures, all from saved results: 0.809 and
+0.614 (`results/a2_report_numbers.json`), the gaps 0.195, 0.119 and 0.020 (from those and
+`results/a3_matched_numbers.json`), and the 3,000-cell count (`src/scminer_clust/stability.py`). The
+original-grids table was dropped because the all-rules table repeats its columns, so tables renumber:
+I matched, II every rule, III graph, IV datasets, V all rules, VI common range, VII mode against size, VIII
+transfer, IX AMI. Detail went to the appendix, with a new section on ties, thresholds and cost. The long
+version stays at commit 4c6839c as a base for the November 18 draft.
+
+*Review, workflow wf_ace097c0-b8e, 26 findings confirmed, 4 rejected, no number wrong.* All applied, with the
+wording adjusted where two findings overlapped. The ones that change what the report discloses:
+- **On PBMC14K the stability score covers a random 3,000 of the 13,605 cells, redrawn per seed, for both
+  methods.** `stability.reference_cells`, `REFERENCE = 3000`, called in `scripts/run_rule_stability_graph.py`
+  line 126. No version of the report said so, and PBMC14K is where the ranking turns on the threshold. Now in
+  the method section, the limitations and the appendix, marked as not tested separately. Small datasets stop at
+  2,903 cells and the mode pools at 2,500, so only PBMC14K is affected.
+- PBMC14K selection takes exact neighbours from one saved distance matrix in place of HNSW. This was in the long
+  body and the cut had moved it to the appendix. It is back in the results.
+- The limitation said the implementation follows chooseR, where the appendix reports a simpler bootstrap. It now
+  says we reimplemented chooseR with a simpler bootstrap and the 3,000-cell score.
+- The memory multiple covers the graph build only, and whole-run memory was not measured for the shortlist. The
+  abstract, introduction, conclusion and Table III now say so. The pilot's 7.1 h and 140 GB in the plan are now
+  reconciled with Table III's 4.9 h and 21.6 GB on the same cells.
+- New in the discussion: the comparison does not isolate mutual information, since the pipelines differ in distance,
+  embedding and clustering step. Label-fixed means on the same nine datasets are now stated (0.809 and 0.614, with
+  MICA at 100 restarts), so the fall to the matched gaps is visible.
+- The silhouette rule ran at one seed, and the old reason given (no resampling) did not justify that. It now says
+  it shows no variation.
+- The plain maximum is again stated as specified with chooseR's reading, and "tie-break" is defined. The cut had
+  lost both.
+
+*Final check, workflow wf_4db5ea01-5cf, 11 findings confirmed, 3 rejected, no number wrong (21:08 CST).* All applied:
+- **"We run the authors' released implementation, not a reimplementation" was false for the label-free runs.** Those runs
+  use `mi.distance_matrix`, `diagnostics.classical_mds` and scikit-learn's k-means, and on PBMC14K only node2vec and Louvain
+  go through MICA's code (`scripts/run_rule_stability.py` lines 44 to 62, `src/scminer_clust/mi.py`). The sentence dates from
+  the long version. The method section and Appendix J now say so. The label-fixed reproduction does use the released code.
+- My rewording in Section II ("fall in MICA's cluster-count mode") was false, since the authors ran Zeisel in graph mode. It
+  now says all ten headline scores come from MICA at the true number of clusters, from
+  `external/scMINER_analysis/cell_clustering/Benchmark_ARI_metrics/scMINER_eval_metrics.csv`, where pred_k equals true_k on all ten.
+- The fall from the label-fixed means holds only on matched candidates, and the sentence now says so. On the original grids the
+  baseline sits above 0.614.
+- Smaller wording: "as first specified" for the three of four rules, since the default has no cap. "At the stated threshold" on
+  PBMC14K, since a relaxed baseline pick is 7 clusters at 0.875. Klein and Zeisel for the 4 to 6 minute matrices. Shortlist size,
+  resolution grid and the Overleaf link sentence. The Appendix A heading.
+
+*Notebook.* `notebooks/assignment3_results.ipynb` rebuilt with the new table numbers. Tables regenerated. The only
+change to the saved numbers is the four renamed summary keys in `results/a3_matched_numbers.json` (Stability F
+and M became Finest stable and Most stable).
+
+*Assignment text against the report.*
+
+| Asked for | Where |
+|---|---|
+| About 5 to 7 pages, excluding references and appendix | 7.0 in the Times-metric build. Confirm on Overleaf |
+| Short opening paragraph on changes | Changes since Assignment 2 |
+| Revised introduction, closest literature, methods | Sections I, II, III |
+| At least three closely related studies, what they established, what we add | Section II: scMINER, chooseR, Yu et al., Ullmann et al. and others |
+| New results from the comments, at least one table or figure | Tables I, II, III, Figure 1 |
+| Data, settings, labels, runs, quality and cost | Section IV, Table captions |
+| Repeat stochastic comparisons, report variation | Three seeds, ranges in Tables I and II, Section V-C. Silhouette at one seed, stated |
+| What it shows, why, what remains uncertain | Sections V and VI |
+| Negative results reported honestly | Section V-C, Section VI |
+| Links to Overleaf, code, notebook and results | Links paragraph after the completion plan, Appendix A |
+| Completion plan naming each person | Completion plan |
+| Changes to the comparison plan discussed with the instructor | **Open. See below** |
+
+*Open point for Utshab.* The assignment says any proposed change to the data or comparison plan should be discussed
+with the instructor. The matched candidates are a change to the comparison and were not discussed. The report states
+them openly, and a line in the submission message can flag them.
 
 **Both teammate reviews are in and acted on (16:25 CST).** Every point was recomputed before any text
 changed. Rhea's PR #4 is merged.
