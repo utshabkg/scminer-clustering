@@ -1,0 +1,17 @@
+# R environment for scoring our saved subsample partitions with chooseR's own code
+# (rbpatt2019/chooseR, pinned in scripts/fetch_chooser.sh). Clustering stays in Python.
+# The packages are the ones chooseR's pipeline.R and example script call for the
+# scoring step: cluster::silhouette, boot::boot and boot.ci, dplyr, tidyr, tibble, magrittr.
+name: chooser-r
+channels:
+  - conda-forge
+dependencies:
+  - r-base=4.4
+  - r-boot
+  - r-cluster
+  - r-dplyr
+  - r-tidyr
+  - r-tibble
+  - r-magrittr
+  - r-purrr
+  - r-jsonlite

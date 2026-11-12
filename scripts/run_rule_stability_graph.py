@@ -61,11 +61,13 @@ def full_distance(X):
     return np.load(cache, mmap_mode="r")
 
 
-def mica_graph_partitions(D, cells, tag, workers=8, resolutions=None):
+def mica_graph_partitions(D, cells, tag, workers=8, resolutions=None, keep=None):
     """MICA's graph pipeline on a set of cells. Returns a dict of resolution to labels.
 
     resolutions limits the Louvain sweep to those values. Each is a separate Louvain run on
-    the same embedding, so this only saves time.
+    the same embedding, so this only saves time. keep, a folder, saves the node2vec embedding
+    and the step timings there before the work folder is removed (protocol v1 keeps them, so
+    a denser Louvain sweep can be run later without redoing node2vec).
     """
     resolutions = MICA_GRID if resolutions is None else resolutions
     reso = MICA_MAX_RES if resolutions is None else "".join(f"{r}," for r in resolutions)
@@ -102,6 +104,12 @@ def mica_graph_partitions(D, cells, tag, workers=8, resolutions=None):
         lab = s.reindex(want)
         assert lab.notna().all(), f"{f.name}: {int(lab.isna().sum())} of {len(want)} cells missing a label"
         parts[float(f.stem.split("_")[-1])] = lab.to_numpy().astype(str)
+    if keep is not None:
+        keep = Path(keep)
+        keep.mkdir(parents=True, exist_ok=True)
+        for name in ("knn_node2vec_graph_emb_on_gene_to_20.txt", "seconds.txt"):
+            if (out / name).exists():
+                shutil.copy(out / name, keep / name)
     shutil.rmtree(gdir, ignore_errors=True)
     shutil.rmtree(out, ignore_errors=True)
     return parts

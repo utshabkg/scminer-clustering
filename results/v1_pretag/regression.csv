@@ -1,0 +1,5 @@
+folder,rows_new,rows_old,picks,stability_curve,full_sweep
+rule_matched_stability_paper_kolodziejczyk_seed1,353,353,equal,equal,equal
+rule_matched_stability_paper_yan,353,353,equal,equal,equal
+rule_stability_paper_kolodziejczyk_seed1,122,63,equal,equal,absent in saved file
+rule_stability_paper_yan,122,63,equal,equal,absent in saved file

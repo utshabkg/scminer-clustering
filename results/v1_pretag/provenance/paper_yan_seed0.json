@@ -1,0 +1,38 @@
+{
+ "git": {
+  "head": "c3701d448e1498d5f884f439b2d8cf8ae4394ea3",
+  "describe": "c3701d4-dirty",
+  "dirty": true,
+  "tag_commit": ""
+ },
+ "python": "3.11.16",
+ "platform": "Linux-6.12.95+deb12-amd64-x86_64-with-glibc2.36",
+ "numpy": "2.4.6",
+ "scanpy": "1.11.5",
+ "sklearn": "1.9.1",
+ "anndata": "0.12.19",
+ "threads": {
+  "OMP_NUM_THREADS": "8",
+  "OPENBLAS_NUM_THREADS": "8",
+  "MKL_NUM_THREADS": "8",
+  "NUMBA_NUM_THREADS": "8"
+ },
+ "dataset": "paper_yan",
+ "seed": 0,
+ "b": 100,
+ "timings": {
+  "full_mica": 0.6544582843780518,
+  "full_leiden": 7.200825929641724,
+  "full_kmeans": 1.0339171886444092,
+  "scoring": 61.87782907485962,
+  "total": 279.3607668876648
+ },
+ "seconds_per_subsample": {
+  "mica": 0.6090156745910644,
+  "kmeans_pca": 0.9055322313308716,
+  "leiden_pca": 0.5503314971923828
+ },
+ "store": "/home/ugdf8/coursework/26Fall/Clustering_Algorithms/scminer-clustering/data/runs/protocol_v1/paper_yan_seed0",
+ "input_sha256": "38bde7f5f220e839ff872d685b21b0e3a6c42ee7ba7dd2f6b58c0a073e1bfa68",
+ "seconds_note": "old-layout seconds are reconstructed from this run's timings"
+}

@@ -46,9 +46,9 @@ def pca(adata, n_comps=50, seed=0, n_hvg=None):
     return adata.obsm[key]
 
 
-def kmeans_pca(adata, k, n_comps=50, seed=0):
+def kmeans_pca(adata, k, n_comps=50, seed=0, n_init=10):
     emb = pca(adata, n_comps, seed)
-    labels = KMeans(n_clusters=k, n_init=10, random_state=seed).fit_predict(emb)
+    labels = KMeans(n_clusters=k, n_init=n_init, random_state=seed).fit_predict(emb)
     return labels.astype(str), emb
 
 

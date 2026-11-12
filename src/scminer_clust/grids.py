@@ -75,6 +75,32 @@ def one_per_count(full, counts):
     return {k: by[k][(len(by[k]) - 1) // 2] for k in counts if k in by}
 
 
+def per_count(full, counts, which="mid"):
+    """One setting per count, the first ("low"), middle ("mid") or last ("high") in grid order.
+
+    "mid" is one_per_count. The other two exist for protocol v1's check of whether the result
+    depends on which setting stands for a count. Returns {count: setting}.
+    """
+    by = {}
+    for s in sorted(full):
+        by.setdefault(len(np.unique(full[s])), []).append(s)
+    pick = {"low": lambda v: v[0], "mid": lambda v: v[(len(v) - 1) // 2], "high": lambda v: v[-1]}[which]
+    return {k: pick(by[k]) for k in counts if k in by}
+
+
+def dense_per_count(full, counts):
+    """Every setting whose full-data partition has one of the counts. Returns {count: [settings]}."""
+    by = {}
+    for s in sorted(full):
+        by.setdefault(len(np.unique(full[s])), []).append(s)
+    return {k: by[k] for k in counts if k in by}
+
+
+def original_settings(full):
+    """The original design's candidates: settings whose full-data partition has 2 to 20 clusters, in grid order."""
+    return [s for s, lab in full.items() if 2 <= len(np.unique(lab)) <= 20]
+
+
 def tag(exp):
     """Result folder name: matched runs get their own prefix, so old globs never pick them up."""
     return exp.replace("rule_", "rule_matched_", 1) if matched() else exp

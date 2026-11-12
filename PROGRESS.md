@@ -5,7 +5,7 @@ Utshab adds an entry at the end of each working session. Laraib and Rhea add a l
 
 ## Where we stand
 
-Updated: 2026-11-04. Counts follow the Milestone column in `WORKPLAN.md`.
+Updated: 2026-11-12. Counts follow the Milestone column in `WORKPLAN.md`.
 
 | Milestone | Due | Tasks done | Percent | State |
 |-----------|-----|------------|---------|-------|
@@ -21,7 +21,81 @@ Updated: 2026-11-04. Counts follow the Milestone column in `WORKPLAN.md`.
 
 Overall: 36 of 57 tasks finished. Three of the 57 repeat every week. The counts above are read off the status markers in `WORKPLAN.md`.
 
-Next three things: pull the 7-page report into Overleaf and confirm its length there, submit Assignment 3 today, and repeat Laraib's discussion check (L-9) on the condensed text.
+Next three things: finish the pre-tag checks and tag `matched-protocol-v1`, launch the confirmatory runs (U-41 to U-43), then write the Assignment 4 manuscript for Nov 16.
+
+---
+
+## 2026-11-11 and 12, Utshab (Assignment 4, due Nov 16)
+
+**What Jian asked.** His general note and his comments on our report are in the gitignored
+`scratchpad/assignment4_instructions.md` and `scratchpad/instructor_feedback_a3.md`. Deadlines and limits:
+- submit Nov 16, reviewed Nov 17, discussed in class Nov 18
+- complete research paper Nov 30, presentations Dec 2 and 9
+- no page limit is stated for Nov 16
+- course requirements: an ordinary dataset (at least 5,000 by 20), a large-scale one (at least 2 million by 10) and a high-dimensional one (at least 500 by 700), with dimensions after preprocessing, textbook algorithms, and the published algorithm reproduced
+
+His specific requests:
+- keep both the original and the matched results, and say that matching came after seeing results
+- confirm the main conclusions on new independent runs under a protocol fixed in advance
+- explain why matching changes the ranking, and whether the choice of candidate settings matters
+- at least five seeds on the main comparisons
+- verify that our differences from chooseR do not decide the conclusions
+- add PCA plus k-means under a label-free protocol
+
+**Decisions with Utshab (Nov 11).**
+- chooseR is checked with its own R code.
+- Nine small datasets at seeds 0 to 9 (3 to 9 confirmatory), PBMC14K at seeds 0 to 4, all at B=100.
+- The 2.3M-cell experiment comes after Nov 16 (U-46).
+- `latex/` stays in the repo.
+- Title, provisional: "When Clustering Methods Must Choose for Themselves: Label-Free Selection and the Reliability of Single-Cell Clustering Comparisons".
+- On the shared machine, never compete with other users' GPU jobs, and cap our CPU use near 64 of 120 cores.
+
+**chooseR's own code differs from ours in a third way.** Commit `410bdbf` of github.com/rbpatt2019/chooseR, files
+pinned by sha256 in `scripts/fetch_chooser.sh`, shows:
+- `boot_median(avg_sil, R = 25000, type = "bca")` resamples the per-cluster average silhouettes, so it resamples
+  clusters. Ours resamples cells within clusters (`stability.score_setting`).
+- `percent_match` divides by a fixed n = 100, so chooseR is only correct at 100 subsamples.
+- `boot.ci` returns no interval when every bootstrap median is equal, which happens on flat settings.
+- Its median is the same statistic as our score. On Yan seed 0 the two agree within 5e-8 (float32 rounding in ours).
+
+**Protocol v1 code (U-41 to U-44).**
+- New: `src/scminer_clust/protocol.py`, `scripts/run_protocol_small.py`, `run_protocol_pbmc.py`, `score_chooser_r.R`,
+  `run_chooser_r.py`, `check_v1_regression.py`, `run_protocol_v1.sh`, `a4_protocol_v1.py`, `tests/test_protocol.py`.
+- Additions only to `grids.py` and `cluster.py`. A `keep=` argument in `run_rule_stability_graph.py`.
+- R env `envs/chooser-r.yml`, built Nov 11 23:58.
+- The design and criteria are in `docs/protocol_matched_v1.md`.
+
+Checks so far:
+- `tests/` 19 passed. They cover nesting, the matrix-product counts against `CoClustering`, codes, the candidate
+  variants, chooseR's frequency and choice.
+- **Yan seed 0 at B=100 reproduces the saved original-protocol results** on every column but seconds: picks, curves and
+  full sweeps for matched, picks and curves for original (the Oct 22 file has no full sweep). Source:
+  `results/v1/regression.csv`, 00:06.
+- chooseR's R tally equals our float64 frequency on 93 of 93 Yan settings, maximum difference 0.
+- Yan seed 0 statuses under chooseR's code: 87 ok, 4 warnings, 1 with no interval and 1 error, both k-means.
+
+Pre-tag checks (Nov 12):
+- **Kolodziejczyk seed 1 at B=100 also reproduces** the saved results (00:23, 11.5 min run). R0 holds on 4 of 4
+  folders, in `results/v1_pretag/regression.csv`. All pre-tag outputs are kept in `results/v1_pretag/`, apart from
+  the confirmatory `results/v1/`.
+- **Code review, workflow `wf_8a0eeefa-ece`: 8 confirmed, 0 rejected, none changing a number.** The reviewers
+  checked the scoring paths and found them faithful to the original runner and to chooseR. All 8 are fixed:
+  - The tag check now compares only the executed files (`protocol.CODE`) with the tag, so notes and the
+    manuscript can change during the runs.
+  - The driver skips finished runs, reports failures, and has chooseR parts with a fixed cross-check (5 settings on
+    Klein and Zeisel, 2 on PBMC14K).
+  - The PBMC14K store refuses reuse without `--fresh`. Each subsample file carries its settings and cells, which are
+    checked on resume, and is written atomically.
+  - chooseR runs have a tag guard and provenance with R and package versions (lock file `envs/chooser-r.lock.yml`:
+    R 4.4.3, boot 1.3-32, cluster 2.1.8.3, dplyr 1.2.1, tibble 3.3.1). S3 handles a reduced B.
+- The first PBMC14K smoke test ran the pre-fix code, so it was stopped and moved to
+  `data/runs/protocol_v1_pretag/`. It is rerunning on the fixed code as seed 90, which no confirmatory run uses
+  (`scratchpad/pretag_pbmc_smoke.sh`, byobu `scm-v1-pretag-pbmc`). A Leiden reproduction check on PBMC14K
+  seed 0 runs in `scm-v1-pretag-leiden`.
+- The session sat idle from about 00:30 to 10:57, so nothing ran in that gap.
+- To save time, the small datasets start right after the tag, from a separate worktree at the tag
+  (`../scminer-v1-run`). If the PBMC14K smoke test finds a bug, its fix gets tag `matched-protocol-v1.1`, logged
+  as a deviation.
 
 ---
 
