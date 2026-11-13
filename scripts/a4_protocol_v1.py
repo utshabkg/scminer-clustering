@@ -12,6 +12,7 @@ S2 ours at B=100 on all cells (PBMC14K), S3-V, S3-G and S3-G2 chooseR's own code
 import json
 import sys
 from glob import glob
+from pathlib import Path
 
 import numpy as np
 import pandas as pd
@@ -20,6 +21,14 @@ from scminer_clust import stability
 from scminer_clust.paths import RESULTS
 
 V1 = RESULTS / "v1"
+TABLES = RESULTS.parent / "latex" / "tables"
+FIGS = RESULTS.parent / "latex" / "figures"
+NAMES = {"yan": "Yan", "goolam": "Goolam", "buettner": "Buettner", "pollen": "Pollen", "chung": "Chung",
+         "usoskin": "Usoskin", "kolodziejczyk": "Kolodziejczyk", "klein": "Klein", "zeisel": "Zeisel",
+         "pbmc14k": "PBMC14K"}
+TYPES = {"yan": 8, "goolam": 5, "buettner": 3, "pollen": 11, "chung": 4, "usoskin": 4, "kolodziejczyk": 3,
+         "klein": 4, "zeisel": 7, "pbmc14k": 7}
+MNAME = {"mica": "MICA", "leiden_pca": "Leiden", "kmeans_pca": "$k$-means"}
 SMALL = ["yan", "goolam", "buettner", "pollen", "chung", "usoskin", "kolodziejczyk", "klein", "zeisel"]
 FIVE = ["yan", "goolam", "buettner", "pollen", "chung"]  # at most 317 cells
 METHODS = ["mica", "leiden_pca", "kmeans_pca"]
@@ -55,6 +64,8 @@ def summary(p, S, design, reading, method, seeds, datasets=SMALL):
     if not len(s):
         return None
     per_ds = s.groupby("ds").ari.median()
+    if per_ds.size < len(datasets):  # a mean over fewer datasets is not comparable
+        return None
     per_seed = s.groupby("seed").agg(mean=("ari", "mean"), n=("ari", "size"))
     per_seed = per_seed[per_seed.n == len(datasets)]["mean"]
     return {"mean": round(float(per_ds.mean()), 4), "n_datasets": int(per_ds.size),
@@ -163,6 +174,316 @@ def chooser_agreement(p, seeds, design="mid"):
             for m, g in j.groupby("method")}
 
 
+def fmt(x, nd=3):
+    return "n/a" if x is None or (isinstance(x, float) and np.isnan(x)) else f"{x:.{nd}f}"
+
+
+def kr(lo, hi):
+    lo, hi = int(lo), int(hi)
+    return f"{lo}" if lo == hi else f"{lo}\\textrm{{-}}{hi}"
+
+
+def write_tables(p, c, out, conf, pseeds):
+    """The manuscript's protocol v1 tables (latex/tables/a4_*.tex) and the per-seed figure."""
+    TABLES.mkdir(parents=True, exist_ok=True)
+    allseeds = list(range(10))
+    # Table: confirmatory runs, matched candidates, S0
+    rows = []
+    for ds in SMALL:
+        cells = []
+        for reading in (F, M):
+            for m in METHODS:
+                s = p[(p.S == "S0") & (p.design == "mid") & (p.reading == reading) & (p.method == m)
+                      & (p.ds == ds) & p.seed.isin(conf)]
+                cells.append("n/a" if not len(s) else f"{s.ari.median():.3f}\\,({kr(s.n_clusters.min(), s.n_clusters.max())})")
+        rows.append(f"{NAMES[ds]} ({TYPES[ds]}) & " + " & ".join(cells) + " \\\\")
+    rows.append("\\midrule")
+    for label, seeds in (("Mean, seeds 3 to 9", conf), ("Mean, seeds 0 to 2", [0, 1, 2]), ("Mean, all ten seeds", allseeds)):
+        vals = [summary(p, "S0", "mid", r, m, seeds) for r in (F, M) for m in METHODS]
+        rows.append(f"\\textit{{{label}}} & " + " & ".join("n/a" if v is None else
+                    (f"\\textbf{{{v['mean']:.3f}}}" if label.startswith("Mean, seeds 3") else f"{v['mean']:.3f}") for v in vals) + " \\\\")
+    (TABLES / "a4_confirm.tex").write_text(
+        "\\begin{table*}[t]\n\\centering\n\\caption{The confirmatory runs of protocol v1: the stability rule on matched "
+        "candidates at the seven new seeds, 3 to 9, scored as the original protocol (S0, the first 25 of the 100 "
+        "subsamples). ARI of the chosen partition, median over the seven seeds, with the smallest and largest chosen "
+        "count in parentheses and the number of cell types after each dataset name. No labels are used in the choice. "
+        "The mean rows average the per-dataset medians over the nine datasets, for the confirmatory seeds, for the "
+        "exploratory seeds 0 to 2 of Assignment 3, and for all ten.}\n\\label{tab:confirm}\n\\footnotesize\n"
+        "\\setlength{\\tabcolsep}{4pt}\n\\begin{tabular}{lcccccc}\n\\toprule\n"
+        " & \\multicolumn{3}{c}{Finest stable} & \\multicolumn{3}{c}{Most stable} \\\\\n"
+        "\\cmidrule(lr){2-4}\\cmidrule(lr){5-7}\nDataset (types) & MICA & Leiden & $k$-means & MICA & Leiden & $k$-means \\\\\n"
+        "\\midrule\n" + "\n".join(rows) + "\n\\bottomrule\n\\end{tabular}\n\\end{table*}\n")
+
+    # Table: every design and scorer, means over the nine datasets at the confirmatory seeds
+    spec = [("Original grids", "original", "S0"), ("Matched, middle setting", "mid", "S0"),
+            ("Matched, lowest setting", "low", "S0"), ("Matched, highest setting", "high", "S0"),
+            ("Matched, every setting", "dense", "S0"), ("Matched, 100 subsamples (S1)", "mid", "S1"),
+            ("Original, chooseR's code (S3)", "original", "S3-G"), ("Matched, chooseR's code (S3)", "mid", "S3-G")]
+    rows = []
+    for label, d, S in spec:
+        vals = []
+        for r in (F, M):
+            for m in METHODS:
+                v = None if (S.startswith("S3") and r == M) else summary(p, S, d, r, m, conf)
+                vals.append("n/a" if (S.startswith("S3") and r == M) else fmt(v["mean"] if v else None))
+        rows.append(f"{label} & " + " & ".join(vals) + " \\\\")
+    (TABLES / "a4_designs.tex").write_text(
+        "\\begin{table*}[t]\n\\centering\n\\caption{How far each method's mean ARI moves with the candidate design and "
+        "the scorer. Means over the nine small datasets of the per-dataset medians, confirmatory seeds 3 to 9. The "
+        "lowest, middle and highest setting per count and every setting differ only for Leiden, since $k$ has one "
+        "setting per count. S1 scores the same partitions on all 100 subsamples. S3 is chooseR's own R code on all "
+        "100, with a point interval where its bootstrap gives none (the protocol's primary repair). chooseR has only "
+        "the finest-stable reading, and the most-stable reading uses no interval, so it equals S1.}\n"
+        "\\label{tab:designs}\n\\footnotesize\n\\setlength{\\tabcolsep}{4pt}\n\\begin{tabular}{lcccccc}\n\\toprule\n"
+        " & \\multicolumn{3}{c}{Finest stable} & \\multicolumn{3}{c}{Most stable} \\\\\n"
+        "\\cmidrule(lr){2-4}\\cmidrule(lr){5-7}\nDesign and scorer & MICA & Leiden & $k$-means & MICA & Leiden & $k$-means \\\\\n"
+        "\\midrule\n" + "\n".join(rows) + "\n\\bottomrule\n\\end{tabular}\n\\end{table*}\n")
+
+    # Table: PBMC14K, medians over its seeds
+    rows = []
+    for m in METHODS:
+        for S, label in (("S0", "S0"), ("S1", "S1"), ("S2", "S2, all cells"), ("S3-G", "S3, chooseR")):
+            cells = []
+            for d in ("original", "mid"):
+                for r in (F, M):
+                    s = p[(p.ds == "pbmc14k") & (p.S == S) & (p.design == d) & (p.reading == r) & (p.method == m)
+                          & p.seed.isin(pseeds)]
+                    cells.append("n/a" if (S == "S3-G" and r == M) else ("n/a" if not len(s) else
+                                 f"{s.ari.median():.3f}\\,({kr(s.n_clusters.min(), s.n_clusters.max())})"))
+            rows.append(f"{MNAME[m] if S == 'S0' else ''} & {label} & " + " & ".join(cells) + " \\\\")
+        rows.append("\\midrule")
+    (TABLES / "a4_pbmc.tex").write_text(
+        "\\begin{table*}[t]\n\\centering\n\\caption{PBMC14K, the one large benchmark dataset and the only one in MICA's "
+        "graph mode, at five seeds. ARI of the chosen partition, median over the seeds, with the range of chosen counts. "
+        "MICA's node2vec and Louvain take no seed, so every MICA run is a new draw. S0 keeps the co-clustering on a "
+        "random 3,000 of the 13,605 cells and uses the first 25 subsamples, S1 the same cells and all 100, S2 all cells "
+        "and all 100, S3 chooseR's code on all cells and all 100. The true number of types is 7.}\n"
+        "\\label{tab:pbmc}\n\\footnotesize\n\\setlength{\\tabcolsep}{4pt}\n\\begin{tabular}{llcccc}\n\\toprule\n"
+        " & & \\multicolumn{2}{c}{Original grids} & \\multicolumn{2}{c}{Matched candidates} \\\\\n"
+        "\\cmidrule(lr){3-4}\\cmidrule(lr){5-6}\nMethod & Scorer & Finest & Most & Finest & Most \\\\\n\\midrule\n"
+        + "\n".join(rows[:-1]) + "\n\\bottomrule\n\\end{tabular}\n\\end{table*}\n")
+
+    # Figure: per-seed means, the variation the draw alone causes
+    try:
+        import matplotlib
+        matplotlib.use("Agg")
+        import matplotlib.pyplot as plt
+        fig, axes = plt.subplots(1, 4, figsize=(7.0, 1.9), sharey=True)
+        colors = {"mica": "#1f77b4", "leiden_pca": "#d62728", "kmeans_pca": "#2ca02c"}
+        for ax, (d, r, title) in zip(axes, (("original", F, "Original, finest"), ("original", M, "Original, most"),
+                                             ("mid", F, "Matched, finest"), ("mid", M, "Matched, most"))):
+            for m in METHODS:
+                v = summary(p, "S0", d, r, m, allseeds)
+                if v and v["per_seed"]:
+                    xs = sorted(v["per_seed"])
+                    ax.plot(xs, [v["per_seed"][x] for x in xs], "o-", ms=2.5, lw=1, color=colors[m],
+                            label=MNAME[m].replace("$", ""))
+            ax.axvspan(-0.5, 2.5, color="0.9", lw=0)
+            ax.set_title(title, fontsize=7)
+            ax.set_xticks(range(0, 10, 3))
+            ax.tick_params(labelsize=6)
+            ax.set_xlabel("seed", fontsize=6)
+        axes[0].set_ylabel("mean ARI, nine datasets", fontsize=6)
+        axes[0].legend(fontsize=5.5, frameon=False, loc="lower left")
+        fig.tight_layout(pad=0.3)
+        FIGS.mkdir(parents=True, exist_ok=True)
+        fig.savefig(FIGS / "a4_seed_means.pdf")
+        plt.close(fig)
+    except Exception as e:  # the numbers do not depend on the figure
+        print("figure skipped:", e)
+
+
+def write_tables2(p, out, conf):
+    """Criteria verdicts, the decomposition of Leiden's change, and chooseR's failures."""
+    def v(x, k="verdict"):
+        return (out.get(x) or {}).get(k, "n/a")
+    c1f, c1m = out["C1"][F], out["C1"][M]
+    rows = [
+        ("C1, finest stable: MICA above Leiden", "0.662 vs 0.543", f"{fmt(c1f.get('mean_a'))} vs {fmt(c1f.get('mean_b'))}, leads at {c1f.get('a_leads_seeds', 'n/a')} seeds", c1f["verdict"]),
+        ("C1, most stable: MICA above Leiden", "0.473 vs 0.452", f"{fmt(c1m.get('mean_a'))} vs {fmt(c1m.get('mean_b'))}, leads at {c1m.get('a_leads_seeds', 'n/a')} seeds", c1m["verdict"]),
+        ("C2, the reading moves MICA more", "0.197 vs 0.118",
+         f"{fmt(out['C2']['mean_abs_reading_change'].get('mica'))} vs {fmt(out['C2']['mean_abs_reading_change'].get('leiden_pca'))}", out["C2"]["verdict"]),
+    ]
+    c3 = out.get("C3", {})
+    if c3:
+        rows.append(("C3, MICA's flat top in the five smallest", "0.534 vs 0.231, Leiden 0.177",
+                     f"{fmt(c3.get('five_smallest/mica', {}).get('share_tied'))} vs {fmt(c3.get('four_larger/mica', {}).get('share_tied'))}, "
+                     f"Leiden {fmt(c3.get('five_smallest/leiden_pca', {}).get('share_tied'))}", c3["verdict"]))
+    c4 = out.get("C4", {})
+    rows.append(("C4, PBMC14K tie under most stable, seeds 0 to 4", "3 of 3 seeds", c4.get("ties", "n/a"), c4.get("verdict", "n/a")))
+    c5 = out["C5"]
+    rows.append(("C5, original grids: Leiden above MICA, most stable", "0.635 vs 0.473",
+                 f"{fmt(c5.get('mean_a'))} vs {fmt(c5.get('mean_b'))}", c5["verdict"]))
+    f1 = out["F1"]
+    rows.append(("F1, chooseR's code: MICA above Leiden, finest", "not run", f"{fmt(f1.get('mean_a'))} vs {fmt(f1.get('mean_b'))}", f1["verdict"]))
+    fc = out.get("FC", {})
+    rows.append(("FC, chooseR's tally equals ours", "not run", f"{fc['identical']:,} of {fc['matrices']:,}" if 'identical' in fc else "n/a", fc.get("verdict", "n/a")))
+    body = "\n".join(f"{a} & {b} & {c} & {d} \\\\" for a, b, c, d in rows)
+    (TABLES / "a4_criteria.tex").write_text(
+        "\\begin{table*}[t]\n\\centering\n\\caption{The criteria fixed in protocol v1 before the confirmatory runs, with "
+        "Assignment 3's value (seeds 0 to 2) and the value at the seven new seeds, 3 to 9, except C4 (PBMC14K, seeds 0 to 4) "
+        "and FC (every seed). Mean ARI over the nine small "
+        "datasets of the per-dataset medians, on matched candidates scored as the original protocol (S0), unless stated. "
+        "A criterion of C1 holds if the mean is higher and MICA leads at 5 or more of the 7 per-seed means, and is weak "
+        "if only the mean is higher.}\n\\label{tab:criteria}\n\\footnotesize\n\\setlength{\\tabcolsep}{4pt}\n"
+        "\\begin{tabular}{lllc}\n\\toprule\nCriterion & Assignment 3 & Protocol v1 & Verdict \\\\\n\\midrule\n"
+        + body + "\n\\bottomrule\n\\end{tabular}\n\\end{table*}\n")
+    e3 = out.get("E3_decomposition_leiden", {})
+    steps = [("Original grid, capped at 2 to 20", "original"), ("Original grid, one setting per count", "original_one_per_count"),
+             ("Matched grid, only counts the original grid reached", "mid_old_counts"), ("Matched grid, all matched counts", "mid")]
+    body = "\n".join(f"{lab} & {fmt(e3.get(f'{k}/{F}'))} & {fmt(e3.get(f'{k}/{M}'))} \\\\" for lab, k in steps)
+    (TABLES / "a4_decomp.tex").write_text(
+        "\\begin{table}[t]\n\\centering\n\\caption{Why matching changes Leiden's score: its mean ARI over the nine small "
+        "datasets as the candidate set changes one step at a time, seeds 3 to 9, original protocol (S0). Each step is "
+        "rescored from the same partitions, so only the candidates differ.}\n\\label{tab:decomp}\n\\footnotesize\n"
+        "\\setlength{\\tabcolsep}{4pt}\n\\begin{tabular}{lcc}\n\\toprule\nLeiden's candidates & Finest & Most \\\\\n\\midrule\n"
+        + body + "\n\\bottomrule\n\\end{tabular}\n\\end{table}\n")
+
+
+def write_numbers(p, out, conf, pseeds, root):
+    """latex/numbers_a4.tex: every protocol v1 figure the text quotes, as \V{key}, from this run's results.
+
+    The text never types a protocol v1 number by hand. \V{key} prints the value, and an unknown
+    key prints ??key in bold, so a stale or missing number shows in the PDF.
+    """
+    vals = {}
+    short_m = {"mica": "mica", "leiden_pca": "leiden", "kmeans_pca": "kmeans"}
+    short_r = {F: "F", M: "M"}
+    for S in ("S0", "S1", "S3-G", "S3-G2"):
+        for d in protocol_designs():
+            for r in (F, M):
+                for m in METHODS:
+                    for tag, seeds in (("", conf), (".s02", [0, 1, 2]), (".all", list(range(10)))):
+                        v = summary(p, S, d, r, m, seeds)
+                        if v:
+                            vals[f"{S.replace('-', '')}.{d}.{short_r[r]}.{short_m[m]}{tag}"] = f"{v['mean']:.3f}"
+    for r in (F, M):
+        c = out["C1"][r]
+        if "a_leads_seeds" in c:
+            vals[f"C1.{short_r[r]}.leads"] = c["a_leads_seeds"]
+            vals[f"C1.{short_r[r]}.verdict"] = c["verdict"]
+        for m in ("mica", "leiden_pca"):
+            ps = summary(p, "S0", "mid", r, m, conf)
+            if ps and ps["per_seed"]:
+                vals[f"S0.mid.{short_r[r]}.{short_m[m]}.seedmin"] = f"{min(ps['per_seed'].values()):.3f}"
+                vals[f"S0.mid.{short_r[r]}.{short_m[m]}.seedmax"] = f"{max(ps['per_seed'].values()):.3f}"
+    for m, v in out["C2"]["mean_abs_reading_change"].items():
+        if v is not None:
+            vals[f"C2.{short_m[m]}"] = f"{v:.3f}"
+    for k, v in out.get("C3", {}).items():
+        if isinstance(v, dict) and "share_tied" in v:
+            sz, m = k.split("/")
+            vals[f"C3.{sz}.{short_m[m]}.share"] = f"{v['share_tied']:.3f}"
+            vals[f"C3.{sz}.{short_m[m]}.span"] = f"{v['span']:.1f}"
+            vals[f"C3.{sz}.{short_m[m]}.atone"] = f"{100 * v['share_at_one']:.0f}"
+    for k in ("C1", "C2", "C3", "C4", "C5", "F1", "FC"):
+        if k in out and isinstance(out[k], dict) and "verdict" in out[k] and k != "C1":
+            vals[f"{k}.verdict"] = out[k]["verdict"]
+    if "C4" in out:
+        vals["C4.ties"] = out["C4"]["ties"]
+    if "FC" in out:
+        vals["FC.identical"] = f"{out['FC']['identical']:,}"
+        vals["FC.matrices"] = f"{out['FC']['matrices']:,}"
+    for k, v in out.get("E3_decomposition_leiden", {}).items():
+        name, r = k.split("/")
+        vals[f"E3.{name.replace('_', '')}.{short_r[r]}"] = f"{v:.3f}"
+    for k, v in out.get("E2_menu_vs_representation", {}).items():
+        d, r = k.split("/")
+        for kk, x in v.items():
+            if x is not None:
+                vals[f"E2.{d}.{short_r[r]}.{kk.replace('_', '')}"] = f"{x:.3f}"
+                if kk == "kmeans_minus_leiden":
+                    vals[f"E2.{d}.{short_r[r]}.leidenminuskmeans"] = f"{-x:.3f}"
+    # Leiden's range over the candidate variants
+    for r in (F, M):
+        xs = [summary(p, "S0", d, r, "leiden_pca", conf) for d in ("mid", "low", "high", "dense")]
+        xs = [x["mean"] for x in xs if x]
+        if xs:
+            vals[f"variants.{short_r[r]}.leiden.min"] = f"{min(xs):.3f}"
+            vals[f"variants.{short_r[r]}.leiden.max"] = f"{max(xs):.3f}"
+    reg = root / "regression.csv"
+    if reg.exists():
+        rg = pd.read_csv(reg)
+        rg = rg[~rg.picks.astype(str).str.startswith("no saved")]
+        bad = rg[[c for c in ("picks", "stability_curve", "full_sweep") if c in rg]].map(
+            lambda v: str(v) not in ("equal", "absent in saved file", "nan")
+            and not str(v).startswith("not expected")).any(axis=1)
+        vals["R0.compared"], vals["R0.mismatch"] = str(len(rg)), str(int(bad.sum()))
+        small = ~rg.folder.str.contains("pbmc14k")
+        vals["R0.small.compared"], vals["R0.small.mismatch"] = str(int(small.sum())), str(int(bad[small].sum()))
+        lp = rg.folder.str.contains("pbmc14k") & (rg.note.astype(str) == "Leiden only")
+        vals["R0.pbmcleiden.compared"], vals["R0.pbmcleiden.mismatch"] = str(int(lp.sum())), str(int(bad[lp].sum()))
+    e3a = out.get("E3_added_counts", {})
+    for k, v in e3a.items():
+        vals[f"E3.{k.replace('_', '')}"] = str(v)
+    f3 = out.get("S3_failures")
+    if f3:
+        vals["S3.settings"], vals["S3.failed"] = f"{f3['settings']:,}", f"{f3['failed']:,}"
+        for m, x in f3["runs_without_choice_V"].items():
+            vals[f"S3.nochoice.{short_m[m]}"] = x
+        for ds, x in f3["by_dataset"].items():
+            vals[f"S3.failed.{ds}"] = x
+    for d, block in out.get("E4_chooser_agreement", {}).items():
+        for m, x in block.items():
+            vals[f"E4.{d}.{short_m[m]}.same"] = f"{x['same_count']} of {x['runs']}"
+            vals[f"E4.{d}.{short_m[m]}.change"] = f"{x['mean_abs_ari_change']:.3f}"
+    for k, v in out.get("ami_means", {}).items():
+        r, m = k.split("/")
+        vals[f"AMI.{short_r[r]}.{short_m[m]}"] = f"{v:.3f}"
+    for k, v in out.get("seed_range", {}).items():
+        r, m = k.split("/")
+        vals[f"range.{short_r[r]}.{short_m[m]}.mean"] = f"{v['mean']:.2f}"
+        vals[f"range.{short_r[r]}.{short_m[m]}.max"] = f"{v['max']:.2f}"
+        vals[f"range.{short_r[r]}.{short_m[m]}.maxds"] = NAMES.get(v["max_dataset"], v["max_dataset"])
+    for k, x in out.get("E5_dataset_robustness", {}).items():
+        S, d, r = k.split("/")
+        key = f"E5.{S.replace('-', '')}.{d}.{short_r[r]}"
+        vals[key + ".micawins"] = str(x["mica_wins"])
+        vals[key + ".leidenwins"] = str(x["leiden_wins"])
+        vals[key + ".level"] = str(x["level"])
+        vals[key + ".loo"] = f"{x['loo_gap']:.3f}"
+        vals[key + ".loods"] = x["loo_gap_without"]
+        vals[key + ".flips"] = str(x["sign_flips_without_one"])
+        vals[key + ".seedleads"] = x["mica_leads_seeds"]
+    for k, x in out.get("E5_mica_vs_kmeans", {}).items():
+        S, d, r = k.split("/")
+        key = f"E5k.{S.replace('-', '')}.{d}.{short_r[r]}"
+        vals[key + ".micawins"] = str(x["mica_wins"])
+        vals[key + ".kmeanswins"] = str(x["kmeans_wins"])
+        vals[key + ".level"] = str(x["level"])
+        vals[key + ".loo"] = f"{x['loo_gap']:.3f}"
+        vals[key + ".loods"] = x["loo_gap_without"]
+    # PBMC14K medians over its seeds, every scorer, design and reading
+    pb = p[(p.ds == "pbmc14k") & p.seed.isin(pseeds)]
+    for (S, d, r, m), g in pb.groupby(["S", "design", "reading", "method"]):
+        key = f"pbmc.{S.replace('-', '')}.{d}.{short_r.get(r, 'F')}.{short_m[m]}"
+        if S == "S3-V":  # as written, chooseR's code can make no choice, so count those runs instead
+            vals[key + ".nochoice"] = f"{int(g.ari.isna().sum())} of {len(g)}"
+        g = g.dropna(subset=["ari"])
+        if not len(g):
+            continue
+        vals[key] = f"{g.ari.median():.3f}"
+        vals[key + ".k"] = kr(g.n_clusters.min(), g.n_clusters.max())
+        vals[key + ".seeds"] = str(int(g.seed.nunique()))
+    # per-subsample cost from the provenance files
+    prov = [json.loads(Path(f).read_text()) for f in glob(str(root / "provenance" / "paper_*.json"))]
+    for m in METHODS:
+        xs = [d["seconds_per_subsample"][m] for d in prov if "seconds_per_subsample" in d and m in d["seconds_per_subsample"]
+              and not str(d.get("dataset")).endswith("pbmc14k")]
+        if xs:
+            vals[f"cost.small.{short_m[m]}.median"] = f"{float(np.median(xs)):.1f}"
+    lines = ["% Generated by scripts/a4_protocol_v1.py from results/v1. Do not edit by hand.",
+             f"% seeds {conf[0]} to {conf[-1]} confirmatory, PBMC14K seeds {pseeds}"]
+    for k in sorted(vals):
+        lines.append(f"\\expandafter\\def\\csname v@{k}\\endcsname{{{vals[k]}}}")
+    (RESULTS.parent / "latex" / "numbers_a4.tex").write_text("\n".join(lines) + "\n")
+    return vals
+
+
+def protocol_designs():
+    return ("original", "mid", "low", "high", "dense")
+
+
 def seeds_of(arg, default):
     if not arg:
         return default
@@ -172,6 +493,9 @@ def seeds_of(arg, default):
 
 def main(argv):
     opts = dict(zip(argv[::2], argv[1::2]))
+    global V1
+    if "--root" in opts:
+        V1 = Path(opts["--root"])
     conf = seeds_of(opts.get("--seeds"), list(range(3, 10)))
     pseeds = seeds_of(opts.get("--pbmc-seeds"), list(range(0, 5)))
     allseeds = list(range(0, 10))
@@ -235,12 +559,83 @@ def main(argv):
                      "mica_minus_kmeans": (lead(p, "S0", d, r, "mica", "kmeans_pca", conf) or {}).get("gap")}
         for d in ("original", "mid") for r in (F, M)}
     out["E3_decomposition_leiden"] = decomposition(c, conf)
+    # Exploratory, added Nov 13 after reading Table a4_confirm: how far the mean gap rests on single datasets.
+    # Per-dataset medians over the confirmatory seeds, MICA minus Leiden. Wins count gaps above 0.01.
+    rob = {}
+    for S, d, r in (("S0", "mid", F), ("S0", "mid", M), ("S1", "mid", F), ("S1", "mid", M), ("S3-G", "mid", F),
+                    ("S0", "original", F), ("S0", "original", M), ("S1", "original", F), ("S3-G", "original", F)):
+        x, y = summary(p, S, d, r, "mica", conf), summary(p, S, d, r, "leiden_pca", conf)
+        if not x or not y:
+            continue
+        g = {ds: x["per_dataset"][ds] - y["per_dataset"][ds] for ds in SMALL}
+        loo = {ds: float(np.mean([g[o] for o in SMALL if o != ds])) for ds in SMALL}
+        worst = min(loo, key=loo.get) if sum(g.values()) > 0 else max(loo, key=loo.get)
+        rob[f"{S}/{d}/{r}"] = {"gap": round(float(np.mean(list(g.values()))), 4),
+                               "mica_leads_seeds": lead(p, S, d, r, "mica", "leiden_pca", conf)["a_leads_seeds"],
+                               "mica_wins": int(sum(v > 0.01 for v in g.values())),
+                               "leiden_wins": int(sum(v < -0.01 for v in g.values())),
+                               "level": int(sum(abs(v) <= 0.01 for v in g.values())),
+                               "loo_gap_without": NAMES[worst], "loo_gap": round(loo[worst], 4),
+                               "sign_flips_without_one": int(sum(np.sign(v) != np.sign(np.mean(list(g.values())))
+                                                                 for v in loo.values())),
+                               "per_dataset_gap": {k: round(v, 4) for k, v in g.items()}}
+    out["E5_dataset_robustness"] = rob
+    # The same check for MICA against PCA plus k-means, the representation comparison (E2)
+    robk = {}
+    for S, d, r in (("S0", "mid", F), ("S0", "mid", M), ("S0", "original", F), ("S0", "original", M)):
+        x, y = summary(p, S, d, r, "mica", conf), summary(p, S, d, r, "kmeans_pca", conf)
+        if not x or not y:
+            continue
+        g = {ds: x["per_dataset"][ds] - y["per_dataset"][ds] for ds in SMALL}
+        loo = {ds: float(np.mean([g[o] for o in SMALL if o != ds])) for ds in SMALL}
+        worst = min(loo, key=loo.get)
+        robk[f"{S}/{d}/{r}"] = {"gap": round(float(np.mean(list(g.values()))), 4),
+                                "mica_wins": int(sum(v > 0.01 for v in g.values())),
+                                "kmeans_wins": int(sum(v < -0.01 for v in g.values())),
+                                "level": int(sum(abs(v) <= 0.01 for v in g.values())),
+                                "loo_gap_without": NAMES[worst], "loo_gap": round(loo[worst], 4),
+                                "per_dataset_gap": {k: round(v, 4) for k, v in g.items()}}
+    out["E5_mica_vs_kmeans"] = robk
+    # which counts the matched design adds for Leiden, and whether the plain maximum takes them
+    lc = c[(c.scorer == "ours") & (c.b == 25) & (c.method == "leiden_pca") & c.seed.isin(conf) & c.ds.isin(SMALL)]
+    old_counts = {k: set(g[g.in_original].n_clusters) for k, g in lc.groupby(["ds", "seed"])}
+    added = [k for key, g in lc.groupby(["ds", "seed"]) for k in set(g[g.in_mid].n_clusters) - old_counts[key]]
+    q = p[(p.S == "S0") & (p.design == "mid") & (p.reading == M) & (p.method == "leiden_pca") & p.seed.isin(conf) & p.ds.isin(SMALL)]
+    new_pick = sum(1 for r in q.itertuples() if r.n_clusters not in old_counts.get((r.ds, r.seed), set()))
+    med = q.groupby("ds").n_clusters.median()
+    out["E3_added_counts"] = {"added_at_most_3": int(sum(k <= 3 for k in added)), "added_above_3": int(sum(k > 3 for k in added)),
+                              "plain_max_picks_new_count": f"{new_pick} of {len(q)}",
+                              "median_pick_2_or_3": f"{int(((med >= 2) & (med <= 3)).sum())} of {len(med)}"}
     out["E4_chooser_agreement"] = {"mid": chooser_agreement(p, allseeds, "mid"),
                                    "original": chooser_agreement(p, allseeds, "original")}
     st = p[p.scorer.str.startswith("chooseR")]
     if len(st):
         out["S3_failed_settings"] = {m: int(g.n_failed.max()) for m, g in st.groupby("method")}
         out["S3_no_choice_runs_V"] = {m: int(g.chosen_setting.isna().sum()) for m, g in st[st.S == "S3-V"].groupby("method")}
+    if "--tables" in opts:
+        write_tables(p, c, out, conf, pseeds)
+    files = [f for f in sorted(glob(str(V1 / "chooser_r" / "paper_*_seed*.csv")))]
+    cr = pd.concat([pd.read_csv(f).assign(ds=short(Path(f).stem.rsplit("_seed", 1)[0]),
+                                          seed=int(Path(f).stem.rsplit("_seed", 1)[1])) for f in files],
+                   ignore_index=True) if files else pd.DataFrame()
+    if len(cr):
+        cr["failed"] = cr.status.isin(["error", "no_interval"])
+        out["S3_failures"] = {
+            "settings": int(len(cr)), "failed": int(cr.failed.sum()),
+            "by_status": cr.status.value_counts().to_dict(),
+            "by_dataset": {k: f"{int(g.failed.sum())} of {len(g)}" for k, g in cr.groupby("ds")},
+            "runs_without_choice_V": {m: f"{int(g.chosen_setting.isna().sum())} of {len(g)}"
+                                      for m, g in p[p.S == "S3-V"].groupby("method")}}
+    sm = p[(p.S == "S0") & (p.design == "mid") & p.ds.isin(SMALL) & p.seed.isin(conf)]
+    if len(sm):
+        out["ami_means"] = {f"{r}/{m}": round(float(g.groupby("ds").ami.median().mean()), 4)
+                            for (r, m), g in sm.groupby(["reading", "method"])}
+        rng_ = sm.groupby(["reading", "method", "ds"]).ari.agg(lambda x: x.max() - x.min())
+        out["seed_range"] = {f"{r}/{m}": {"mean": round(float(g.mean()), 3), "max": round(float(g.max()), 3),
+                                          "max_dataset": g.idxmax()[2]} for (r, m), g in rng_.groupby(level=[0, 1])}
+    if "--tables" in opts:
+        write_tables2(p, out, conf)
+        out["latex_values"] = write_numbers(p, out, conf, pseeds, V1)
     (RESULTS / "a4_protocol_v1_numbers.json").write_text(json.dumps(out, indent=1, default=str))
     for k in ("C1", "C2", "C3", "C4", "C5", "F1", "FC"):
         if k in out:

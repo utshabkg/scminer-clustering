@@ -1,0 +1,3 @@
+job_id,max_abs_diff,equal
+paper_pbmc14k_s0_mica_0.49,0.0,True
+paper_pbmc14k_s0_mica_0.58,0.0,True

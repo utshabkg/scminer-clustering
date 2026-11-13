@@ -1,0 +1,38 @@
+{
+ "git": {
+  "head": "620f940ed7aba952ae16d673ab2eac2c783a5398",
+  "describe": "matched-protocol-v1",
+  "dirty": false,
+  "tag_commit": "620f940ed7aba952ae16d673ab2eac2c783a5398",
+  "code_changed_since_tag": [],
+  "code_untracked": [],
+  "code_matches_tag": true
+ },
+ "module": "/home/ugdf8/coursework/26Fall/Clustering_Algorithms/scminer-v1-run/src/scminer_clust/protocol.py",
+ "repo": "/home/ugdf8/coursework/26Fall/Clustering_Algorithms/scminer-v1-run",
+ "python": "3.11.16",
+ "platform": "Linux-6.12.95+deb12-amd64-x86_64-with-glibc2.36",
+ "numpy": "2.4.6",
+ "scanpy": "1.11.5",
+ "sklearn": "1.9.1",
+ "anndata": "0.12.19",
+ "pythonpath": "/home/ugdf8/coursework/26Fall/Clustering_Algorithms/scminer-v1-run/src",
+ "threads": {
+  "OMP_NUM_THREADS": "8",
+  "OPENBLAS_NUM_THREADS": "8",
+  "MKL_NUM_THREADS": "8",
+  "NUMBA_NUM_THREADS": "8"
+ },
+ "dataset": "paper_kolodziejczyk",
+ "seed": 6,
+ "b": 100,
+ "designs": [
+  "original",
+  "mid"
+ ],
+ "tally_max": 704,
+ "crosscheck": 0,
+ "r_versions": "R version 4.4.3 (2025-02-28) | 1.3.32 | 2.1.8.3 | 1.2.1 | 3.3.1",
+ "chooser_pipeline_sha256": "ca0016318ffa431395ff20669861970294fda2c329ef40ec4b6275f1949201c3",
+ "minutes": 0.5210138201713562
+}

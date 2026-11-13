@@ -1,0 +1,44 @@
+{
+ "git": {
+  "head": "620f940ed7aba952ae16d673ab2eac2c783a5398",
+  "describe": "matched-protocol-v1",
+  "dirty": false,
+  "tag_commit": "620f940ed7aba952ae16d673ab2eac2c783a5398",
+  "code_changed_since_tag": [],
+  "code_untracked": [],
+  "code_matches_tag": true
+ },
+ "module": "/home/ugdf8/coursework/26Fall/Clustering_Algorithms/scminer-v1-run/src/scminer_clust/protocol.py",
+ "repo": "/home/ugdf8/coursework/26Fall/Clustering_Algorithms/scminer-v1-run",
+ "python": "3.11.16",
+ "platform": "Linux-6.12.95+deb12-amd64-x86_64-with-glibc2.36",
+ "numpy": "2.4.6",
+ "scanpy": "1.11.5",
+ "sklearn": "1.9.1",
+ "anndata": "0.12.19",
+ "pythonpath": "/home/ugdf8/coursework/26Fall/Clustering_Algorithms/scminer-v1-run/src",
+ "threads": {
+  "OMP_NUM_THREADS": "8",
+  "OPENBLAS_NUM_THREADS": "8",
+  "MKL_NUM_THREADS": "8",
+  "NUMBA_NUM_THREADS": "8"
+ },
+ "dataset": "paper_pollen",
+ "seed": 5,
+ "b": 100,
+ "timings": {
+  "full_mica": 0.8456571102142334,
+  "full_leiden": 9.505546808242798,
+  "full_kmeans": 1.3751215934753418,
+  "scoring": 94.86779761314392,
+  "total": 407.1040503978729
+ },
+ "seconds_per_subsample": {
+  "mica": 0.83548020362854,
+  "kmeans_pca": 1.3001861453056336,
+  "leiden_pca": 0.8454509210586548
+ },
+ "store": "/home/ugdf8/coursework/26Fall/Clustering_Algorithms/scminer-v1-run/data/runs/protocol_v1/paper_pollen_seed5",
+ "input_sha256": "f688081fb4ada8e6387a453fafe7ad3cf53d50abc1a4eece41d02cab47bb3807",
+ "seconds_note": "old-layout seconds are reconstructed from this run's timings"
+}
