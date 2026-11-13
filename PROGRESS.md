@@ -21,7 +21,195 @@ Updated: 2026-11-12. Counts follow the Milestone column in `WORKPLAN.md`.
 
 Overall: 36 of 57 tasks finished. Three of the 57 repeat every week. The counts above are read off the status markers in `WORKPLAN.md`.
 
-Next three things: finish the pre-tag checks and tag `matched-protocol-v1`, launch the confirmatory runs (U-41 to U-43), then write the Assignment 4 manuscript for Nov 16.
+Next three things (Nov 13): teammate checks of the Assignment 4 draft by 13:00, fixes by 15:00, submit in the evening. Then the Allen large-scale run (U-46) for Nov 30.
+
+---
+
+## 2026-11-12 evening and 2026-11-13, Utshab (Assignment 4, now submitted Nov 13)
+
+**Deadline moved up.** Utshab is at a conference from Nov 14 to 19, so Assignment 4 goes in on Fri Nov 13
+instead of Nov 16. The message to Laraib and Rhea with the new timeline, and answers to Laraib's questions (keep
+`latex/`, the title, the tag, her L-5 text), is in the gitignored `scratchpad/teammate_message_nov13.md`.
+Plan: draft on GitHub by 08:00, Laraib proofreads the Introduction, Related Work and Discussion and Rhea runs R-7 by
+13:00, fixes by 15:00, Utshab submits in the evening.
+
+**Launches on Nov 12 at 19:11** (all from the worktree at the tag, byobu, CPU only):
+- PBMC14K seed 2 had never been launched before the session went idle. `scm-v1-pbmc-s2` and `scm-v1-pbmcpca-s2`
+  started at 19:11, about 8 hours later than planned. Not a protocol deviation as long as it finishes before
+  Nov 14 09:00, the cut-off the protocol set.
+- `scm-v1-finish-s0` to `-s4` wait for each seed's MICA and PCA stages, then run the score and chooseR stages
+  (`scratchpad/v1_pbmc_finish.sh`).
+- `scm-v1-chooser-c` ran chooseR's code on small-dataset seeds 9, 1, 2, then 0 once the last small run finished.
+
+**State at 00:46 Nov 13.**
+- All 90 small-dataset runs (nine datasets, seeds 0 to 9) and their chooseR scoring are done.
+- PBMC14K seeds 0, 1, 3 and 4 are done through chooseR (MICA stage 8.8 to 10.1 h, Leiden and k-means stage 2.1 to
+  2.5 h, from the logs). Seed 2 is at MICA subsample 61 of 100, expected done near 04:10.
+- **R0 holds.** `scripts/check_v1_regression.py` on the worktree's `results/v1`: 58 folders compared, 0 mismatches.
+  That is all 54 small-dataset folders of seeds 0 to 2, PBMC14K Leiden at seeds 0 and 1, and two PBMC14K MICA folders
+  marked as not expected to reproduce, since node2vec and Louvain take no seed. Source: `results/v1/regression.csv`.
+- **FC holds** on every cross-checked matrix, 6,705 of 6,705 identical.
+
+**Confirmatory verdicts** (S0, matched candidates, seeds 3 to 9, nine small datasets. Source:
+`results/a4_protocol_v1_numbers.json`, regenerated 00:5x):
+
+| Criterion | Seeds 0 to 2 | Seeds 3 to 9 | Verdict |
+|---|---|---|---|
+| C1 finest: MICA above Leiden | 0.662 vs 0.543 | 0.647 vs 0.591, 7 of 7 seeds | holds |
+| C1 most stable | 0.473 vs 0.452 | 0.452 vs 0.454, 3 of 7 seeds | fails |
+| C2 reading moves MICA more | 0.197 vs 0.118 | 0.292 vs 0.179 (k-means 0.079) | holds |
+| C3 MICA's flat top in the five smallest | 0.534 vs 0.231 | 0.493 vs 0.231, Leiden 0.142 | holds |
+| C4 PBMC14K tie, most stable | 3 of 3 | 4 of 5 (seeds 0 to 4) | holds |
+| C5 original grids: Leiden above MICA, most stable | 0.635 vs 0.473 | 0.650 vs 0.452, 7 of 7 | holds |
+| F1 chooseR's code: MICA above Leiden, finest | not run | 0.679 vs 0.591, 7 of 7 | holds |
+| FC tally equals ours | not run | 6,709 of 6,709 | holds |
+
+**Exploratory, added Nov 13 after reading Table `a4_confirm` (not fixed in the protocol).**
+- *Per dataset and leave one dataset out* (`E5_dataset_robustness` in the JSON). Matched, finest, S0: MICA higher on 5
+  datasets, Leiden on 3, 1 level. Without Buettner the mean gap is -0.028, so at 25 subsamples the mean lead rests on
+  Buettner. At 100 subsamples (S1) the gap is 0.151 and 0.069 without Buettner, and under chooseR's code (S3-G) 0.087
+  and 0.008. Both split 4 to 4 by dataset. The original-grid reversal (most stable, S0) never flips without any one
+  dataset: Leiden higher on 6 of 9, MICA minus Leiden -0.139 even without Pollen.
+- *Subsamples change the plain maximum.* Matched, most stable: S0 0.452 vs 0.454 (MICA ahead at 3 of 7 seeds), S1
+  0.486 vs 0.428 (5 of 7). Original grids, most stable, S1: Leiden still ahead, 0.623 vs 0.486, 0 of 7.
+- *Menu against representation, using k-means as the control.* Most stable: Leiden minus k-means 0.276 on original
+  grids, 0.084 matched. MICA minus k-means 0.078 and 0.082. The menu effect shrinks, the representation effect does
+  not move.
+- *PBMC14K mechanism.* On the original grid MICA picks 5 clusters (ARI 0.62 to 0.63) under our scorer on all cells and
+  8 clusters (0.833 to 0.842) under chooseR's code, at all four seeds so far. At seed 0, chooseR's interval for
+  MICA's 5-cluster settings has lower bounds 0.61 to 0.66 against medians near 0.998, because it resamples only 5
+  cluster averages. A 7-cluster setting sets the threshold (lower bound up to 0.84), and 8 clusters clears it. Source:
+  `results/v1/chooser_r/paper_pbmc14k_seed0.csv`.
+
+**Analysis script changes (`scripts/a4_protocol_v1.py`, not part of the tagged code).**
+- PBMC14K runs where chooseR's code makes no choice (S3-V, k-means on the original grid at every seed) caused a NaN
+  crash in the macros. They are now counted instead (`pbmc.S3V.*.nochoice`).
+- The E5 block and its `\V{E5.*}` macros, R0 macros for the small datasets and for PBMC14K Leiden.
+- Table placeholders `--` became `n/a`, because `--` prints an en dash.
+
+**Manuscript.** Laraib's L-5 text came from Overleaf in `latex/updated_tex_Nov-13-2026/` (the export of all three
+Overleaf projects). Against the tag `a3-submitted`, only `02_introduction.tex` and `03_related.tex` differ. Both
+are adapted to the new framing, with her structure and much of her wording kept, the 21 verified references added,
+and the graph and language-model material shortened since the graph comparison moved to the appendix. The export
+folder itself is not committed. Also rewritten: title, abstract, Discussion (four mechanisms, six reliability checks,
+limitations), Conclusion with the plan to Nov 30, the completion plan, the PBMC14K results, and the stale appendix
+statements (bootstrap never compared, dangling references). Times-metric build: 17 pages, References on page 10.
+
+**Overleaf transfer (02:45).** Utshab cannot sync Overleaf with GitHub, so the Nov 11 reason for keeping `latex/`
+(Overleaf pulls from GitHub) was wrong and is corrected in WORKPLAN. The teammate message no longer says the two are
+synced: the draft goes to GitHub, then Utshab uploads the same files to Overleaf by hand and posts in the chat.
+`scripts/overleaf_package.py` compares `latex/` with the Overleaf export and writes `scratchpad/overleaf_upload/`
+(changed files by folder, `full.zip`, `MANIFEST.txt`). Dry run against the Nov 13 export: 12 changed, 7 new, nothing
+only in Overleaf. The one non-ASCII character in the source (the accented name in Related Work) became `Du{\`o}`,
+since Overleaf compiles with pdfLaTeX. Open point: `\overleaflink` in `main.tex` is the same project id
+(6aaf2340...) as the Assignment 2 export, so it may not point at the Assignment 4 project.
+`scripts/lint_prose.py` is clean on every section and table.
+
+**Review round 1.** Workflow `wf_d0005e2d-15a`, four lenses (numbers, the instructor's requests, logic, citations),
+each with an adversarial verifier: 40 findings, 37 confirmed or partly confirmed, 3 refuted. All 37 applied by 01:10
+(full list in the session scratchpad, `review_a4.json`). The ones that changed what the paper says:
+- *chooseR's failures are not a small-data effect.* MICA makes no choice under chooseR's code as written on every run
+  of Chung, Goolam, Klein, Kolodziejczyk and Pollen, 6 of 20 on Yan, and none on Buettner, Usoskin, Zeisel or
+  PBMC14K. All 53 failed MICA settings are its coarsest partition (k = 2, or 3 on Goolam) with a median of exactly
+  1.0. Leiden's failures are at 2 or 3 clusters too, but their medians run from 0 to 1. Those of k-means are mostly
+  at 17 to 20 clusters. Source: `results/v1/chooser_r/*.csv`. The text no longer ties failures to flat scores.
+- *Klein explains the finest-stable change on matching.* Leiden's matched grid offers a perfectly reproducing
+  2-cluster partition, whose lower bound 1.0 becomes our threshold. Leiden then takes 2 clusters (ARI 0.501) at
+  every new seed, where the original grid gave 4 or 5 (0.885 to 0.973). Source: `results/v1/picks/paper_klein*`.
+- *The PBMC14K tie depends on the setting per count.* Under the plain maximum with the lowest setting per count, or
+  every setting, Leiden takes a perfectly reproducing 5-cluster partition at 3 of 4 seeds, median 0.604 against
+  MICA's 0.395. On the original grids MICA leads under every scorer (0.624 at 5 clusters, 0.84 at 8 under chooseR's
+  code, against Leiden's 0.397 at 4), so the small-data reversal does not extend to PBMC14K.
+- *The interval does not move the ranking* in any comparison where only the interval changes (S1 against S3). It
+  moves individual choices. The Abstract and Conclusion now say so.
+- *chooseR's code as written versus repaired.* The matched lead under chooseR's code is the protocol's point-interval
+  repair (S3-G). The text now says "with the declared repair" wherever it cites it.
+- Others: the Introduction now defines the two readings, the Method no longer says k-means differs from Leiden only
+  in its menu, four citation statements were narrowed (Haslbeck and Wulff, Duò et al., Freytag et al., pipeComp),
+  the transfer comparison is listed among the results kept at three seeds, the pre-tag test runs are disclosed in
+  the Design, the reproduction table (`tab:repro`) is back in the appendix, and the appendix has code and data
+  links (GitHub, Zenodo 10.5281/zenodo.15040179). Zeisel at resolution 1.0 gives 20 or 21 clusters over ten seeds,
+  not always 21.
+
+After the fixes: Times-metric build 18 pages, References on page 11, no undefined references or values, lint clean.
+
+**Review round 2** (`wf_8aeb8f1a-c55`, three lenses with verifiers, 01:15 to 01:35): 24 findings, 23 confirmed or partly
+confirmed, 1 refuted. All 23 applied (session scratchpad, `review_a4_round2.json`). Some corrected round 1's fixes:
+- The PBMC14K plain-maximum tie also holds with Leiden's highest setting per count (4 of 4 seeds). Only the lowest
+  and every-setting variants break it. The text now says "unless Leiden is offered its lowest or every setting".
+- A threshold of 1.0 still lets a finer setting through if it also scores 1.0 (MICA on Pollen picks 14 clusters
+  that way at seed 3). Leiden on Klein has no such finer setting, which is why it falls to 2 clusters.
+- Most of the baselines' failed settings under chooseR's code score 0 (status "error", 185 of 281), not 1.0. Only
+  MICA's failures are all perfect coarse partitions (96 settings have status no_interval, all with median 1.0).
+- On PBMC14K the menu effect runs the other way. MICA's own graph grid (0.1 to 4.0) gives no fewer than 5 clusters,
+  and matching adds its 4-cluster partitions, which the plain maximum takes.
+- PBMC14K seeds 0 to 2 reuse the Assignment 3 subsamples, and Leiden's runs there reproduce Assignment 3. So only
+  seeds 3 and 4 are new for every method. The text now says "seeds 0 to 4 on PBMC14K", and C4 is labelled with its
+  seeds.
+- The subsample and interval effects come from analyses the protocol left exploratory, and the Conclusion now says
+  so. The six checks are described as flags, not as sufficient conditions, since no comparison passes all six.
+- New exploratory macros `E5k.*`: MICA against PCA plus k-means per dataset (S0, matched). Finest: MICA ahead on 6,
+  k-means on 2, still 0.132 without Usoskin. Most stable: 4 against 3, and 0.001 without Usoskin.
+- Smaller: the design history sentence now gives the two commit dates (Oct 22, Oct 28), the Changes section points
+  to the sections that answer each request, and k-means appears in the Conclusion.
+
+**PBMC14K seed 2 finished (Nov 13, 04:04).** MICA stage done at 03:38 (8.14 h), score stage at 03:51, chooseR's code
+at 04:04: 125 settings, 124 ok, 1 without an interval (k-means at k = 2, as at every PBMC14K seed), cross-check 2 of 2
+matrices identical. Source: `logs/v1-pbmc-s2.log`, `v1-pbmcscore-s2.log`, `v1-chooserpbmc-s2.log` in the worktree.
+- `check_v1_regression.py`: 60 folders compared, 0 mismatches (R0, now with PBMC14K Leiden at seeds 0 to 2).
+- `a4_protocol_v1.py --seeds 3-9 --tables 1` regenerated everything. **C4 holds: ties at 4 of 5 seeds.** FC 6,709 of
+  6,709. chooseR's code fails to form an interval for 282 of 8,923 settings (error 185: k-means 155, Leiden 30.
+  No interval 97: MICA 53, Leiden 15, k-means 29). No choice as written: MICA 106 of 190 runs, Leiden 36, k-means 83.
+  53 macros changed (list in the session scratchpad, `numbers_a4_before_s2.tex` against the new file). No
+  confirmatory small-dataset value changed.
+- *Per seed on PBMC14K* (`results/v1/picks*/paper_pbmc14k_seed*.csv`):
+  - Matched, most stable, S0: MICA takes 4 clusters at seeds 0 to 3 (0.395) and 5 at seed 4 (0.590). Leiden takes 4
+    at every seed (0.397). So C4's ties are seeds 0 to 3, and seeds 0 to 2 alone would satisfy it.
+  - Lowest or every setting per count, most stable: Leiden takes its 5-cluster partition (resolution 0.0715, score
+    1.000) at seeds 0, 3 and 4 with 25 subsamples (median 0.604), but only at seeds 3 and 4 with 100 (median 0.397,
+    level with MICA's 0.395). Seed by seed under C4's rule (within 0.02): S0 lowest 1 tie of 5, S0 every setting 3
+    of 5, S1 3 or more under every variant, S2 lowest 2 of 5. So the tie breaks with the lowest setting under the
+    protocol's scorer (and on all cells), not with every setting.
+  - Matched, finest stable: MICA takes 5 clusters at 1 seed under S0, 2 under S1 and S2 (median 0.395 for all three),
+    3 under chooseR's code (median 0.590 against Leiden's 0.397).
+  - Original grids: MICA picks 5 clusters (0.619 to 0.632) under our scorers and 8 (0.833 to 0.842) under chooseR's
+    code at every seed. Leiden 4 (0.397) everywhere. k-means 2 except S0 finest at seed 2 (5 clusters). MICA's
+    original grid gives at least 5 clusters and its full graph sweep at least 4 at every seed.
+  - chooseR's mechanism at all five seeds (`results/v1/chooser_r/paper_pbmc14k_seed*.csv`, curves for S2): MICA's
+    5-cluster settings have medians 0.993 to 0.999 and chooseR lower bounds 0.48 to 0.66, ours within 0.004 of the
+    median. The highest lower bound is a 7-cluster setting at seeds 0 to 3 and an 8-cluster one at seed 4.
+  - Run times: MICA stage 8.1 to 10.1 h per seed, Leiden and k-means stage 2.1 to 2.5 h.
+- *Text changes for five seeds.* Abstract and Conclusion: the PBMC14K tie is "at four of five seeds, but the tie
+  depends on which setting stands for each count". Introduction: "with 25 subsamples the tie breaks when Leiden is
+  offered its lowest or every setting per count". Results: the fifth seed, 3 of 5 and 2 of 5 for the lowest setting,
+  MICA's finest-stable counts by scorer, chooseR's matched median, the interval numbers over all seeds, the seed 4
+  exception, k-means "2 in every run in the table but one", "at every seed", cost 8 to 10 h and five to six minutes per
+  subsample. Discussion: "with 25 subsamples" on the PBMC14K setting effect, and Limitations now says seeds 0 to 2
+  alone would satisfy C4 and that of the two new seeds one ties and one gives MICA the lead.
+- `results/v1` copied from the worktree into the repo (18 MB, 1,046 files, `diff -rq` identical). Running
+  `a4_protocol_v1.py` with its default paths reproduces the JSON, the macros and the tables byte for byte. The
+  figure differs only in its embedded creation date.
+- Build: 18 pages, References on page 11, no undefined references or values. Lint clean.
+
+**Review round 3** (`wf_5b3e649f-346`, four lenses on what seed 2 could change, each finding sent to a verifier,
+04:30 to 04:35): 18 findings. 12 verified, and the 6 from the macros lens lost their verifiers to an API error, so
+they were checked by hand against `results/v1`. Session scratchpad: `review_seed2.json`. Applied:
+- *Every setting per count does not break the PBMC14K tie.* With seed 2 the dense design ties at 3 of 5 seeds, which
+  meets C4, and only Leiden's median moves (0.604). The Introduction and Discussion now name only the lowest setting,
+  and the Results give the per-seed ties for S0, S1 and S2.
+- *Not adopted:* adding "with 25 subsamples" to the Abstract and Conclusion. The verifiers checked S1 only. On all
+  cells (S2) the lowest setting still leaves 2 ties of 5, so the qualifier would imply more than the data show. The
+  Discussion now says the tie changes with the setting "under the protocol's scorer".
+- R0 sentence narrowed to Leiden's original-grid PBMC14K runs at seeds 0 to 2, the only ones compared
+  (`results/v1/regression.csv`).
+- chooseR failures: Leiden's 45 are all at 2 or 3 clusters, 30 score 0. k-means has 184: 140 at 13 to 20 clusters and
+  15 at 5 to 12, all scoring 0, plus 29 at 2 to 4 clusters scoring 1.0 (5 of them PBMC14K at k = 2). MICA's 53 are
+  all at 2 or 3 clusters with score 1.0. The sentence said "mostly of 17 to 20", which is only 93 of 184.
+- "At the fifth seed" became "At seed 4". Per-subsample cost: MICA medians 278 to 363 s by seed, so "four and a half
+  to six minutes". Leiden and k-means 74 to 89 s.
+- `a4_criteria.tex` printed 6709 without a separator. Fixed in `a4_protocol_v1.py`, regenerated. JSON and macros
+  unchanged.
+- Rebuilt: 18 pages, References on page 11, no undefined values, lint clean.
 
 ---
 
@@ -96,6 +284,39 @@ Pre-tag checks (Nov 12):
 - To save time, the small datasets start right after the tag, from a separate worktree at the tag
   (`../scminer-v1-run`). If the PBMC14K smoke test finds a bug, its fix gets tag `matched-protocol-v1.1`, logged
   as a deviation.
+
+**Tagged and launched (Nov 12).**
+- Laraib's L-5 status commit (`317274a`) arrived first, so protocol v1 was rebased onto it, tagged
+  `matched-protocol-v1` at `620f940` and pushed at 11:03. The submitted Assignment 3 commit is tagged `a3-submitted`.
+- Confirmatory runs execute from the worktree `../scminer-v1-run` at the tag. Their provenance files show
+  `describe = matched-protocol-v1`, `code_matches_tag = True` and the worktree's own `src`.
+- Launched in byobu:
+
+| Session | What | Started |
+|---|---|---|
+| `scm-v1-small-a` | small seeds 3, 6, 9, 0 | 11:03 |
+| `scm-v1-small-b` | small seeds 4, 7, 1 | 11:03 |
+| `scm-v1-small-c` | small seeds 5, 8, 2 | 11:03 |
+| `scm-v1-pbmc-s3`, `-s4` | PBMC14K full and MICA stages | 11:18 |
+| `scm-v1-pbmcpca-s3`, `-s4` | PBMC14K Leiden and k-means stages | 11:37 |
+| `scm-v1-pbmc-s0` | PBMC14K full and MICA stages | 12:02 |
+
+- Measured rates: a small-dataset seed takes about 2 h. PBMC14K MICA takes about 6 min per subsample under this load
+  (so about 10 h for 100), and PBMC14K Leiden plus k-means about 1.5 min per subsample.
+- PBMC14K matched counts: seed 3 offers 16 (4 to 20 without 19), seed 4 all 17 from 4 to 20.
+
+**Pre-tag PBMC14K checks passed.**
+- The smoke test on the fixed code (seed 90, 3 subsamples) ran every stage: full 16 min, MICA 5.5 min per subsample,
+  Leiden and k-means 1.5 min per subsample, scoring 14 min, chooseR's code 8.8 min with 128 of 128 settings ok. Its
+  outputs are in `results/v1_pretag/smoke_pbmc14k_seed90/`.
+- The PBMC14K Leiden full sweep at seed 0 reproduces the saved matched sweep on all 300 resolutions: same counts, and
+  ARI equal to within the last digit a CSV round trip can change (`scratchpad/check_pbmc_leiden_repro2.py`). A first
+  version of this check compared floats read back from CSV for exact equality and wrongly reported a mismatch.
+
+**Reading list.** The literature sweep `wf_76f30da1-fba` verified 21 references on stability-based selection,
+tuning effects on benchmark rankings and parameter choice in single-cell clustering, each checked by a second agent:
+`docs/reading_list_a4.md`, with BibTeX added to `latex/references.bib`. It is for Laraib's closest-work paragraph
+on the new framing and for the discussion.
 
 ---
 
