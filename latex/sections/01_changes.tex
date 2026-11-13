@@ -1,9 +1,10 @@
-\section*{Changes since Assignment 2}
-Following the feedback, this submission completes one label-free rule, subsampling stability in
-the style of chooseR \cite{pattersoncross2021chooser}, fixed before any partition was scored and
-run on all ten datasets, and reports selection time apart from clustering time. A shared cap left
-the two methods with different cluster counts, so we reran the rules on matched candidates. The
-transfer rule now sits apart because it uses other datasets' labels, the planned win count is gone,
-and the graph comparison now covers quality and cost at a declared candidate count. We deferred annotation, hub correction and GPU work, set aside the
-significance rule, the runs on 2,000 variable genes and the label-free runs on the Allen subset, and
-ran three seeds where the plan asked for at least five runs per setting.
+\section*{Changes since Assignment 3}
+The feedback accepted the matched candidates as an exploratory improvement and asked us to confirm the
+main conclusions under a protocol fixed in advance. We wrote that protocol, tagged it in our repository before any run at a new seed, and reran the stability comparison at ten seeds on the nine small datasets and five
+on PBMC14K. Every run now draws 100 subsamples, and the first 25 reproduce the original protocol exactly,
+so one run gives both. We added PCA plus $k$-means as a textbook baseline under the same rule, and
+scored every run with chooseR's own R code as well as ours, which showed a third difference besides the
+number of subsamples and the bootstrap type: chooseR resamples clusters where we resampled cells. We also explain why matching changes the ranking (Section~\ref{sec:why}), test whether the setting that stands for a cluster count matters (Section~\ref{sec:variants}), and show how each lead is spread across the datasets (Section~\ref{sec:confirm}). Section~\ref{sec:design} says which secondary results keep three seeds or one, and why. The paper is reframed around
+how label-free selection changes the ranking of clustering methods and when such a comparison is
+reliable, with MICA against Leiden as the case that exposed it. The graph comparison moves to the
+appendix, and the large-scale dataset the course requires is planned for the November 30 draft.

@@ -1,33 +1,40 @@
 \section{Conclusion and Remaining Work}\label{sec:conclusion}
-Under one published label-free rule, applied identically to MICA and a principal component and Leiden pipeline on ten datasets at three seeds, the advantage scMINER reports for mutual information clustering survives in direction on the nine small
-datasets once both methods are offered the same candidates. A shared cap alone is not enough, since one reading then
-reversed the ranking. The size of the lead still depends on the rule's tie-break, threshold and random draw, MICA's strong
-default score is no support, and PBMC14K supports no ranking. These findings are about one rule, and we do not extend them
-to mutual information clustering under other rules. The faster neighbour graph is a faster graph rather than a better one:
-it needs three to four times the memory to build and gave no better clustering.
+When one label-free rule chooses the setting for every method, the ranking it produces depends on more
+than the methods. On the scMINER benchmark the candidates offered to each method decided the
+plain-maximum ranking and reversed it on the nine small datasets' original grids, and the reading of the
+scores and the number of subsamples each moved it further, while the bootstrap interval moved individual
+choices. The effects of the candidates and of the reading held at seven new seeds against criteria fixed in advance. The effects of the number of subsamples and of the interval were first measured in these runs, and the protocol gave them no verdict. chooseR's own code has only the finest-stable reading, so it could test only the interval. Between the methods, MICA's lead under
+chooseR's reading on matched candidates held at every seed, under our scorer and under chooseR's code with
+either declared repair, but the datasets split about evenly and with 25 subsamples the mean lead rests on
+one of them. PCA plus $k$-means, the textbook baseline, scored lowest in every design on the nine small datasets, and with the menu and the clustering step held fixed MICA led it by \V{E2.mid.F.micaminuskmeans} under chooseR's reading. On PBMC14K, MICA and Leiden tie on matched candidates under the plain maximum at four of five seeds, but the tie depends on which setting stands for each count, and on the original grids MICA leads at every seed. A comparison of clustering methods under label-free
+selection should therefore match the candidate counts and report the setting behind each, check that the scores are not flat at the top, and check that the ranking holds under both readings, across draws, across implementations of the rule and without each dataset.
 
-\subsection*{Plan through November 18}
-The main experiments are complete with this submission. One test remains before the full draft on November 18: drawing pools of 150 and 300 cells from Zeisel and from PBMC14K and rerunning the matched rule at three seeds tests whether MICA's stability flattens when the same data are made small.
+\subsection*{Plan through November 30}
+\textbf{The large-scale dataset.} The course requires one of at least two million observations. We will use
+the Allen whole mouse brain atlas, 2.3 million cells \cite{yao2023allen}, and report its dimensions after
+preprocessing. Label-free selection by subsampling is out of reach for MICA at that size. Our Assignment 2
+pilot of MICA as shipped took 7.1 hours and 140 GB on 100,000 of these cells, which scales to about 6 to 8
+days and 3.2 TB for the whole atlas, against the 754 GB on our machine. We will therefore run PCA with
+$k$-means and with Leiden on all cells, and MICA on a sample with the remaining cells assigned to its
+clusters, and apply the stability rule to subsamples of a size all three methods can run.
 
-\textbf{Still deferred:} annotation with a language model, the hub correction, GPU work, the significance rule in the style of
-sc-SHC, the runs on 2,000 variable genes and the label-free runs on the Allen subset. We will ask the instructor whether any of
-these belongs in the course project before starting one.
+\textbf{The size test.} Drawing pools of 150 and 300 cells from Zeisel and from PBMC14K and rerunning the
+matched rule tests whether MICA's flat top comes from small samples or from the datasets themselves.
 
-\textbf{The full atlas.} Our Assignment 2 pilot of MICA as shipped on 100,000 Allen cells, slower than Table~\ref{tab:graph}'s rebuild and counting memory beyond the graph build, took 7.1 hours and peaked at 140 GB, which scales to about 6 to
-8 days and 3.2 TB for all 2.3 million cells, against the 754 GB on our machine. Our shortlist build alone peaked at 80 GB, about
-1.8 TB in proportion, so a faster graph does not close that gap and the whole atlas would need a sketch, clustering a sample and
-assigning the rest. We will not change the course-scale plan for the atlas without first discussing it with the instructor.
+\textbf{Still set aside:} the significance rule, the runs on 2,000 variable genes, the label-free runs on the
+Allen subset, annotation with a language model, the hub correction and GPU work.
 
 \section*{Completion plan}
-\textbf{Utshab} runs the size test, drafts the methods, design and results sections, and raises the full-atlas question and the
-deferred items with the instructor. 
+\textbf{Utshab} wrote and ran protocol v1 and the chooseR check, wrote the methods, design, results and
+discussion, adapted the introduction and related work to the new framing, and runs the large-scale
+experiment and the size test for November 30.
 
-\textbf{Laraib} revises the introduction and related work from our literature table and checks independently that the discussion
-follows from the exported results. That check has so far covered an earlier version of this discussion and will be repeated on the
-draft.
+\textbf{Laraib} rewrote the introduction and related work, which this draft builds on, and checks that the
+discussion follows from the results.
 
-\textbf{Rhea} regenerates the result tables as new runs land, checks every number in the text against the exported results, with a
-first pass on a longer version of this report already folded in, keeps the schedule and risk list current, and assembles the slides.
+\textbf{Rhea} checks every number in the text against the exported results, keeps the schedule and risk
+list current, and assembles the slides for December.
 
-\textbf{Links.} The manuscript source is in the Overleaf project at \overleaflink. The code, the saved results and the notebook that
-rebuilds every table and figure are at \url{https://github.com/utshabkg/scminer-clustering}.
+\textbf{Links.} The manuscript source is in the Overleaf project at \overleaflink. The code, the saved
+results, the tagged protocol and the scripts and notebook that rebuild every table and figure are at
+\url{https://github.com/utshabkg/scminer-clustering}.

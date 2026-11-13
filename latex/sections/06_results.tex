@@ -1,127 +1,210 @@
 \section{Results}\label{sec:results}
-We report what the rule chooses as first specified and on matched candidates, test why its readings
-disagree, and finish with cost and the neighbour graph. Means cover the nine small datasets unless
-stated. The starting point is sound: under the authors' own protocol, on their released inputs, MICA
-reaches the published ARI within 0.05 on nine of ten datasets and within 0.001 on six, the exception
-being Kolodziejczyk at 0.727, like the main run in the authors' notebook, against a published 1.000. With labels fixing the setting and 100 $k$-means restarts, the nine small datasets average 0.809 for MICA against 0.614 for the baseline.
+We first recall the exploratory runs of Assignment~3, then test their conclusions on the confirmatory
+runs against the criteria protocol v1 fixed in advance (Table~\ref{tab:criteria}). We then ask why
+matching the candidates changes the ranking, whether the setting that stands for a cluster count matters,
+what chooseR's own code does with the same partitions, where the choice is ambiguous, and what holds on
+PBMC14K. Unless stated otherwise, a mean is over the nine small datasets of the per-dataset medians at the
+seven confirmatory seeds, 3 to 9, on matched candidates, scored as the original protocol (S0), and the
+value from the exploratory seeds 0 to 2 follows in parentheses.
 
-\subsection{As first specified, a shared cap reverses the ranking}
-MICA has the higher mean under three of the four rules (Table~\ref{tab:summary}, with per-dataset picks in Table~\ref{tab:rulesall}), but the rule moves its
-score more than the choice of method does: from 0.473 to 0.727, a spread of 0.255, where the baseline's
-spread is 0.120. The clearest case is the stability rule, whose two readings are
-the same scores. MICA leads 0.661 to 0.632 under chooseR's reading, though only at two of
-three seeds, and trails 0.473 to 0.635 under the plain maximum, so its mean moves by 0.189 between them
-against the baseline's 0.002 (differences use unrounded means). The baseline's small figure is partly
-cancellation, since in absolute terms its readings move 0.067 per dataset against 0.197 for MICA. 
+\input{tables/a4_criteria}
 
-That reversal comes from the candidates rather than the method. MICA's $k$ covers the whole range from 2 to
-20, while the baseline's grid produces only some of it, for example 2 and 4 to 8 clusters on Yan and 4 to 11
-on Pollen, and MICA's two readings land at counts the baseline cannot produce, 2 clusters on Pollen and 19 on
-Yan. Restricting MICA's saved scores after the fact to the counts the baseline produced removes the reversal
-(Appendix~\ref{app:common}), which is why we ran the matched design.
+\subsection{The exploratory runs}
+Under the authors' own protocol, on their released inputs, MICA reaches the published ARI within 0.05 on nine of ten datasets (Table~\ref{tab:repro}), the exception being Kolodziejczyk at 0.727, like the main run in the authors' notebook,
+against a published 1.000. With labels fixing the setting, the nine small datasets average 0.809 for MICA
+against 0.614 for PCA plus Leiden. In Assignment 3, at seeds 0 to 2 with 25 subsamples, the stability rule
+with a shared cap of 20 clusters reversed the ranking under the plain maximum, with Leiden ahead 0.635 to
+0.473. Offering both methods the same counts removed the reversal, and MICA then led under both readings,
+0.662 to 0.543 and 0.473 to 0.452. We had introduced that matched design after seeing the first results.
+Rerun under protocol v1, seeds 0 to 2 reproduce those outputs exactly on every column but time in all
+\V{R0.small.compared} result folders of the nine small datasets, with \V{R0.small.mismatch} mismatches
+(criterion R0), and Leiden's original-grid runs on PBMC14K at seeds 0 to 2 reproduce too. So the confirmatory runs differ from the
+exploratory ones only in their seeds.
 
-\input{tables/a3_matched}
+\input{tables/a4_confirm}
 
-\subsection{On matched candidates the reversal is gone}\label{sec:matched}
-Offered the same cluster counts with one setting each, MICA leads under both readings at every seed
-(Table~\ref{tab:matched}), 0.662 to 0.543 under chooseR's reading and 0.473 to 0.452 under the plain maximum.
-The AMI ranks them the same way, 0.775 against 0.646 and 0.602 against 0.585. The change is in the baseline,
-not in MICA, whose means barely move. The baseline falls from 0.632 to 0.543 and from 0.635 to 0.452, and under
-the plain maximum its median pick is now 2 or 3 clusters on eight of the nine datasets. The wider range, not the
-single setting per count, causes the fall: in 13 of 27 runs the baseline's plain-maximum pick is a count its old
-grid never produced, while keeping one setting per count on its old grid leaves its plain-maximum mean at 0.656
-against 0.635. The silhouette rule on the same candidates, scored in the principal components, follows the same
-pattern, with MICA at 0.593 and the baseline falling from 0.564 to 0.478, but in MICA's own embedding MICA trails,
-0.493 against 0.497 (Appendix~\ref{app:secondary}).
+\subsection{At new seeds the matched lead holds under chooseR's reading only}\label{sec:confirm}
+Table~\ref{tab:confirm} gives every dataset. Under the finest-stable reading MICA's mean is
+\V{S0.mid.F.mica} against Leiden's \V{S0.mid.F.leiden} (0.662 against 0.543), and MICA has the higher
+per-seed mean at \V{C1.F.leads} new seeds, so this half of C1 holds. Under the plain maximum the two are level,
+\V{S0.mid.M.mica} against \V{S0.mid.M.leiden} (0.473 against 0.452), with MICA ahead at \V{C1.M.leads}
+new seeds, so this half fails. The protocol had flagged it as fragile, since its gap at seeds 0 to 2 was 0.021,
+and the new seeds place that gap within the variation of the subsample draw. On the original grids the
+reversal replicates (C5): under the plain maximum Leiden leads, \V{S0.original.M.leiden} against
+\V{S0.original.M.mica}, and under the finest reading the two are level, \V{S0.original.F.mica} against
+\V{S0.original.F.leiden}. The AMI gives the same order on matched candidates, \V{AMI.F.mica} against
+\V{AMI.F.leiden} under the finest reading. PCA plus $k$-means scores lowest in every design, at
+\V{S0.mid.F.kmeans} and \V{S0.mid.M.kmeans} on matched candidates.
 
-Two qualifications keep this from being a clean win. The tie-break still moves MICA more, 0.197 per dataset in
-absolute terms against 0.118, and the gap narrowed only because the baseline's figure rose from 0.067. MICA leads
-on five of the nine datasets under each reading, so the mean rests on a few large gaps, such as Buettner at 0.934
-against 0.263 and Pollen at 0.898 against 0.500. 
+A mean over nine datasets can hide how a lead is spread, so we also looked at each dataset, an analysis
+the protocol did not fix in advance. Under the finest reading MICA has the higher median on
+\V{E5.S0.mid.F.micawins} datasets and Leiden on \V{E5.S0.mid.F.leidenwins}, and much of MICA's lead
+comes from Buettner, where Leiden's choice of 2 or 3 clusters scores far below MICA's
+(Table~\ref{tab:confirm}). Without Buettner the gap is \V{E5.S0.mid.F.loo}. With 100 subsamples (S1) or
+chooseR's code (S3) the lead survives leaving out any one dataset, though only just under chooseR's code,
+\V{E5.S1.mid.F.loo} and \V{E5.S3G.mid.F.loo} without Buettner, and the datasets split
+\V{E5.S1.mid.F.micawins} to \V{E5.S1.mid.F.leidenwins}. The reversal on the original grids is the sturdiest
+result we have. Leiden leads at every new seed, has the higher median on \V{E5.S0.original.M.leidenwins}
+of the nine datasets, and MICA minus Leiden is still \V{E5.S0.original.M.loo} without Pollen, the dataset
+that favours Leiden most.
 
-The chosen counts show why the scores alone understate the problem. Under chooseR's reading on matched candidates
-MICA picks 19 or 20 clusters on Yan, which has 8 types, 14 to 18 on Pollen, which has 11, and 10 to 12 on Chung,
-which has 4, and errs the other way on Zeisel with 3 where there are 7. The baseline can produce the same counts
-here, so the overclustering is MICA's and not an artefact of the range.
+\input{tables/a4_decomp}
+
+\subsection{Why matching changes the ranking}\label{sec:why}
+On the nine small datasets the change is in Leiden. Table~\ref{tab:decomp} rescores the same partitions while changing Leiden's
+candidates one step at a time. Keeping one setting per count on its original grid does not lower its mean
+under the plain maximum, \V{E3.original.M} to \V{E3.originalonepercount.M}. Moving to the matched grid
+while offering only the counts the original grid reached gives \V{E3.midoldcounts.M}. Adding the counts
+the original grid never produced, coarser and finer ones alike, lowers it to \V{E3.mid.M}. The plain
+maximum takes the coarse ones: Leiden's plain-maximum pick is a count its original grid never produced in
+\V{E3.plainmaxpicksnewcount} runs, and its median pick is 2 or 3 clusters on \V{E3.medianpick2or3}
+datasets. The original grid had kept Leiden away from those partitions, as Assignment~3 found at three seeds. MICA's $k$ reaches those counts in both designs, so its mean barely moves, \V{S0.original.M.mica} and \V{S0.mid.M.mica}.
+Under the finest reading, adding those counts lowers Leiden's mean from \V{E3.midoldcounts.F} to
+\V{E3.mid.F} by another route. A coarse partition that reproduces perfectly has a lower bound of 1.0, which
+becomes the threshold, and then only a finer setting that also reproduces perfectly clears it. On Klein, matching gives Leiden such a 2-cluster partition, and none of its finer settings scores 1.0, so it takes 2 clusters at every new seed, at an ARI of 0.501 (Table~\ref{tab:confirm}), where its original grid gave 4 clusters at 0.973 at five new seeds and 5 clusters at 0.885 or 0.888 at the other two. Klein accounts for most of the fall, and
+it is a large part of why MICA leads on matched candidates under that reading with 25 subsamples while the
+two are level on the original grids. A selection rule's choice depends on which settings it is
+shown, which is what Haslbeck and Wulff found for stability-based estimates of $k$
+\cite{Haslbeck2020Corrected}: the uncorrected instability overshoots the true $k$ unless the candidates are limited, which is why they correct it.
+
+PCA plus $k$-means separates two things the comparison of MICA and Leiden mixes. Against Leiden it shares
+the representation, the 50 principal components, and changes the clustering step and its menu. Against
+MICA in small-data mode it shares the clustering step and the menu, $k$-means over $k$, and changes only
+the representation, principal components against the multidimensional scaling of the mutual information
+distance. On matched candidates MICA leads $k$-means by \V{E2.mid.F.micaminuskmeans} under the finest
+reading and by \V{E2.mid.M.micaminuskmeans} under the plain maximum, and Leiden leads $k$-means by
+\V{E2.mid.F.leidenminuskmeans} and \V{E2.mid.M.leidenminuskmeans}. So with the menu and the clustering step held fixed, the mutual information representation gives the higher score under the finest reading, on \V{E5k.S0.mid.F.micawins} datasets against \V{E5k.S0.mid.F.kmeanswins}, and still by \V{E5k.S0.mid.F.loo} without \V{E5k.S0.mid.F.loods}. Under the plain maximum MICA is ahead on \V{E5k.S0.mid.M.micawins} datasets and $k$-means on \V{E5k.S0.mid.M.kmeanswins}, and without \V{E5k.S0.mid.M.loods} the gap is \V{E5k.S0.mid.M.loo}. This is the
+closest our design comes to isolating the representation, and it holds for one benchmark and one rule.
+
+\input{tables/a4_designs}
+
+\subsection{Which setting stands for a count}\label{sec:variants}
+Several Leiden resolutions give the same cluster count, and the matched design offers the middle one.
+Offering the lowest, the highest or all of them moves Leiden's mean between \V{variants.F.leiden.min} and
+\V{variants.F.leiden.max} under the finest reading and between \V{variants.M.leiden.min} and
+\V{variants.M.leiden.max} under the plain maximum (Table~\ref{tab:designs}). The largest drop comes from
+offering every setting under the plain maximum, \V{S0.dense.M.leiden}: more candidates per count give the
+rule more chances at a coarse count with a high score. MICA and $k$-means have one setting per count, so
+their means do not move. MICA's finest-stable lead holds under every variant, while under the plain
+maximum the order depends on the variant. A user comparing methods should therefore report which setting
+stands for each count, as the benchmarking guidelines of Van Mechelen et al. ask for every tuning choice
+\cite{vanmechelen2023white}.
+
+\subsection{chooseR's own code on the same partitions}\label{sec:chooser}
+R's tally with chooseR's \texttt{find\_matches} and \texttt{percent\_match} gives the same co-clustering
+frequency as ours in \V{FC.identical} of \V{FC.matrices} cross-checked matrices (FC), and its median is the
+same statistic as our score. The interval is where the two part. As written, chooseR's code makes no
+choice in \V{S3.nochoice.mica} MICA runs, \V{S3.nochoice.leiden} Leiden runs and \V{S3.nochoice.kmeans}
+$k$-means runs, original and matched designs together. Its BCa bootstrap over the cluster averages gives no
+interval for \V{S3.failed} of the \V{S3.settings} scored settings, because those averages are all equal or nearly so, and a single such setting leaves the threshold undefined. For MICA every such setting is a coarse partition, of 2 or 3 clusters, whose score is exactly 1.0, so its failures do not track dataset size: MICA makes no choice in every run on Klein and Kolodziejczyk, of 2,717 and 704 cells, but in none on Buettner, of 182. Leiden's failures are also partitions of 2 or 3 clusters, but two thirds of them score 0, not 1.0. Most failures of $k$-means are partitions of 13 to 20 clusters that score 0, and 29 are partitions of 2 to 4 clusters that score 1.0, as MICA's do. Failures are most common on Chung
+(\V{S3.failed.chung}) and Goolam (\V{S3.failed.goolam}), two of the smallest datasets. With the repair the
+protocol declared, a point interval at the median, MICA leads Leiden \V{S3G.mid.F.mica} against
+\V{S3G.mid.F.leiden} under the finest reading (F1), and dropping the failed settings instead gives
+\V{S3G2.mid.F.mica} against \V{S3G2.mid.F.leiden}. With the point-interval repair, chooseR's code and our scorer at the same 100 subsamples (S1) choose the same count in \V{E4.mid.mica.same} MICA runs and \V{E4.mid.leiden.same} Leiden runs. With
+100 subsamples our own scorer widens MICA's finest-stable lead, \V{S1.mid.F.mica} against
+\V{S1.mid.F.leiden}. So on matched candidates the three differences from chooseR, the number of subsamples, the bootstrap
+and the resampling unit, change individual choices but not the direction of the finest-stable comparison.
+On the original grids they do. There the two methods are level with 25 subsamples, but with 100 MICA
+leads at \V{E5.S1.original.F.seedleads} new seeds, \V{S1.original.F.mica} against
+\V{S1.original.F.leiden}, and under chooseR's code it leads by more, \V{S3G.original.F.mica} against
+\V{S3G.original.F.leiden}. Both leads rest on Buettner, without which the gaps are
+\V{E5.S1.original.F.loo} and \V{E5.S3G.original.F.loo}. As written, chooseR's code cannot be applied
+when a coarse setting reproduces perfectly. The plain
+maximum is more sensitive. With 100 subsamples the matched comparison moves from level to a MICA lead,
+\V{S1.mid.M.mica} against \V{S1.mid.M.leiden} at \V{E5.S1.mid.M.seedleads} new seeds, while on the
+original grids Leiden still leads, \V{S1.original.M.leiden} against \V{S1.original.M.mica}.
 
 \begin{figure*}[t]
 \centering
 \includegraphics[width=\textwidth]{figures/a3_stability_curve.pdf}
-\caption{Reproducibility and accuracy against the number of clusters, for both methods on
-three datasets, on the original grids. Solid lines are the stability score the rule maximises, dashed lines the
-ARI against the reference labels, and the dotted vertical line marks the true number of
-types. Where the solid line is flat, the rule has no basis for preferring one setting over
+\caption{Reproducibility and accuracy against the number of clusters, for MICA and Leiden on three
+datasets, from the Assignment 3 runs on the original grids. Solid lines are the stability score the rule
+maximises, dashed lines the ARI against the reference labels, and the dotted vertical line marks the true
+number of types. Where the solid line is flat, the rule has no basis for preferring one setting over
 another and its tie-break decides instead.}
 \label{fig:curve}
 \end{figure*}
 
-\subsection{Why: the rule cannot separate the settings}
-Figure~\ref{fig:curve} plots the quantity the rule maximises against the number of clusters. On Buettner MICA's
-stability falls steadily as clusters are added, and the rule selects 3 clusters for an ARI of 0.934. On Pollen it
-stays close to its maximum from 2 to 20 clusters, leaving the threshold nothing to act on. On Zeisel stability is
-highest at 2 and 3 clusters while ARI peaks at 8, so the rule has a clear maximum in the wrong place.
+\subsection{Where the choice is ambiguous}\label{sec:ambiguous}
+Figure~\ref{fig:curve} shows the three shapes a stability curve takes. On Buettner MICA's stability falls
+as clusters are added and the rule finds a clear maximum near the truth. On Pollen it stays near its
+maximum across the whole range, leaving the threshold nothing to act on. On Zeisel it has a clear maximum
+in the wrong place. The flat top is mostly MICA's and sits in the smallest datasets (C3). On the five
+datasets of at most 317 cells, \V{C3.five_smallest.mica.share} of MICA's settings score within 0.01 of its
+best, against \V{C3.four_larger.mica.share} on the four larger ones and \V{C3.five_smallest.leiden.share}
+for Leiden. When scores tie, the reading decides, and it moves MICA more (C2): the finest and plain-maximum
+picks differ by \V{C2.mica} per dataset for MICA, \V{C2.leiden} for Leiden and \V{C2.kmeans} for $k$-means
+(0.197 against 0.118 at seeds 0 to 2). A partition that reproduces perfectly need not be the right one, as
+Ben-David, von Luxburg and P\'al showed for stability in general \cite{BenDavid2006Sober}, and von
+Luxburg notes that stability becomes trivial when the perturbation is too small to change the clustering
+\cite{vonLuxburg2010Stability}. On a few hundred cells, removing a fifth may be too small a change, which the size test planned in Section~\ref{sec:conclusion} will check.
 
-Matching the candidates does not change this. With one setting per count for both, 40 percent of MICA's settings
-score within 0.01 of its best against 14 percent for the baseline, the span of cluster counts among those tied
-settings is 7.3 against 2.9, and 29 percent of MICA's settings score exactly 1.0 against 5 percent. Buettner aside,
-the flat top sits in the smallest datasets. On the five with 124 to 317 cells the tied span is 10.6 for MICA against
-4.2, and 81, 72 and 52 percent of MICA's settings score 1.0 on Yan, Pollen and Chung. On the four with 622 to 2,903
-cells the spans are 3.3 against 1.3.
+\begin{figure}[t]
+\centering
+\includegraphics[width=\columnwidth]{figures/a4_seed_means.pdf}
+\caption{Mean ARI over the nine small datasets at each seed, matched and original candidates, both readings,
+original protocol (S0). Seeds 0 to 2 (shaded) are the exploratory runs of Assignment 3, rerun under protocol
+v1. A ranking read from one seed can differ from the ranking over ten.}
+\label{fig:seeds}
+\end{figure}
 
-Two expected explanations fail on the original grids. Stability does not carry less information about accuracy for MICA: the
-rank correlation between stability and ARI across settings averages 0.65 against 0.50 for the baseline. Nor is
-overclustering worse where a method's spread of scores is narrower: the Spearman correlation is $-0.03$ for MICA and
-$-0.21$ for the baseline.
+The subsample draw is the other source of ambiguity (Figure~\ref{fig:seeds}). Across the seven new seeds,
+MICA's finest-stable mean ranges from \V{S0.mid.F.mica.seedmin} to \V{S0.mid.F.mica.seedmax} and Leiden's
+from \V{S0.mid.F.leiden.seedmin} to \V{S0.mid.F.leiden.seedmax}. Per dataset, the draw moves Leiden's
+finest-stable ARI by \V{range.F.leiden.mean} on average and MICA's by \V{range.F.mica.mean}. Under the plain
+maximum it moves MICA's by \V{range.M.mica.mean} and Leiden's by \V{range.M.leiden.mean}, as much as
+\V{range.M.leiden.max} on \V{range.M.leiden.maxds}. Under the plain maximum a ranking read from any one seed
+can point either way.
 
-Relaxing the threshold by at most 0.02,
-a size we assumed rather than measured, changes the chosen cluster count in 35 of 54 runs on the original grids and
-38 of 54 on matched candidates. Repeating the rule at three seeds moves the resulting ARI on matched candidates by
-0.09 on average for MICA and 0.16 for the baseline, and by as much as 0.50, from 0.361 to 0.862 for the baseline on
-Zeisel. The tie-break and the subsample draw each move ARI by about as much as the gap between the methods.
+\input{tables/a4_pbmc}
 
-\subsection{PBMC14K: both choose at or near the coarsest count}\label{sec:pbmc}
-PBMC14K has 13,605 cells, which puts it in graph mode, here with exact neighbours from one saved distance matrix in place of HNSW. On the original grids MICA scores 0.629 at 5 clusters
-against the baseline's 0.397 at 4, but both are at the coarsest partition their grid allows. On matched candidates
-both are offered 14 to 16 of the 17 counts from 4 to 20, and the plain maximum sends both to 4 clusters at every
-seed, where they tie at 0.395 against 0.397, with AMI 0.720 against 0.725. chooseR's reading gives MICA a median of 0.623 at 4 or 5 clusters. Relaxing the threshold by 0.02 moves the baseline
-to 6 or 7 clusters, at 0.786 to 0.875, ahead of MICA. So which method the rule favours here turns on its reading and
-its threshold, and at the stated threshold neither pick is right: MICA's full sweep peaks at the true 7, at 0.856 to 0.864.
+\subsection{PBMC14K}\label{sec:pbmc}
+PBMC14K has 13,605 cells, which puts MICA in graph mode, where its node2vec and Louvain take no seed, so every
+run is a new draw (Table~\ref{tab:pbmc}). MICA's graph mode never gives fewer than 4 clusters here, so the
+matched counts start at 4, and the rule mostly takes that floor. Under the plain maximum on matched
+candidates MICA's median is \V{pbmc.S0.mid.M.mica} at \V{pbmc.S0.mid.M.mica.k} clusters and Leiden's
+\V{pbmc.S0.mid.M.leiden} at \V{pbmc.S0.mid.M.leiden.k}, within 0.02 of each other at \V{C4.ties} seeds (C4),
+and $k$-means picks 4 as well. At seed 4 MICA takes 5 clusters and leads. The tie depends on which
+setting stands for a count, a check the protocol left exploratory. Offered its lowest setting per count, or
+every setting, Leiden takes a 5-cluster partition that reproduces perfectly at three of the five seeds, and
+its median rises to \V{pbmc.S0.low.M.leiden} against MICA's \V{pbmc.S0.low.M.mica}. Seed by seed, the two
+then tie at only one seed with the lowest setting, but still at three with every setting. With all 100
+subsamples Leiden takes that partition at only two seeds, and the medians are level again. With the
+co-clustering on 3,000 cells (S1) the two then tie at three or more seeds under every variant, but on all
+cells (S2) the lowest setting still leaves only two ties. Under chooseR's reading MICA
+takes 5 clusters on matched candidates at one seed with 25 subsamples and at two with 100, whether the
+co-clustering is kept on 3,000 cells (S1) or uses all cells (S2), so its median stays at
+\V{pbmc.S1.mid.F.mica}, while Leiden stays at 4. Under chooseR's code MICA takes 5 clusters at three seeds,
+a median of \V{pbmc.S3G.mid.F.mica} against Leiden's \V{pbmc.S3G.mid.F.leiden}.
 
-\label{sec:modesize}To separate MICA's pipeline from the dataset size, we also ran the rule on one fixed pool of 2,500
-PBMC14K cells under both of MICA's modes, redrawing the pool at three seeds (Appendix~\ref{app:modesize}). On matched counts the readings differ on 2 of 3 pools in small-data mode against 1 of 3 in graph mode, too few to call a mode effect. Neither mode shows the flat top of the smallest
-datasets at 2,500 cells, which fits the pattern above.
+On the original grids the implementation of the rule decides MICA's choice. Our scorer on all cells picks
+\V{pbmc.S2.original.F.mica.k} clusters at an ARI of \V{pbmc.S2.original.F.mica}, and chooseR's code, on the
+same partitions and subsamples, picks \V{pbmc.S3G.original.F.mica.k} at \V{pbmc.S3G.original.F.mica}, close
+to the 7 cell types. The reason is the resampling unit. MICA's 5-cluster partitions reproduce almost
+perfectly, with medians of 0.993 to 0.999 on all cells, but with only five cluster averages to resample,
+chooseR's interval for them reaches down to between 0.48 and 0.66, while ours, resampling thousands of
+cells, stays within 0.004 of the median. Under chooseR's code the highest lower bound therefore comes from
+a 7-cluster setting, or an 8-cluster one at seed 4, and 8 clusters clears it at every seed. Leiden's original
+grid gives 4 clusters under every scorer and at every seed, and that of $k$-means gives 2 in every run in
+Table~\ref{tab:pbmc} but one.
+So on the original grids MICA leads Leiden on PBMC14K under every scorer and at every seed, the reverse of the plain-maximum result on the small datasets. Under our scorer the cause is the same, with the roles swapped. MICA's own grid stops at a resolution of 4.0 and gives no fewer than 5 clusters at any seed we ran, while Leiden's reaches 4. Matching adds MICA's 4-cluster partitions, and the plain maximum takes one at four of the five seeds, which levels the two.
 
-\input{tables/a3_summary}
+\subsection{Secondary rules, from Assignment 3}\label{sec:transfer}
+These ran at seeds 0 to 2 or at one seed and were not repeated. MICA's best mean there, 0.727, came from its
+shipped default of four clusters, which is what tuning $k$ on the other datasets' labels picks in 26 of 27
+held-out choices, so it carries label information about this benchmark rather than evidence for the method.
+For PCA plus Leiden, the resolution tuned on the other datasets lifted the mean from 0.514 under its shipped default to 0.641. The silhouette rule on matched
+candidates gave MICA 0.593 against 0.478 in the principal components, but MICA trailed in its own embedding,
+0.493 against 0.497. On a pool of 2,500 PBMC14K cells, drawn afresh at each of three seeds, the two readings of the rule
+differed on 3 of 3 pools in MICA's small-data mode and on none in graph mode. On matched candidates that
+became 2 of 3 against 1 of 3, too few to call a mode effect (Appendix~\ref{app:modesize}).
 
-\subsection{The default and the transfer add no support}\label{sec:transfer}
-MICA's best mean, 0.727, comes from its shipped default, which returns
-four clusters whatever the dataset. The median number of cell types across these nine is also four, and the default
-scores 0.802 where the true count is 3 to 5 against 0.579 outside. The transfer comparison, which uses the other datasets'
-labels and is kept apart for that reason, shows why this is no support. Tuned on the other eight datasets' labels, MICA
-takes $k = 4$ in 26 of 27 held-out choices, so its default is what tuning on this benchmark picks. The baseline's tuned
-resolution, 0.22 to 0.30 against its shipped 1.0, lifts its mean from 0.514 to 0.641, still below MICA's 0.727.
-
-\subsection{The cost of choosing, apart from clustering}
-Choosing a setting costs far more than clustering at one, and a user pays both. On Zeisel one clustering at a fixed setting
-takes a few seconds for either method once MICA's distance matrix exists, and that matrix takes 4 minutes and is computed
-once. Across the nine small datasets selection takes 17 to 109 s for MICA and 14 to 225 s for the baseline on the original
-grids, and a median of 25 s and 9 s per run on matched candidates, so cost is no reason to prefer either method there. On
-PBMC14K one run of MICA as shipped at a fixed resolution takes under 12 minutes. The baseline's PCA, neighbour graph and sweep of 200
-resolutions together took 2 to 3.3 minutes per seed in Assignment 2, and we saved no time for one clustering.
-Choosing took 103 minutes per seed for MICA against 8 for the baseline on the original grids, and 93 against 7.5 on matched
-candidates. MICA's selection times leave its distance matrix out, and on PBMC14K that matrix's compute time was not logged.
-The matched times also leave out the full-data sweep that fixes the shared counts, at most 36 s per small-dataset run and about
-16 minutes per PBMC14K seed. Graph-mode selection is why the large-dataset evidence rests on one dataset.
-
-\input{tables/a3_graph_cost}
-
-\subsection{The faster neighbour graph, on cost and quality}\label{sec:graph}
-Table~\ref{tab:graph} compares MICA's HNSW search with our correlation shortlist rescored exactly. On PBMC14K a shortlist of 800
-matches MICA's recall, 0.974 against 0.973, and ARI, 0.853 against 0.852, and builds the graph in 18 s against 7 minutes. The whole run is only about twice as fast, 6.4 minutes against
-13.2, because node2vec and Louvain take about 6 minutes on either graph.
-
-On the Allen cells a shortlist of 3,200 reaches higher recall than HNSW, 0.946 against 0.903, yet the clustering it yields is no
-better: ARI 0.602 and 0.627 against 0.641 and 0.617. So recall alone does not settle which graph is better. The speed-up is also much
-smaller here, 1.7 hours against 3.8 for the build and 2.8 against 4.9 in total. Build memory goes the other way on both datasets, 3.6 GB
-against 1.2 on PBMC14K and 80 GB against 22 on Allen, with the peak reached while loading and binning the data. Appendix~\ref{app:cost} gives further
-cautions on these times.
+\subsection{Cost}\label{sec:cost}
+Choosing a setting costs far more than clustering at one, and a user pays both. On the small datasets, one
+subsample of protocol v1 took a median of \V{cost.small.mica.median}~s for MICA's whole sweep of $k$,
+\V{cost.small.leiden.median}~s for Leiden's sweep and \V{cost.small.kmeans.median}~s for $k$-means, so a
+full run of 100 subsamples takes minutes per dataset, and cost is no reason to prefer a method there. On
+PBMC14K one MICA subsample takes a median of four and a half to six minutes, depending on the seed, almost all
+of it node2vec, against 75 to 90 seconds for Leiden and $k$-means together, so one run of 100 subsamples took 8 to 10 hours for MICA and 2 to 2.5 for the two baselines. That
+cost is why the large-dataset evidence rests on one dataset. chooseR's own scoring adds under a minute per
+small dataset and seed.

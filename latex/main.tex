@@ -10,15 +10,22 @@
 \usepackage{balance}
 \usepackage[hidelinks]{hyperref}
 
+% Protocol v1 numbers, generated from results/v1 by scripts/a4_protocol_v1.py --tables.
+% \V{key} prints one value. An unknown key prints ??key in bold and warns, so nothing goes stale silently.
+\makeatletter
+\newcommand{\V}[1]{\ifcsname v@#1\endcsname\csname v@#1\endcsname\else\textbf{??\detokenize{#1}}\PackageWarning{numbers}{undefined value #1}\fi}
+\makeatother
+\input{numbers_a4}
+
 % Shareable Overleaf link
 \newcommand{\overleaflink}{%
   \href{https://www.overleaf.com/project/6aaf2340c882a49ae981bb56/share\#7eee00f5a11647638baeeafadcc68fa244fd8d02dcf53a42}{\nolinkurl{overleaf.com/project/6aaf2340c882a49ae981bb56}}}
 
 \begin{document}
 
-\title{When a Clustering Method Must Choose for Itself:\\
-Mutual Information Clustering Without Reference Labels\\
-{\footnotesize{Project Assignment 3 for the Clustering Algorithms course at Missouri University of Science and Technology}}
+\title{When Clustering Methods Must Choose for Themselves:\\
+Label-Free Selection and the Reliability of\\ Single-Cell Clustering Comparisons\\
+{\footnotesize{Project Assignment 4 for the Clustering Algorithms course at Missouri University of Science and Technology}}
 }
 
 \author{

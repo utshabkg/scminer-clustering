@@ -1,0 +1,21 @@
+\begin{table*}[t]
+\centering
+\caption{The criteria fixed in protocol v1 before the confirmatory runs, with Assignment 3's value (seeds 0 to 2) and the value at the seven new seeds, 3 to 9, except C4 (PBMC14K, seeds 0 to 4) and FC (every seed). Mean ARI over the nine small datasets of the per-dataset medians, on matched candidates scored as the original protocol (S0), unless stated. A criterion of C1 holds if the mean is higher and MICA leads at 5 or more of the 7 per-seed means, and is weak if only the mean is higher.}
+\label{tab:criteria}
+\footnotesize
+\setlength{\tabcolsep}{4pt}
+\begin{tabular}{lllc}
+\toprule
+Criterion & Assignment 3 & Protocol v1 & Verdict \\
+\midrule
+C1, finest stable: MICA above Leiden & 0.662 vs 0.543 & 0.647 vs 0.591, leads at 7 of 7 seeds & holds \\
+C1, most stable: MICA above Leiden & 0.473 vs 0.452 & 0.452 vs 0.454, leads at 3 of 7 seeds & fails \\
+C2, the reading moves MICA more & 0.197 vs 0.118 & 0.292 vs 0.179 & holds \\
+C3, MICA's flat top in the five smallest & 0.534 vs 0.231, Leiden 0.177 & 0.493 vs 0.231, Leiden 0.142 & holds \\
+C4, PBMC14K tie under most stable, seeds 0 to 4 & 3 of 3 seeds & 4 of 5 & holds \\
+C5, original grids: Leiden above MICA, most stable & 0.635 vs 0.473 & 0.650 vs 0.452 & holds \\
+F1, chooseR's code: MICA above Leiden, finest & not run & 0.679 vs 0.591 & holds \\
+FC, chooseR's tally equals ours & not run & 6,709 of 6,709 & holds \\
+\bottomrule
+\end{tabular}
+\end{table*}

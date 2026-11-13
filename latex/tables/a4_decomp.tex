@@ -1,0 +1,17 @@
+\begin{table}[t]
+\centering
+\caption{Why matching changes Leiden's score: its mean ARI over the nine small datasets as the candidate set changes one step at a time, seeds 3 to 9, original protocol (S0). Each step is rescored from the same partitions, so only the candidates differ.}
+\label{tab:decomp}
+\footnotesize
+\setlength{\tabcolsep}{4pt}
+\begin{tabular}{lcc}
+\toprule
+Leiden's candidates & Finest & Most \\
+\midrule
+Original grid, capped at 2 to 20 & 0.662 & 0.650 \\
+Original grid, one setting per count & 0.707 & 0.687 \\
+Matched grid, only counts the original grid reached & 0.656 & 0.630 \\
+Matched grid, all matched counts & 0.591 & 0.454 \\
+\bottomrule
+\end{tabular}
+\end{table}

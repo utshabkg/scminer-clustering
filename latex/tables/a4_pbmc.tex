@@ -1,0 +1,29 @@
+\begin{table*}[t]
+\centering
+\caption{PBMC14K, the one large benchmark dataset and the only one in MICA's graph mode, at five seeds. ARI of the chosen partition, median over the seeds, with the range of chosen counts. MICA's node2vec and Louvain take no seed, so every MICA run is a new draw. S0 keeps the co-clustering on a random 3,000 of the 13,605 cells and uses the first 25 subsamples, S1 the same cells and all 100, S2 all cells and all 100, S3 chooseR's code on all cells and all 100. The true number of types is 7.}
+\label{tab:pbmc}
+\footnotesize
+\setlength{\tabcolsep}{4pt}
+\begin{tabular}{llcccc}
+\toprule
+ & & \multicolumn{2}{c}{Original grids} & \multicolumn{2}{c}{Matched candidates} \\
+\cmidrule(lr){3-4}\cmidrule(lr){5-6}
+Method & Scorer & Finest & Most & Finest & Most \\
+\midrule
+MICA & S0 & 0.624\,(5) & 0.624\,(5) & 0.395\,(4\textrm{-}5) & 0.395\,(4\textrm{-}5) \\
+ & S1 & 0.625\,(5) & 0.625\,(5) & 0.395\,(4\textrm{-}5) & 0.395\,(4\textrm{-}5) \\
+ & S2, all cells & 0.624\,(5) & 0.624\,(5) & 0.395\,(4\textrm{-}5) & 0.395\,(4\textrm{-}5) \\
+ & S3, chooseR & 0.840\,(8) & n/a & 0.590\,(4\textrm{-}5) & n/a \\
+\midrule
+Leiden & S0 & 0.397\,(4) & 0.397\,(4) & 0.397\,(4) & 0.397\,(4) \\
+ & S1 & 0.397\,(4) & 0.397\,(4) & 0.397\,(4) & 0.397\,(4) \\
+ & S2, all cells & 0.397\,(4) & 0.397\,(4) & 0.397\,(4) & 0.397\,(4) \\
+ & S3, chooseR & 0.397\,(4) & n/a & 0.397\,(4) & n/a \\
+\midrule
+$k$-means & S0 & 0.094\,(2\textrm{-}5) & 0.094\,(2) & 0.385\,(4\textrm{-}5) & 0.385\,(4) \\
+ & S1 & 0.094\,(2) & 0.094\,(2) & 0.385\,(4) & 0.385\,(4) \\
+ & S2, all cells & 0.094\,(2) & 0.094\,(2) & 0.385\,(4) & 0.385\,(4) \\
+ & S3, chooseR & 0.094\,(2) & n/a & 0.440\,(5\textrm{-}6) & n/a \\
+\bottomrule
+\end{tabular}
+\end{table*}

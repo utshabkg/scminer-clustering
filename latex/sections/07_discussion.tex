@@ -1,40 +1,70 @@
 \section{Discussion}\label{sec:discussion}
-The results answer the main question only in part.
+\textbf{What the confirmatory runs settle.} The conclusions Assignment 3 drew about the rule held at
+seven new seeds. The reversal on the original grids replicated, and on the nine small datasets it is our
+sturdiest result: it holds at every seed, without any one dataset and at either number of subsamples. On PBMC14K the original grids favour MICA instead, \V{pbmc.S0.original.M.mica} against \V{pbmc.S0.original.M.leiden}, because there it is MICA's own grid that cannot reach 4 clusters. The reading still moved MICA more than the baselines, and MICA's flat top
+stayed in the smallest datasets. The conclusion about the methods held only in part. MICA's lead on
+matched candidates held under chooseR's reading at every new seed, under our scorer and under chooseR's
+code with the declared repair, but dataset by dataset it splits about evenly, and with 25 subsamples it
+rests on Buettner. Under the plain maximum the two methods are level with 25 subsamples, and MICA leads with 100, a comparison the protocol left without a verdict. So this benchmark says more about how the evaluation shapes a ranking than about which method
+clusters better.
 
-\textbf{What is now answered.} On the nine small datasets MICA's reported advantage survives in direction under this rule. Offered the same
-cluster counts as the baseline, one setting each, MICA has the higher mean under both readings of the stability
-rule at every seed, and, at one seed, under the silhouette rule when it is scored in the 50 principal components, a lead that
-does not hold in MICA's own embedding. 
-How large the advantage is still depends on choices that have nothing to do with either method, the reading of the
-rule, its threshold and the subsample draw, and the lead rests on five of the nine datasets. On PBMC14K the matched
-runs leave the methods tied under the plain maximum, and a 0.02 change in the threshold reverses which leads, so the large-dataset evidence supports no ranking and does not justify MICA's selection cost there, 93 minutes against 7.5.
+\textbf{Why the ranking moves.} Four mechanisms account for what we saw, and each was measured rather
+than assumed. The first is the menu. A rule can only pick from what it is shown, and Leiden's original
+grid never produced some of the counts the plain maximum prefers. PCA plus $k$-means shows the size of
+this effect. It shares Leiden's representation, so the gap between those two reflects the menu and the
+clustering step, and under the plain maximum that gap shrinks from \V{E2.original.M.leidenminuskmeans} on
+the original grids to \V{E2.mid.M.leidenminuskmeans} once the counts are matched. It shares MICA's menu
+and clustering step, so the gap between those two reflects the representation, and that gap barely
+moves, \V{E2.original.M.micaminuskmeans} against \V{E2.mid.M.micaminuskmeans}. The candidates changed which method looked better, while the representation contributed about the same in both designs, though under the plain maximum that contribution rests on Usoskin.
+Haslbeck and Wulff found that a stability estimate depends on its candidate range in the same way
+\cite{Haslbeck2020Corrected}.
 
-On matched candidates both fall below the label-fixed means, MICA further, and the gap shrinks from 0.195 to 0.119 or 0.020. Beyond the general concern about tuning on labels \cite{ullmann2023overoptimistic}, this gives a specific measurement for MICA and a failure mode any label-free
-comparison should check for: whether the rule chose a cluster count the other method could not have produced. A cap
-on the range does not prevent it, and matching the counts does.
+The second mechanism is ties. When many settings reproduce almost perfectly, stability no longer
+separates them and the tie-break decides, toward fewer clusters under the plain maximum and toward more
+under chooseR's reading. Ben-David et al. showed that stability alone cannot tell such settings apart
+\cite{BenDavid2006Sober}, and here it is mostly MICA's problem. Its distance between two cells does not
+change when the sample does, and on a few hundred cells removing a fifth of them often leaves its
+partitions unchanged \cite{vonLuxburg2010Stability}, which may be why its scores are flat where Leiden's
+are not.
 
-\textbf{Why it happens.} The matched runs separate two sources of ambiguity. The first is the candidates, which explained the reversal. The
-second is ties at the top of the stability scores, and it is mostly MICA's. The two readings break such a tie in
-opposite directions, the plain maximum toward fewer clusters and chooseR's toward more, which is why they move MICA's
-result further apart. 
+The third is the interval. The threshold is the highest lower bound among the candidates, so how the
+interval is computed decides which settings clear it. A coarse partition that reproduces perfectly is
+where the two implementations part most. Under ours its lower bound is 1.0 and becomes the threshold, so only a finer setting that also reproduces perfectly clears it. Leiden on Klein had none. Under chooseR's code it gets no
+interval at all, and a single such candidate leaves the threshold undefined, so the code as written makes
+no choice in most MICA runs. Resampling clusters also gives wide intervals when there are only a few
+clusters, and on PBMC14K that alone moved MICA's choice on its original grid from
+\V{pbmc.S2.original.F.mica.k} clusters to \V{pbmc.S3G.original.F.mica.k}. The fourth mechanism is the
+number of subsamples, which left the matched finest-stable comparison unchanged in direction but turned
+the matched plain-maximum comparison from level into a MICA lead, and the original-grid finest-stable
+comparison from level into a MICA lead as well.
 
-That the flat top sits in the smallest datasets favours a small-sample explanation over the mode, though nine datasets
-cannot separate size from the datasets themselves. We had suspected that MICA's partitions are too reproducible for
-reproducibility to discriminate, because its distance between two cells does not change when the sample does. That may
-matter most when cells are few, but we have not tested it in isolation.
+\textbf{When a label-free comparison is reliable.} Within what we tested, six checks flag a ranking that should not be trusted, and none of them needs labels. No comparison here passes all six, so we have not shown that passing them is enough.
+(1) The methods choose among the same cluster counts, and the ranking does not change with the setting behind each count. A shared cap is not enough, and that setting should be reported, since offering every setting per count instead of one lowered Leiden's
+plain-maximum mean from \V{S0.mid.M.leiden} to \V{S0.dense.M.leiden} on the small datasets, and offering
+only its lowest setting broke the tie on PBMC14K.
+(2) The two readings of the rule rank the methods the same way.
+(3) The scores are not flat. If most settings tie at the top, the tie-break is choosing.
+(4) The ranking holds across subsample draws. Across seeds the draw moved Leiden's chosen ARI on one dataset by as much as \V{range.M.leiden.max} under the plain maximum.
+(5) The ranking holds across implementations: the number of subsamples, the bootstrap and what it
+resamples. The rule should also be able to form an interval at all.
+(6) The ranking survives leaving out any one dataset.
+Our matched finest-stable comparison passes checks (1) and (4). It passes check (5) only with the repair
+the protocol declared, since chooseR's code as written makes no choice in most MICA runs, and it passes
+check (6) only with 100 subsamples. It fails check (2) at 25 subsamples and check (3) on the five smallest
+datasets, and even where it passes, the datasets split about evenly between the methods, so a mean lead
+says little about the next dataset. We therefore read it as a lead for MICA under chooseR's reading on
+these datasets, not as evidence that mutual information clusters better in general. The PBMC14K tie
+fails check (1), since under the protocol's scorer it changes with the setting behind each count. A user choosing a method for new
+data can run the same checks, and should report the chosen number of clusters beside any score, because
+a respectable ARI can come with a badly wrong count.
 
-\textbf{What it changes for someone using these tools.} Within what we tested, a user should do five things differently. Compare methods on the same cluster counts with one
-setting each, rather than only under the same cap, and check whether a method's chosen count is one the other could have
-produced. On a dataset of a few hundred cells, do not let a stability score choose MICA's number of clusters on its own,
-and if most settings tie at the maximum or two readings of the same scores disagree, treat the rule as having made no
-choice. Report the chosen cluster count beside the score, which exposes both failures at once. Do not read the strength of
-MICA's default of four clusters as evidence that it generalises, since tuning on this benchmark's labels picks the same
-value. And judge a faster neighbour graph by its clustering and memory, not by recall and time alone: ours helps only when time is short and memory is spare.
-
-\textbf{Limitations.} The two pipelines differ in distance, embedding and clustering step, so the comparison does not isolate mutual information. It uses rules we chose on datasets from a single benchmark. The
-matched design was fixed before its runs but after the post hoc check that prompted it, and one setting per count is one
-reasonable choice among several. Even the matched grids reach 14 to 19 of the 19 counts per run, and 2 and 3 clusters are
-never compared on PBMC14K, the only large dataset in the selection comparison. We use 25 subsamples where chooseR specifies 100. We reimplemented chooseR with a simpler bootstrap and, on PBMC14K, a 3,000-cell score (Appendix~\ref{app:repro}) rather than run its R code, and since the choice is sensitive to a shift of 0.02, a discrepancy in our reading could
-propagate to every stability result here, the matched comparison included. The graph comparison covers two datasets, lets
-the labels pick the resolution, and compares numpy against compiled code, so it bounds the cost of the two graphs on this
-machine rather than ranking the algorithms in general.
+\textbf{Limitations.} The rules all come from one family, subsampling stability, and the datasets from one
+benchmark, nine of them small. Other label-free rules, such as significance tests, may rank the methods
+differently. The matched design was introduced after we had seen the first results. Its conclusions are
+now tested at new seeds under a protocol tagged in advance, but the criteria were written knowing the
+results at seeds 0 to 2, and the per-dataset analysis was added afterwards. The protocol also left exploratory the effects of the number of subsamples, the interval and the setting per count, so these still need runs of their own. C4 counts PBMC14K seeds 0 to 2 as well, which we had seen in Assignment 3, and their three ties alone would satisfy it. Of the two new seeds, one ties and one gives MICA the lead. PBMC14K is the only large
+dataset. MICA's graph mode never gives fewer than 4 clusters on it, so the matched comparison there starts
+at 4, and its node2vec and Louvain take no seed, so its runs cannot be repeated exactly. The $k$-means
+control isolates the representation only in MICA's small-data mode. The repairs for chooseR's failed
+intervals are ours, though both were declared before the runs. The large-scale dataset the course
+requires has not been run yet, and the secondary rules remain at three seeds or one.

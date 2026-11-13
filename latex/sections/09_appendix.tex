@@ -1,8 +1,13 @@
 \section{Code and data}\label{app:links}
-\texttt{notebooks/assignment3\_results.ipynb} rebuilds every table and figure in this
-paper from the saved result files and prints many of the numbers behind them, so the
-displays can be checked without rerunning an experiment. Appendix~\ref{app:repro} gives
-the layout of those files and the commands that produced them.
+The code and the per-run results are at \url{https://github.com/utshabkg/scminer-clustering}, where the
+protocol is tagged \texttt{matched-protocol-v1}. The ten benchmark inputs are the scMINER authors'
+processed release, \url{https://doi.org/10.5281/zenodo.15040179}. The saved subsample partitions of
+protocol v1 take 11 GB, too large for GitHub, and we share them on request.
+\texttt{scripts/a4\_protocol\_v1.py} rebuilds every protocol v1 table, the per-seed figure and every
+protocol v1 number in the text from the saved result files, and
+\texttt{notebooks/assignment3\_results.ipynb} does the same for the Assignment 3 displays, so they can
+be checked without rerunning an experiment. Appendix~\ref{app:repro} gives the layout of those files
+and the commands that produced them.
 
 \section{The datasets}\label{app:data}
 Table~\ref{tab:data} lists the ten benchmark datasets with their sizes, label counts and
@@ -11,6 +16,8 @@ mode to its graph mode, and PBMC14K is the only one above it, which is why mode 
 move together in the runs as shipped.
 
 \input{tables/a3_datasets}
+
+\input{tables/a2_reproduction}
 
 \section{All four rules in one table}\label{app:rulesall}
 Table~\ref{tab:rulesall} gives the per-dataset picks on each method's original grid under the two
@@ -32,8 +39,8 @@ rule re-applied to MICA's saved scores restricted to the set of counts the basel
 the same run. That set can have gaps: on Yan the baseline makes 2 and 4 to 8 clusters but never
 3. Nothing is rerun and no labels are used to restrict, but the restriction was chosen after the
 results were seen and is applied to MICA only. It is a sensitivity check on what the candidate
-grids do to the ranking and not a fair comparison, which is why the matched runs of
-Section~\ref{sec:matched} replace it as the comparison we rely on. The largest gains in MICA's finest-stable ARI are
+grids do to the ranking and not a fair comparison, which is why the matched design of
+Section~\ref{sec:design} replaces it as the comparison we rely on. The largest gains in MICA's finest-stable ARI are
 on Yan, where its pick falls from 19 clusters to 7 and its ARI rises from 0.496 to 0.925, and on
 Klein, by 0.36. On Pollen the pick falls from 17 to the true 11 at 0.969, though 11 is also the
 most clusters the baseline makes there. This check suggested a larger lead than the matched runs
@@ -44,7 +51,8 @@ in the matched runs, MICA's picks are the same as on its original grid in 8 of 8
 \input{tables/a3_common_range}
 
 \section{Mode against size}\label{app:modesize}
-Table~\ref{tab:modesize} gives the three arms of the test in Section~\ref{sec:modesize}. Within a
+Table~\ref{tab:modesize} gives the three arms of the test in Section~\ref{sec:transfer}, run at
+seeds 0 to 2 in Assignment 3. Within a
 seed the cells, the subsamples and the labels are shared. The pipelines differ in their
 normalisation of the mutual information and in the cluster counts their grids reach, so the test
 says nothing about the mutual information distance itself. On the original grids the difference
@@ -108,13 +116,37 @@ both directions, is why we report the ARI in the main table.
 
 \input{tables/a3_ami}
 
+\section{The faster neighbour graph}\label{app:graph}
+This comparison is not about selection, so it sits here. The faster neighbour graph is compared with
+MICA's own on PBMC14K and on 100,000 cells drawn at random from the 10x v3 data of the Allen whole mouse
+brain atlas \cite{yao2023allen}, both fed to MICA's own node2vec and Louvain so that only the graph
+differs. We preprocessed these Allen cells ourselves from the raw counts ($\log_2(\mathrm{CPM}+1)$, 28,536
+genes after filtering), and score them against the atlas's 34 cell classes, which its authors derived
+by clustering. The labels pick the resolution, so that only the graph differs. The shortlist size
+follows one stated rule: the smallest value on a doubling grid whose recall on 500 brute-forced query
+cells reaches that of MICA's search. We wrote it after Assignment 2 had picked 800 and 3,200 from the same
+recall audits, and it gives those counts back. Setting it uses no labels.
+
+\input{tables/a3_graph_cost}
+
+Table~\ref{tab:graph} compares MICA's HNSW search with our correlation shortlist rescored exactly. On PBMC14K a shortlist of 800
+matches MICA's recall, 0.974 against 0.973, and ARI, 0.853 against 0.852, and builds the graph in 18 s against 7 minutes. The whole run is only about twice as fast, 6.4 minutes against
+13.2, because node2vec and Louvain take about 6 minutes on either graph.
+
+On the Allen cells a shortlist of 3,200 reaches higher recall than HNSW, 0.946 against 0.903, yet the clustering it yields is no
+better: ARI 0.602 and 0.627 against 0.641 and 0.617. So recall alone does not settle which graph is better. The speed-up is also much
+smaller here, 1.7 hours against 3.8 for the build and 2.8 against 4.9 in total. Build memory goes the other way on both datasets, 3.6 GB
+against 1.2 on PBMC14K and 80 GB against 22 on Allen, with the peak reached while loading and binning the data. Appendix~\ref{app:cost} gives further
+cautions on these times.
+
 \section{Further detail on ties, thresholds and cost}\label{app:cost}
-\textbf{Ties and thresholds.} On the original grids 38 percent of MICA's candidate settings score
+\textbf{Ties and thresholds.} These figures come from the Assignment 3 runs at seeds 0 to 2. On the original grids 38 percent of MICA's candidate settings score
 within 0.01 of its best, against 22 percent for the baseline, over a span of 7.3 cluster counts against
 2.7. On the four datasets with 622 to 2,903 cells at most 16 percent of MICA's settings score 1.0.
 Relaxing the threshold changes the count in 20 of 27 runs for MICA and 15 of 27 for the baseline on the
-original grids. We took 0.02 as a plausible size for the difference the choice of bootstrap or the number
-of subsamples could make to the threshold, without measuring it. MICA's picks on PBMC14K sit at resolution
+original grids. We had taken 0.02 as a plausible size for the difference the choice of bootstrap or the number
+of subsamples could make to the threshold. Section~\ref{sec:chooser} now measures that difference with
+chooseR's own code. MICA's picks on PBMC14K sit at resolution
 4.0 or 3.9, the top of its original grid, and the baseline's at 0.05, the bottom of its own, at 4 clusters.
 The baseline's best setting there scores 0.876 to 0.878, and on the original grid relaxing the threshold
 moves it to 0.785 to 0.873, while MICA's ARI peaks at 0.851 to 0.859. The shipped defaults there, 0.846 for MICA and 0.853 to 0.867 for the baseline, score above anything the rule picks at its stated threshold. On that grid both of MICA's readings
@@ -122,15 +154,12 @@ select 5 clusters at all three seeds, with AMI 0.790 against 0.725. Across seeds
 moves the ARI by 0.09 on average for both methods and by as much as 0.46, from 0.474 to 0.934 for MICA on Buettner.
 
 The $k$-means step is not deterministic either: at a fixed $k$ MICA's ARI moves by as much as 0.267 across seeds, on
-Buettner at $k=7$. The rank correlation in Section~\ref{sec:results} means the signal points the right way and only sits in a band too
-narrow for a threshold to act on. The ambiguity we report is an observation and does not rest on either failed
-explanation.
+Buettner at $k=7$.
 
 \textbf{Cost of selection.} On Zeisel stability selection adds 103 s for MICA and 107 s for the baseline on the
-original grids. Each run takes 494 clusterings for MICA and 468 to 1,040 for the baseline on the
+original grids. In Assignment 3 each run took 494 clusterings for MICA and 468 to 1,040 for the baseline on the
 original grids. MICA's distance matrix takes 4 to 6 minutes on Klein and Zeisel and is
-shared across every setting and seed. Without the exactness property it would be rebuilt for each of the 25
-subsamples. On PBMC14K the 13.2 minutes in Table~\ref{tab:graph} covers MICA's sweep of 40 Louvain
+shared across every setting and seed. Without the exactness property it would be rebuilt for every subsample, 25 per run in Assignment 3 and 100 in protocol v1. On PBMC14K the 13.2 minutes in Table~\ref{tab:graph} covers MICA's sweep of 40 Louvain
 resolutions, and almost all of a single run is the HNSW search and node2vec. Our selection runner there skips
 HNSW and takes exact neighbours for every subsample from one full distance matrix computed once.
 
@@ -149,8 +178,8 @@ build 1.3 times. We therefore attribute part of the old timings to a busier mach
 \section{Reproducing the results}\label{app:repro}
 \url{scripts/a3_report.py} rebuilds the figure and the tables of the runs as first specified
 from the saved result files and writes \url{results/a3_report_numbers.json}.
-\url{scripts/a3_matched.py} builds Tables~\ref{tab:matched}, \ref{tab:summary} and
-\ref{tab:transfer} from the matched runs and writes \url{results/a3_matched_numbers.json}.
+\url{scripts/a3_matched.py} builds the Assignment 3 matched tables and
+Table~\ref{tab:transfer} from the matched runs and writes \url{results/a3_matched_numbers.json}.
 Between them the two files hold most of the aggregate figures quoted in the text, each
 traceable to the run that produced it. The rest come from the per-run files: selection times and
 clustering counts from each run's \url{metrics.csv}, the distance-matrix, node2vec and matched
@@ -160,6 +189,21 @@ sweep times from the logs, saved in \url{results/a3_log_timings.csv} by
 \url{results/a3_matched_mechanism.csv}. Per-dataset ARI ranges across seeds are in
 \url{results/a3_seed_variation.csv} and \url{results/a3_matched_seed_variation.csv}.
 
+\textbf{Protocol v1.} The protocol is \texttt{docs/protocol\_matched\_v1.md}, tagged
+\texttt{matched-protocol-v1} at commit \texttt{620f940}. \texttt{scripts/run\_protocol\_v1.sh} runs every
+part: \texttt{scripts/run\_protocol\_small.py} for the nine small datasets,
+\texttt{scripts/run\_protocol\_pbmc.py} for PBMC14K in four stages, and
+\texttt{scripts/run\_chooser\_r.py}, which passes each saved partition to
+\texttt{scripts/score\_chooser\_r.R}. That script loads chooseR's \texttt{R/pipeline.R} at commit
+\texttt{410bdbf}, fetched and checksummed by \texttt{scripts/fetch\_chooser.sh}, in the R environment
+pinned in \texttt{envs/chooser-r.yml}. Each run refuses to start unless its code matches the tag, and
+writes a provenance file under \url{results/v1/provenance} with the commit, the result of that check,
+package versions and checksums of its inputs. Every subsample partition is saved, so a scorer can be
+rerun without clustering again. \texttt{scripts/check\_v1\_regression.py} compares seeds 0 to 2 with
+the Assignment 3 folders, and \texttt{scripts/a4\_protocol\_v1.py} computes every criterion and writes
+\url{results/a4_protocol_v1_numbers.json} and \texttt{latex/numbers\_a4.tex}, from which the text
+prints each protocol v1 number.
+
 \textbf{Software.} Two conda environments, both pinned in \texttt{envs/}. The analysis
 environment has Python 3.11, Scanpy 1.11.5 and scikit-learn. The second reproduces the
 authors' published environment, Python 3.9.2 with MICA 1.0.0 and scikit-learn 0.24.1, and
@@ -167,26 +211,24 @@ is used whenever MICA's own code runs. MICA is the released version at commit
 \texttt{54fae81}. Our own implementation of both distance forms agrees with the authors' code to within
 $10^{-6}$ on Zeisel, where a test enforces it, and within $10^{-4}$ on the other inputs we compared. The label-free runs use it, with our own multidimensional scaling and scikit-learn's $k$-means at 50 starts in small-data mode, because the released code offers no entry point for rerunning on subsamples. On PBMC14K only node2vec and Louvain go through MICA's code.
 
-\textbf{Running the experiment.} The stability rule for the nine small-data datasets is
+\textbf{Running the Assignment 3 experiment.} The stability rule for the nine small-data datasets is
 \texttt{scripts/run\_rules\_small.sh}, which calls
 \texttt{scripts/run\_rule\_stability.py} once per dataset at seed 0, with
 \texttt{scripts/run\_rules\_repeats.sh} supplying seeds 1 and 2. PBMC14K needs MICA's
 graph mode and runs through \texttt{scripts/run\_rule\_stability\_graph.py}, which shells
 out to the legacy environment for the node2vec step. The mode against size comparison of
-Section~\ref{sec:modesize} is \texttt{scripts/run\_rule\_mode\_size.py}, which draws the
+Appendix~\ref{app:modesize} is \texttt{scripts/run\_rule\_mode\_size.py}, which draws the
 pool once and calls both pipelines on it. The silhouette rule is
 \texttt{scripts/run\_rule\_silhouette.py} and the shipped defaults are
 \texttt{scripts/run\_rule\_default.py}. Each writes a folder under \texttt{results/}
 containing \texttt{metrics.csv} and a \texttt{params.json} recording the settings, seed
-and candidate grid of that run. The matched runs of Section~\ref{sec:matcheddesign} use the
+and candidate grid of that run. The matched runs of Section~\ref{sec:design} use the
 same stability, mode and silhouette runners with \texttt{-{}-matched} on the command line,
 called through \texttt{scripts/run\_rules\_matched.sh} once per part and seed, and write to
 folders starting \texttt{rule\_matched\_}. Their grids are in
-\texttt{src/scminer\_clust/grids.py}, fixed beforehand from the label-free sweeps of
-\texttt{scripts/probe\_grid\_coverage.py} and \texttt{scripts/probe\_mica\_graph\_coverage.py}.
+\texttt{src/scminer\_clust/grids.py}, set from the label-free sweeps of \texttt{scripts/probe\_grid\_coverage.py} and \texttt{scripts/probe\_mica\_graph\_coverage.py}. That file reached the repository in the same commit as the Assignment 3 matched results (Section~\ref{sec:design}).
 
-\textbf{Settings.} Subsamples: $B = 25$ at 80 percent of cells, redrawn per seed, shared
-between the two methods within a seed. Candidate settings in the runs as first specified:
+\textbf{Settings.} In Assignment 3 we drew $B = 25$ subsamples of 80 percent of cells, redrawn per seed and shared between the two methods within a seed. Candidate settings in the runs as first specified:
 $k \in \{2,\dots,20\}$ for MICA
 in small-data mode, resolutions 0.05 to 2.00 in steps of 0.05 for Leiden, and 0.1 to 4.0 in
 steps of 0.1 for MICA in graph mode, which is MICA's own grid. Only settings whose
@@ -196,16 +238,14 @@ of 0.01, then to 4.0 in steps of 0.1 and to 30 in steps of 0.5, and keep one set
 among the counts every method reaches. $k$-means uses 50
 restarts. The bootstrap for the stability threshold is a percentile bootstrap over cells with
 2,000 resamples, where chooseR specifies BCa with 25,000. The two differ only in the
-lower bound they give, which is what sets the threshold. We first assumed this would not
-matter, and we have not compared the two bootstraps. Section~\ref{sec:results} relaxes the
-threshold by at most 0.02, a size we took as plausible without measuring it, and the chosen
-cluster count is sensitive to that, so the difference between the two bootstraps could change the
-selection. This is the clearest unverified assumption remaining in our implementation, and settling it needs a run against chooseR's own R code. On PBMC14K, for both methods, the co-clustering counts, the score and the bootstrap are kept on a random 3,000 of the 13,605 cells, redrawn per seed, a second departure from chooseR made for cost and not tested separately. Clustering still runs on subsamples of all the cells.
+lower bound they give, which is what sets the threshold. In Assignment 3 we had not compared them.
+Protocol v1 draws $B = 100$ subsamples, the first 25 of which are these, and
+Section~\ref{sec:chooser} compares our scorer with chooseR's own R code on the same partitions. On PBMC14K, for both methods, the co-clustering counts, the score and the bootstrap are kept on a random 3,000 of the 13,605 cells, redrawn per seed, a second departure from chooseR made for cost, which scorer S2 removes in protocol v1. Clustering still runs on subsamples of all the cells.
 
-\textbf{Scale of the computation.} Each dataset and seed runs $B+1$ clusterings per
+\textbf{Scale of the computation.} In Assignment 3 each dataset and seed ran $B+1$ clusterings per
 candidate setting for each method, which is 494 for MICA over 19 values of $k$ and 468 to
 1,040 for Leiden, whose grid loses settings that fall outside 2 to 20 clusters, and 364 to 494
-for either method on matched candidates. The reported cost excludes the one-off mutual information
+for either method on matched candidates. Protocol v1, with $B = 100$, runs 101 per setting, 1,919 for MICA or $k$-means over all 19 values of $k$. The reported cost excludes the one-off mutual information
 distance matrix, which is computed once per dataset, cached, and shared by every setting
 and seed.
 

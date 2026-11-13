@@ -1,55 +1,65 @@
 \section{Experimental Design}\label{sec:design}
-The comparison is paired. For every dataset and rule, the input matrix, the gene set and the
-scoring are fixed, and the method and its grid differ.
+The comparison is paired: within a dataset and seed every method sees the same cells and the same
+subsamples, and only the method and its candidates differ. The design also separates what we explored,
+and could tune by looking, from what we then confirmed under a protocol fixed in advance.
 
 \textbf{Data.} We use the ten labelled datasets of the scMINER benchmark in the processed form the authors
-released, with all genes retained for both methods (Table~\ref{tab:data}). They span 124 to 13,605
+released, with all genes retained for every method (Table~\ref{tab:data}). They span 124 to 13,605
 cells and 3 to 11 cell types. PBMC14K's labels are cell types fixed by antibody sorting before
 sequencing \cite{zheng2017massively}. Several small datasets are labelled by experimental condition,
 while Zeisel's labels came from the original authors clustering the same data \cite{zeisel2015cell},
-which flatters any method resembling theirs.
+which flatters any method resembling theirs. For the course's three data categories, PBMC14K is the
+ordinary dataset (13,605 cells by 8,846 genes) and Zeisel (2,903 by 14,890) and Klein (2,717 by 24,175)
+are high-dimensional ones. The large-scale dataset, the 2.3 million cells of the Allen whole mouse brain
+atlas \cite{yao2023allen}, is planned for the November 30 draft (Section~\ref{sec:conclusion}).
 
-\textbf{The runs as first specified.} The protocol was fixed before any partition was scored: the candidate grids, 25 subsamples of 80
-percent at three seeds, and the selection step. chooseR's reading is primary, and the plain maximum, specified with it, is a second rule. Both methods choose among settings whose full-data
-partition has 2 to 20 clusters and see the same subsamples within a seed. That caps the range without
-matching it: MICA's $k$ covers all of it on every dataset, but the baseline's resolution grid of 0.05
-to 2.0 never does. chooseR specifies $B = 100$. We use 25 because the rule costs $B + 1$ clusterings
-per candidate setting, so 100 would take roughly four times the compute. Fewer subsamples may widen the
-bootstrap intervals and so lower the threshold. We did not rerun at 100. We test how sensitive the
-selection is to the threshold instead, which is a related check and not the same comparison.
+\textbf{Candidate designs.} In the \emph{original} design, as first specified, each method chooses among
+its own grid's settings whose full-data partition has 2 to 20 clusters. That caps the range without
+matching it: the $k$ of MICA and of $k$-means covers all of it, but Leiden's resolution grid of 0.05 to 2.0 never does, and neither does MICA's graph-mode grid of 0.1 to 4.0 on PBMC14K, which gives no fewer than 5 clusters. In the \emph{matched} design every method is offered the counts from 2 to
+20 that all of them reach on the full data, with one setting per count, the middle of the settings in
+grid order that give it. One per count matters because the threshold is the highest lower bound among
+the candidates, and a dense grid would give Leiden several chances at it for every one of MICA's.
+Label-free probes on the full data showed that no resolution grid reaches every count: 300 log-spaced
+Leiden resolutions from 0.001 to 50 still skip up to 5 of the 19 counts in a run, and MICA's graph mode
+never gives fewer than 4 clusters on PBMC14K, even at a resolution of 30. To test whether the setting
+that stands for a count matters, Leiden is also offered the first (\emph{low}) or last (\emph{high})
+setting per count, or every setting giving a matched count (\emph{dense}). MICA's graph mode gets low
+and high as well. $k$ has only one setting per count.
 
-\textbf{Matched candidates.}\label{sec:matcheddesign} Restricting MICA's saved scores to the counts the baseline produced (Table~\ref{tab:common}) suggested
-the unmatched range mattered, but that restriction was chosen after the results were seen and applied
-to MICA only. We therefore fixed a matched design before running it. In each run every method is offered
-the counts from 2 to 20 that all of them reach on the full data, with one setting per count, the middle
-of the settings in grid order that give it. One per count matters because the threshold is the highest
-lower bound among the candidates, and a dense grid would give the baseline several chances at it for
-every one of MICA's. Label-free probes on the full data showed that no resolution grid reaches every count: 300 log-spaced Leiden resolutions from 0.001 to 50 still skip up to 5 of the 19 counts in a
-run, and MICA's graph mode never gives fewer than 4 clusters on PBMC14K, even at a resolution of 30. The
-rule, the subsamples and the seeds are unchanged, and the silhouette rule gets the same candidates.
+\textbf{What we explored and what we confirmed.} The original design ran first, for MICA and Leiden at
+three seeds (0 to 2). The matched design was introduced after we had seen those results, and also ran
+at seeds 0 to 2. Each design reached our repository in the same commit as its first results, the original on October 22 and the matched one on October 28. So the history shows that the matched design came later, but not that either design was fixed before its results. Everything after that follows protocol v1
+(\texttt{docs/protocol\_matched\_v1.md}). It fixes the methods, designs, scorers, seeds and the criteria
+for confirming each Assignment~3 finding, and it was tagged \texttt{matched-protocol-v1}
+(commit \texttt{620f940}, November 12) before any run at a new seed. Before the tag we tested the code on Yan at seed 0, Kolodziejczyk at seed 1 and PBMC14K at seed 0 with 3 subsamples, and ran chooseR's code on the Yan partitions, as the protocol records. Each run refuses to start unless
+the code it executes is the tagged code, and records that check. Seeds 3 to 9 on the nine small datasets
+are the confirmatory runs. Seeds 0 to 2 were rerun under the same protocol, so that every seed has every
+method and scorer. On PBMC14K, seeds 0 to 2 reuse the Assignment 3 subsamples, and Leiden's original-grid runs there reproduce Assignment 3, so only seeds 3 and 4 are new for every method. MICA's node2vec and Louvain take no seed, so its partitions are new draws at all five.
 
-\textbf{Use of labels.}\label{sec:labeluse} Labels are used in four places, none of which feeds a label-free choice. They score the chosen
-partition, they fix the setting in the reproduction of the published protocol, and they pick the
-resolution in the graph comparison so that only the graph differs. The transfer comparison also uses
-them, so it is reported apart: each small dataset takes the setting with the best mean ARI over the
-other eight at the same seed, with ties going to the smaller setting.
+\textbf{Scorers.} Every run draws 100 subsamples, and the first 25 are exactly the 25 the original
+protocol drew at that seed. Every subsample partition is saved and scored four ways (Section~\ref{sec:method}):
+S0 on the first 25, S1 on all 100, S2 on all 100 and all cells for PBMC14K, and S3 with chooseR's own R
+code (commit \texttt{410bdbf} of its repository) on all 100. For S3, R reads our partitions and runs
+chooseR's tally, scoring, silhouette, grouping and bootstrap functions unchanged, and its choice is
+ported line for line. Where BCa cannot form an interval, chooseR's code produces no choice. We report
+that as it is, and as the protocol declared, we also report two repairs: a point interval at the
+median, which is our primary S3 reading, and dropping the setting.
 
-\textbf{Runs, measures and cost.} The stability rule is run with three independent seeds, which redraw the subsamples and reinitialise the
-clustering, and we report the median with the full range of chosen cluster counts. MICA's $k$-means uses
-50 restarts within a run, which are restarts rather than repeats. The default rule ran at three seeds and the silhouette rule at one, so it shows no variation. A range is the observed minimum and
-maximum, not a confidence interval, because three runs are too few to justify one.
+\textbf{Use of labels.}\label{sec:labeluse} Labels are used in four places, none of which feeds a
+label-free choice. They score the chosen partition, they fix the setting in the reproduction of the
+published protocol, and they pick the resolution in the graph comparison of
+Appendix~\ref{app:graph} so that only the graph differs. The transfer comparison also uses them, so it
+is reported apart: each small dataset takes the setting with the best mean ARI over the other eight at
+the same seed, with ties going to the smaller setting.
 
-Agreement with the labels is the ARI, with the adjusted mutual information (AMI) in Table~\ref{tab:ami}
-and in the text for the matched runs. We also report the number of clusters the rule chose, because a
-rule can reach a respectable ARI with a badly wrong count. Cost is wall-clock time on one workstation with
-120 cores and 754 GB, every job on 8 threads and no GPU. Selection counts the candidate partitions, the
-subsample reruns and the scoring, and is reported apart from the cost of clustering once.
-
-\textbf{Graph comparison.} The faster neighbour graph is compared with MICA's own on PBMC14K and on 100,000 cells drawn at random
-from the 10x v3 data of the Allen whole mouse brain atlas \cite{yao2023allen}, both fed to MICA's own
-node2vec and Louvain so that only the graph differs. We preprocessed these Allen cells ourselves from the
-raw counts ($\log_2(\mathrm{CPM}+1)$, 28,536 genes after filtering), and score them against the atlas's 34
-cell classes, which its authors derived by clustering. The shortlist size follows one stated rule: the
-smallest value on a doubling grid whose recall on 500 brute-forced query cells reaches that of MICA's search.
-We wrote it after Assignment 2 had picked 800 and 3,200 from the same recall audits, and it gives those
-counts back. Setting it uses no labels.
+\textbf{Runs, measures and cost.} The main comparisons run at ten seeds on the nine small datasets and
+five on PBMC14K. A seed redraws the subsamples and reinitialises every seeded step. MICA's and
+$k$-means' 50 restarts are restarts within a run, not repeats. We report per-dataset medians over seeds
+with the full range of chosen counts, and a range is the observed minimum and maximum, not a confidence
+interval. Four secondary results keep the seeds they had: the mode-against-size test (three), the shipped defaults (three), the transfer comparison (three) and the silhouette rule (one, so it shows no variation). They are not the
+comparisons our conclusions rest on, and the computation went to the main comparison and the chooseR
+check instead. Agreement with the labels is the ARI, with the adjusted mutual information (AMI) as a
+second measure. We also report the number of clusters chosen, because a rule can reach a respectable
+ARI with a badly wrong count. Cost is wall-clock time on one workstation with 120 cores and 754 GB,
+every job on 8 threads and no GPU. Selection counts the candidate partitions, the subsample reruns and
+the scoring, and is reported apart from the cost of clustering once.
