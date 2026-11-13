@@ -1,61 +1,66 @@
 \section{Introduction}\label{sec:intro}
-A biologist who has sequenced a new tissue wants to know which cell types are in it. The
-standard route is to cluster the cells and inspect the groups, and every method used for this
-has a setting that controls how finely it divides the data. On Zeisel, which has 7 annotated
-cell types, a Leiden pipeline returns 3 or 4 clusters at a resolution of 0.05, depending on the seed,
-and 21 at 1.0, the setting its software ships with. That choice has to be made without knowing
-the answer, because the number of cell types is usually what the experiment is trying to
-establish.
+A biologist who has sequenced a new tissue wants to know which cell types are in it. The standard
+route is to cluster the cells and inspect the groups, but every practical method has a setting that
+controls how finely it divides the data. On Zeisel, which has 7 annotated cell types, a Leiden
+pipeline returns 3 or 4 clusters at resolution 0.05, depending on the seed, and 21 at resolution
+1.0, the setting Scanpy ships with. A user has to make that choice without knowing the answer,
+because the number of cell types is usually what the experiment is trying to establish.
 
-Published benchmarks do not make that decision. In the benchmark for scMINER
-\cite{pan2025scminer}, the framework we study, every method is either given the true
-number of cell types or has its setting swept and keeps only the runs reproducing that
-number, with ties broken by agreement with the labels.
-Ullmann et al. \cite{ullmann2023overoptimistic} show that tuning against the ground
-truth inflates a method's apparent advantage. What is missing is a direct measurement of
-what happens to a specific published advantage when the selection is made without labels.
+scMINER \cite{pan2025scminer} is a useful stress test for this problem because its MICA clustering
+module replaces ordinary geometric similarity with binned mutual information between cell profiles.
+The published benchmark reports strong clustering accuracy, but the reported settings are fixed with
+reference labels: MICA is run at the true number of clusters, while graph-based methods are swept until
+they reproduce that count. Ullmann et al. \cite{ullmann2023overoptimistic} show more generally that
+tuning against ground truth can make a clustering method look better than it would to a user who does
+not have those labels. The first question examined here is therefore not whether MICA can match known
+cell types after tuning. It is whether its advantage survives when the setting itself must be chosen
+without labels.
 
-\textbf{Main question.} When the same label-free rule chooses the setting for both methods,
-does MICA, the mutual information clustering in scMINER, produce partitions closer to the
-known cell types than a principal component and Leiden pipeline on the same genes? Two
-supporting questions follow. How much of the answer is set by the rule rather than by either
-method, and under what conditions does the answer hold?
+Related studies place this question beside three lines of work. First,
+chooseR, MultiK, sc-SHC and CHOIR provide label-free or significance-based ways to select or merge
+clusters \cite{pattersoncross2021chooser,liu2021multik,grabski2023significance,sant2025choir}, but the
+reviewed studies do not report an application of these ideas to MICA's mutual-information clustering. Second,
+methods such as minicore show that information-theoretic distances can be used at multi-million-cell
+scale \cite{baker2021minicore}, while standard graph methods such as Leiden are already highly scalable
+\cite{traag2019louvain}. That does not answer how expensive MICA's own mutual-information neighbour
+graph is, or whether a faster approximation changes its clustering. Third, recent language-model
+systems annotate clusters from marker genes and retrieved biological knowledge
+\cite{hou2024gpt4,crowley2025anndictionary,xie2025cassia}. They generally assume that the partition has
+already been chosen. The reviewed studies do not establish a method that uses scMINER's computed hidden-driver
+activity as retrieval evidence. That interpretation question remains an extension, but the
+language-model experiment has not yet been conducted, so this paper makes no annotation claim.
 
-Our approach holds the data and the rule fixed and varies the method. The main rule is
-subsampling stability in the style of chooseR \cite{pattersoncross2021chooser}, which reruns each
-method on random 80 percent subsamples and prefers settings whose clusters survive resampling. As
-first specified, both methods chose among settings yielding at most 20 clusters. In the runs we
-rely on, both are offered the same cluster counts, one setting per count. Labels are used only
-afterwards, to score what the rule chose. The experiment covers all ten benchmark datasets at three
-seeds, with cost recorded.
+\textbf{Main question.} When the same label-free rule chooses the setting for both methods, does MICA
+produce partitions closer to the known cell types than a principal-component and Leiden pipeline on
+the same genes? Two supporting questions follow. How much of the answer is set by the selection rule
+rather than by either clustering method, and under what conditions does the answer hold?
 
-As first specified, MICA leads under three of four rules,
-but its mean moves by 0.255 across them against 0.120 for the baseline, and two readings of one rule
-reverse the ranking. The cause is a confound: a cap does not give the methods the same candidates.
-On matched counts the reversal is gone and MICA leads under both readings at every seed, because the
-baseline's score falls once its grid reaches the coarse partitions MICA's always could. MICA's
-stability scores still sit flat at the top, mostly on the smallest datasets, and a label-informed
-transfer shows that its default of four clusters is what tuning on this benchmark would pick. On
-PBMC14K, the one large benchmark dataset, the ranking turns on the rule's reading and threshold.
+Our main rule is subsampling stability in the style of chooseR
+\cite{pattersoncross2021chooser}. It reruns each method on random 80 percent subsamples and prefers
+settings whose clusters survive resampling. As first specified, both methods chose among settings
+producing at most 20 clusters. That shared cap did not give them the same candidate cluster counts, so
+our primary comparison now offers both methods the same reachable counts, one setting per count.
+Reference labels are used only afterwards to score the selected partition. The experiment covers all
+ten scMINER benchmark datasets at three seeds, with the selection cost reported separately from the
+cost of one clustering.
 
+On the nine small datasets, MICA leads under both readings of the stability scores once the candidate
+cluster counts are matched, with mean ARI 0.662 versus 0.543 under the finest-stable reading and 0.473
+versus 0.452 under the plain maximum. The result is not a clean win. MICA's stability surface is often
+flat near its maximum, especially on the smallest datasets, so the tie-break and the subsample draw can
+move the selected partition by about as much as the gap between methods. On PBMC14K, the only large
+benchmark dataset in the selection experiment, the methods tie under one reading and a 0.02 threshold
+change reverses which method leads under the other. The main practical result is therefore that fair
+candidate construction is necessary, but it does not remove the uncertainty of label-free selection.
 
-
-\textbf{A measurement of what label-free selection does to a published advantage.} The closest
-work establishes that tuning on labels is optimistic \cite{ullmann2023overoptimistic} and supplies
-rules meant to replace it \cite{pattersoncross2021chooser,liu2021multik}, but we found none applied
-to mutual information clustering, and the scMINER benchmark reports no label-free result. We find
-that the tie-break and the subsample draw inside one rule each move the result by as much as the gap
-between the methods, and Section~\ref{sec:discussion} turns this into what a user should do
-differently.
-
-\textbf{Evidence that a cap is not a match.} The reversal came from counts one method could reach
-and the other could not, and it disappears when both are offered the same counts. The ties that
-remain are largely MICA's, and the rule's two readings break them in opposite directions.
-
-\textbf{A cost and quality comparison of a faster neighbour graph.} A correlation shortlist rescored
-with the exact MICA distance builds the graph faster with no worse recall. It is not guaranteed to
-find every true neighbour, it needs three to four times the memory to build, and it gave no better clustering.
+We also test one scaling idea motivated by previous work on scalable information-theoretic methods. A correlation shortlist rescored with the
+exact MICA distance builds the neighbour graph much faster than MICA's own search on PBMC14K and on a
+100,000-cell Allen subset, while reaching similar neighbour recall. The shortcut is not uniformly
+better: it needs three to four times the peak memory during graph construction and gives no better
+downstream clustering. Together, these experiments separate two issues that the surrounding literature
+usually treats independently: choosing a defensible partition without labels and paying for the
+mutual-information graph that produces it.
 
 Sections~\ref{sec:related} to~\ref{sec:design} cover the closest work, the methods and the design,
-Section~\ref{sec:results} the results, and Sections~\ref{sec:discussion} and~\ref{sec:conclusion} what
-follows from them and what remains.
+Section~\ref{sec:results} gives the results, and Sections~\ref{sec:discussion} and
+\ref{sec:conclusion} state what follows from them and what remains open.

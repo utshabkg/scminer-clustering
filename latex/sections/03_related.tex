@@ -1,38 +1,66 @@
-\section{Closest Work}\label{sec:related}
-Four bodies of work bear on our question. The first three lead to the measurement we make, and the
-fourth to our graph comparison.
+\section{Related Work}\label{sec:related}
+The related literature can be organized into four complementary groups. They answer different parts of
+our problem: MICA supplies the method under test, cluster-selection papers supply label-free rules,
+scalable clustering papers show what is computationally possible, and language-model papers address
+biological interpretation after a partition already exists. The experiments reported here address the first three groups. The annotation group defines a later question that is currently deferred.
 
 \textbf{The method under test.} scMINER \cite{pan2025scminer} introduces MICA and reports a mean
-adjusted Rand index (ARI) of 0.84 across ten labelled datasets, against 0.73 for Seurat and 0.68
-for Scanpy. Every setting in that benchmark is fixed with the labels, and all ten headline scores come from MICA at the true number of clusters. Asked during peer review how a user should choose the resolution without
-labels, the authors pointed to silhouette scores and marker genes but tested neither. We found no
-independent benchmark that includes MICA.
+adjusted Rand index (ARI) of 0.84 across ten labelled datasets, against 0.73 for Seurat and 0.68 for
+Scanpy. MICA measures cell-cell similarity with binned mutual information. Below about 5,000 cells it
+uses multidimensional scaling followed by k-means, while larger inputs use a mutual-information
+neighbour graph, node2vec and Louvain. The published benchmark does not demonstrate label-free setting
+selection. Its headline MICA scores use the true number of cell types, and the graph-based comparisons
+sweep settings until the produced cluster count matches the truth. This makes MICA the right method for
+our question, because its reported advantage is strong but the user-facing setting problem remains
+open.
 
-\textbf{Choosing a clustering without labels.} chooseR \cite{pattersoncross2021chooser} is the rule
-we adopt. It reruns a pipeline on 100 random 80 percent subsamples per candidate setting, scores
-each setting by how reliably cells co-cluster, and keeps the finest setting that stays above a
-threshold derived from the settings themselves. Its authors note that this leans toward mild
-overclustering. We found no application of it to a mutual information method. Yu et al.
-\cite{yu2022benchmarking} benchmarked 14 methods that estimate the number of cell types, finding that
-most underestimate it and that a good ARI did not imply a correct count, which is why we report the
-chosen count beside the score. A second family, sc-SHC \cite{grabski2023significance} and CHOIR
-\cite{sant2025choir}, asks whether a split is real rather than merely reproducible. None of these
-covers a mutual information method, and the distinction matters here, because a partition can be
-perfectly reproducible without being real.
+\textbf{Choosing the cluster count without reference labels.} chooseR
+\cite{pattersoncross2021chooser} repeatedly clusters 80 percent subsamples, measures co-clustering
+robustness and keeps a fine partition that remains above a stability threshold. MultiK
+\cite{liu2021multik} also uses subsampling and consensus, but returns plausible values of $K$ rather
+than one guaranteed answer. Yu et al. \cite{yu2022benchmarking} benchmarked 14 approaches to estimating
+the number of cell types and found that good agreement with labels does not imply a correct cluster
+count. Significance-based methods attack a different failure mode. sc-SHC
+\cite{grabski2023significance} tests whether a hierarchical split is stronger than a fitted
+single-population null, and CHOIR \cite{sant2025choir} deliberately overclusters and then merges sibling
+clusters that a calibrated classifier cannot reliably distinguish. These methods show that stability
+and validity are not the same thing. The reviewed studies do not report an application of these rules to
+MICA's mutual-information partitions.
 
-\textbf{Tuning on the ground truth.} Ullmann et al. \cite{ullmann2023overoptimistic} tuned a
-published clustering algorithm against known labels to make it look good, then showed how much of
-that advantage disappeared when the choices moved. They used toy and UCI data and one algorithm, with
-no single-cell data and no label-free rule tested as the remedy. A 2025 preprint
-\cite{szmigiel2025benchmarking} swept Leiden and Louvain on 16 single-cell datasets and found that
-on six the Scanpy default did no better than a typical random setting. These studies establish the
-general concern. None measures it for MICA, whose published scores were all obtained with
-label-informed settings. We supply that measurement, and with it something the general concern does
-not predict: the effect depends on which cluster counts each method's grid can offer.
+Our experiment uses chooseR's stability idea because it can be applied to both MICA and the same
+PCA-Leiden baseline without reference labels. We also report a plain maximum of the same stability
+scores. The comparison exposed a design issue that the selection papers do not settle: a common cap on
+cluster count does not ensure that two methods are choosing from the same candidate counts. We
+therefore repeat the comparison with matched reachable counts, one setting per count, and report the
+selected count beside ARI and AMI.
 
-\textbf{Scaling the neighbour graph.} MICA's graph mode finds neighbours with the HNSW graph index
-\cite{malkov2020efficient}. Proposing candidates cheaply and rescoring them exactly is the standard
-alternative, as in the refinement step of Faiss \cite{douze2024faiss}, and like any shortlist it
-finds only the true neighbours that land in it. Song et al. \cite{song2012comparison} found that
-binned mutual information tracks correlation closely for gene pairs, which suggested correlation as
-the cheap stage.
+\textbf{Evaluation when labels influence tuning.} Ullmann et al.
+\cite{ullmann2023overoptimistic} show on general clustering problems that tuning against known labels
+can inflate the apparent advantage of a new method. In single-cell data, Szmigiel et al.
+\cite{szmigiel2025benchmarking} sweep Leiden and Louvain settings across multiple datasets and show
+that software defaults can be weak or arbitrary. These studies establish the evaluation problem, but
+they do not measure it for MICA. Our contribution is narrower and more direct: we take one published
+MICA advantage and measure how much survives when the same label-free rule must choose settings for
+both methods.
+
+\textbf{Scaling mutual-information clustering.} MICA's large-data mode searches an approximate
+nearest-neighbour graph under its mutual-information distance. HNSW \cite{malkov2020efficient} and
+Faiss-style candidate generation followed by exact rescoring \cite{douze2024faiss} motivate our graph
+comparison. Among scalable information-theoretic approaches, minicore \cite{baker2021minicore} as the closest
+information-theoretic example at multi-million-cell scale, but minicore uses Jensen-Shannon,
+Kullback-Leibler and Bhattacharyya divergences rather than mutual information between cell profiles.
+Standard community detection such as Leiden \cite{traag2019louvain} scales well once a graph exists.
+The open issue for us is therefore not whether large single-cell datasets can be clustered in general,
+but whether MICA's particular neighbour graph can be made cheaper without changing the partition. Our
+correlation shortlist addresses that question and is evaluated on recall, downstream clustering,
+time and build memory rather than speed alone.
+
+\textbf{Language-model and retrieval-based interpretation.} GPTCelltype
+\cite{hou2024gpt4} showed that an LLM can assign biological names from marker lists. AnnDictionary
+\cite{crowley2025anndictionary} expanded that comparison across many language models, while CASSIA
+\cite{xie2025cassia} uses multiple agents and includes retrieval-oriented annotation components. Recent retrieval-augmented methods also use biological knowledge to support annotation. This literature addresses a different question from the present experiments because it generally starts from an
+already formed cluster partition. Our planned interpretation arm asks whether scMINER's inferred
+regulatory drivers, including hidden drivers with weak differential expression, add useful evidence
+beyond marker genes. The reviewed studies do not establish an annotation method that tests that input. Since
+our language-model experiment is deferred, we use this literature to define the remaining gap and do
+not treat it as evidence for the clustering results reported here.
