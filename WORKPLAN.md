@@ -3,6 +3,7 @@
 Project: clustering single-cell data with scMINER, extending it, and writing it up as a paper.
 Course: Clustering Algorithms, Missouri S&T, Fall 2026. Team: Utshab (lead), Laraib, Rhea.
 Final deliverable: **early December 2026**. Weekly meeting: **Wednesday 2pm**.
+Key dates from the instructor's Nov 11 feedback: Assignment 4, the revised Assignment 3, due Mon Nov 16 and **submitted Fri Nov 13** because Utshab is at a conference from Nov 14 to 19. Review Nov 17, class discussion Nov 18, **full research paper draft Nov 30**, final presentations **Dec 2 and Dec 9**.
 
 ## How to use this file
 
@@ -38,7 +39,7 @@ The first task for each of you (L-1, L-7, R-1) is set so we can get moving. Ever
 
 ## Milestones
 
-There are 57 tasks: 40 for Utshab, 9 for Laraib and 8 for Rhea. Three of them (L-7, R-3, R-8) repeat every week, and each of the other 52 belongs to the milestone in its row. U-25 and U-26 were added on Oct 2 to firm up the first finding, U-27 to U-30 came out of the Oct 2 review, and U-31 to U-38 come from the Assignment 2 feedback and our revised plan, and U-39 was added on Oct 22 because the PBMC14K result could not otherwise be attributed to size or to mode. U-40 and L-9 were added on Oct 28, when Assignment 3 moved to Nov 4: U-40 runs the matched grids the report promised, and L-9 is the independent check the feedback asked for.
+There are 65 tasks: 46 for Utshab, 9 for Laraib and 10 for Rhea. Three of them (L-7, R-3, R-8) repeat every week, and each of the other 62 belongs to the milestone in its row. U-25 and U-26 were added on Oct 2 to firm up the first finding, U-27 to U-30 came out of the Oct 2 review, and U-31 to U-38 come from the Assignment 2 feedback and our revised plan, and U-39 was added on Oct 22 because the PBMC14K result could not otherwise be attributed to size or to mode. U-40 and L-9 were added on Oct 28, when Assignment 3 moved to Nov 4: U-40 runs the matched grids the report promised, and L-9 is the independent check the feedback asked for. U-41 to U-46 were added on Nov 11 and 12 for protocol v1, Assignment 4 and the large-scale dataset, and R-9 and R-10 on Nov 11, all from the instructor's Assignment 3 feedback.
 
 | ID | By | What is true when it is done |
 |----|----|------------------------------|
@@ -47,9 +48,10 @@ There are 57 tasks: 40 for Utshab, 9 for Laraib and 8 for Rhea. Three of them (L
 | M3 | Oct 21 | RQ1 part one: scores with and without using the labels to choose the number of clusters. The stability and significance rules run on the two anchor datasets |
 | M4 | Oct 28 | RQ1 part two: what the similarity measures, plus the brain atlas downloaded and a timing pilot done. Every dataset run under the new rules, both gene settings, with repeats |
 | M5 | Nov 4 | **Main experiments complete.** The new label-free rules have run on every dataset with repeats, and the final label-free comparison table is built |
-| M6 | Nov 11 | Gated extras done or dropped: the GPU neighbor search, and the annotation comparison |
-| M7 | Nov 18 | **Full manuscript draft**, with all figures and tables |
-| M8 | Dec 2 | Revision from the feedback, slides, submitted |
+| M6 | Nov 11 | Gated extras done or dropped: the GPU neighbor search, and the annotation comparison. Dropped for the course project: the instructor's Nov 11 letter says not to return to the extensions set aside |
+| M7 | Nov 16, moved to Nov 13 | **Assignment 4 submitted** (the revised Assignment 3): the matched results confirmed at new seeds under protocol v1, tagged before those runs, PCA plus k-means under the same rule, chooseR's own code, and the post hoc origin of the matched design stated in the text |
+| M8 | Nov 30 | **Full research paper draft**, with all figures and tables, the large-scale dataset, and the instructor's Nov 17 recommendations |
+| M9 | Dec 2 and Dec 9 | Final presentations |
 
 ## Tasks: Utshab
 
@@ -72,13 +74,13 @@ There are 57 tasks: 40 for Utshab, 9 for Laraib and 8 for Rhea. Three of them (L
 | U-15 | Download the Allen brain atlas | public S3 bucket | `data/raw/allen/`, list in `docs/allen_files.csv` | file list and sizes recorded | Oct 28 | M4 | `[x]` |
 | U-16 | Preprocess the atlas and run a 100,000 cell timing pilot | U-15 | `docs/allen_pilot.md` | measured time and memory, extrapolated to 2.3M | Oct 28 | M4 | `[x]` |
 | U-17 | Our own mutual information distance, proven to match the authors' | their code | `tests/test_mi_matches_mica.py` | matches on 10,000 random cell pairs | Nov 4 | M5 | `[x]` |
-| U-18 | GPU version of the distance | U-17 | `src/scminer_clust/mi.py` | same numbers as the CPU version, with a speedup recorded | Nov 11 | M6 | `[ ]` |
+| U-18 | GPU version of the distance | U-17 | `src/scminer_clust/mi.py` | same numbers as the CPU version, with a speedup recorded | Nov 11 | M6 | `[!]` deferred. Not resumed before Nov 30, per the instructor's Nov 11 letter |
 | U-19 | Fast neighbor graph: propose candidates cheaply, rescore exactly | U-17 (CPU first, U-18 for speed) | `results/rq2_graph_<dataset>/` | neighbor recall measured against brute force | Nov 4 | M5 | `[x]` CPU version done. Matches MICA's recall about 5 times faster on 100,000 cells |
-| U-20 | Cluster a sketch of the atlas and assign the rest, full 2.3M run | U-19 | `results/rq2_atlas/` | the run finishes within a day and is scored | Nov 18 | M7 | `[ ]` |
-| U-21 | Rare population analysis | U-20 | `results/rq2_atlas/rare_types.csv` | per-type recall, and which types were lost | Nov 18 | M7 | `[ ]` |
-| U-22 | Driver activity in Python, including hidden drivers | PBMC14K clusters | `results/rq3_drivers/` | driver lists per cluster | Nov 11 | M6 | `[ ]` |
-| U-23 | Retrieval and local language model annotation, three query types | U-22 | `results/rq3_rag/` | names and cited sources for every cluster | Nov 11 | M6 | `[ ]` |
-| U-24 | Final figures, method and results writing, repo cleanup | everything | `latex/sections/`, `results/` | a fresh clone reproduces the main table | Dec 2 | M8 | `[ ]` |
+| U-20 | Cluster a sketch of the atlas and assign the rest, full 2.3M run | U-19 | `results/rq2_atlas/` | the run finishes within a day and is scored | Nov 18 | M6 | `[!]` deferred. Not resumed before Nov 30, per the instructor's Nov 11 letter |
+| U-21 | Rare population analysis | U-20 | `results/rq2_atlas/rare_types.csv` | per-type recall, and which types were lost | Nov 18 | M6 | `[!]` deferred. Not resumed before Nov 30, per the instructor's Nov 11 letter |
+| U-22 | Driver activity in Python, including hidden drivers | PBMC14K clusters | `results/rq3_drivers/` | driver lists per cluster | Nov 11 | M6 | `[!]` deferred. Not resumed before Nov 30, per the instructor's Nov 11 letter |
+| U-23 | Retrieval and local language model annotation, three query types | U-22 | `results/rq3_rag/` | names and cited sources for every cluster | Nov 11 | M6 | `[!]` deferred. Not resumed before Nov 30, per the instructor's Nov 11 letter |
+| U-24 | Final figures, method and results writing, repo cleanup | everything | `latex/sections/`, `results/` | a fresh clone reproduces the main table | Nov 30 | M8 | `[ ]` |
 | U-25 | Run MICA on the same 2,000 genes the baselines got, all three selection methods | processed data | `results/mica_*_hvg2000_*/` | a two by two table of method against gene set on every dataset | Oct 14 | M2 | `[x]` |
 | U-26 | Add the rest of the paper's eligible benchmark sets: Usoskin, Kolodziejczyk, Klein | Bioconductor mirror and GEO | `data/raw/`, `results/reproduction_*/`, `results/baselines_*/` | MICA and baselines scored on all five datasets | Oct 14 | M2 | `[x]` |
 | U-27 | Add the paper's five small benchmark sets (Yan, Goolam, Buettner, Pollen, Chung) from the authors' Zenodo inputs, MICA and Leiden at all four gene settings | Zenodo 15040179 | `results/` | ten datasets in the gene-set table | Oct 21 | M3 | `[x]` |
@@ -87,12 +89,12 @@ There are 57 tasks: 40 for Utshab, 9 for Laraib and 8 for Rhea. Three of them (L
 | U-30 | Decide whether to ask the scMINER authors for their unreleased Kolodziejczyk input before we describe the non-reproduction anywhere outside the team | R5 evidence in PROGRESS.md | email or a recorded decision | decision recorded in the decision log | Oct 14 | M2 | `[ ]` |
 | U-31 | Assignment 2 report: revised question, closest work, preliminary results, plan and schedule | the feedback and our results | `latex/` and the submitted PDF | submitted by Oct 14 | Oct 14 | M2 | `[x]` |
 | U-32 | Stability rule: pick the setting whose clusters best survive subsampling, for MICA and Leiden alike. Varies $k$ in MICA's small-data mode | processed data | `src/scminer_clust/selection.py`, `results/rule_stability_<dataset>[_seed<n>]/` | the rule picks a setting for both methods on all ten sets, no labels used | Oct 21 | M3 | `[x]` |
-| U-33 | Significance rule: merge clusters a test cannot separate, in the style of sc-SHC | U-32 | `results/rule_significance/` | the rule runs on both methods and reports the merged cluster count | Oct 21 | M3 | `[ ]` |
+| U-33 | Significance rule: merge clusters a test cannot separate, in the style of sc-SHC | U-32 | `results/rule_significance/` | the rule runs on both methods and reports the merged cluster count | Oct 21 | M3 | `[!]` set aside, confirmed in the instructor's Nov 11 letter |
 | U-34 | Transfer comparison: give each method the resolution that scored best on the other datasets. It uses their labels, so it is reported apart from the label-free rules. Also score MICA's default on the Allen subset, outside the paper's benchmark | U-32 | `results/rule_transfer/` | one held-out score per dataset per method | Nov 4 | M5 | `[x]` on the ten benchmark sets. The Allen part is set aside |
 | U-35 | Rerun the silhouette rule in one shared embedding, over the same range of cluster counts for both methods | U-32 | `results/rule_silhouette_<dataset>/` | both methods scored in the same space over the same range of k | Oct 28 | M4 | `[x]` |
-| U-36 | Label-free Leiden on the Allen 100,000 cell subset, so it becomes a third anchor | U-16 | `results/labelfree_allen_100k/` | Leiden scored under every rule on the Allen subset | Oct 28 | M4 | `[ ]` |
+| U-36 | Label-free Leiden on the Allen 100,000 cell subset, so it becomes a third anchor | U-16 | `results/labelfree_allen_100k/` | Leiden scored under every rule on the Allen subset | Oct 28 | M4 | `[!]` set aside, confirmed in the instructor's Nov 11 letter |
 | U-37 | Final comparison table across the ten benchmark sets: every rule with its repeats and costs, and no win-count criterion | U-32 to U-36 | `results/summary_label_free_rules.md` | one table, every rule, every dataset, with repeats | Nov 4 | M5 | `[x]` |
-| U-38 | Optional checks if time allows: Leiden on the correlation neighbor graph, and a hub correction on the mutual information graph | U-19 | `results/rq2_swap/`, `results/rq2_hubness/` | both run or formally dropped at the Nov 4 meeting | Nov 11 | M6 | `[ ]` |
+| U-38 | Optional checks if time allows: Leiden on the correlation neighbor graph, and a hub correction on the mutual information graph | U-19 | `results/rq2_swap/`, `results/rq2_hubness/` | both run or formally dropped at the Nov 4 meeting | Nov 11 | M6 | `[!]` deferred. Not resumed before Nov 30, per the instructor's Nov 11 letter |
 | U-39 | Separate MICA's mode from the dataset size: one fixed pool of 2,500 PBMC14K cells run through both of MICA's modes under the same rule | U-32 | `scripts/run_rule_mode_size.py`, `results/rule_mode_size_pbmc14k_n2500_seed0/` | both arms report a tie span on the same cells, so mode and size are no longer confounded | Nov 4 | M5 | `[x]` |
 | U-40 | Matched candidate grids: rerun the stability comparison and the mode test with both methods offered the same cluster counts, one setting per count | U-32, U-39 | `src/scminer_clust/grids.py`, `results/rule_matched_*/` | both methods choose among the same cluster counts on all ten sets, and the mode test is repeated on them | Nov 4 | M5 | `[x]` |
 | U-41 | Protocol v1 runner for the nine small datasets: one run at B=100 per seed, MICA, PCA plus Leiden and PCA plus k-means, every subsample partition saved, scored as the original protocol (first 25) and at 100 | U-40 | `scripts/run_protocol_small.py`, `results/v1/`, `docs/protocol_matched_v1.md` | seeds 0 to 9 on all nine, seeds 0 to 2 reproduce the saved results | Nov 13 | M7 | `[x]` tagged `matched-protocol-v1` (620f940), seeds 0 to 9 on all nine done Nov 13, R0 holds on all 54 folders of seeds 0 to 2 |
@@ -113,7 +115,7 @@ There are 57 tasks: 40 for Utshab, 9 for Laraib and 8 for Rhea. Three of them (L
 | L-5 | Rewrite the introduction and closest work | Use L-4 so the paper's story matches the table | `latex/sections/02_introduction.tex`, `latex/sections/03_related.tex` | sections updated and compiling | Nov 11 | M5 | `[x]` |
 | L-6 | Marker check | For each cluster name our system proposes, look the markers up in CellMarker 2.0 and PanglaoDB on their websites, and record whether they agree, with the link you used | `results/rq3_rag/marker_check.csv` | every proposed name checked | Nov 18 | M6 | `[!]` on hold, the annotation work is deferred |
 | L-7 | Meeting minutes | Short notes after each Wednesday meeting: decisions, who owns what next | `docs/minutes/YYYY-MM-DD.md` | one file per meeting | weekly | every week | `[ ]` |
-| L-8 | Proofread the paper | Check the writing rules we agreed on: no long dashes, no semicolons, plain words, consistent terms | the LaTeX sections | full read-through with fixes | Dec 2 | M8 | `[ ]` |
+| L-8 | Proofread the paper | Check the writing rules we agreed on: no long dashes, no semicolons, plain words, consistent terms | the LaTeX sections | full read-through with fixes | Nov 28 | M8 | `[ ]` |
 | L-9 | Independent check of the discussion | For each claim in the Discussion section of the Assignment 3 report, check that it follows from the results and tables. Mark anything that overstates them or cannot be traced | the paper | every claim checked, problems listed | Nov 3 | M5 | `[~]` done on the old Overleaf draft, from before the matched runs. Repeat on the current text, cut to 7 pages on Nov 4 |
 
 ## Tasks: Rhea
@@ -123,11 +125,13 @@ There are 57 tasks: 40 for Utshab, 9 for Laraib and 8 for Rhea. Three of them (L
 | R-1 | Results summary | Utshab refreshes `docs/results_for_pivot.csv` after every run. It holds only the main comparison, one row per run (the full `docs/results_tracker.csv` has every kind of row and is not meant for this). Download it from GitHub, open it in Excel or Google Sheets, and build a one-page pivot: rows are dataset and gene_setting, columns are method, values are the average of ari. Keep the two inputs (authors' data and our preprocessing) apart, for example with a filter on the input column. Mark anything that looks odd and bring it to the meeting | `docs/author_data_results_summary.csv` and `docs/our_preprocessing_results_summary.csv` | every run in `docs/results_for_pivot.csv` appears in the summary, with odd results marked | Oct 21 | M3 | `[x]` odd results marked in a new anomaly column of both CSVs |
 | R-2 | Turn results into paper tables | Take the result CSVs and format them as LaTeX tables with captions | `latex/tables/r2_*.tex`, made by `scripts/make_paper_tables.py` | tables compile in the draft | Oct 21 | M3 | `[x]` both tables compile with the report preamble. Rerun the script when the summary CSVs change |
 | R-3 | Keep this plan current | After each meeting, update statuses, the milestone table and the risk list | `WORKPLAN.md` | statuses match reality each week | weekly | every week | `[ ]` |
-| R-4 | Rare population sheets | From the per-cluster counts, work out how many reference cell types survive clustering and which ones vanish, then summarize | `results/rq2_atlas/rare_summary.csv` | summary table with a short written finding | Nov 18 | M6 | `[!]` on hold, the full atlas run is deferred |
-| R-5 | Annotation audit | For about 50 sampled annotations, use the rubric to mark whether the quoted text really supports the proposed name, yes or no, with a reason | `results/rq3_rag/audit.csv` | 50 rows scored | Nov 25 | M7 | `[!]` on hold, the annotation work is deferred |
-| R-6 | Slide outline | Draft 10 to 12 slides: problem, limitation, our questions, method, results, what we learned | `docs/slides_outline.md` | outline agreed in the meeting | Nov 25 | M7 | `[ ]` |
-| R-7 | Number consistency check | Every number in the text matches the tables, and every table is referenced somewhere. A first pass on the Assignment 3 report by Nov 3, the full pass on the final draft | the paper | one pass with corrections listed | Nov 3, then Dec 2 | M8 | `[~]` first pass done Nov 2, see `docs/r7_number_check.md`. Assignment 4 draft checked Nov 13, see `docs/r7_number_check_a4.md`. Full pass on the final draft by Dec 2 |
+| R-4 | Rare population sheets | From the per-cluster counts, work out how many reference cell types survive clustering and which ones vanish, then summarize | `results/rq2_atlas/rare_summary.csv` | summary table with a short written finding | Nov 18 | M6 | `[!]` deferred with the full atlas run. Not resumed before Nov 30, per the instructor's Nov 11 letter |
+| R-5 | Annotation audit | For about 50 sampled annotations, use the rubric to mark whether the quoted text really supports the proposed name, yes or no, with a reason | `results/rq3_rag/audit.csv` | 50 rows scored | Nov 25 | M6 | `[!]` deferred with the annotation work. Not resumed before Nov 30, per the instructor's Nov 11 letter |
+| R-6 | Slide outline | Draft 10 to 12 slides: problem, limitation, our questions, method, results, what we learned | `docs/slides_outline.md` | outline agreed in the meeting | Nov 25 | M9 | `[ ]` |
+| R-7 | Number consistency check | Every number in the text matches the tables, and every table is referenced somewhere. A first pass on the Assignment 3 report by Nov 3, the full pass on the final draft | the paper | one pass with corrections listed | Nov 3, Nov 13, then Nov 28 | M8 | `[~]` first pass done Nov 2, see `docs/r7_number_check.md`. Assignment 4 draft checked Nov 13, see `docs/r7_number_check_a4.md`. Full pass on the paper draft by Nov 28, before the Nov 30 deadline |
 | R-8 | Update the progress file | After each meeting, refresh the milestone status table at the top of the progress log | `PROGRESS.md` | percentages match the task statuses | weekly | every week | `[ ]` |
+| R-9 | Provenance table | For every result in the paper, record which design produced it (original, post hoc, matched, label-fixed, transfer or confirmatory), when that design was fixed and by which commit, whether git shows it was fixed before its results, and how many seeds it has. Add a row for each new experiment as it lands, and copy the finished table into the Overleaf appendix | `docs/provenance.csv`, then the table in Overleaf | every table and figure in the paper has a row, and the Overleaf table matches the CSV | Nov 28 | M8 | `[~]` first version Nov 11 from the repo at c3701d4, protocol v1 rows filled Nov 13 |
+| R-10 | Seed coverage tracker | One row per comparison: seeds done, seeds wanted, what is still needed and why. Update it when runs land. Every comparison left below five seeds needs a one-line reason, which goes into the paper | `docs/seed_coverage.csv` | every comparison in the paper has a row, and every gap has a reason | Nov 28, then weekly | M8 | `[~]` first version Nov 11, protocol v1 seeds filled Nov 13 |
 
 ## Weekly schedule
 
@@ -138,10 +142,11 @@ There are 57 tasks: 40 for Utshab, 9 for Laraib and 8 for Rhea. Three of them (L
 | Oct 15 to 21 | Oct 21 | M3 | U-32, U-33 | L-3 | R-1, R-2 |
 | Oct 22 to 28 | Oct 28 | M4 | U-35, U-36 | L-4 | R-2 |
 | Oct 29 to Nov 4 | Nov 4 | M5 | U-34, U-37 | L-4 | weekly tasks only |
-| Nov 5 to 11 | Nov 11 | M6 | U-18, U-22, U-23, U-38 | L-5 | weekly tasks only |
-| Nov 12 to 18 | Nov 18 | M7 | U-20, U-21, U-24 starts | L-6 | R-4 |
-| Nov 19 to 25 | Nov 25 | M8 | U-24 | L-6 | R-5, R-6 |
-| Nov 26 to Dec 2 | Dec 2 | M8 | U-24 | L-8 | R-7 |
+| Nov 5 to 11 | Nov 11 | M6 | Extras dropped. Instructor feedback received Nov 11 | L-5 | R-3, R-8, R-9 and R-10 started |
+| Nov 12 to 13 | (submitted Fri Nov 13) | M7 | U-41 to U-45 | L-5 done, check of the draft | R-7 on the draft |
+| Nov 14 to 25 | Nov 18, Nov 25 | M8 | Utshab at a conference Nov 14 to 19. Then the Nov 17 recommendations, U-46, U-24 starts | to agree at the Nov 18 meeting | R-6, R-9 and R-10 kept current |
+| Nov 26 to 30 | (draft due Nov 30) | M8 | U-24, U-46 | L-8 by Nov 28 | R-7 full pass by Nov 28, R-9 table into Overleaf |
+| Dec 1 to 9 | Dec 2, Dec 9 | M9 | Presentations | Presentations | Slides from R-6 |
 
 Every week, starting Oct 7: Laraib takes the meeting notes (L-7), and after the meeting Rhea updates the statuses in this file (R-3) and the table at the top of `PROGRESS.md` (R-8). Utshab will show how to edit a file on GitHub at the Oct 7 meeting.
 
@@ -170,6 +175,8 @@ scminer-clustering/
   results/summary_*.md the main tables, rebuilt after every run
   docs/results_for_pivot.csv  the main comparison, one row per run (for R-1)
   docs/results_tracker.csv    every row from every experiment
+  docs/provenance.csv  which design each result came from, when it was fixed, its seeds (R-9)
+  docs/seed_coverage.csv  seeds done and still needed per comparison (R-10)
   docs/allen_pilot.md  atlas pilot: time, memory, what 2.3 million cells would cost
   docs/dataset_cards/  one page per dataset
   docs/research/       the literature reviews we did before the proposal
@@ -192,6 +199,7 @@ Datasets never go into git. They live on the shared 20 TB disk, and the repo onl
 | Someone publishes our retrieval idea first | A new preprint appears | Our main contribution stays the scaling and the evaluation, which are separate findings |
 | Shared disk fills up | Less than 200 GB free | Delete intermediate files after each conversion and keep only what we need |
 | A teammate gets busy | A task slips two weeks | Tasks are weekly sized and independent, so they can be swapped or dropped without blocking the runs |
+| The large-scale dataset is not ready for the Nov 30 draft | U-46 has not started by Nov 20, with Utshab away Nov 14 to 19 | Run PCA with k-means and with Leiden on all cells first, then MICA on a sample, as the Assignment 4 plan says |
 
 ## Decisions so far
 
@@ -225,3 +233,4 @@ Datasets never go into git. They live on the shared 20 TB disk, and the repo onl
 | Nov 4 | Cut the Assignment 3 body to 7 pages and keep the long version at commit 4c6839c for the Nov 18 draft | The assignment asks for about 5 to 7 pages excluding references and appendix. The body had reached about 11.6, and the limit had never been written into this plan or PROGRESS |
 | Nov 11 | Confirm the matched results with protocol v1, fixed and tagged (`matched-protocol-v1`) before seeds 3 to 9 | Jian accepted the matched design as exploratory and asked for independent runs under a protocol fixed in advance, at least five seeds, a check against chooseR's own code and a PCA plus k-means baseline. A teammate pointed out that the old design commits hold their results too |
 | Nov 11 | Keep `latex/` in the repo | The report scripts write the tables, figures and numbers there, so the paper stays next to the code that produced it. (The first reason given, that Overleaf pulls from GitHub, was wrong: on Nov 13 it turned out Overleaf cannot sync with GitHub for us, so files move by hand with `scripts/overleaf_package.py`) |
+| Nov 11 | The significance rule, the 2,000-gene runs and the label-free Allen runs stay set aside, and no deferred extension is resumed before Nov 30 | Instructor's letter of Nov 11. He prefers one question answered thoroughly |

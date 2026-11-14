@@ -5,21 +5,22 @@ Utshab adds an entry at the end of each working session. Laraib and Rhea add a l
 
 ## Where we stand
 
-Updated: 2026-11-12. Counts follow the Milestone column in `WORKPLAN.md`.
+Updated: 2026-11-13 (Rhea). Counts follow the Milestone column in `WORKPLAN.md`.
 
 | Milestone | Due | Tasks done | Percent | State |
 |-----------|-----|------------|---------|-------|
 | M1 software, small data ready | Oct 7 | 8 of 8 | 100% | Done. Laraib's Zeisel card (L-1) merged on Oct 14 |
 | M2 reproduce the paper, Assignment 2 report | Oct 14 | 8 of 9 | 89% | Ten benchmark sets run, nine reproduce within 0.05. Report submitted (U-31). Laraib's PBMC14K card (L-2) done Oct 30. Left: contacting the authors (U-30) |
-| M3 cluster count without labels | Oct 21 | 8 of 9 | 89% | The stability rule (U-32) is done on all ten datasets, including PBMC14K in graph mode. The results summary (R-1) and paper tables (R-2) are done. Laraib's Allen card (L-3) done Oct 30. Left: significance rule (U-33, set aside) |
-| M4 what the similarity measures, atlas downloaded | Oct 28 | 6 of 7 | 86% | Diagnostics, atlas, pilot and the shared-space silhouette (U-35) done. Laraib's related work table (L-4) done Nov 2. Left: label-free Leiden on Allen (U-36, set aside) |
-| M5 main experiments complete | Nov 4 | 6 of 8 | 75% | Distance check (U-17), CPU fast neighbor search (U-19), mode against size (U-39), matched grids (U-40), transfer comparison (U-34, Allen part set aside) and the final table (U-37) done. Left: the discussion check (L-9), GPU search (U-18, deferred) |
-| M6 gated extras | Nov 11 | 0 of 6 | 0% | Not started. The GPU search (U-18), the annotation comparison (U-22, U-23) and the optional checks (U-38) all depend on the Nov 4 result |
-| M7 full manuscript draft | Nov 18 | 0 of 4 | 0% | Not started |
-| M8 revision and slides | Dec 2 | 0 of 3 | 0% | Not started |
+| M3 cluster count without labels | Oct 21 | 8 of 9 | 89% | The stability rule (U-32) is done on all ten datasets, including PBMC14K in graph mode. The results summary (R-1) and paper tables (R-2) are done. Laraib's Allen card (L-3) done Oct 30. Left: significance rule (U-33), set aside and confirmed by the instructor on Nov 11 |
+| M4 what the similarity measures, atlas downloaded | Oct 28 | 6 of 7 | 86% | Diagnostics, atlas, pilot and the shared-space silhouette (U-35) done. Laraib's related work table (L-4) done Nov 2. Left: label-free Leiden on Allen (U-36), set aside and confirmed by the instructor on Nov 11 |
+| M5 main experiments complete | Nov 4 | 7 of 8 | 88% | Distance check (U-17), CPU fast neighbor search (U-19), mode against size (U-39), matched grids (U-40), transfer comparison (U-34, Allen part set aside), the final table (U-37) and Laraib's introduction rewrite (L-5) done. Left: the discussion check (L-9) |
+| M6 gated extras | Nov 11 | 0 of 9 | 0% | All nine deferred (U-18, U-20 to U-23, U-38, L-6, R-4, R-5). The instructor's Nov 11 letter says not to return to the set-aside extensions before the Nov 30 draft |
+| M7 Assignment 4 (revised Assignment 3) | Nov 16, moved to Nov 13 | 4 of 5 | 80% | Protocol v1 on the nine small datasets (U-41) and PBMC14K (U-42), chooseR's own code (U-43) and the criteria (U-44) done. Left: the manuscript (U-45), to be submitted tonight |
+| M8 full research paper draft | Nov 30 | 0 of 6 | 0% | Writing (U-24), the large-scale dataset (U-46), proofreading (L-8) and the full number check (R-7) due by Nov 28 to 30. Provenance table (R-9) and seed tracker (R-10) started Nov 11 and filled with protocol v1 on Nov 13. R-7 checked the Assignment 4 draft on Nov 13 |
+| M9 final presentations | Dec 2 and Dec 9 | 0 of 1 | 0% | Slide outline (R-6) due Nov 25 |
 | Every week: notes, plan and progress updates | weekly | | | L-7, R-3 and R-8 |
 
-Overall: 36 of 57 tasks finished. Three of the 57 repeat every week. The counts above are read off the status markers in `WORKPLAN.md`.
+Overall: 41 of 65 tasks finished. Three of the 65 repeat every week. The counts above are read off the status markers in `WORKPLAN.md`.
 
 Next three things (Nov 13): teammate checks of the Assignment 4 draft by 13:00, fixes by 15:00, submit in the evening. Then the Allen large-scale run (U-46) for Nov 30.
 
@@ -27,7 +28,9 @@ Next three things (Nov 13): teammate checks of the Assignment 4 draft by 13:00, 
 
 ## 2026-11-13, Rhea
 
-R-7 on the Assignment 4 draft was completed, and the flags are noted in `docs/r7_number_check_a4.md`. Nothing in `latex/` was changed. Rerunning `scripts/a4_protocol_v1.py` on a clean clone reproduces the JSON, `numbers_a4.tex` and the five A4 tables exactly. All 116 `\V{}` keys are defined and match the JSON, and a separate script recomputed the headline claims from `results/v1`. Every table and figure is cited. Six fixes for tonight: the PBMC14K per-subsample time (4.9 to 6.0 minutes, not four and a half), two sentences that both describe S1, "much of" the lead that is all of it, no stated cut-off for "level", "barely moves" for a mean that does not move, and the Section VI-E denominators that cover every seed and dataset. About 20 protocol v1 figures are typed by hand. All are correct, and they should move into the generator for Nov 30.
+- R-7 on the Assignment 4 draft was completed, and the flags are noted in `docs/r7_number_check_a4.md`. Nothing in `latex/` was changed. Rerunning `scripts/a4_protocol_v1.py` on a clean clone reproduces the JSON, `numbers_a4.tex` and the five A4 tables exactly. All 116 `\V{}` keys are defined and match the JSON, and a separate script recomputed the headline claims from `results/v1`. Every table and figure is cited. Six fixes for tonight: the PBMC14K per-subsample time (4.9 to 6.0 minutes, not four and a half), two sentences that both describe S1, "much of" the lead that is all of it, no stated cut-off for "level", "barely moves" for a mean that does not move, and the Section VI-E denominators that cover every seed and dataset. About 20 protocol v1 figures are typed by hand. All are correct, and they should move into the generator for Nov 30.
+- The Nov 11 plan update and trackers (entry below) brought up to date with main and committed. Utshab's U-41 to U-46 cover the work the Nov 11 proposals U-41 to U-44 described, so those proposals were dropped. M7 is now Assignment 4, submitted Nov 13. The status table was recounted: 41 of 65 tasks done.
+- R-9 and R-10 filled with protocol v1. Provenance rows P-17 to P-20 now record the confirmatory runs, PCA plus k-means, chooseR's own code and the setting per count. For protocol v1, git does show the order: the annotated tag `matched-protocol-v1` (Nov 12) is older than the results commit (7033a95, Nov 13), and every run's provenance file records the tagged commit. The seed tracker shows ten seeds on the small datasets and five on PBMC14K, with the paper's reason on each row left below five.
 
 ---
 
@@ -323,6 +326,15 @@ Pre-tag checks (Nov 12):
 tuning effects on benchmark rankings and parameter choice in single-cell clustering, each checked by a second agent:
 `docs/reading_list_a4.md`, with BibTeX added to `latex/references.bib`. It is for Laraib's closest-work paragraph
 on the new framing and for the discussion.
+
+---
+
+## 2026-11-11, Rhea (instructor feedback on Assignment 3)
+
+- Plan and progress updated (R-3, R-8) for the dates in the instructor's Nov 11 letter: revised Assignment 3 due Nov 16, review Nov 17, full paper draft Nov 30, presentations Dec 2 and Dec 9. M7 to M9 redefined around them, the extras marked deferred as the letter asks, R-9 and R-10 added, and U-41 to U-44 proposed for Utshab. Prepared from the repo at c3701d4 and committed on Nov 13 (entry above).
+- R-9 (`docs/provenance.csv`) and R-10 (`docs/seed_coverage.csv`) started, one row per result and per comparison. Git cannot show that a design came before its results in two places: the original stability runner arrived with its seed 0 results (384d8f6, Oct 22), and the matched grids arrived with all three seeds of results (faca18c, Oct 28). Suggested tagging the protocol before any new seed.
+- How often the rule picks the true number of clusters, read from the saved Assignment 3 `metrics.csv` files with no new runs. On matched candidates over the nine small datasets and three seeds (27 runs per cell), the exact count is hit by MICA 4 times under the finest-stable reading and once under the plain maximum, and by the baseline 6 times and twice. On PBMC14K neither method picks 7 in any run. This is a hand count. It needs a script before it goes into the paper.
+- The Nov 4 table listed the GPU search (U-18) under M5, but WORKPLAN files U-18 under M6. The table now follows WORKPLAN.
 
 ---
 
