@@ -20,9 +20,9 @@ This notebook rebuilds every table and figure in the Assignment 3 manuscript fro
 |---|---|
 | Table I, the stability rule on matched candidates | the same runners with `--matched`, `scripts/a3_matched.py` |
 | Table II, every rule in one place | `scripts/a3_matched.py` |
-| Table III, graph quality and cost | `scripts/measure_graph_cost.py`, `measure_mica_hnsw.py`, the `rq2_*` audits and downstream runs |
+| Table III, graph quality and cost | `scripts/graph/measure_graph_cost.py`, `measure_mica_hnsw.py`, the `rq2_*` audits and downstream runs |
 | Figure 1, stability against cluster count | the stability runs |
-| Table IV (appendix), the datasets | `scripts/dataset_facts.py` |
+| Table IV (appendix), the datasets | `scripts/setup/dataset_facts.py` |
 | Table V (appendix), all four rules | the stability runs plus `run_rule_silhouette.py` and `run_rule_default.py` |
 | Table VI (appendix), the stability rule on a common range | `scripts/a3_report.py`, from the saved stability curves |
 | Table VII (appendix), mode against size on one fixed pool of cells | `scripts/run_rule_mode_size.py` |

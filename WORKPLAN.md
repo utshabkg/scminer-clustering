@@ -109,8 +109,8 @@ There are 65 tasks: 46 for Utshab, 9 for Laraib and 10 for Rhea. Three of them (
 | ID | Task | What to do | Output | Done when | Due | Milestone | Status |
 |----|------|-----------|--------|-----------|-----|-----------|--------|
 | L-1 | Dataset card: Zeisel | Fill the template: where the data comes from, how many cells and genes, what the labels mean, who made them, the license, and what preprocessing we applied | `docs/dataset_cards/zeisel.md` | every field filled, with links | Oct 7 | M1 | `[x]` |
-| L-2 | Dataset card: PBMC14K | Same template. Note that labels come from sorting cells with antibodies, not from clustering | `docs/dataset_cards/pbmc14k.md` | every field filled | Oct 14 | M2 | `[x]` |
-| L-3 | Dataset card: Allen brain atlas | Same template, plus the label levels (34 classes, 338 subclasses) and the license restriction | `docs/dataset_cards/allen_wmb.md` | every field filled | Oct 21 | M3 | `[x]` |
+| L-2 | Dataset card: PBMC14K | Same template. Note that labels come from sorting cells with antibodies, not from clustering | `docs/dataset_cards/PBMC14K.md` | every field filled | Oct 14 | M2 | `[x]` |
+| L-3 | Dataset card: Allen brain atlas | Same template, plus the label levels (34 classes, 338 subclasses) and the license restriction | `docs/dataset_cards/allen_100k.md` | every field filled | Oct 21 | M3 | `[x]` |
 | L-4 | Related work comparison table | Using the saved reviews in `docs/research/`, build a table of about 15 papers with columns: paper, year, venue, what it does, biggest data it handled, does it use mutual information, does it choose cluster count without labels, does it use a language model, how ours differs | `docs/related_work_table.md` | 15 rows, each with a link | Oct 28 | M4 | `[x]` Nov 2 |
 | L-5 | Rewrite the introduction and closest work | Use L-4 so the paper's story matches the table | `latex/sections/02_introduction.tex`, `latex/sections/03_related.tex` | sections updated and compiling | Nov 11 | M5 | `[x]` |
 | L-6 | Marker check | For each cluster name our system proposes, look the markers up in CellMarker 2.0 and PanglaoDB on their websites, and record whether they agree, with the link you used | `results/rq3_rag/marker_check.csv` | every proposed name checked | Nov 18 | M6 | `[!]` on hold, the annotation work is deferred |
@@ -123,7 +123,7 @@ There are 65 tasks: 46 for Utshab, 9 for Laraib and 10 for Rhea. Three of them (
 | ID | Task | What to do | Output | Done when | Due | Milestone | Status |
 |----|------|-----------|--------|-----------|-----|-----------|--------|
 | R-1 | Results summary | Utshab refreshes `docs/results_for_pivot.csv` after every run. It holds only the main comparison, one row per run (the full `docs/results_tracker.csv` has every kind of row and is not meant for this). Download it from GitHub, open it in Excel or Google Sheets, and build a one-page pivot: rows are dataset and gene_setting, columns are method, values are the average of ari. Keep the two inputs (authors' data and our preprocessing) apart, for example with a filter on the input column. Mark anything that looks odd and bring it to the meeting | `docs/author_data_results_summary.csv` and `docs/our_preprocessing_results_summary.csv` | every run in `docs/results_for_pivot.csv` appears in the summary, with odd results marked | Oct 21 | M3 | `[x]` odd results marked in a new anomaly column of both CSVs |
-| R-2 | Turn results into paper tables | Take the result CSVs and format them as LaTeX tables with captions | `latex/tables/r2_*.tex`, made by `scripts/make_paper_tables.py` | tables compile in the draft | Oct 21 | M3 | `[x]` both tables compile with the report preamble. Rerun the script when the summary CSVs change |
+| R-2 | Turn results into paper tables | Take the result CSVs and format them as LaTeX tables with captions | `latex/tables/r2_*.tex`, made by `scripts/tools/make_paper_tables.py` | tables compile in the draft | Oct 21 | M3 | `[x]` both tables compile with the report preamble. Rerun the script when the summary CSVs change |
 | R-3 | Keep this plan current | After each meeting, update statuses, the milestone table and the risk list | `WORKPLAN.md` | statuses match reality each week | weekly | every week | `[ ]` |
 | R-4 | Rare population sheets | From the per-cluster counts, work out how many reference cell types survive clustering and which ones vanish, then summarize | `results/rq2_atlas/rare_summary.csv` | summary table with a short written finding | Nov 18 | M6 | `[!]` deferred with the full atlas run. Not resumed before Nov 30, per the instructor's Nov 11 letter |
 | R-5 | Annotation audit | For about 50 sampled annotations, use the rubric to mark whether the quoted text really supports the proposed name, yes or no, with a reason | `results/rq3_rag/audit.csv` | 50 rows scored | Nov 25 | M6 | `[!]` deferred with the annotation work. Not resumed before Nov 30, per the instructor's Nov 11 letter |
@@ -159,7 +159,7 @@ Standing meeting agenda: read the progress log, update statuses here, clear anyt
 - For spreadsheet work, download the CSV, work in Excel or Google Sheets, then send the file back and Utshab commits it, or edit directly on GitHub if you are comfortable with that.
 - If a file you need is missing or confusing, say so in the meeting or message Utshab. Do not rebuild numbers by hand.
 - Writing happens in Overleaf. The LaTeX files in `latex/sections/` are the same ones, one file per section, so two people can edit different sections without clashing.
-- Overleaf does not sync with GitHub. Utshab downloads the Overleaf project into `latex/updated_tex_<date>/` to bring edits in, and uploads the files listed by `scripts/overleaf_package.py` to send them back. Edit in one place at a time and say in the chat when a copy has been made.
+- Overleaf does not sync with GitHub. Utshab downloads the Overleaf project into `latex/updated_tex_<date>/` to bring edits in, and uploads the files listed by `scripts/tools/overleaf_package.py` to send them back. Edit in one place at a time and say in the chat when a copy has been made.
 
 ## Where things live
 
@@ -169,10 +169,10 @@ scminer-clustering/
   PROGRESS.md          what has actually been done
   latex/               the paper, one file per section under latex/sections/
   src/scminer_clust/   our code
-  scripts/             one runner per experiment
-  results/<run>/params.json   the settings, seed and candidate grid for that run
-  results/<id>/        metrics.csv, params.json, figures
-  results/summary_*.md the main tables, rebuilt after every run
+  README.md            start here: what the project found, where things are, how to rebuild
+  scripts/             the scripts behind the current paper, with setup/, assignment2/, graph/ and tools/ for the rest (see scripts/README.md)
+  results/<run>/       metrics.csv and params.json for one run (results/README.md explains the names)
+  results/v1/          protocol v1, the Assignment 4 runs
   docs/results_for_pivot.csv  the main comparison, one row per run (for R-1)
   docs/results_tracker.csv    every row from every experiment
   docs/provenance.csv  which design each result came from, when it was fixed, its seeds (R-9)
@@ -232,5 +232,5 @@ Datasets never go into git. They live on the shared 20 TB disk, and the repo onl
 | Oct 28 | Assignment 3 was not submitted on Oct 28. The deadline moved to Nov 4 | Announced on Oct 28. The week goes first to what the report itself says is weakest, before new tasks |
 | Nov 4 | Cut the Assignment 3 body to 7 pages and keep the long version at commit 4c6839c for the Nov 18 draft | The assignment asks for about 5 to 7 pages excluding references and appendix. The body had reached about 11.6, and the limit had never been written into this plan or PROGRESS |
 | Nov 11 | Confirm the matched results with protocol v1, fixed and tagged (`matched-protocol-v1`) before seeds 3 to 9 | Jian accepted the matched design as exploratory and asked for independent runs under a protocol fixed in advance, at least five seeds, a check against chooseR's own code and a PCA plus k-means baseline. A teammate pointed out that the old design commits hold their results too |
-| Nov 11 | Keep `latex/` in the repo | The report scripts write the tables, figures and numbers there, so the paper stays next to the code that produced it. (The first reason given, that Overleaf pulls from GitHub, was wrong: on Nov 13 it turned out Overleaf cannot sync with GitHub for us, so files move by hand with `scripts/overleaf_package.py`) |
+| Nov 11 | Keep `latex/` in the repo | The report scripts write the tables, figures and numbers there, so the paper stays next to the code that produced it. (The first reason given, that Overleaf pulls from GitHub, was wrong: on Nov 13 it turned out Overleaf cannot sync with GitHub for us, so files move by hand with `scripts/tools/overleaf_package.py`) |
 | Nov 11 | The significance rule, the 2,000-gene runs and the label-free Allen runs stay set aside, and no deferred extension is resumed before Nov 30 | Instructor's letter of Nov 11. He prefers one question answered thoroughly |

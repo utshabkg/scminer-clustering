@@ -389,7 +389,7 @@ def main():
             f"{k} span {v['k_tied_span_median']} disagree {v['readings_disagree']}" for k, v in ms.items()))
 
     # ---------- graph quality and cost: correlation shortlist against MICA's own HNSW ----------
-    # Graph build time and memory come from scripts/measure_graph_cost.py and measure_mica_hnsw.py,
+    # Graph build time and memory come from scripts/graph/measure_graph_cost.py and measure_mica_hnsw.py,
     # recall from the brute-force audits, and the final clustering from MICA's own node2vec and
     # Louvain run on each graph (results/rq2_downstream_*). The downstream ARIs let the labels pick
     # the resolution, because this compares graphs, not selection rules.

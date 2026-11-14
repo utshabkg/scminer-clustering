@@ -32,7 +32,7 @@ Link : https://doi.org/10.1126/science.aaa1934
 
 ## Source and terms
 
-- **Download link we used:** Bioconductor's scRNAseq collection, a public library of biology datasets. Dataset zeisel-brain-2015, version 2023-12-14: https://bioconductor.org/packages/scRNAseq/. We fetch the files from the gypsum store that backs that package, in `scripts/download_zeisel.py`
+- **Download link we used:** Bioconductor's scRNAseq collection, a public library of biology datasets. Dataset zeisel-brain-2015, version 2023-12-14: https://bioconductor.org/packages/scRNAseq/. We fetch the files from the gypsum store that backs that package, in `scripts/setup/download_zeisel.py`
 - **Original link, if different, and whether it still works** http://linnarssonlab.org/cortex/ The page still loads, but its data files now give an access error (403). The raw counts are also on GEO as GSE60361: https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE60361
 - **License and any restriction** The original Zeisel paper/Linnarsson data source does not state a specific dataset license. The Bioconductor scRNAseq package through which we obtained the processed dataset is distributed under CC0.
 

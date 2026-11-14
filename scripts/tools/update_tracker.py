@@ -1,0 +1,50 @@
+"""Collect every experiment's metrics into one sheet.
+
+Usage: python scripts/tools/update_tracker.py
+Writes docs/results_tracker.csv, which is the file the team reads in meetings.
+"""
+import sys
+
+import pandas as pd
+
+from scminer_clust.paths import REPO, RESULTS
+
+KEEP = ["experiment", "dataset", "method", "gene_setting", "k_setting", "seed", "n_clusters",
+        "n_true_classes", "ari", "ami", "nmi", "silhouette", "seconds", "peak_rss_gb"]
+
+
+def gene_setting(row):
+    """One readable label for which genes a run used.
+
+    Older runs were saved before the genes and hvg_flavor columns existed, so a
+    blank means all genes, and 2000 with a blank method means the seurat method.
+    MICA rows without a genes value are the all-gene reproductions.
+    """
+    genes = row.get("genes")
+    if pd.isna(genes) or str(genes) in ("all", ""):
+        return "all genes"
+    flavor = row.get("hvg_flavor")
+    flavor = "seurat" if pd.isna(flavor) or flavor == "" else flavor
+    return f"{int(float(genes))} genes ({flavor})"
+
+
+def main():
+    frames = []
+    for f in sorted(RESULTS.glob("*/metrics.csv")):
+        df = pd.read_csv(f)
+        df.insert(0, "experiment", f.parent.name)
+        frames.append(df)
+    if not frames:
+        print("no results yet")
+        return 0
+    all_df = pd.concat(frames, ignore_index=True)
+    all_df["gene_setting"] = all_df.apply(gene_setting, axis=1)
+    cols = [c for c in KEEP if c in all_df.columns] + [c for c in all_df.columns if c not in KEEP]
+    out = REPO / "docs" / "results_tracker.csv"
+    all_df[cols].to_csv(out, index=False)
+    print(f"wrote {out} with {len(all_df)} rows from {len(frames)} experiments")
+    return 0
+
+
+if __name__ == "__main__":
+    sys.exit(main())

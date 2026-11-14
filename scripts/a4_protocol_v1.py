@@ -1,8 +1,9 @@
 """Protocol v1's criteria and exploratory comparisons, from the saved picks and curves (U-44).
 
-Usage: python scripts/a4_protocol_v1.py [--seeds 3-9] [--pbmc-seeds 0-4]
+Usage: python scripts/a4_protocol_v1.py [--tables] [--seeds 3-9] [--pbmc-seeds 0-4]
 Reads results/v1/{picks,curves,picks_chooser,chooser_r}/ and results/v1/regression.csv, and
-writes results/a4_protocol_v1_numbers.json. The criteria and their thresholds are fixed in
+writes results/a4_protocol_v1_numbers.json. With --tables it also writes the five
+latex/tables/a4_*.tex, latex/figures/a4_seed_means.pdf and latex/numbers_a4.tex. The criteria and their thresholds are fixed in
 docs/protocol_matched_v1.md. Summary of a design: the per-dataset median ARI over the seeds,
 then the mean over the nine small datasets, as in Assignment 3 (scripts/a3_report.py, agg).
 
@@ -287,7 +288,7 @@ def write_tables(p, c, out, conf, pseeds):
         axes[0].legend(fontsize=5.5, frameon=False, loc="lower left")
         fig.tight_layout(pad=0.3)
         FIGS.mkdir(parents=True, exist_ok=True)
-        fig.savefig(FIGS / "a4_seed_means.pdf")
+        fig.savefig(FIGS / "a4_seed_means.pdf", metadata={"CreationDate": None})
         plt.close(fig)
     except Exception as e:  # the numbers do not depend on the figure
         print("figure skipped:", e)
@@ -491,8 +492,21 @@ def seeds_of(arg, default):
     return list(range(int(a), int(b) + 1))
 
 
+def parse_args(argv):
+    """--tables is a switch. The old form '--tables 1' still works. Every other option takes a value."""
+    opts, i = {}, 0
+    while i < len(argv):
+        if argv[i] == "--tables":
+            opts["--tables"] = True
+            i += 2 if i + 1 < len(argv) and not argv[i + 1].startswith("--") else 1
+        else:
+            opts[argv[i]] = argv[i + 1] if i + 1 < len(argv) else None
+            i += 2
+    return opts
+
+
 def main(argv):
-    opts = dict(zip(argv[::2], argv[1::2]))
+    opts = parse_args(argv)
     global V1
     if "--root" in opts:
         V1 = Path(opts["--root"])

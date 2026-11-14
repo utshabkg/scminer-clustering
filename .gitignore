@@ -1,6 +1,8 @@
-# data and large outputs stay outside git
+# What stays out of git, and why. Everything else in the repository is tracked.
+
+# Datasets live on the shared disk. `data` is a symlink to it (see README).
+/data
 data/
-logs/
 *.h5ad
 *.h5
 *.loom
@@ -9,51 +11,57 @@ logs/
 *.npy
 *.npz
 *.pt
-results/raw/
 
-# python
+# Run logs are large and local. The numbers they hold are saved in results/.
+logs/
+
+# Raw MICA output (per-resolution tables and plots). The scored copies are in results/.
+results/raw/
+results/reproduction/
+
+# Third-party code: MICA, cloned by scripts/setup/setup_envs.sh. (chooseR goes to data/external/.)
+external/
+
+# Python and R caches
 __pycache__/
 *.pyc
+*.egg-info/
 .ipynb_checkpoints/
-
-# R
+.pytest_cache/
 .Rhistory
 .RData
 .Rproj.user/
 
-# third-party code cloned for reproduction
-external/
-
-# the data symlink points to the shared disk
-/data
-
-# build artifacts
-*.egg-info/
-__pycache__/
-
-# raw MICA output (per-resolution tables and plots); scored copies live in results/reproduction_<name>/
-results/reproduction/
-
-# local compile previews (the submitted build is made on Overleaf)
-latex/a2_report_preview.pdf
-latex/a3_report_preview.pdf
+# LaTeX build files and local previews. The submitted PDF is built on Overleaf.
+latex/**/*.aux
+latex/**/*.log
+latex/**/*.out
+latex/**/*.bbl
+latex/**/*.blg
+latex/**/*.toc
+latex/**/*.fls
+latex/**/*.fdb_latexmk
+latex/**/*.synctex.gz
+latex/main.pdf
+latex/*_preview.pdf
 latex/assignment3_draft.pdf
-latex/*.aux
-latex/*.log
-latex/*.out
-latex/*.bbl
-latex/*.blg
 
+# Projects downloaded from Overleaf, kept only to compare with latex/
+latex/updated_tex_*/
+
+# Personal working notes and scratch files
 scratchpad/
-
-# course material we did not write, kept locally only
-docs/Project_Paper_Writing_Guide.docx
-
-# working notes for the next session, not part of the project
 RESUME.md
 
-# agent orchestration artifacts from the planning stage; the readable notes beside them
-# are tracked, and git history keeps these
+# Course material we did not write, kept locally only
+docs/Project_Paper_Writing_Guide.docx
+
+# Agent orchestration files from the planning stage. The readable notes beside them are tracked.
 docs/research/**/journal.jsonl
 docs/research/**/workflow_script*.js
 docs/research/**/verify_*_workflow.js
+
+# Editor and OS files
+.vscode/
+.idea/
+.DS_Store

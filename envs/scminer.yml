@@ -24,5 +24,5 @@ dependencies:
       - rdata
       - scikit-misc
       - tabulate
-      # the project itself, so scripts/ and notebooks/ can import scminer_clust
-      - -e .
+# Install the project itself afterwards with `pip install -e .` from the repository root
+# (README.md). conda runs this pip step from envs/, so `-e .` here would point at the wrong folder.

@@ -22,7 +22,50 @@ Updated: 2026-11-13 (Rhea). Counts follow the Milestone column in `WORKPLAN.md`.
 
 Overall: 41 of 65 tasks finished. Three of the 65 repeat every week. The counts above are read off the status markers in `WORKPLAN.md`.
 
-Next three things (Nov 14): upload the changed files to Overleaf and submit Assignment 4, apply Laraib's check if it arrives first. Then the Allen large-scale run (U-46) and the hand-typed numbers moved into the generator, for Nov 30.
+Next three things (Nov 14): Utshab submits Assignment 4 (the files are in Overleaf, Laraib had no comments). Then the Allen large-scale run (U-46) and the hand-typed numbers moved into the generator, for Nov 30.
+
+---
+
+## 2026-11-14, Utshab (title, and the repository made easy to read)
+
+**Title.** Utshab shortened the title in Overleaf and in `latex/main.tex` to "When Clustering Methods Must
+Choose for Themselves: Label-Free Selection and Single-Cell Clustering Reliability" (1823992). Times build
+19 pages, no undefined references. Uploaded to Overleaf by Utshab. Rhea's reply sent, and Laraib had no
+comments on the draft.
+
+**Why the editor showed many unstaged files.** They were in `../scminer-v1-run`, the git worktree at the
+tag that ran protocol v1. Its `results/v1/` (1,046 files) was untracked there because the copy in this
+repository is the committed one (`diff -rq` found no difference). Its 32 run logs were the only copies, so
+they were copied into `logs/` and compared byte for byte, and then the worktree was removed with
+`git worktree remove`. No job was using it.
+
+**What moved and what did not.** The paper cites 37 repository paths (21 scripts, result files and folders,
+the protocol, an environment), and `src/scminer_clust/protocol.py` refuses a protocol v1 run if any of 13
+protocol paths differs from the tag. So those stay where they are, and so do `src/` and the layout of
+`results/` (every runner writes there through `paths.py`, which the guard covers). The other 48 scripts
+moved into `scripts/setup/` (10), `scripts/assignment2/` (18), `scripts/graph/` (14) and `scripts/tools/`
+(6), with `git mv`. In each moved file the root lookup went one level up (`parents[2]`, `../..`), and
+every `scripts/<name>` mention in living files now gives the new path. Dated records keep the old paths:
+the entries below, `latex/archive/`, `docs/research/`, the R-7 checks and each run's `params.json`.
+
+**New guides.** `README.md` rewritten for Assignment 4 (it still described the Assignment 3 framing and
+numbers). New `scripts/README.md`, `results/README.md` (how to read a folder name, and which script made
+each group), `docs/README.md` and `latex/README.md`. `.gitignore` tidied: `.pytest_cache/`, LaTeX build
+files and `latex/updated_tex_*/` added, duplicates removed. Five `.gitkeep` files in non-empty folders and
+an empty `configs/` folder removed.
+
+**Two small fixes on the way.** `a2_report.py` and `a4_protocol_v1.py` stamped a new creation date into
+their PDF figures on every run, which dirtied the repository. Both now save without it, as `a3_report.py`
+already did. The figures render pixel for pixel the same and their content streams are identical.
+`a4_protocol_v1.py --tables` now works without a value (Rhea's flag). `--tables 1` still works.
+
+**Checks.** The four report scripts, run from their new places, rebuild every table, JSON, CSV and
+`latex/numbers_a4.tex` byte for byte (baseline taken before any change, same result). All moved scripts
+compile and pass `bash -n`, and every root lookup resolves to the repository. `pytest`: 19 passed. The
+protocol guard still reports `code_matches_tag: True`. All 37 paths the paper cites exist.
+`scripts/tools/overleaf_package.py` runs from its new place. Do not rerun `scripts/tools/update_tracker.py`:
+`docs/results_tracker.csv` is frozen at Oct 3 and `a3_report.py` reads it, and a rebuild would change the
+PBMC14K default value in two tables (found by the inventory, now noted in `scripts/README.md`).
 
 ---
 

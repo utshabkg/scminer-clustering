@@ -5,7 +5,7 @@ methods and the words that keep coming up, in the order you need them. Nothing h
 requires running code. If a term in a results file is unclear, it should be here.
 
 The numbers for each dataset are in [dataset_facts.md](dataset_facts.md), regenerated
-from the processed files by `scripts/dataset_facts.py`.
+from the processed files by `scripts/setup/dataset_facts.py`.
 
 ## 1. The data
 
@@ -163,7 +163,7 @@ split, and that is worth saying out loud.
 | What | Where |
 |---|---|
 | The numbers for each dataset | `docs/dataset_facts.md` |
-| One page per dataset, in our own words | `docs/dataset_cards/` |
+| Cards for Zeisel, PBMC14K and the Allen sample, in our own words | `docs/dataset_cards/` |
 | Every result ever produced, one row per run | `docs/results_tracker.csv` |
 | Just the main comparison, for pivot tables | `docs/results_for_pivot.csv` |
 | Tables ready for the paper | `latex/tables/` |
