@@ -22,7 +22,7 @@ Updated: 2026-11-13 (Rhea). Counts follow the Milestone column in `WORKPLAN.md`.
 
 Overall: 41 of 65 tasks finished. Three of the 65 repeat every week. The counts above are read off the status markers in `WORKPLAN.md`.
 
-Next three things (Nov 13): teammate checks of the Assignment 4 draft by 13:00, fixes by 15:00, submit in the evening. Then the Allen large-scale run (U-46) for Nov 30.
+Next three things (Nov 14): upload the changed files to Overleaf and submit Assignment 4, apply Laraib's check if it arrives first. Then the Allen large-scale run (U-46) and the hand-typed numbers moved into the generator, for Nov 30.
 
 ---
 
@@ -219,6 +219,37 @@ they were checked by hand against `results/v1`. Session scratchpad: `review_seed
 - `a4_criteria.tex` printed 6709 without a separator. Fixed in `a4_protocol_v1.py`, regenerated. JSON and macros
   unchanged.
 - Rebuilt: 18 pages, References on page 11, no undefined values, lint clean.
+
+**Rhea's R-7 applied (Nov 13, 23:50 to Nov 14, 00:20).** Rhea's PR (branch `rhea/r7-a4-number-check`, commits
+9ea975d and 696b4ba, based on 19188e3) fast-forwarded into main. Her line numbers matched 19188e3, so she checked
+the current text. Each flag was checked against `results/v1` before changing anything:
+- *Cost.* `results/v1/provenance/paper_pbmc14k_seed{0..4}.json` give MICA 342, 315, 293, 363 and 361 s per
+  subsample, so 4.9 to 6.0 minutes. The 278 s in round 3 above did not come from these files. Text now says "about
+  five to six minutes". Baselines 74 to 90 s, unchanged.
+- *S1 said twice.* Under S1 (b = 100, 3,000-cell reference, most stable) Leiden takes 5 clusters at 2 seeds under
+  low and dense, the medians are 0.397 against 0.395, and ties are 3 (low), 4 (mid, dense), 5 (high). S2 low: 2
+  ties. The two sentences are now one, followed by the S2 sentence.
+- *"Much of" became "all of" MICA's lead from Buettner.* Without Buettner the gap is -0.028 (`E5.S0.mid.F.loo`).
+- *"Level" defined.* Section V now says two methods are level when their mean or median scores differ by less than
+  0.02, the C4 margin, and that the word plays no part in the verdicts. Checked against every use: 0.002 (matched
+  plain maximum) and 0.015 (original finest) are level, 0.022 (S1 original finest) and 0.058 (S1 matched plain
+  maximum) are leads, PBMC14K 0.397 against 0.395 is level.
+- *"Barely moves" became "does not move".* MICA's plain-maximum pick is the same in all 63 confirmatory runs on
+  both designs (`results/v1/picks`, b = 25), mean 0.4520 on both. Under the finest reading 3 runs differ (Yan seeds
+  6 and 7, Chung seed 3), so the sentence is about the plain maximum only, as before.
+- *Denominators in Section VI-E.* The generator counts every seed on all ten datasets for `S3.*`, `E4.*` and `FC`
+  (`S3_failures`, `chooser_agreement(p, allseeds)`). The subsection now says so at its start.
+- Minor flags taken too. The AMI under the plain maximum (Leiden 0.592 against MICA 0.575, within 0.02) is now in
+  the text, with a pointer to Appendix H. Section VI-G cites Appendices C, F and G. The stale "spread across rules"
+  pointer in Appendix C now points to Section VI-G. The `main.tex` comment says `--tables 1`.
+- Rhea's optional provenance table added as the last appendix (Table XIV), with a sentence in Section V citing it.
+  Every commit date in it was checked with `git log` (23e3ace Oct 14, 384d8f6, 6130cd6, 33ba410 Oct 22, 6b7f363,
+  04378d6, faca18c Oct 28, c110c2e, 26522d6, 87e496b Oct 31, 620f940 Nov 12 11:02, tag Nov 12 11:03, 7033a95 Nov 13
+  12:26) and every label it cites exists. `array` added to `main.tex` so its columns are ragged right.
+- Left for Nov 30, as Rhea suggested: the about 20 hand-typed protocol v1 numbers she lists in
+  `docs/r7_number_check_a4.md`, and making `--tables` work without a value.
+- Times build: 20 pages, References on page 12 (the body runs a few lines onto it), no undefined references or
+  values, the only overfull boxes are two URLs in the bibliography. Lint clean, source ASCII.
 
 ---
 

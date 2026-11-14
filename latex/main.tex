@@ -6,11 +6,12 @@
 \usepackage{textcomp}
 \usepackage{xcolor}
 \usepackage{booktabs}
+\usepackage{array}
 \usepackage{multirow}
 \usepackage{balance}
 \usepackage[hidelinks]{hyperref}
 
-% Protocol v1 numbers, generated from results/v1 by scripts/a4_protocol_v1.py --tables.
+% Protocol v1 numbers, generated from results/v1 by scripts/a4_protocol_v1.py --tables 1.
 % \V{key} prints one value. An unknown key prints ??key in bold and warns, so nothing goes stale silently.
 \makeatletter
 \newcommand{\V}[1]{\ifcsname v@#1\endcsname\csname v@#1\endcsname\else\textbf{??\detokenize{#1}}\PackageWarning{numbers}{undefined value #1}\fi}

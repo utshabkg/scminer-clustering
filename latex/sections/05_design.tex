@@ -28,7 +28,8 @@ and high as well. $k$ has only one setting per count.
 
 \textbf{What we explored and what we confirmed.} The original design ran first, for MICA and Leiden at
 three seeds (0 to 2). The matched design was introduced after we had seen those results, and also ran
-at seeds 0 to 2. Each design reached our repository in the same commit as its first results, the original on October 22 and the matched one on October 28. So the history shows that the matched design came later, but not that either design was fixed before its results. Everything after that follows protocol v1
+at seeds 0 to 2. Each design reached our repository in the same commit as its first results, the original on October 22 and the matched one on October 28. So the history shows that the matched design came later, but not that either design was fixed before its results. Table~\ref{tab:provenance} in
+Appendix~\ref{app:provenance} gives this record for every design in the paper. Everything after that follows protocol v1
 (\texttt{docs/protocol\_matched\_v1.md}). It fixes the methods, designs, scorers, seeds and the criteria
 for confirming each Assignment~3 finding, and it was tagged \texttt{matched-protocol-v1}
 (commit \texttt{620f940}, November 12) before any run at a new seed. Before the tag we tested the code on Yan at seed 0, Kolodziejczyk at seed 1 and PBMC14K at seed 0 with 3 subsamples, and ran chooseR's code on the Yan partitions, as the protocol records. Each run refuses to start unless
@@ -56,7 +57,8 @@ the same seed, with ties going to the smaller setting.
 five on PBMC14K. A seed redraws the subsamples and reinitialises every seeded step. MICA's and
 $k$-means' 50 restarts are restarts within a run, not repeats. We report per-dataset medians over seeds
 with the full range of chosen counts, and a range is the observed minimum and maximum, not a confidence
-interval. Four secondary results keep the seeds they had: the mode-against-size test (three), the shipped defaults (three), the transfer comparison (three) and the silhouette rule (one, so it shows no variation). They are not the
+interval. In the text two methods are level when their mean or median scores differ by less than 0.02, the
+margin C4 uses for a tie. The word plays no part in the verdicts. Four secondary results keep the seeds they had: the mode-against-size test (three), the shipped defaults (three), the transfer comparison (three) and the silhouette rule (one, so it shows no variation). They are not the
 comparisons our conclusions rest on, and the computation went to the main comparison and the chooseR
 check instead. Agreement with the labels is the ARI, with the adjusted mutual information (AMI) as a
 second measure. We also report the number of clusters chosen, because a rule can reach a respectable

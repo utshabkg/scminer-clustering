@@ -21,8 +21,8 @@ move together in the runs as shipped.
 
 \section{All four rules in one table}\label{app:rulesall}
 Table~\ref{tab:rulesall} gives the per-dataset picks on each method's original grid under the two
-stability readings, the shipped defaults and the shared-space silhouette, so the spread across rules
-quoted in Section~\ref{sec:results} can be read off directly. The Assignment 2 plan counted a win for MICA
+stability readings, the shipped defaults and the shared-space silhouette, so the secondary rules of
+Section~\ref{sec:transfer} can be read against the stability rule dataset by dataset. The Assignment 2 plan counted a win for MICA
 if, under the stability rule, its median ARI was higher on at least 7 of 11 sets and higher on
 average by 0.05. We dropped that count after the feedback. It was not met on the datasets we ran:
 under the stability rule MICA leads on at most 6 of the 10, one short of 7, and the eleventh set,
@@ -293,3 +293,32 @@ The collapse of every method on Chung with the \texttt{seurat} gene set is also 
 input is stored on a natural log scale, and after correcting the log base in Assignment 2
 the \texttt{seurat} selector shares only 715 of its 2,000 genes with \texttt{cell\_ranger}.
 The two gene sets are genuinely different, and one of them is poor for this dataset.
+
+\section{When each design was fixed}\label{app:provenance}
+Table~\ref{tab:provenance} lists each design in this paper, when it was written down, when its first results
+reached our repository, and whether the repository history shows that the design came first.
+\begin{table*}[t]
+\centering
+\caption{When each design was fixed. Dates are commits in our repository. ``Same commit'' means the design
+and its first results arrived together, so the history cannot show which came first. Only protocol v1 was
+tagged before its runs.}
+\label{tab:provenance}
+\footnotesize
+\setlength{\tabcolsep}{3pt}
+\begin{tabular}{>{\raggedright\arraybackslash}p{3.3cm}>{\raggedright\arraybackslash}p{2.9cm}>{\raggedright\arraybackslash}p{2.5cm}>{\raggedright\arraybackslash}p{1.6cm}>{\raggedright\arraybackslash}p{3.3cm}>{\raggedright\arraybackslash}p{2.6cm}}
+\toprule
+Design & Where & Design fixed & First results & History shows the order & Seeds \\
+\midrule
+Label-fixed reproduction of the published protocol & Table~\ref{tab:repro} & Assignment 2, Oct 1 to 3 & Oct 14 & not needed: labels fix the setting & 3 $k$-means draws \\
+Original grids, both readings (as first specified) & Tables~\ref{tab:rulesall}, \ref{tab:designs}, Fig.~\ref{fig:curve} & Oct 22 & Oct 22 & no, same commit & 0 to 2, then 0 to 9 under protocol v1 \\
+Shipped defaults and silhouette rule & Appendix~\ref{app:secondary} & Oct 22 & Oct 22 & no, same commit & 3 and 1 \\
+Common range, MICA restricted to Leiden's counts (post hoc) & Table~\ref{tab:common} & Oct 28, after the original results & Oct 28 & no, same commit & reanalysis of 0 to 2 \\
+Matched candidates (after the original results) & Table~\ref{tab:confirm}, seeds 0 to 2 & Oct 28 & Oct 28 & no, same commit & 0 to 2 \\
+Matched mode against size and silhouette & Table~\ref{tab:modesize}, Appendix~\ref{app:secondary} & Oct 31 & Oct 31 & no, same day & 3 pools and 1 \\
+Transfer (uses other datasets' labels) & Table~\ref{tab:transfer} & Oct 31 & Oct 31 & no, same commit & 0 to 2 \\
+Neighbour graph comparison (labels pick the resolution) & Table~\ref{tab:graph} & Oct 28 & Oct 28 & no, same commit & 2 runs per graph \\
+Protocol v1: criteria, $k$-means, chooseR's code, scorers & Tables~\ref{tab:criteria}, \ref{tab:confirm}, \ref{tab:pbmc}, Fig.~\ref{fig:seeds} & Nov 12, tag \texttt{matched-protocol-v1} & Nov 13 & yes: the tag is older than the results, and every run records the tagged code & 3 to 9 new (0 to 2 rerun), PBMC14K 0 to 4 \\
+Exploratory under protocol v1: setting per count, per-dataset analysis, number of subsamples, interval & Sections~\ref{sec:confirm}, \ref{sec:variants}, \ref{sec:chooser}, Table~\ref{tab:decomp} & code Nov 12, analyses chosen after the results & Nov 13 & code yes, choice of analysis no & as protocol v1 \\
+\bottomrule
+\end{tabular}
+\end{table*}
