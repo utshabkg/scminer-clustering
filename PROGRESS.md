@@ -25,6 +25,12 @@ Next three things (Nov 13): teammate checks of the Assignment 4 draft by 13:00, 
 
 ---
 
+## 2026-11-13, Rhea
+
+R-7 on the Assignment 4 draft was completed, and the flags are noted in `docs/r7_number_check_a4.md`. Nothing in `latex/` was changed. Rerunning `scripts/a4_protocol_v1.py` on a clean clone reproduces the JSON, `numbers_a4.tex` and the five A4 tables exactly. All 116 `\V{}` keys are defined and match the JSON, and a separate script recomputed the headline claims from `results/v1`. Every table and figure is cited. Six fixes for tonight: the PBMC14K per-subsample time (4.9 to 6.0 minutes, not four and a half), two sentences that both describe S1, "much of" the lead that is all of it, no stated cut-off for "level", "barely moves" for a mean that does not move, and the Section VI-E denominators that cover every seed and dataset. About 20 protocol v1 figures are typed by hand. All are correct, and they should move into the generator for Nov 30.
+
+---
+
 ## 2026-11-12 evening and 2026-11-13, Utshab (Assignment 4, now submitted Nov 13)
 
 **Deadline moved up.** Utshab is at a conference from Nov 14 to 19, so Assignment 4 goes in on Fri Nov 13
