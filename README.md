@@ -123,3 +123,4 @@ converts them without changing a value. The protocol v1 subsample partitions (11
 |---|---|
 | `a3-submitted` | The Assignment 3 submission |
 | `matched-protocol-v1` | Protocol v1, fixed before the confirmatory runs |
+| `a4-submitted` | The Assignment 4 submission |

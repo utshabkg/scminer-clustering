@@ -36,4 +36,4 @@ into that same Overleaf folder.
 ## Earlier versions
 
 `archive/proposal/` and `archive/assignment2/` are the proposal and Assignment 2 as submitted, and each
-compiles on its own. Assignment 3 as submitted is the git tag `a3-submitted`.
+compiles on its own. Assignment 3 and Assignment 4 as submitted are the git tags `a3-submitted` and `a4-submitted`.

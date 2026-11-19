@@ -22,7 +22,40 @@ Updated: 2026-11-13 (Rhea). Counts follow the Milestone column in `WORKPLAN.md`.
 
 Overall: 41 of 65 tasks finished. Three of the 65 repeat every week. The counts above are read off the status markers in `WORKPLAN.md`.
 
-Next three things (Nov 14): Utshab submits Assignment 4 (the files are in Overleaf, Laraib had no comments). Then the Allen large-scale run (U-46) and the hand-typed numbers moved into the generator, for Nov 30.
+Next three things (Nov 19): the Allen run on all cells (U-46), the checks split and table (U-47), then the paper rewrite and slides (U-48, U-49) for Nov 30.
+
+---
+
+## 2026-11-19, Utshab (Nov 17 feedback, and the plan for Nov 30)
+
+**What the instructor asked for.** His letter is kept in the gitignored `scratchpad/`. In summary:
+- He accepted the Assignment 4 revision. Due Nov 30: the paper and the slides. The talk is on Dec 2
+  (30 minutes plus about 10 for questions, all three presenting), and the final report is due Dec 11.
+- Split the six checks into ones that run on unlabeled data and ones that need labels, with a short
+  table of what each needs, detects and means. Show with one existing experiment how an unreliable
+  selection can be spotted without labels.
+- Run at least one clustering method on all Allen cells, reporting the dimensions, results, time and
+  memory. MICA may use a subset if we explain how it was drawn and how the other cells were assigned,
+  and keep the full-data and sampled results apart.
+- Organize the paper around how candidate settings and label-free selection rules affect the
+  reliability of clustering comparisons. No new selection methods or broad parameter searches.
+
+**Decisions (Utshab).**
+- The slides are a Claude Slides deck.
+- Allen: PCA with k-means and with Leiden on all cells. MICA uses the 100,000-cell sample already run,
+  with the other cells assigned by nearest neighbours in the full-data principal components.
+- Tagged `a4-submitted` at 1823992, the version Utshab submitted.
+
+**Facts found while planning** (two read-only explorers and one design agent):
+- The 13 Allen files hold 2,349,544 rows. 2,341,350 of them are annotated 10Xv3 cells, which are the
+  cells `load_allen` keeps, and all 34 classes are present.
+- No MICA resolution on the 100,000 sample gives exactly 34 clusters. The paper rule picks 3.2 (33
+  clusters, ARI 0.652), matching the pilot.
+- Of the six checks as written, only the flat-score check, the shared candidate counts and the "can
+  form an interval" part are label-free. The others compare ARI, but most have a label-free version:
+  the chosen count stays put across readings, seeds, scorers and setting-per-count variants.
+- The plan, with its timeline, is in WORKPLAN (U-46 to U-49, L-8, R-6, R-7, R-9). The teammate
+  message is in `scratchpad/teammate_message_nov19.md`.
 
 ---
 
