@@ -123,6 +123,116 @@ def flat_top(c, seeds, design="mid", b=25):
     return out
 
 
+def exploratory_values():
+    """Each criterion's value in the exploratory runs, as their own report recorded it
+    (results/a3_matched_numbers.json, from scripts/a3_matched.py). The protocol quotes these."""
+    f = RESULTS / "a3_matched_numbers.json"
+    if not f.exists():
+        return {}
+    d = json.loads(f.read_text())
+    mm, s, mech = d["matched"], d["summary"], d["matched"]["mechanism_by_size"]
+    means = mm["means_nine_small"]
+    return {"F.mica": means[f"{F}/mica"], "F.leiden": means[f"{F}/leiden_pca"],
+            "M.mica": means[f"{M}/mica"], "M.leiden": means[f"{M}/leiden_pca"],
+            "C2.mica": mm["mean_abs_reading_change"]["mica"], "C2.leiden": mm["mean_abs_reading_change"]["leiden_pca"],
+            "C3.five.mica": mech["at most 317 cells/mica"]["share_tied"],
+            "C3.four.mica": mech["622 cells or more/mica"]["share_tied"],
+            "C3.five.leiden": mech["at most 317 cells/leiden_pca"]["share_tied"],
+            "C5.leiden": s["Most stable, original grids"]["leiden_pca"], "C5.mica": s["Most stable, original grids"]["mica"]}
+
+
+def label_free_signals(p, c, seeds, design="mid", b=25, gap=5):
+    """Warning signs a user can read without labels, run by run, beside the ARI the labels later give.
+
+    A run is one small dataset, seed and method, scored as the original protocol (S0) on the given
+    candidates. The signs need no labels: the share of settings within 0.01 of the run's best
+    stability, the span of cluster counts among them, the count each reading picks, and whether a
+    pick is the smallest count offered. The ARI is reported only to show what the signs foretold.
+    """
+    cs = c[(c.scorer == "ours") & (c.b == b) & c[f"in_{design}"] & c.seed.isin(seeds) & c.ds.isin(SMALL)]
+    rows = []
+    for (ds, seed, m), g in cs.groupby(["ds", "seed", "method"]):
+        t = g[g.stability >= g.stability.max() - 0.01]
+        rows.append({"ds": ds, "seed": int(seed), "method": m, "share_tied": len(t) / len(g),
+                     "span": int(t.n_clusters.max() - t.n_clusters.min()), "k_floor": int(g.n_clusters.min())})
+    R = pd.DataFrame(rows)
+    pk = p[(p.S == "S0") & (p.design == design) & p.seed.isin(seeds) & p.ds.isin(SMALL)]
+    w = pk.pivot_table(index=["ds", "seed", "method"], columns="reading", values=["n_clusters", "ari"])
+    w.columns = [f"{a}_{'F' if r == F else 'M'}" for a, r in w.columns]
+    R = R.merge(w.reset_index(), on=["ds", "seed", "method"]).dropna(subset=["ari_F", "ari_M"])
+    R["k_gap"] = (R.n_clusters_F - R.n_clusters_M).abs()
+    R["ari_gap"] = (R.ari_F - R.ari_M).abs()
+    per = {}
+    for (ds, m), g in R.groupby(["ds", "method"]):
+        per[f"{ds}/{m}"] = {"share_tied": round(float(g.share_tied.median()), 3), "span": float(g.span.median()),
+                            "k_F": kr(int(g.n_clusters_F.min()), int(g.n_clusters_F.max())),
+                            "k_M": kr(int(g.n_clusters_M.min()), int(g.n_clusters_M.max())),
+                            "ari_F": round(float(g.ari_F.median()), 3), "ari_M": round(float(g.ari_M.median()), 3),
+                            "true_k": TYPES[ds], "n_runs": int(len(g))}
+    dis = R[R.k_gap >= gap]
+    out = {"per_dataset": per, "n_runs": int(len(R)), "gap": gap,
+           "disagree": {"n": int(len(dis)), "n_mica": int((dis.method == "mica").sum()),
+                        "mean_ari_gap": round(float(dis.ari_gap.mean()), 3)},
+           "agree": {"n": int(len(R) - len(dis)), "mean_ari_gap": round(float(R[R.k_gap < gap].ari_gap.mean()), 3)}}
+    for tag in ("F", "M"):
+        fl = R[f"n_clusters_{tag}"] == R.k_floor
+        out[f"floor_{tag}"] = {"n": int(fl.sum()), "mean_ari": round(float(R.loc[fl, f"ari_{tag}"].mean()), 3),
+                               "n_interior": int((~fl).sum()), "mean_ari_interior": round(float(R.loc[~fl, f"ari_{tag}"].mean()), 3)}
+    return out
+
+
+def curve_figure(c, p, seeds, show=("buettner", "pollen", "zeisel"), design="mid", b=25):
+    """Figure 1: stability and ARI against the number of clusters, from the confirmatory runs.
+
+    Medians over the seeds of each count's stability (solid) and ARI (dashed), for MICA and Leiden on
+    matched candidates, scored as the original protocol. The markers show the counts the two readings
+    picked (median over the seeds), and the dotted line the true number of types.
+    """
+    import matplotlib
+    matplotlib.use("Agg")
+    import matplotlib.pyplot as plt
+
+    blue, orange, muted, ink = "#2a6f97", "#d1792b", "#8a8a85", "#2b2b2b"
+    plt.rcParams.update({"font.size": 7, "font.family": "serif", "pdf.fonttype": 42})
+    cs = c[(c.scorer == "ours") & (c.b == b) & c[f"in_{design}"] & c.seed.isin(seeds)]
+    fig, axes = plt.subplots(1, len(show), figsize=(7.0, 1.95), sharey=True)
+    for ax, ds in zip(axes, show):
+        for m, col, lab in [("mica", blue, "MICA"), ("leiden_pca", orange, "Leiden")]:
+            s = cs[(cs.ds == ds) & (cs.method == m)].groupby("n_clusters").agg(
+                stab=("stability", "median"), ari=("ari", "median")).reset_index()
+            if not len(s):
+                continue
+            ax.plot(s.n_clusters, s.stab, color=col, lw=1.5, label=f"{lab} stability")
+            ax.plot(s.n_clusters, s.ari, color=col, lw=1.2, ls=(0, (2, 1.5)), label=f"{lab} ARI")
+            for reading, mk in ((F, "^"), (M, "v")):
+                k = p[(p.S == "S0") & (p.design == design) & (p.reading == reading) & (p.method == m)
+                      & (p.ds == ds) & p.seed.isin(seeds)].n_clusters.median()
+                if pd.notna(k):
+                    y = float(np.interp(k, s.n_clusters, s.stab))
+                    ax.plot([k], [y], marker=mk, color=col, ms=4, mec="white", mew=0.5, ls="none")
+        ax.axvline(TYPES[ds], color=muted, lw=0.8, ls=":")
+        ax.text(TYPES[ds], 1.04, "true", fontsize=6, color=muted, ha="center")
+        ax.set_title(NAMES[ds], fontsize=7.5, color=ink)
+        ax.set_xlabel("clusters")
+        ax.set_ylim(-0.05, 1.1)
+        ax.grid(axis="y", color="#e6e5e1", lw=0.5)
+        ax.set_axisbelow(True)
+        for sp in ("top", "right"):
+            ax.spines[sp].set_visible(False)
+    axes[0].set_ylabel("score")
+    axes[0].legend(fontsize=5.5, frameon=False, loc="lower left", ncol=2, columnspacing=0.8,
+                   handlelength=1.5, labelspacing=0.2)
+    from matplotlib.lines import Line2D
+    picks = [Line2D([], [], marker="^", color=muted, ls="none", ms=4, label="finest stable pick"),
+             Line2D([], [], marker="v", color=muted, ls="none", ms=4, label="most stable pick")]
+    axes[1].legend(handles=picks, fontsize=5.5, frameon=False, loc="lower right", handletextpad=0.2,
+                   labelspacing=0.2)
+    fig.tight_layout(pad=0.3)
+    fig.savefig(FIGS / "a4_stability_curve.pdf", metadata={"CreationDate": None})
+    fig.savefig(FIGS / "a4_stability_curve.png", dpi=200)
+    plt.close(fig)
+
+
 def repick(curve_rows, settings):
     """stability.pick on a subset of one run's curve, in the given order."""
     sc = {}
@@ -209,7 +319,7 @@ def write_tables(p, c, out, conf, pseeds):
         "subsamples). ARI of the chosen partition, median over the seven seeds, with the smallest and largest chosen "
         "count in parentheses and the number of cell types after each dataset name. No labels are used in the choice. "
         "The mean rows average the per-dataset medians over the nine datasets, for the confirmatory seeds, for the "
-        "exploratory seeds 0 to 2 of Assignment 3, and for all ten.}\n\\label{tab:confirm}\n\\footnotesize\n"
+        "exploratory seeds 0 to 2, and for all ten.}\n\\label{tab:confirm}\n\\footnotesize\n"
         "\\setlength{\\tabcolsep}{4pt}\n\\begin{tabular}{lcccccc}\n\\toprule\n"
         " & \\multicolumn{3}{c}{Finest stable} & \\multicolumn{3}{c}{Most stable} \\\\\n"
         "\\cmidrule(lr){2-4}\\cmidrule(lr){5-7}\nDataset (types) & MICA & Leiden & $k$-means & MICA & Leiden & $k$-means \\\\\n"
@@ -299,21 +409,22 @@ def write_tables2(p, out, conf):
     def v(x, k="verdict"):
         return (out.get(x) or {}).get(k, "n/a")
     c1f, c1m = out["C1"][F], out["C1"][M]
+    a3 = exploratory_values()
     rows = [
-        ("C1, finest stable: MICA above Leiden", "0.662 vs 0.543", f"{fmt(c1f.get('mean_a'))} vs {fmt(c1f.get('mean_b'))}, leads at {c1f.get('a_leads_seeds', 'n/a')} seeds", c1f["verdict"]),
-        ("C1, most stable: MICA above Leiden", "0.473 vs 0.452", f"{fmt(c1m.get('mean_a'))} vs {fmt(c1m.get('mean_b'))}, leads at {c1m.get('a_leads_seeds', 'n/a')} seeds", c1m["verdict"]),
-        ("C2, the reading moves MICA more", "0.197 vs 0.118",
+        ("C1, finest stable: MICA above Leiden", f"{fmt(a3.get('F.mica'))} vs {fmt(a3.get('F.leiden'))}", f"{fmt(c1f.get('mean_a'))} vs {fmt(c1f.get('mean_b'))}, leads at {c1f.get('a_leads_seeds', 'n/a')} seeds", c1f["verdict"]),
+        ("C1, most stable: MICA above Leiden", f"{fmt(a3.get('M.mica'))} vs {fmt(a3.get('M.leiden'))}", f"{fmt(c1m.get('mean_a'))} vs {fmt(c1m.get('mean_b'))}, leads at {c1m.get('a_leads_seeds', 'n/a')} seeds", c1m["verdict"]),
+        ("C2, the reading moves MICA more", f"{fmt(a3.get('C2.mica'))} vs {fmt(a3.get('C2.leiden'))}",
          f"{fmt(out['C2']['mean_abs_reading_change'].get('mica'))} vs {fmt(out['C2']['mean_abs_reading_change'].get('leiden_pca'))}", out["C2"]["verdict"]),
     ]
     c3 = out.get("C3", {})
     if c3:
-        rows.append(("C3, MICA's flat top in the five smallest", "0.534 vs 0.231, Leiden 0.177",
+        rows.append(("C3, MICA's flat top in the five smallest", f"{fmt(a3.get('C3.five.mica'))} vs {fmt(a3.get('C3.four.mica'))}, Leiden {fmt(a3.get('C3.five.leiden'))}",
                      f"{fmt(c3.get('five_smallest/mica', {}).get('share_tied'))} vs {fmt(c3.get('four_larger/mica', {}).get('share_tied'))}, "
                      f"Leiden {fmt(c3.get('five_smallest/leiden_pca', {}).get('share_tied'))}", c3["verdict"]))
     c4 = out.get("C4", {})
     rows.append(("C4, PBMC14K tie under most stable, seeds 0 to 4", "3 of 3 seeds", c4.get("ties", "n/a"), c4.get("verdict", "n/a")))
     c5 = out["C5"]
-    rows.append(("C5, original grids: Leiden above MICA, most stable", "0.635 vs 0.473",
+    rows.append(("C5, original grids: Leiden above MICA, most stable", f"{fmt(a3.get('C5.leiden'))} vs {fmt(a3.get('C5.mica'))}",
                  f"{fmt(c5.get('mean_a'))} vs {fmt(c5.get('mean_b'))}", c5["verdict"]))
     f1 = out["F1"]
     rows.append(("F1, chooseR's code: MICA above Leiden, finest", "not run", f"{fmt(f1.get('mean_a'))} vs {fmt(f1.get('mean_b'))}", f1["verdict"]))
@@ -322,12 +433,12 @@ def write_tables2(p, out, conf):
     body = "\n".join(f"{a} & {b} & {c} & {d} \\\\" for a, b, c, d in rows)
     (TABLES / "a4_criteria.tex").write_text(
         "\\begin{table*}[t]\n\\centering\n\\caption{The criteria fixed in protocol v1 before the confirmatory runs, with "
-        "Assignment 3's value (seeds 0 to 2) and the value at the seven new seeds, 3 to 9, except C4 (PBMC14K, seeds 0 to 4) "
+        "the exploratory value (seeds 0 to 2) and the value at the seven new seeds, 3 to 9, except C4 (PBMC14K, seeds 0 to 4) "
         "and FC (every seed). Mean ARI over the nine small "
         "datasets of the per-dataset medians, on matched candidates scored as the original protocol (S0), unless stated. "
         "A criterion of C1 holds if the mean is higher and MICA leads at 5 or more of the 7 per-seed means, and is weak "
         "if only the mean is higher.}\n\\label{tab:criteria}\n\\footnotesize\n\\setlength{\\tabcolsep}{4pt}\n"
-        "\\begin{tabular}{lllc}\n\\toprule\nCriterion & Assignment 3 & Protocol v1 & Verdict \\\\\n\\midrule\n"
+        "\\begin{tabular}{lllc}\n\\toprule\nCriterion & Exploratory & Protocol v1 & Verdict \\\\\n\\midrule\n"
         + body + "\n\\bottomrule\n\\end{tabular}\n\\end{table*}\n")
     e3 = out.get("E3_decomposition_leiden", {})
     steps = [("Original grid, capped at 2 to 20", "original"), ("Original grid, one setting per count", "original_one_per_count"),
@@ -371,12 +482,40 @@ def write_numbers(p, out, conf, pseeds, root):
     for m, v in out["C2"]["mean_abs_reading_change"].items():
         if v is not None:
             vals[f"C2.{short_m[m]}"] = f"{v:.3f}"
+    for k, val in exploratory_values().items():
+        vals[f"A3.{k}"] = f"{val:.3f}"
+    for m in ("mica", "leiden_pca"):  # the same quantity at the exploratory seeds, which R0 reproduces
+        v = reading_change(p, "S0", "mid", m, [0, 1, 2])
+        if v is not None:
+            vals[f"C2.{short_m[m]}.s02"] = f"{v:.3f}"
+    for r in (F, M):
+        x, y = summary(p, "S0", "mid", r, "mica", [0, 1, 2]), summary(p, "S0", "mid", r, "leiden_pca", [0, 1, 2])
+        if x and y:
+            vals[f"C1.{short_r[r]}.gap.s02"] = f"{x['mean'] - y['mean']:.3f}"
     for k, v in out.get("C3", {}).items():
         if isinstance(v, dict) and "share_tied" in v:
             sz, m = k.split("/")
             vals[f"C3.{sz}.{short_m[m]}.share"] = f"{v['share_tied']:.3f}"
             vals[f"C3.{sz}.{short_m[m]}.span"] = f"{v['span']:.1f}"
             vals[f"C3.{sz}.{short_m[m]}.atone"] = f"{100 * v['share_at_one']:.0f}"
+    lf = out.get("label_free_signals")
+    if lf:
+        for key, v in lf["per_dataset"].items():
+            ds, m = key.split("/")
+            base = f"L.{ds}.{short_m[m]}"
+            vals[f"{base}.share"] = f"{100 * v['share_tied']:.0f}"
+            vals[f"{base}.span"] = f"{v['span']:.0f}"
+            vals[f"{base}.kF"], vals[f"{base}.kM"] = v["k_F"], v["k_M"]
+            vals[f"{base}.ariF"], vals[f"{base}.ariM"] = f"{v['ari_F']:.3f}", f"{v['ari_M']:.3f}"
+            vals[f"{base}.truek"] = str(v["true_k"])
+        vals["L.runs"], vals["L.gap"] = str(lf["n_runs"]), str(lf["gap"])
+        vals["L.disagree.n"], vals["L.disagree.mica"] = str(lf["disagree"]["n"]), str(lf["disagree"]["n_mica"])
+        vals["L.disagree.arigap"] = f"{lf['disagree']['mean_ari_gap']:.3f}"
+        vals["L.agree.n"], vals["L.agree.arigap"] = str(lf["agree"]["n"]), f"{lf['agree']['mean_ari_gap']:.3f}"
+        for tag in ("F", "M"):
+            fl = lf[f"floor_{tag}"]
+            vals[f"L.floor.{tag}.n"], vals[f"L.floor.{tag}.ari"] = str(fl["n"]), f"{fl['mean_ari']:.3f}"
+            vals[f"L.interior.{tag}.n"], vals[f"L.interior.{tag}.ari"] = str(fl["n_interior"]), f"{fl['mean_ari_interior']:.3f}"
     for k in ("C1", "C2", "C3", "C4", "C5", "F1", "FC"):
         if k in out and isinstance(out[k], dict) and "verdict" in out[k] and k != "C1":
             vals[f"{k}.verdict"] = out[k]["verdict"]
@@ -542,6 +681,7 @@ def main(argv):
                      ft.get("five_smallest/leiden_pca", {}).get("share_tied"))
         ok = None if None in (a, b_, cl) else (a > b_ and a > cl)
         out["C3"] = {**ft, "verdict": "not yet computable" if ok is None else ("holds" if ok else "fails")}
+    out["label_free_signals"] = label_free_signals(p, c, conf)
     # C4
     pb = p[(p.ds == "pbmc14k") & (p.S == "S0") & (p.design == "mid") & (p.reading == M) & p.seed.isin(pseeds)]
     if len(pb):
@@ -628,6 +768,7 @@ def main(argv):
         out["S3_no_choice_runs_V"] = {m: int(g.chosen_setting.isna().sum()) for m, g in st[st.S == "S3-V"].groupby("method")}
     if "--tables" in opts:
         write_tables(p, c, out, conf, pseeds)
+        curve_figure(c, p, conf)
     files = [f for f in sorted(glob(str(V1 / "chooser_r" / "paper_*_seed*.csv")))]
     cr = pd.concat([pd.read_csv(f).assign(ds=short(Path(f).stem.rsplit("_seed", 1)[0]),
                                           seed=int(Path(f).stem.rsplit("_seed", 1)[1])) for f in files],

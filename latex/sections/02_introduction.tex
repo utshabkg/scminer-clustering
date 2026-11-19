@@ -16,50 +16,52 @@ itself \cite{germain2020pipecomp}. A fair comparison therefore lets each method 
 without labels. That opens a second problem, and it is the subject of this paper: the label-free rule,
 and the candidates it is shown, can decide the ranking too.
 
-\textbf{Main question.} When one label-free rule chooses the setting for every method, how much of the
-resulting ranking comes from the rule and its candidates rather than from the methods, and under what
-conditions is the comparison reliable? We study it on MICA against two pipelines on the same genes,
-principal component analysis (PCA) followed by Leiden, the usual single-cell route, and PCA followed by
-$k$-means, the textbook baseline. Three supporting questions follow. Does offering every method the same
-cluster counts change the ranking, and why? Do the rule's details, its reading, threshold and bootstrap,
-change it? And how far does it move between independent subsample draws?
+\textbf{Main question.} How do the candidate settings and the label-free rule that chooses among them
+affect the reliability of a comparison of clustering methods? We study it on MICA against two pipelines on
+the same genes: principal component analysis (PCA) followed by Leiden, the usual single-cell route, and
+PCA followed by $k$-means, the textbook baseline. Three questions follow. Why does offering every method
+the same cluster counts change the ranking? Which details of the rule, its reading, its number of
+subsamples and its interval, move the ranking? And what can a user check, with or without labels, before
+trusting a ranking?
 
 The rule is subsampling stability in the style of chooseR \cite{pattersoncross2021chooser}. It reruns
 each method on random 80 percent subsamples and scores each setting by how well its clusters survive
 resampling. chooseR then keeps the setting with the most clusters whose score clears a threshold, the
 highest lower bound of a bootstrap interval over all candidates. We call this chooseR's reading, or
 \emph{finest stable}, and also report the plain maximum of the same scores, or \emph{most stable}.
-Labels are used only afterwards, to score the chosen partition. In Assignment 3 we ran the rule at three
-seeds on all ten scMINER benchmark datasets. A shared cap of 20 clusters turned out not to give the
-methods the same candidate counts, so after seeing those results we added a matched design that offers
-every method the same reachable counts, one setting each. For this report we fixed the protocol in
-advance and tagged it in our repository, then ran seven new seeds on the nine small datasets and seeds 0 to 4 on PBMC14K, scored every run with chooseR's own R code as well as ours, and added the $k$-means baseline.
+Labels are used only afterwards, to score the chosen partition. We first ran the rule at three seeds on
+all ten scMINER benchmark datasets. A shared cap of 20 clusters turned out not to give the methods the same
+candidate counts, so after seeing those results we added a matched design that offers every method the
+same reachable counts, one setting each. We then fixed a protocol in advance, tagged it in our repository,
+ran seven new seeds on the nine small datasets and five seeds on PBMC14K, and scored every run with
+chooseR's own R code as well as ours. Last, we clustered all 2.3 million cells of the Allen whole mouse
+brain atlas \cite{yao2023allen} with both PCA pipelines, and a sample of them with MICA.
 
-\textbf{Findings.} The candidates decide the ranking under the plain maximum. On each method's own grid
-Leiden leads MICA, \V{S0.original.M.leiden} against \V{S0.original.M.mica} in mean adjusted Rand index
-(ARI) over the nine small datasets, and offered the same counts the two are level, \V{S0.mid.M.mica}
-against \V{S0.mid.M.leiden}. Matching adds counts Leiden's own grid never produced, and the rule often
-picks one of them. Under chooseR's reading MICA leads at every new seed, \V{S0.mid.F.mica} against
-\V{S0.mid.F.leiden}, and the lead holds under chooseR's own code once its missing intervals are repaired
-as the protocol declared, \V{S3G.mid.F.mica} against \V{S3G.mid.F.leiden}. Dataset by dataset, though,
-the two methods split about evenly, and with 25 subsamples the mean lead rests on a single dataset. With
-the menu of counts and the clustering step held fixed, MICA's mutual information representation beats the
-principal components by \V{E2.mid.F.micaminuskmeans} under that reading. MICA's stability scores are
-often flat at the top on datasets of a few hundred cells. Separately, chooseR's code as written makes no
-choice at all in \V{S3.nochoice.mica} MICA runs, because a coarse partition that reproduces perfectly
-leaves its interval undefined. On PBMC14K, the one large dataset, MICA and Leiden tie under the plain
-maximum on matched candidates at \V{C4.ties} seeds, but the tie breaks when Leiden is offered its lowest setting per count. On the original grids there, the interval alone moves MICA's choice from
-\V{pbmc.S2.original.F.mica.k} clusters to \V{pbmc.S3G.original.F.mica.k}.
+\textbf{Contributions.}
+\begin{itemize}
+\item \emph{The candidates decide the ranking, and we show why.} On each method's own grid Leiden leads
+MICA under the plain maximum, \V{S0.original.M.leiden} against \V{S0.original.M.mica} in mean adjusted Rand
+index (ARI) over the nine small datasets, at every new seed. Offered the same counts, the two are level,
+\V{S0.mid.M.mica} against \V{S0.mid.M.leiden}, because matching adds coarse counts that Leiden's own grid
+never produced and the rule then picks. PCA plus $k$-means separates this effect of the menu from the
+effect of the representation.
+\item \emph{The rule's details move it too.} The reading moves MICA most, since its stability scores are
+often flat at the top on datasets of a few hundred cells. The number of subsamples turns a level
+comparison into a lead. chooseR's own code cannot form its interval when a coarse partition reproduces
+perfectly, and then makes no choice, in \V{S3.nochoice.mica} MICA runs.
+\item \emph{Which effects hold.} We sort the effects into those confirmed against criteria fixed in advance
+and those only measured (Table~\ref{tab:effects}). MICA's lead under chooseR's reading holds at every seed,
+\V{S0.mid.F.mica} against \V{S0.mid.F.leiden}, but the datasets split about evenly and with 25 subsamples
+the lead rests on one of them.
+\item \emph{Checks with and without labels.} We separate six checks a user can run on unlabeled data, which
+ask whether a choice is determined by the data, from five that need labels and judge a benchmark's ranking
+(Table~\ref{tab:checks}), and show on Pollen how the label-free ones flag a poor choice.
+\item \emph{Scale.} On the full Allen atlas we report the dimensions, results, time and memory of both
+baselines, and MICA's result from a 100,000-cell sample, kept apart from the full-data results.
+\end{itemize}
 
-From these results we draw conditions under which such a comparison can be trusted. The methods must
-choose among the same cluster counts, and the ranking should not change with the setting behind each count. The two readings of
-the rule should agree. The scores should not be flat at the top. And the ranking should hold across
-subsample draws, across implementations of the rule and without any one dataset. Where one of these
-fails, the comparison shows at most a lead under that rule on those datasets, not a ranking of the
-methods. By these checks our benchmark establishes more about how the evaluation shapes a ranking than
-about which method clusters better.
-
-Sections~\ref{sec:related} to~\ref{sec:design} cover the closest work, the methods and the design,
-Section~\ref{sec:results} gives the results, and Sections~\ref{sec:discussion} and~\ref{sec:conclusion}
-state what follows from them and what remains open. Our Assignment 3 comparison of a faster neighbour
-graph for MICA, which is not about selection, is now in Appendix~\ref{app:graph}.
+Section~\ref{sec:related} covers the closest work, Section~\ref{sec:method} the methods and
+Section~\ref{sec:design} the design. Section~\ref{sec:results} gives the results,
+Section~\ref{sec:discussion} explains them and states the checks, and Section~\ref{sec:conclusion}
+concludes. A faster neighbour graph for MICA, which is not about selection, is in
+Appendix~\ref{app:graph}.

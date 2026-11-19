@@ -1,5 +1,5 @@
 \section{Results}\label{sec:results}
-We first recall the exploratory runs of Assignment~3, then test their conclusions on the confirmatory
+We first recall the exploratory runs, then test their conclusions on the confirmatory
 runs against the criteria protocol v1 fixed in advance (Table~\ref{tab:criteria}). We then ask why
 matching the candidates changes the ranking, whether the setting that stands for a cluster count matters,
 what chooseR's own code does with the same partitions, where the choice is ambiguous, and what holds on
@@ -12,10 +12,10 @@ value from the exploratory seeds 0 to 2 follows in parentheses.
 \subsection{The exploratory runs}
 Under the authors' own protocol, on their released inputs, MICA reaches the published ARI within 0.05 on nine of ten datasets (Table~\ref{tab:repro}), the exception being Kolodziejczyk at 0.727, like the main run in the authors' notebook,
 against a published 1.000. With labels fixing the setting, the nine small datasets average 0.809 for MICA
-against 0.614 for PCA plus Leiden. In Assignment 3, at seeds 0 to 2 with 25 subsamples, the stability rule
-with a shared cap of 20 clusters reversed the ranking under the plain maximum, with Leiden ahead 0.635 to
-0.473. Offering both methods the same counts removed the reversal, and MICA then led under both readings,
-0.662 to 0.543 and 0.473 to 0.452. We had introduced that matched design after seeing the first results.
+against 0.614 for PCA plus Leiden. In the exploratory runs, at seeds 0 to 2 with 25 subsamples, the stability rule
+with a shared cap of 20 clusters reversed the ranking under the plain maximum, with Leiden ahead \V{A3.C5.leiden} to
+\V{A3.C5.mica}. Offering both methods the same counts removed the reversal, and MICA then led under both readings,
+\V{A3.F.mica} to \V{A3.F.leiden} and \V{A3.M.mica} to \V{A3.M.leiden}. We had introduced that matched design after seeing the first results.
 Rerun under protocol v1, seeds 0 to 2 reproduce those outputs exactly on every column but time in all
 \V{R0.small.compared} result folders of the nine small datasets, with \V{R0.small.mismatch} mismatches
 (criterion R0), and Leiden's original-grid runs on PBMC14K at seeds 0 to 2 reproduce too. So the confirmatory runs differ from the
@@ -23,19 +23,19 @@ exploratory ones only in their seeds.
 
 \input{tables/a4_confirm}
 
-\subsection{At new seeds the matched lead holds under chooseR's reading only}\label{sec:confirm}
+\subsection{Which conclusions hold at new seeds}\label{sec:confirm}
 Table~\ref{tab:confirm} gives every dataset. Under the finest-stable reading MICA's mean is
-\V{S0.mid.F.mica} against Leiden's \V{S0.mid.F.leiden} (0.662 against 0.543), and MICA has the higher
+\V{S0.mid.F.mica} against Leiden's \V{S0.mid.F.leiden} (\V{A3.F.mica} against \V{A3.F.leiden}), and MICA has the higher
 per-seed mean at \V{C1.F.leads} new seeds, so this half of C1 holds. Under the plain maximum the two are level,
-\V{S0.mid.M.mica} against \V{S0.mid.M.leiden} (0.473 against 0.452), with MICA ahead at \V{C1.M.leads}
-new seeds, so this half fails. The protocol had flagged it as fragile, since its gap at seeds 0 to 2 was 0.021,
+\V{S0.mid.M.mica} against \V{S0.mid.M.leiden} (\V{A3.M.mica} against \V{A3.M.leiden}), with MICA ahead at \V{C1.M.leads}
+new seeds, so this half fails. The protocol had flagged it as fragile, since at seeds 0 to 2 the means were only \V{A3.M.mica} and \V{A3.M.leiden},
 and the new seeds place that gap within the variation of the subsample draw. On the original grids the
 reversal replicates (C5): under the plain maximum Leiden leads, \V{S0.original.M.leiden} against
 \V{S0.original.M.mica}, and under the finest reading the two are level, \V{S0.original.F.mica} against
 \V{S0.original.F.leiden}. The AMI gives the same order on matched candidates, \V{AMI.F.mica} against
 \V{AMI.F.leiden} under the finest reading. Under the plain maximum it leans a little further towards
 Leiden than the ARI does, \V{AMI.M.leiden} against \V{AMI.M.mica}, but the two stay level.
-Appendix~\ref{app:ami} gives the AMI of the Assignment 3 runs. PCA plus $k$-means scores lowest in every design, at
+Appendix~\ref{app:ami} gives the AMI of the exploratory runs. PCA plus $k$-means scores lowest in every design, at
 \V{S0.mid.F.kmeans} and \V{S0.mid.M.kmeans} on matched candidates.
 
 A mean over nine datasets can hide how a lead is spread, so we also looked at each dataset, an analysis
@@ -60,7 +60,7 @@ while offering only the counts the original grid reached gives \V{E3.midoldcount
 the original grid never produced, coarser and finer ones alike, lowers it to \V{E3.mid.M}. The plain
 maximum takes the coarse ones: Leiden's plain-maximum pick is a count its original grid never produced in
 \V{E3.plainmaxpicksnewcount} runs, and its median pick is 2 or 3 clusters on \V{E3.medianpick2or3}
-datasets. The original grid had kept Leiden away from those partitions, as Assignment~3 found at three seeds. MICA's $k$ reaches those counts in both designs, and its plain-maximum pick is the same in every confirmatory run, so its mean does not move from \V{S0.mid.M.mica}.
+datasets. The original grid had kept Leiden away from those partitions, as the exploratory runs found at three seeds. MICA's $k$ reaches those counts in both designs, and its plain-maximum pick is the same in every confirmatory run, so its mean does not move from \V{S0.mid.M.mica}.
 Under the finest reading, adding those counts lowers Leiden's mean from \V{E3.midoldcounts.F} to
 \V{E3.mid.F} by another route. A coarse partition that reproduces perfectly has a lower bound of 1.0, which
 becomes the threshold, and then only a finer setting that also reproduces perfectly clears it. On Klein, matching gives Leiden such a 2-cluster partition, and none of its finer settings scores 1.0, so it takes 2 clusters at every new seed, at an ARI of 0.501 (Table~\ref{tab:confirm}), where its original grid gave 4 clusters at 0.973 at five new seeds and 5 clusters at 0.885 or 0.888 at the other two. Klein accounts for most of the fall, and
@@ -119,34 +119,35 @@ original grids Leiden still leads, \V{S1.original.M.leiden} against \V{S1.origin
 
 \begin{figure*}[t]
 \centering
-\includegraphics[width=\textwidth]{figures/a3_stability_curve.pdf}
-\caption{Reproducibility and accuracy against the number of clusters, for MICA and Leiden on three
-datasets, from the Assignment 3 runs on the original grids. Solid lines are the stability score the rule
-maximises, dashed lines the ARI against the reference labels, and the dotted vertical line marks the true
-number of types. Where the solid line is flat, the rule has no basis for preferring one setting over
-another and its tie-break decides instead.}
+\includegraphics[width=\textwidth]{figures/a4_stability_curve.pdf}
+\caption{Stability and accuracy against the number of clusters, for MICA and Leiden on three datasets,
+from the confirmatory runs on matched candidates (medians over seeds 3 to 9, 25 subsamples). Solid lines
+are the stability score the rule maximises and need no labels. Dashed lines are the ARI against the
+reference labels. Triangles mark the counts the two readings picked, as a median over the seeds, and the
+dotted line the true number of types. Where the solid line is flat, the rule has no basis for preferring
+one setting over another, and its tie-break decides instead.}
 \label{fig:curve}
 \end{figure*}
 
 \subsection{Where the choice is ambiguous}\label{sec:ambiguous}
 Figure~\ref{fig:curve} shows the three shapes a stability curve takes. On Buettner MICA's stability falls
-as clusters are added and the rule finds a clear maximum near the truth. On Pollen it stays near its
-maximum across the whole range, leaving the threshold nothing to act on. On Zeisel it has a clear maximum
+as clusters are added and the rule finds a clear maximum near the truth. On Pollen it stays at its
+maximum across most of the range, leaving the threshold nothing to act on. On Zeisel it has a clear maximum
 in the wrong place. The flat top is mostly MICA's and sits in the smallest datasets (C3). On the five
 datasets of at most 317 cells, \V{C3.five_smallest.mica.share} of MICA's settings score within 0.01 of its
 best, against \V{C3.four_larger.mica.share} on the four larger ones and \V{C3.five_smallest.leiden.share}
 for Leiden. When scores tie, the reading decides, and it moves MICA more (C2): the finest and plain-maximum
 picks differ by \V{C2.mica} per dataset for MICA, \V{C2.leiden} for Leiden and \V{C2.kmeans} for $k$-means
-(0.197 against 0.118 at seeds 0 to 2). A partition that reproduces perfectly need not be the right one, as
+(\V{A3.C2.mica} against \V{A3.C2.leiden} at seeds 0 to 2). A partition that reproduces perfectly need not be the right one, as
 Ben-David, von Luxburg and P\'al showed for stability in general \cite{BenDavid2006Sober}, and von
 Luxburg notes that stability becomes trivial when the perturbation is too small to change the clustering
-\cite{vonLuxburg2010Stability}. On a few hundred cells, removing a fifth may be too small a change, which the size test planned in Section~\ref{sec:conclusion} will check.
+\cite{vonLuxburg2010Stability}. On a few hundred cells, removing a fifth may be too small a change, which a test on smaller pools drawn from larger datasets could settle (Section~\ref{sec:conclusion}).
 
 \begin{figure}[t]
 \centering
 \includegraphics[width=\columnwidth]{figures/a4_seed_means.pdf}
 \caption{Mean ARI over the nine small datasets at each seed, matched and original candidates, both readings,
-original protocol (S0). Seeds 0 to 2 (shaded) are the exploratory runs of Assignment 3, rerun under protocol
+original protocol (S0). Seeds 0 to 2 (shaded) are the exploratory runs, rerun under protocol
 v1. A ranking read from one seed can differ from the ranking over ten.}
 \label{fig:seeds}
 \end{figure}
@@ -192,7 +193,7 @@ grid gives 4 clusters under every scorer and at every seed, and that of $k$-mean
 Table~\ref{tab:pbmc} but one.
 So on the original grids MICA leads Leiden on PBMC14K under every scorer and at every seed, the reverse of the plain-maximum result on the small datasets. Under our scorer the cause is the same, with the roles swapped. MICA's own grid stops at a resolution of 4.0 and gives no fewer than 5 clusters at any seed we ran, while Leiden's reaches 4. Matching adds MICA's 4-cluster partitions, and the plain maximum takes one at four of the five seeds, which levels the two.
 
-\subsection{Secondary rules, from Assignment 3}\label{sec:transfer}
+\subsection{Secondary rules, at the exploratory seeds}\label{sec:transfer}
 These ran at seeds 0 to 2 or at one seed and were not repeated (Appendices~\ref{app:rulesall},
 \ref{app:secondary} and \ref{app:transfer}). MICA's best mean there, 0.727, came from its
 shipped default of four clusters, which is what tuning $k$ on the other datasets' labels picks in 26 of 27

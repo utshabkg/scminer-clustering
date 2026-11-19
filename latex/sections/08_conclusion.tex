@@ -1,40 +1,38 @@
-\section{Conclusion and Remaining Work}\label{sec:conclusion}
+\section{Conclusion}\label{sec:conclusion}
 When one label-free rule chooses the setting for every method, the ranking it produces depends on more
 than the methods. On the scMINER benchmark the candidates offered to each method decided the
-plain-maximum ranking and reversed it on the nine small datasets' original grids, and the reading of the
-scores and the number of subsamples each moved it further, while the bootstrap interval moved individual
-choices. The effects of the candidates and of the reading held at seven new seeds against criteria fixed in advance. The effects of the number of subsamples and of the interval were first measured in these runs, and the protocol gave them no verdict. chooseR's own code has only the finest-stable reading, so it could test only the interval. Between the methods, MICA's lead under
-chooseR's reading on matched candidates held at every seed, under our scorer and under chooseR's code with
-either declared repair, but the datasets split about evenly and with 25 subsamples the mean lead rests on
-one of them. PCA plus $k$-means, the textbook baseline, scored lowest in every design on the nine small datasets, and with the menu and the clustering step held fixed MICA led it by \V{E2.mid.F.micaminuskmeans} under chooseR's reading. On PBMC14K, MICA and Leiden tie on matched candidates under the plain maximum at four of five seeds, but the tie depends on which setting stands for each count, and on the original grids MICA leads at every seed. A comparison of clustering methods under label-free
-selection should therefore match the candidate counts and report the setting behind each, check that the scores are not flat at the top, and check that the ranking holds under both readings, across draws, across implementations of the rule and without each dataset.
+plain-maximum ranking and reversed it on the nine small datasets, and the reading of the scores and the
+number of subsamples each moved it further, while the bootstrap interval moved individual choices. The
+effects of the candidates and of the reading held at seven new seeds against criteria fixed in advance.
+Between the methods, MICA's lead under chooseR's reading on matched candidates held at every seed, but the
+datasets split about evenly and with 25 subsamples the mean lead rests on one of them. PCA plus $k$-means,
+the textbook baseline, scored lowest in every design on the nine small datasets. On PBMC14K, MICA and
+Leiden tie on matched candidates under the plain maximum at \V{C4.ties} seeds, but the tie depends on which
+setting stands for each count. On 2.3 million cells both PCA pipelines run on every cell, while MICA has
+to be approximated from a sample.
 
-\subsection*{Plan through November 30}
-\textbf{The large-scale dataset.} The course requires one of at least two million observations. We will use
-the Allen whole mouse brain atlas, 2.3 million cells \cite{yao2023allen}, and report its dimensions after
-preprocessing. Label-free selection by subsampling is out of reach for MICA at that size. Our Assignment 2
-pilot of MICA as shipped took 7.1 hours and 140 GB on 100,000 of these cells, which scales to about 6 to 8
-days and 3.2 TB for the whole atlas, against the 754 GB on our machine. We will therefore run PCA with
-$k$-means and with Leiden on all cells, and MICA on a sample with the remaining cells assigned to its
-clusters, and apply the stability rule to subsamples of a size all three methods can run.
+The answer to our question is therefore practical. A comparison of clustering methods under label-free
+selection should report the cluster counts each method can reach and match them, report the setting
+behind each count, and report the count each method chose. A user facing unlabeled data can check whether
+the scores are flat, whether the two readings agree, whether the pick sits at the edge of the range, and
+whether the choice survives another draw and another implementation of the rule. Whoever builds a
+benchmark should also check, with the labels, that the ranking holds under both readings, across draws,
+across implementations and without each dataset. Where a check fails, the comparison shows at most a lead
+under that rule on those datasets.
 
-\textbf{The size test.} Drawing pools of 150 and 300 cells from Zeisel and from PBMC14K and rerunning the
-matched rule tests whether MICA's flat top comes from small samples or from the datasets themselves.
+Three things remain open. Drawing pools of 150 and 300 cells from Zeisel and PBMC14K would test whether
+MICA's flat scores come from small samples or from the datasets. Rules of another family, such as
+significance tests, may rank the methods differently. And the stability rule itself could be run on the
+Allen atlas at subsample sizes all three methods can afford.
 
-\textbf{Still set aside:} the significance rule, the runs on 2,000 variable genes, the label-free runs on the
-Allen subset, annotation with a language model, the hub correction and GPU work.
+\section*{Author contributions}
+Utshab Kumar Ghosh designed and ran the experiments, wrote the code, and wrote the methods, design,
+results and discussion. Laraib Khan wrote the introduction and related work and checked that the discussion
+follows from the results. Rhea Eckman checked every number against the saved results and kept the
+provenance and seed records.
 
-\section*{Completion plan}
-\textbf{Utshab} wrote and ran protocol v1 and the chooseR check, wrote the methods, design, results and
-discussion, adapted the introduction and related work to the new framing, and runs the large-scale
-experiment and the size test for November 30.
-
-\textbf{Laraib} rewrote the introduction and related work, which this draft builds on, and checks that the
-discussion follows from the results.
-
-\textbf{Rhea} checks every number in the text against the exported results, keeps the schedule and risk
-list current, and assembles the slides for December.
-
-\textbf{Links.} The manuscript source is in the Overleaf project at \overleaflink. The code, the saved
-results, the tagged protocol and the scripts and notebook that rebuild every table and figure are at
-\url{https://github.com/utshabkg/scminer-clustering}.
+\section*{Code and data}
+The code, the saved results of every run, the tagged protocol and the scripts that rebuild every table and
+figure are at \url{https://github.com/utshabkg/scminer-clustering} (Appendix~\ref{app:repro}). The ten
+benchmark inputs are the scMINER authors' release, \url{https://doi.org/10.5281/zenodo.15040179}, and the
+Allen atlas is public \cite{yao2023allen}.

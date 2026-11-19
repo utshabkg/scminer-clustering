@@ -11,22 +11,20 @@
 \usepackage{balance}
 \usepackage[hidelinks]{hyperref}
 
-% Protocol v1 numbers, generated from results/v1 by scripts/a4_protocol_v1.py --tables 1.
+% Protocol v1 numbers, generated from results/v1 by scripts/a4_protocol_v1.py --tables.
+% Allen atlas numbers, generated from results/large_scale by scripts/large_scale/make_tables.py.
 % \V{key} prints one value. An unknown key prints ??key in bold and warns, so nothing goes stale silently.
 \makeatletter
 \newcommand{\V}[1]{\ifcsname v@#1\endcsname\csname v@#1\endcsname\else\textbf{??\detokenize{#1}}\PackageWarning{numbers}{undefined value #1}\fi}
 \makeatother
 \input{numbers_a4}
-
-% Shareable Overleaf link
-\newcommand{\overleaflink}{%
-  \href{https://www.overleaf.com/project/6aaf2340c882a49ae981bb56/share\#7eee00f5a11647638baeeafadcc68fa244fd8d02dcf53a42}{\nolinkurl{overleaf.com/project/6aaf2340c882a49ae981bb56}}}
+\IfFileExists{numbers_large.tex}{\input{numbers_large}}{}
 
 \begin{document}
 
-\title{When Clustering Methods Must Choose for Themselves: Label-Free Selection and Single-Cell Clustering Reliability\\
-{\footnotesize{Project Assignment 4 for the Clustering Algorithms course at Missouri University of Science and Technology}}
-}
+\title{When Clustering Methods Must Choose for Themselves: Label-Free Selection and Single-Cell Clustering
+Reliability\thanks{Course project for Clustering Algorithms, Missouri University of Science and Technology,
+Fall 2026.}}
 
 \author{
   \IEEEauthorblockN{
@@ -46,7 +44,6 @@
 \maketitle
 
 \input{sections/00_abstract}
-\input{sections/01_changes}
 \input{sections/02_introduction}
 \input{sections/03_related}
 \input{sections/04_method}

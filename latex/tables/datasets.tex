@@ -1,0 +1,24 @@
+% Written by hand. The small datasets' sizes are docs/dataset_facts.csv (scripts/setup/dataset_facts.py),
+% the Allen atlas's are \V{} values from numbers_large.tex (scripts/large_scale/make_tables.py).
+\begin{table}[t]
+\centering
+\caption{The datasets, with their dimensions after preprocessing, and which of the three kinds of data
+each one represents. Genes are the features MICA uses. The PCA pipelines use 2,000 of them, reduced to 50
+principal components. The other five benchmark datasets have 124 to 317 cells
+(Table~\ref{tab:data}).}
+\label{tab:datasets}
+\footnotesize
+\setlength{\tabcolsep}{3pt}
+\begin{tabular}{>{\raggedright\arraybackslash}p{1.65cm}rrr>{\raggedright\arraybackslash}p{2.35cm}}
+\toprule
+Dataset & Cells & Genes & Types & Kind of data \\
+\midrule
+PBMC14K & 13,605 & 8,846 & 7 & ordinary ($\geq$5,000 cells) \\
+Zeisel & 2,903 & 14,890 & 7 & high-dimensional \\
+Klein & 2,717 & 24,175 & 4 & high-dimensional \\
+Kolodziejczyk & 704 & 13,698 & 3 & high-dimensional \\
+Usoskin & 622 & 16,383 & 4 & high-dimensional \\
+Allen atlas & \V{large.n_cells} & \V{large.n_genes} & 34 & large-scale ($\geq$2 million cells) \\
+\bottomrule
+\end{tabular}
+\end{table}

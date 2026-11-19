@@ -50,7 +50,7 @@ tie-break.
 
 \textbf{Two implementations of the interval.} chooseR's own code draws $B = 100$ subsamples and
 computes the interval with a BCa bootstrap of 25,000 replicates over the per-cluster average
-silhouettes, so it resamples clusters. Our implementation, used in Assignment 3, drew $B = 25$ and
+silhouettes, so it resamples clusters. Our implementation, used in the exploratory runs, drew $B = 25$ and
 resampled cells within each cluster, taking a percentile interval from 2,000 draws. On PBMC14K it also
 kept the co-clustering on a random 3,000 of the 13,605 cells. The score itself is the same statistic in
 both. The intervals are not. Resampling clusters gives a wide interval when there are only two or three

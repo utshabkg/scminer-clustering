@@ -1,18 +1,24 @@
 \begin{abstract}
-Benchmarks for single-cell clustering usually fix each method's setting with the reference labels, so
-their rankings assume information a user does not have. We ask how a label-free rule changes such a
-ranking, and when the result can be trusted. The case is scMINER's mutual information clustering, MICA,
-against principal components followed by Leiden or by $k$-means on the ten scMINER benchmark datasets,
-with settings chosen by subsampling stability in the style of chooseR. After exploratory runs at three
-seeds, we fixed a protocol in advance and ran seven new seeds on the nine small datasets and seeds 0 to 4 on PBMC14K, scoring every run with our implementation and with chooseR's own code. The candidates decide the
-plain-maximum ranking. On each method's own grid Leiden leads MICA on the nine small datasets at every
-seed, \V{S0.original.M.leiden} against \V{S0.original.M.mica} in mean adjusted Rand index, and offered
-the same cluster counts the two are level. The reading of the scores and the number of subsamples move
-the ranking as well, and the bootstrap interval moves individual choices. Under chooseR's reading MICA
-leads on matched candidates at every seed, but dataset by dataset the methods split about evenly, and
-with 25 subsamples the mean lead rests on one dataset. When a coarse setting reproduces perfectly,
-chooseR's code as written cannot form its interval and makes no choice, which happens in most MICA runs.
-On PBMC14K the two tie on matched candidates under the plain maximum at four of five seeds, but the tie depends on which setting stands for each count, and on the original grids MICA leads. We turn these findings into six checks, none of which needs labels, that flag a comparison under label-free selection whose ranking should not be trusted.
+Benchmarks of single-cell clustering usually fix each method's setting with the reference labels, so
+their rankings assume information a user does not have. We ask how the candidate settings and the
+label-free rule that chooses among them affect the reliability of such a comparison. The case is
+scMINER's mutual information clustering, MICA, against principal components followed by Leiden or by
+$k$-means on the ten scMINER benchmark datasets, with settings chosen by subsampling stability in the
+style of chooseR. After exploratory runs at three seeds, we fixed a protocol in advance and ran seven new
+seeds on the nine small datasets and five on PBMC14K, scoring every run with our implementation and with
+chooseR's own code. The candidates decide the plain-maximum ranking. On each method's own grid Leiden
+leads MICA at every new seed, \V{S0.original.M.leiden} against \V{S0.original.M.mica} in mean adjusted
+Rand index, and offered the same cluster counts the two are level. The reading of the scores and the
+number of subsamples move the ranking as well, and the bootstrap interval moves individual choices: when
+a coarse setting reproduces perfectly, chooseR's code cannot form its interval and makes no choice, which
+happens in most MICA runs. MICA's lead under chooseR's reading holds at every seed but rests on one dataset.
+We separate the checks these findings suggest into six that run on unlabeled data and ask whether a
+choice is determined by the data, and five that need labels and judge a benchmark's ranking. On Pollen,
+flat stability scores and disagreeing readings flag MICA's choice without labels, and the labels confirm
+it: the two picks score \V{L.pollen.mica.ariF} and \V{L.pollen.mica.ariM}. On all \V{large.n_cells} cells
+of the Allen mouse brain atlas, both baselines ran in under \V{large.full.max_hours} hours and
+\V{large.full.max_gb}~GB, while MICA, which would need about 3.2~TB, ran on a 100,000-cell sample with
+the other cells assigned to its clusters.
 \end{abstract}
 
 \begin{IEEEkeywords}

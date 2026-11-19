@@ -8,10 +8,12 @@ released, with all genes retained for every method (Table~\ref{tab:data}). They 
 cells and 3 to 11 cell types. PBMC14K's labels are cell types fixed by antibody sorting before
 sequencing \cite{zheng2017massively}. Several small datasets are labelled by experimental condition,
 while Zeisel's labels came from the original authors clustering the same data \cite{zeisel2015cell},
-which flatters any method resembling theirs. For the course's three data categories, PBMC14K is the
-ordinary dataset (13,605 cells by 8,846 genes) and Zeisel (2,903 by 14,890) and Klein (2,717 by 24,175)
-are high-dimensional ones. The large-scale dataset, the 2.3 million cells of the Allen whole mouse brain
-atlas \cite{yao2023allen}, is planned for the November 30 draft (Section~\ref{sec:conclusion}).
+which flatters any method resembling theirs. For scale we add the Allen whole mouse brain atlas
+\cite{yao2023allen}, whose labels come from the atlas team's own clustering, so they too are a reference
+rather than ground truth. Table~\ref{tab:datasets} gives the dimensions after preprocessing of the
+datasets that represent ordinary, high-dimensional and large-scale data.
+
+\input{tables/datasets}
 
 \textbf{Candidate designs.} In the \emph{original} design, as first specified, each method chooses among
 its own grid's settings whose full-data partition has 2 to 20 clusters. That caps the range without
@@ -31,11 +33,11 @@ three seeds (0 to 2). The matched design was introduced after we had seen those 
 at seeds 0 to 2. Each design reached our repository in the same commit as its first results, the original on October 22 and the matched one on October 28. So the history shows that the matched design came later, but not that either design was fixed before its results. Table~\ref{tab:provenance} in
 Appendix~\ref{app:provenance} gives this record for every design in the paper. Everything after that follows protocol v1
 (\texttt{docs/protocol\_matched\_v1.md}). It fixes the methods, designs, scorers, seeds and the criteria
-for confirming each Assignment~3 finding, and it was tagged \texttt{matched-protocol-v1}
+for confirming each exploratory finding, and it was tagged \texttt{matched-protocol-v1}
 (commit \texttt{620f940}, November 12) before any run at a new seed. Before the tag we tested the code on Yan at seed 0, Kolodziejczyk at seed 1 and PBMC14K at seed 0 with 3 subsamples, and ran chooseR's code on the Yan partitions, as the protocol records. Each run refuses to start unless
 the code it executes is the tagged code, and records that check. Seeds 3 to 9 on the nine small datasets
 are the confirmatory runs. Seeds 0 to 2 were rerun under the same protocol, so that every seed has every
-method and scorer. On PBMC14K, seeds 0 to 2 reuse the Assignment 3 subsamples, and Leiden's original-grid runs there reproduce Assignment 3, so only seeds 3 and 4 are new for every method. MICA's node2vec and Louvain take no seed, so its partitions are new draws at all five.
+method and scorer. On PBMC14K, seeds 0 to 2 reuse the exploratory runs' subsamples, and Leiden's original-grid runs there reproduce them, so only seeds 3 and 4 are new for every method. MICA's node2vec and Louvain take no seed, so its partitions are new draws at all five.
 
 \textbf{Scorers.} Every run draws 100 subsamples, and the first 25 are exactly the 25 the original
 protocol drew at that seed. Every subsample partition is saved and scored four ways (Section~\ref{sec:method}):
@@ -65,3 +67,20 @@ second measure. We also report the number of clusters chosen, because a rule can
 ARI with a badly wrong count. Cost is wall-clock time on one workstation with 120 cores and 754 GB,
 every job on 8 threads and no GPU. Selection counts the candidate partitions, the subsample reruns and
 the scoring, and is reported apart from the cost of clustering once.
+
+\textbf{Large scale.} On the Allen atlas we keep every cell the atlas annotates as 10x v3, which the
+atlas authors had already filtered, and the genes detected in at least 3 cells. Counts are normalised per
+cell to counts per million and $\log_2(x+1)$, as for the other datasets. The PCA pipelines use the 2,000
+genes Scanpy's \texttt{seurat\_v3} method selects, computed on all cells by streaming the 13 region
+files, and 50 principal components. Each is set to the atlas's 34 classes, as in the label-fixed
+reproduction: $k$-means with $k = 34$ and 10 restarts, at seeds 0, 1 and 2, and Leiden on the 15 nearest
+neighbour graph at the resolution, from a few points of the published grid, whose cluster count is
+closest to 34. We also report Leiden at its default resolution of 1.0, which uses no labels. The
+selection rule itself is not run at this size. MICA cannot run on every cell. On a uniform random
+sample of 100,000 cells (seed 0) it took 7.1 hours and 140~GB, which scales to about 6 to 8 days and
+3.2~TB for the whole atlas, against the 754~GB of our machine. We therefore use that sample's MICA run,
+with the resolution picked by the published rule, and give every other cell the majority cluster of its
+15 nearest sample cells in the full-data principal components. To check that step without labels, we
+assign each tenth of the sample from the other nine tenths and count how often a cell gets back its own
+cluster. The tables keep three kinds of result apart: full-data results, results on the sample, and
+results on the sample with the other cells assigned. Time and peak memory are measured for every stage.

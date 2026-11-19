@@ -1,0 +1,33 @@
+% Written by hand. Every number is a \V{} value from numbers_a4.tex (scripts/a4_protocol_v1.py).
+\begin{table*}[t]
+\centering
+\caption{Checks before trusting a comparison of clustering methods under a label-free selection rule. The
+first six need no labels, so a user can run them on new data. They ask whether the rule's choice is
+determined by the data. The last five need reference labels, so they judge a benchmark: whether its
+ranking of methods holds up. Our runs are the confirmatory runs on the nine small datasets (matched
+candidates, 25 subsamples, seeds 3 to 9) unless stated.}
+\label{tab:checks}
+\footnotesize
+\setlength{\tabcolsep}{3pt}
+\renewcommand{\arraystretch}{1.1}
+\begin{tabular}{>{\raggedright\arraybackslash}p{2.5cm}>{\raggedright\arraybackslash}p{3.1cm}>{\raggedright\arraybackslash}p{3.0cm}>{\raggedright\arraybackslash}p{3.7cm}>{\raggedright\arraybackslash}p{5.1cm}}
+\toprule
+Check & Needs & Detects & How to read it & In our runs \\
+\midrule
+\multicolumn{5}{l}{\textit{On unlabeled data: is the choice determined by the data?}} \\
+1. Same candidate counts & The cluster counts each method's settings reach on the full data & A menu that favours one method & If the ranges differ, match them, or the ranking partly reflects the menu & Leiden's own grid skips counts the plain maximum prefers. Matching moved its mean from \V{S0.original.M.leiden} to \V{S0.mid.M.leiden} \\
+2. Scores not flat & The stability score of every setting & Settings the rule cannot tell apart & If most settings tie at the top, the tie-break chooses, and the count is unresolved & Share within 0.01 of the best: MICA \V{C3.five_smallest.mica.share} on the five smallest datasets, \V{C3.four_larger.mica.share} on the four larger, Leiden \V{C3.five_smallest.leiden.share} \\
+3. Readings agree & The count each reading picks & The tie-break setting the count & Picks several clusters apart mean the count is unresolved & Picks \V{L.gap} or more clusters apart in \V{L.disagree.n} of \V{L.runs} runs, \V{L.disagree.mica} of them MICA's \\
+4. Pick inside the range & The chosen count and the smallest count offered & A coarse partition that reproduces perfectly pinning the rule & A pick at the floor says nothing finer was stable, not that the floor is right & \V{L.floor.F.n} of \V{L.runs} finest-stable picks and \V{L.floor.M.n} plain-maximum picks sit at the floor \\
+5. Count stable across draws and settings & The chosen count at several seeds, and with another setting standing for each count & A choice that depends on the draw or on the menu & Report the range of counts, not one count & Leiden on Pollen, plain maximum: \V{L.pollen.leiden.kM} clusters across seeds. PBMC14K: Leiden's pick moves from \V{pbmc.S0.mid.M.leiden.k} to \V{pbmc.S0.low.M.leiden.k} clusters when its lowest setting stands for each count \\
+6. Rule defined and stable across implementations & Whether the interval can be formed, and the pick under other subsample numbers or bootstraps & An undefined rule, or one that its details decide & A rule that cannot choose needs a repair, and the repair is a new rule & chooseR's code chooses nothing in \V{S3.nochoice.mica} MICA runs (every seed and dataset). Our scorer and chooseR's code pick the same count in \V{E4.mid.mica.same} MICA and \V{E4.mid.leiden.same} Leiden runs \\
+\midrule
+\multicolumn{5}{l}{\textit{With reference labels: does a benchmark's ranking hold?}} \\
+7. Both readings & Mean ARI per method under each reading & A ranking made by the tie-break & A ranking that flips between readings is a property of the rule & MICA ahead under chooseR's reading, \V{S0.mid.F.mica} against \V{S0.mid.F.leiden}. Level under the plain maximum, \V{S0.mid.M.mica} against \V{S0.mid.M.leiden} \\
+8. Across draws & Mean ARI per method at each seed & A ranking made by one draw & Count the seeds each method leads at & MICA ahead at \V{C1.F.leads} seeds under chooseR's reading, \V{C1.M.leads} under the plain maximum \\
+9. Across implementations & Mean ARI per method under each scorer & A ranking made by the rule's details & The ranking should keep its direction & Plain maximum, matched: level with 25 subsamples, MICA ahead with 100, \V{S1.mid.M.mica} against \V{S1.mid.M.leiden} \\
+10. Across settings per count & Mean ARI per method with each setting standing for a count & A ranking made by the menu & The ranking should keep its direction & PBMC14K: a tie at \V{C4.ties} seeds, but Leiden's median moves from \V{pbmc.S0.mid.M.leiden} to \V{pbmc.S0.low.M.leiden} with its lowest setting \\
+11. Without each dataset & Mean ARI per method leaving out one dataset at a time & A mean carried by one dataset & The sign of the gap should survive & MICA's lead under chooseR's reading becomes \V{E5.S0.mid.F.loo} without Buettner \\
+\bottomrule
+\end{tabular}
+\end{table*}

@@ -1,0 +1,25 @@
+% Written by hand. Every number is a \V{} value from numbers_a4.tex (scripts/a4_protocol_v1.py).
+\begin{table}[t]
+\centering
+\caption{What the experiments support. Confirmed means the effect met its criterion at the seven new
+seeds under the protocol fixed in advance (Table~\ref{tab:criteria}). Exploratory means it was measured on
+the same runs but given no criterion in advance.}
+\label{tab:effects}
+\footnotesize
+\setlength{\tabcolsep}{3pt}
+\begin{tabular}{>{\raggedright\arraybackslash}p{2.75cm}>{\raggedright\arraybackslash}p{3.15cm}>{\raggedright\arraybackslash}p{1.75cm}}
+\toprule
+Effect & Evidence (mean ARI) & Status \\
+\midrule
+The candidates decide the plain-maximum ranking & Own grids: Leiden \V{S0.original.M.leiden}, MICA \V{S0.original.M.mica}. Matched: \V{S0.mid.M.leiden} against \V{S0.mid.M.mica} & Confirmed (C5) \\
+The reading moves MICA most & Mean change between readings: MICA \V{C2.mica}, Leiden \V{C2.leiden}, $k$-means \V{C2.kmeans} & Confirmed (C2) \\
+Flat scores sit with MICA on the smallest datasets & Share tied at the top: \V{C3.five_smallest.mica.share} against \V{C3.four_larger.mica.share} & Confirmed (C3) \\
+MICA ahead on matched candidates, chooseR's reading & \V{S0.mid.F.mica} against \V{S0.mid.F.leiden}, at \V{C1.F.leads} seeds, but \V{E5.S0.mid.F.loo} without Buettner & Mean only (C1) \\
+MICA ahead on matched candidates, plain maximum & \V{S0.mid.M.mica} against \V{S0.mid.M.leiden}, ahead at \V{C1.M.leads} seeds & Not supported (C1) \\
+Our scorer computes chooseR's co-clustering & \V{FC.identical} of \V{FC.matrices} matrices identical & Confirmed (FC) \\
+The setting behind each count matters & Leiden, plain maximum: \V{variants.M.leiden.min} to \V{variants.M.leiden.max} across variants & Exploratory \\
+The number of subsamples matters & Plain maximum, matched: level at 25, \V{S1.mid.M.mica} against \V{S1.mid.M.leiden} at 100 & Exploratory \\
+The interval decides choices & chooseR's code chooses nothing in \V{S3.nochoice.mica} MICA runs & Exploratory \\
+\bottomrule
+\end{tabular}
+\end{table}

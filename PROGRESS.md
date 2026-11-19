@@ -57,6 +57,42 @@ Next three things (Nov 19): the Allen run on all cells (U-46), the checks split 
 - The plan, with its timeline, is in WORKPLAN (U-46 to U-49, L-8, R-6, R-7, R-9). The teammate
   message is in `scratchpad/teammate_message_nov19.md`.
 
+**The checks, split (U-47), Nov 19 morning.**
+- `scripts/a4_protocol_v1.py` now computes the label-free warning signs run by run
+  (`label_free_signals`): settings tied at the top, the tie span, each reading's count, floor picks, and
+  the ARI they foretold. Over the 189 confirmatory runs on the small datasets (matched, S0, seeds 3 to 9):
+  - the readings pick 5 or more clusters apart in 29 runs (23 of them MICA's), with a mean ARI gap of
+    0.471, against 0.088 in the other 160
+  - floor picks average 0.355 under chooseR's reading (49 runs), against 0.639 inside the range (140)
+  - MICA on Pollen: 72 percent of settings tied, a span of 15 counts, picks of 13 to 18 against 2,
+    ARI 0.906 against 0.087 (11 types)
+  These are the `L.*` values in `latex/numbers_a4.tex`. They match the planning explorer's numbers,
+  except interior picks: 140 runs at 0.639 here against its 139 at 0.637, because it dropped one run.
+- New Figure 1 (`latex/figures/a4_stability_curve.pdf`, `curve_figure`): Buettner, Pollen and Zeisel from
+  the confirmatory runs, with each reading's pick marked. The old figure came from the original grids at
+  seeds 0 to 2.
+- New tables, typed but with every number a macro: `tables/checks.tex` (checks 1 to 6 need no labels, 7 to
+  11 need labels, each with what it needs, detects, how to read it and what our runs showed) and
+  `tables/effects.tex` (confirmed against the protocol, exploratory, or not supported).
+- The exploratory values (0.662 vs 0.543 and so on) now come from `results/a3_matched_numbers.json` through
+  `exploratory_values()`, for both the criteria table (byte-identical) and the text. The "gap 0.021" was a
+  difference of rounded means (the means are 0.4727 and 0.4523, so 0.020), so the text now gives the two
+  means instead.
+
+**Paper turned into a research paper (U-48, first pass).** Discussion, abstract, introduction and
+conclusion rewritten around the question of how candidates and rules affect reliability. Changes
+section dropped (`01_changes.tex` removed). Course subtitle moved to a footnote. "Assignment N" wording
+gone from every section and table. Anomalies appendix dropped (nothing cited it). New datasets table
+(`tables/datasets.tex`) with the three kinds of data, and a large-scale paragraph in the design. Builds
+with the Allen numbers still undefined until the run lands.
+
+**Allen pipeline (U-46).** `scripts/large_scale/allen.py` (stages manifest to collect), `run.sh`,
+`validate_100k.py`, `make_tables.py`, `tests/test_large_scale.py` (4 tests against scanpy and
+`cluster.pca`, all pass).
+- CTXsp dry run (78,223 cells, 28,147 genes kept, 18 classes): every stage in about 3 minutes. In the
+  holdout, the nearest-neighbour vote returns the cell's own cluster 95 to 98 percent of the time.
+- The 100,000-cell validation started 09:47 in byobu `scm-large-val`.
+
 ---
 
 ## 2026-11-14, Utshab (title, and the repository made easy to read)

@@ -29,8 +29,9 @@ datasets and five seeds on PBMC14K. The numbers are in `latex/numbers_a4.tex`.
   tie changes with which setting stands for each cluster count.
 - PCA plus k-means scores lowest in every design on the nine small datasets.
 
-The paper turns this into six checks, none of which needs labels, for when such a ranking should not
-be trusted.
+The paper turns this into two kinds of checks. Six need no labels, so anyone can run them on new data:
+they ask whether a rule's choice is determined by the data. Five need labels: they ask whether a
+benchmark's ranking of methods holds up.
 
 ## Start here
 
