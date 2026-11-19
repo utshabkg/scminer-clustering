@@ -16,9 +16,9 @@ We separate the checks these findings suggest into six that run on unlabeled dat
 choice is determined by the data, and five that need labels and judge a benchmark's ranking. On Pollen,
 flat stability scores and disagreeing readings flag MICA's choice without labels, and the labels confirm
 it: the two picks score \V{L.pollen.mica.ariF} and \V{L.pollen.mica.ariM}. On all \V{large.n_cells} cells
-of the Allen mouse brain atlas, both baselines ran in under \V{large.full.max_hours} hours and
-\V{large.full.max_gb}~GB, while MICA, which would need about 3.2~TB, ran on a 100,000-cell sample with
-the other cells assigned to its clusters.
+of the Allen mouse brain atlas, both PCA pipelines ran in about \V{large.full.minutes_cold} minutes from the
+raw files, with no process above \V{large.max_process_gb}~GB, while MICA, which would need about
+\V{large.mica.extrap_tb}~TB, ran on a 100,000-cell sample with the other cells assigned to its clusters.
 \end{abstract}
 
 \begin{IEEEkeywords}

@@ -1,0 +1,9 @@
+{
+  "n_cells": 2341350,
+  "n_genes_raw": 32285,
+  "n_genes_kept": 30520,
+  "median_umi_per_cell": 14848.0,
+  "median_genes_per_cell": 4625.0,
+  "n_nonzero": 11749777109,
+  "share_zero": 0.8445601037239016
+}

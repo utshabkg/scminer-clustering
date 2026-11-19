@@ -1,0 +1,20 @@
+{
+  "mica": {
+    "resolution": 3.2,
+    "n_clusters": 33,
+    "hit_true_k": false,
+    "n_hits": 0,
+    "median_ari_of_hits": null
+  },
+  "knn_seconds": 59.7,
+  "vote_seconds": {
+    "mica": 19.5,
+    "mica_default": 19.4,
+    "kmeans": 19.6,
+    "leiden": 19.4
+  },
+  "n_reference": 100000,
+  "n_assigned": 2241350,
+  "k": 15,
+  "space": "full-data principal components"
+}

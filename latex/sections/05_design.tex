@@ -77,8 +77,9 @@ reproduction: $k$-means with $k = 34$ and 10 restarts, at seeds 0, 1 and 2, and 
 neighbour graph at the resolution, from a few points of the published grid, whose cluster count is
 closest to 34. We also report Leiden at its default resolution of 1.0, which uses no labels. The
 selection rule itself is not run at this size. MICA cannot run on every cell. On a uniform random
-sample of 100,000 cells (seed 0) it took 7.1 hours and 140~GB, which scales to about 6 to 8 days and
-3.2~TB for the whole atlas, against the 754~GB of our machine. We therefore use that sample's MICA run,
+sample of 100,000 cells (seed 0) it took \V{large.mica.hours} hours and \V{large.mica.peak_gb}~GB, which
+scales to about \V{large.mica.extrap_days} days and \V{large.mica.extrap_tb}~TB for the whole atlas
+(\texttt{docs/allen\_pilot.md}), against the 754~GB of our machine. We therefore use that sample's MICA run,
 with the resolution picked by the published rule, and give every other cell the majority cluster of its
 15 nearest sample cells in the full-data principal components. To check that step without labels, we
 assign each tenth of the sample from the other nine tenths and count how often a cell gets back its own

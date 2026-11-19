@@ -20,6 +20,7 @@ TABLES = REPO / "latex" / "tables"
 # MICA graph mode 25,727 s and 139.8 GB, the baselines' job 1,388 s and 26.6 GB with 2,000 genes.
 PILOT = {"mica_s": 25727, "mica_gb": 139.8, "baselines_s": 1388, "baselines_gb": 26.6,
          "mica_extrap_days": "6 to 8", "mica_extrap_tb": 3.2}
+STAGE_RECORDS = {}
 STAGES = ["manifest", "scan", "hvg", "normalize", "pca", "kmeans", "leiden", "assign", "collect"]
 
 
@@ -31,6 +32,7 @@ def stage_costs():
     for line in (OUT / "stages.jsonl").read_text().splitlines():
         d = json.loads(line)
         rec[d["stage"]] = d  # the last run of a stage wins
+    kept = pd.read_csv(OUT / "stage_costs.csv").set_index("stage") if (OUT / "stage_costs.csv").exists() else None
     rows = []
     for s in STAGES:
         if s not in rec:
@@ -45,7 +47,11 @@ def stage_costs():
             if peaks:
                 r["peak_tree_gb"] = float(peaks[-1])
                 r["wall_s_outer"] = int(walls[-1])
+        elif kept is not None and s in kept.index:  # a fresh clone has no logs: keep what they recorded
+            r["peak_tree_gb"] = kept.loc[s, "peak_tree_gb"]
+            r["wall_s_outer"] = kept.loc[s, "wall_s_outer"]
         rows.append(r)
+    STAGE_RECORDS.update(rec)
     df = pd.DataFrame(rows)
     if "peak_tree_gb" not in df:
         df["peak_tree_gb"] = float("nan")
@@ -67,7 +73,7 @@ def main():
     search = pd.read_csv(OUT / "leiden_search.csv")
     agree = pd.read_csv(OUT / "seed_agreement.csv")
     hold = pd.read_csv(OUT / "assignment_holdout.csv").groupby("partition")[["accuracy", "ari"]].mean()
-    kseconds = json.loads((REPO / "data" / "runs" / "large_scale" / "kmeans.done").read_text()).get("kmeans_seed0_s")
+    kseconds = STAGE_RECORDS["kmeans"]["kmeans_seed0_s"]
     prep = costs.loc[["scan", "hvg", "normalize", "pca"]]
     res = pick["picked_resolution"]
     leiden_s = float(search[(search.seed == 0) & ((search.resolution - res).abs() < 1e-9)].seconds.iloc[0])
@@ -109,8 +115,10 @@ def main():
              r"its 15 nearest sample cells in the full-data principal components, scored on every cell. Each method "
              r"is set to the 34 classes, except Leiden's default. Time is the clustering itself, after the shared "
              r"preprocessing (" + fmt_time(prep.wall_s.sum()) + r", at most " + f"{prep.peak_gb.max():.0f}"
-             + r"~GB). Sample times and memory are from the whole-job pilot runs, and the assignment rows add only "
-             r"the neighbour search and vote.}",
+             + r"~GB). Peak memory sums a stage's processes, an upper bound when forked workers share memory: no "
+             r"single process used more than " + f"{costs.peak_process_gb.max():.0f}" + r"~GB. Sample times and memory "
+             r"are from the whole-job pilot runs, where Leiden's time includes a sweep of 200 resolutions. The "
+             r"assignment rows add only the neighbour search and vote.}",
              r"\label{tab:large}", r"\footnotesize", r"\setlength{\tabcolsep}{4pt}",
              r"\begin{tabular}{llrrrrr}", r"\toprule",
              r"Method & Setting & Clusters & ARI & AMI & Time & Peak memory \\", r"\midrule"]
@@ -142,8 +150,15 @@ def main():
          "mica.hours": f"{PILOT['mica_s'] / 3600:.1f}", "mica.peak_gb": f"{PILOT['mica_gb']:.0f}",
          "mica.extrap_days": PILOT["mica_extrap_days"], "mica.extrap_tb": f"{PILOT['mica_extrap_tb']:.1f}",
          "assign.minutes": f"{assign['knn_seconds'] / 60:.0f}"}
+    # The full run read the raw files after the 100,000-cell check had just read them, so they came from the
+    # page cache. Reading them from disk is the first pass of that check, which reads every block of every file.
+    cold_read = \
+        pd.read_csv(RESULTS / "large_scale_sample100k" / "stages.csv").set_index("stage").loc["scan", "wall_s"]
     full_s = prep.wall_s.sum() + max(kseconds, graph_s + leiden_s)
-    v["full.max_hours"] = f"{full_s / 3600:.0f}" if full_s >= 3600 else f"{full_s / 3600:.1f}"
+    v["full.minutes"] = f"{full_s / 60:.0f}"
+    v["full.minutes_cold"] = f"{(full_s - costs.loc['scan', 'wall_s'] + cold_read) / 60:.0f}"
+    v["read.minutes_cold"] = f"{cold_read / 60:.0f}"
+    v["max_process_gb"] = f"{costs.peak_process_gb.max():.0f}"
     v["full.max_gb"] = f"{max(prep.peak_gb.max(), costs.loc['kmeans', 'peak_gb'], costs.loc['leiden', 'peak_gb']):.0f}"
     for key in ("kmeans", "leiden", "mica"):
         setting = {"kmeans": "k = 34", "leiden": "pilot resolution", "mica": "paper rule"}[key]
@@ -162,6 +177,12 @@ def main():
         if len(a):
             v[f"{short}.seed_ari_min"] = f"{a.ari.min():.3f}"
     v["kmeans.vs_sample"] = f"{km.ari_sample_cells:.3f}"
+    at = search[(search.resolution - res).abs() < 1e-9].n_clusters
+    v["leiden.k_seeds"] = f"{at.min()} to {at.max()}"
+    pilot_res = float(pilot.loc["leiden_pca", "resolution"])
+    v["leiden.pilot_res"] = f"{pilot_res:.2f}"
+    v["leiden.k_at_pilot_res"] = str(int(search[(search.seed == 0) & ((search.resolution - pilot_res).abs() < 1e-9)].n_clusters.iloc[0]))
+    v["unseen_pct"] = f"{100 - 100 * n_s / dims['n_cells']:.1f}"
     lines = [r"% Allen atlas numbers, written by scripts/large_scale/make_tables.py. Do not edit by hand."]
     lines += [f"\\expandafter\\def\\csname v@large.{k}\\endcsname{{{val}}}" for k, val in sorted(v.items())]
     (REPO / "latex" / "numbers_large.tex").write_text("\n".join(lines) + "\n")

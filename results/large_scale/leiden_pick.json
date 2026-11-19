@@ -1,0 +1,10 @@
+{
+  "resolution": 0.05,
+  "n_clusters": 31,
+  "hit_true_k": false,
+  "n_hits": 0,
+  "median_ari_of_hits": null,
+  "graph_seconds": 71.1,
+  "n_evaluated": 10,
+  "picked_resolution": 0.05
+}

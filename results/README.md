@@ -50,6 +50,13 @@ with one row per method and setting, and a `params.json` with the settings, seed
 | `summary_*` | Summary tables of these runs | `scripts/assignment2/summarize_*.py` |
 | `a2_report_numbers.json` | Every number the reproduction table and the Assignment 2 report quote | `scripts/assignment2/a2_report.py` |
 
+## The Allen atlas at full scale
+
+| Folder | What it holds | Made by |
+|---|---|---|
+| `large_scale/` | PCA with k-means and with Leiden on all 2,341,350 cells, MICA on the 100,000-cell sample and with the other cells assigned: scores (`metrics.csv`), time and memory per stage (`stage_costs.csv`), the Leiden resolution search, seed agreement and the holdout check of the assignment | `scripts/large_scale/allen.py`, `make_tables.py` |
+| `large_scale_sample100k/` | The same pipeline on the pilot's 100,000 cells, and `validation.json`, its comparison with the in-memory pilot | `scripts/large_scale/validate_100k.py` |
+
 ## The neighbour graph comparison
 
 | Folders | What they hold | Made by |

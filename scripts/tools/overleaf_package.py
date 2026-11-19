@@ -19,7 +19,7 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[2]
 LATEX = ROOT / "latex"
-KEEP_TOP = ["main.tex", "IEEEtran.cls", "references.bib", "numbers_a4.tex"]
+KEEP_TOP = ["main.tex", "IEEEtran.cls", "references.bib", "numbers_a4.tex", "numbers_large.tex"]
 KEEP_DIRS = ["sections", "tables", "figures"]
 SKIP_SUFFIX = {".aux", ".log", ".out", ".bbl", ".blg", ".synctex.gz", ".toc"}
 

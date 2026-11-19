@@ -43,6 +43,15 @@ with the tag `matched-protocol-v1`. Everything else is grouped below by job.
 | `run_rules_matched.sh` | Runs the matched-candidate version of each part, one part and seed per call |
 | `probe_grid_coverage.py`, `probe_mica_graph_coverage.py` | Record which cluster counts each method's settings reach, which fixed the matched candidates |
 
+## `large_scale/`: the Allen atlas on every cell
+
+| Script | What it does |
+|---|---|
+| `run.sh` | Runs one stage, or `all`, with its time and peak memory recorded. Start it in a byobu session |
+| `allen.py` | The stages: manifest, three passes over the raw files (gene filter, seurat_v3 genes, normalisation), PCA, k-means, Leiden, assignment of the cells outside MICA's sample, and scoring |
+| `validate_100k.py` | Checks the pipeline against the in-memory pilot on the same 100,000 cells |
+| `make_tables.py` | Writes the paper's Allen table and `latex/numbers_large.tex` |
+
 ## `setup/`: get the data and build the environments
 
 | Script | What it does |

@@ -28,6 +28,9 @@ datasets and five seeds on PBMC14K. The numbers are in `latex/numbers_a4.tex`.
 - **PBMC14K**, the one larger dataset, gives a tie on matched candidates at four of five seeds, but the
   tie changes with which setting stands for each cluster count.
 - PCA plus k-means scores lowest in every design on the nine small datasets.
+- **At 2.3 million cells** (the Allen mouse brain atlas) both PCA pipelines run on every cell in about 20
+  minutes. MICA would need about 3.2 TB of memory, so it runs on a 100,000-cell sample and the other
+  cells are assigned to its clusters. The paper keeps that approximation apart from the full-data results.
 
 The paper turns this into two kinds of checks. Six need no labels, so anyone can run them on new data:
 they ask whether a rule's choice is determined by the data. Five need labels: they ask whether a

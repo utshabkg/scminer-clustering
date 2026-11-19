@@ -1,0 +1,4 @@
+method,data,setting,selection,n_cells_clustered,n_cells_scored,n_clusters,ari,ami,nmi,ari_sample_cells,ami_sample_cells
+PCA + k-means,full data,k = 34,k set to the number of classes,100000,100000,34,0.5792535474118514,0.8203354884734883,0.8206567586955008,0.5792535474118514,0.8203354884734883
+PCA + Leiden,full data,resolution 0.17,"closest count to the classes, then ARI (paper rule)",100000,100000,35,0.6606245068268994,0.8512863330956508,0.8515657310375034,0.6606245068268994,0.8512863330956508
+PCA + Leiden,full data,resolution 1.00,"scanpy default, no labels",100000,100000,57,0.5048951432770415,0.8183940447982786,0.8189070305618329,0.5048951432770415,0.8183940447982786

@@ -90,8 +90,44 @@ with the Allen numbers still undefined until the run lands.
 `validate_100k.py`, `make_tables.py`, `tests/test_large_scale.py` (4 tests against scanpy and
 `cluster.pca`, all pass).
 - CTXsp dry run (78,223 cells, 28,147 genes kept, 18 classes): every stage in about 3 minutes. In the
-  holdout, the nearest-neighbour vote returns the cell's own cluster 95 to 98 percent of the time.
-- The 100,000-cell validation started 09:47 in byobu `scm-large-val`.
+  holdout, the nearest-neighbour vote returns the cell's own cluster 95 to 98 percent of the time. Its
+  outputs were deleted afterwards (3 minutes to recreate).
+- **The 100,000-cell validation passed (09:47 to 10:01, byobu `scm-large-val`,
+  `results/large_scale_sample100k/validation.json`).** On the pilot's own cells the streamed pipeline
+  matches the in-memory one:
+  - cells, order and genes are identical (28,536 kept)
+  - all 2,000 seurat_v3 genes match
+  - the largest log2CPM difference is 0.0
+  - all 50 components correlate at 1.0
+  - k-means gives the pilot's exact partition (ARI 1.0 between them, 0.579 against the classes)
+  - Leiden at 0.17 gives 35 clusters at 0.661 against the pilot's 0.661. The partitions agree at 0.994,
+    the difference coming from multithreaded neighbour search.
+  The first pass took 713 s from disk. The later passes ran in about 12 s each, from the page cache.
+- **The full run (10:02 to 10:26, byobu `scm-large-full`, `results/large_scale/`).**
+  - Data: 2,341,350 annotated cells (of 2,349,544 rows), 30,520 genes kept of 32,285, 34 classes,
+    334 subclasses.
+  - Stage times: scan 78 s, hvg 101 s, normalize 59 s, pca 137 s, kmeans 80 s per seed, graph 71 s
+    plus about 89 s per Leiden resolution, assign 60 s for the neighbour search.
+  - The scan read files the validation had just cached. From disk it took 713 s in the validation,
+    which reads every block of the same files. So the whole run is about 20 minutes from the raw files.
+  - Peak memory: the largest single process used 18 GB (the hvg pass). The tree sums of 39 to 59 GB
+    count pages that forked workers share.
+  - Full data, label-fixed at 34 classes:
+    - k-means: 34 clusters, ARI 0.590, AMI 0.818
+    - Leiden at 0.05: 31 clusters, ARI 0.748. 0.06 gave 37, the two counts are equally far from 34, and
+      ARI broke the tie, as in the paper rule.
+    - Leiden at the default 1.0: 93 clusters, ARI 0.522
+  - Seed agreement: k-means 0.855 to 0.911. Leiden at 0.05: 0.889 to 0.954, with 31, 35 and 34
+    clusters across seeds.
+  - Resolution 0.17, the sample's pick, gives 50 clusters on all cells against 35 on the sample.
+  - The 100k sample (pilot partitions): k-means 0.579, Leiden 0.661, MICA at 3.2 (33 clusters, the paper
+    rule's pick from 40 resolutions) 0.652.
+  - Sample and assigned (15-NN vote in the full-data components): k-means 0.584, Leiden 0.661, MICA
+    0.657. Holdout agreement with each cell's own cluster: k-means 98.1, Leiden 99.7, MICA 99.0 percent.
+- `scripts/large_scale/make_tables.py` writes `latex/tables/large_scale.tex`, `latex/numbers_large.tex`
+  and `results/large_scale/stage_costs.csv`, copying time and memory out of the gitignored logs. The
+  paper's new Section VI-H uses only those values, and `overleaf_package.py` now packs
+  `numbers_large.tex`.
 
 ---
 

@@ -1,0 +1,10 @@
+method,setting,seeds,ari
+PCA + k-means,k = 34,0-1,0.9352426497702755
+PCA + Leiden,resolution 0.17,0-1,0.8769420280415763
+PCA + Leiden,resolution 1.00,0-1,0.9316134015816494
+PCA + k-means,k = 34,0-2,0.9523051373530607
+PCA + Leiden,resolution 0.17,0-2,0.9945146494922336
+PCA + Leiden,resolution 1.00,0-2,0.8748076046961051
+PCA + k-means,k = 34,1-2,0.9329727753145883
+PCA + Leiden,resolution 0.17,1-2,0.8778150198987906
+PCA + Leiden,resolution 1.00,1-2,0.8987723844974915

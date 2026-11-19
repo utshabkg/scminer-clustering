@@ -193,6 +193,40 @@ grid gives 4 clusters under every scorer and at every seed, and that of $k$-mean
 Table~\ref{tab:pbmc} but one.
 So on the original grids MICA leads Leiden on PBMC14K under every scorer and at every seed, the reverse of the plain-maximum result on the small datasets. Under our scorer the cause is the same, with the roles swapped. MICA's own grid stops at a resolution of 4.0 and gives no fewer than 5 clusters at any seed we ran, while Leiden's reaches 4. Matching adds MICA's 4-cluster partitions, and the plain maximum takes one at four of the five seeds, which levels the two.
 
+\input{tables/large_scale}
+
+\subsection{The Allen atlas at full scale}\label{sec:large}
+After preprocessing the atlas has \V{large.n_cells} cells by \V{large.n_genes} genes, and the PCA pipelines
+use \V{large.n_hvg} of those genes, reduced to \V{large.n_pcs} components (Table~\ref{tab:large}). Both
+pipelines ran on every cell. Reading the 13 raw files from disk took \V{large.read.minutes_cold} minutes,
+and the rest of the preprocessing and either clustering about \V{large.full.minutes} more, with no single
+process above \V{large.max_process_gb}~GB. Set to the 34 classes, $k$-means reaches an ARI of
+\V{large.kmeans.ari} on all cells. Leiden, at the resolution whose count is closest to 34, reaches
+\V{large.leiden.ari} with \V{large.leiden.k} clusters. No resolution on the grid gave exactly 34, since 0.05
+gave 31 and 0.06 gave 37, and the labels broke the tie. At Scanpy's default resolution, which needs no
+labels, Leiden gives \V{large.leiden.default.k} clusters and an ARI of \V{large.leiden.default.ari}.
+
+The label-free checks are cheap at this size. Partitions from different seeds agree at an ARI of at least
+\V{large.kmeans.seed_ari_min} for $k$-means and \V{large.leiden.seed_ari_min} for Leiden at the chosen
+resolution, but at that resolution Leiden's count moved from \V{large.leiden.k_seeds} clusters across the
+three seeds (check 5). A setting also means something different at another size. Resolution
+\V{large.leiden.pilot_res}, the pick on the 100,000-cell sample, gives 35 clusters there and
+\V{large.leiden.k_at_pilot_res} on all cells, so a setting tuned on a sample does not carry over to the full
+data, and the full-data Leiden result and the sample's are not at the same setting.
+
+MICA ran only on the sample. There it took \V{large.mica.hours} hours and \V{large.mica.peak_gb}~GB and
+reached \V{large.sample.mica.ari} with \V{large.sample.mica.k} clusters, level with Leiden's
+\V{large.sample.leiden.ari} on the same cells and ahead of $k$-means' \V{large.sample.kmeans.ari}. Giving
+the other \V{large.n_assigned} cells the cluster of their nearest sample cells took about a minute and
+scores \V{large.assigned.mica.ari} on all cells. Within the sample, the vote gave a held-out cell its own
+MICA cluster \V{large.holdout.mica.acc} percent of the time, which needs no labels and says the
+assignment step adds little error. The result is still an approximation. MICA never saw
+\V{large.unseen_pct} percent of the cells, and the assignment works in the principal components rather than
+MICA's own distance. Extended the same way, the baselines' sample partitions score
+\V{large.assigned.kmeans.ari} and \V{large.assigned.leiden.ari}, so on this atlas, at the label-fixed
+setting, MICA and Leiden are level and both are ahead of $k$-means, whether the sample or the assigned
+cells are scored.
+
 \subsection{Secondary rules, at the exploratory seeds}\label{sec:transfer}
 These ran at seeds 0 to 2 or at one seed and were not repeated (Appendices~\ref{app:rulesall},
 \ref{app:secondary} and \ref{app:transfer}). MICA's best mean there, 0.727, came from its
@@ -210,6 +244,6 @@ subsample of protocol v1 took a median of \V{cost.small.mica.median}~s for MICA'
 \V{cost.small.leiden.median}~s for Leiden's sweep and \V{cost.small.kmeans.median}~s for $k$-means, so a
 full run of 100 subsamples takes minutes per dataset, and cost is no reason to prefer a method there. On
 PBMC14K one MICA subsample takes a median of about five to six minutes, depending on the seed, almost all
-of it node2vec, against 75 to 90 seconds for Leiden and $k$-means together, so one run of 100 subsamples took 8 to 10 hours for MICA and 2 to 2.5 for the two baselines. That
-cost is why the large-dataset evidence rests on one dataset. chooseR's own scoring adds under a minute per
+of it node2vec, against 75 to 90 seconds for Leiden and $k$-means together, so one run of 100 subsamples took 8 to 10 hours for MICA and 2 to 2.5 for the two baselines. That cost is why the selection rule's evidence on a large dataset rests on PBMC14K alone, and why the
+Allen atlas compares the methods at a fixed number of clusters (Section~\ref{sec:large}). chooseR's own scoring adds under a minute per
 small dataset and seed.

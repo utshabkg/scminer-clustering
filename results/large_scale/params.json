@@ -1,0 +1,18 @@
+{
+  "scope": "full",
+  "n_hvg": 2000,
+  "n_pcs": 50,
+  "k": 34,
+  "seeds": [
+    0,
+    1,
+    2
+  ],
+  "hvg_flavor": "seurat_v3, streamed, all cells",
+  "normalization": "preprocess.normalize: CPM then log2(x + 1)",
+  "gene_filter": "detected in at least 3 cells",
+  "cell_filter": "none, the atlas authors' QC",
+  "labels": "class (34) from cell_metadata_with_cluster_annotation.csv",
+  "mica_sample": "uniform random 100,000 cells, seed 0 (data.load_allen)",
+  "assignment": "15 nearest sample cells in the full-data principal components, majority vote"
+}
