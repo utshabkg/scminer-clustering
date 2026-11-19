@@ -1944,7 +1944,11 @@
     "ari_F": 0.291,
     "ari_M": 0.291,
     "true_k": 3,
-    "n_runs": 7
+    "n_runs": 7,
+    "tied_lo": 2,
+    "tied_hi": 2,
+    "floor_F": "7 of 7",
+    "floor_M": "7 of 7"
    },
    "buettner/leiden_pca": {
     "share_tied": 0.059,
@@ -1954,7 +1958,11 @@
     "ari_F": 0.204,
     "ari_M": 0.134,
     "true_k": 3,
-    "n_runs": 7
+    "n_runs": 7,
+    "tied_lo": 2,
+    "tied_hi": 2,
+    "floor_F": "3 of 7",
+    "floor_M": "5 of 7"
    },
    "buettner/mica": {
     "share_tied": 0.118,
@@ -1964,7 +1972,11 @@
     "ari_F": 0.934,
     "ari_M": 0.474,
     "true_k": 3,
-    "n_runs": 7
+    "n_runs": 7,
+    "tied_lo": 2,
+    "tied_hi": 3,
+    "floor_F": "0 of 7",
+    "floor_M": "4 of 7"
    },
    "chung/kmeans_pca": {
     "share_tied": 0.062,
@@ -1974,7 +1986,11 @@
     "ari_F": 0.119,
     "ari_M": 0.119,
     "true_k": 4,
-    "n_runs": 7
+    "n_runs": 7,
+    "tied_lo": 3,
+    "tied_hi": 3,
+    "floor_F": "1 of 7",
+    "floor_M": "1 of 7"
    },
    "chung/leiden_pca": {
     "share_tied": 0.267,
@@ -1984,7 +2000,11 @@
     "ari_F": 0.319,
     "ari_M": 0.129,
     "true_k": 4,
-    "n_runs": 7
+    "n_runs": 7,
+    "tied_lo": 3,
+    "tied_hi": 7,
+    "floor_F": "0 of 7",
+    "floor_M": "0 of 7"
    },
    "chung/mica": {
     "share_tied": 0.5,
@@ -1994,7 +2014,11 @@
     "ari_F": 0.48,
     "ari_M": 0.1,
     "true_k": 4,
-    "n_runs": 7
+    "n_runs": 7,
+    "tied_lo": 2,
+    "tied_hi": 12,
+    "floor_F": "0 of 7",
+    "floor_M": "7 of 7"
    },
    "goolam/kmeans_pca": {
     "share_tied": 0.067,
@@ -2004,7 +2028,11 @@
     "ari_F": 0.883,
     "ari_M": 0.883,
     "true_k": 5,
-    "n_runs": 7
+    "n_runs": 7,
+    "tied_lo": 3,
+    "tied_hi": 3,
+    "floor_F": "0 of 7",
+    "floor_M": "0 of 7"
    },
    "goolam/leiden_pca": {
     "share_tied": 0.133,
@@ -2014,7 +2042,11 @@
     "ari_F": 0.429,
     "ari_M": 0.619,
     "true_k": 5,
-    "n_runs": 7
+    "n_runs": 7,
+    "tied_lo": 2,
+    "tied_hi": 3,
+    "floor_F": "3 of 7",
+    "floor_M": "5 of 7"
    },
    "goolam/mica": {
     "share_tied": 0.4,
@@ -2024,7 +2056,11 @@
     "ari_F": 0.447,
     "ari_M": 0.883,
     "true_k": 5,
-    "n_runs": 7
+    "n_runs": 7,
+    "tied_lo": 2,
+    "tied_hi": 7,
+    "floor_F": "0 of 7",
+    "floor_M": "3 of 7"
    },
    "klein/kmeans_pca": {
     "share_tied": 0.067,
@@ -2034,7 +2070,11 @@
     "ari_F": 0.413,
     "ari_M": 0.413,
     "true_k": 4,
-    "n_runs": 7
+    "n_runs": 7,
+    "tied_lo": 2,
+    "tied_hi": 2,
+    "floor_F": "7 of 7",
+    "floor_M": "7 of 7"
    },
    "klein/leiden_pca": {
     "share_tied": 0.056,
@@ -2044,7 +2084,11 @@
     "ari_F": 0.501,
     "ari_M": 0.501,
     "true_k": 4,
-    "n_runs": 7
+    "n_runs": 7,
+    "tied_lo": 2,
+    "tied_hi": 2,
+    "floor_F": "7 of 7",
+    "floor_M": "7 of 7"
    },
    "klein/mica": {
     "share_tied": 0.294,
@@ -2054,7 +2098,11 @@
     "ari_F": 0.501,
     "ari_M": 0.501,
     "true_k": 4,
-    "n_runs": 7
+    "n_runs": 7,
+    "tied_lo": 2,
+    "tied_hi": 6,
+    "floor_F": "7 of 7",
+    "floor_M": "7 of 7"
    },
    "kolodziejczyk/kmeans_pca": {
     "share_tied": 0.111,
@@ -2064,7 +2112,11 @@
     "ari_F": 0.716,
     "ari_M": 0.716,
     "true_k": 3,
-    "n_runs": 7
+    "n_runs": 7,
+    "tied_lo": 2,
+    "tied_hi": 3,
+    "floor_F": "0 of 7",
+    "floor_M": "0 of 7"
    },
    "kolodziejczyk/leiden_pca": {
     "share_tied": 0.235,
@@ -2074,7 +2126,11 @@
     "ari_F": 0.838,
     "ari_M": 0.63,
     "true_k": 3,
-    "n_runs": 7
+    "n_runs": 7,
+    "tied_lo": 2,
+    "tied_hi": 5,
+    "floor_F": "0 of 7",
+    "floor_M": "5 of 7"
    },
    "kolodziejczyk/mica": {
     "share_tied": 0.222,
@@ -2084,7 +2140,11 @@
     "ari_F": 0.722,
     "ari_M": 0.63,
     "true_k": 3,
-    "n_runs": 7
+    "n_runs": 7,
+    "tied_lo": 2,
+    "tied_hi": 5,
+    "floor_F": "0 of 7",
+    "floor_M": "7 of 7"
    },
    "pollen/kmeans_pca": {
     "share_tied": 0.118,
@@ -2094,7 +2154,11 @@
     "ari_F": 0.266,
     "ari_M": 0.266,
     "true_k": 11,
-    "n_runs": 7
+    "n_runs": 7,
+    "tied_lo": 3,
+    "tied_hi": 9,
+    "floor_F": "0 of 7",
+    "floor_M": "0 of 7"
    },
    "pollen/leiden_pca": {
     "share_tied": 0.222,
@@ -2104,7 +2168,11 @@
     "ari_F": 0.828,
     "ari_M": 0.509,
     "true_k": 11,
-    "n_runs": 7
+    "n_runs": 7,
+    "tied_lo": 5,
+    "tied_hi": 10,
+    "floor_F": "0 of 7",
+    "floor_M": "0 of 7"
    },
    "pollen/mica": {
     "share_tied": 0.722,
@@ -2114,7 +2182,11 @@
     "ari_F": 0.906,
     "ari_M": 0.087,
     "true_k": 11,
-    "n_runs": 7
+    "n_runs": 7,
+    "tied_lo": 2,
+    "tied_hi": 17,
+    "floor_F": "0 of 7",
+    "floor_M": "7 of 7"
    },
    "usoskin/kmeans_pca": {
     "share_tied": 0.056,
@@ -2124,7 +2196,11 @@
     "ari_F": 0.089,
     "ari_M": 0.089,
     "true_k": 4,
-    "n_runs": 7
+    "n_runs": 7,
+    "tied_lo": 2,
+    "tied_hi": 2,
+    "floor_F": "7 of 7",
+    "floor_M": "7 of 7"
    },
    "usoskin/leiden_pca": {
     "share_tied": 0.111,
@@ -2134,7 +2210,11 @@
     "ari_F": 0.696,
     "ari_M": 0.696,
     "true_k": 4,
-    "n_runs": 7
+    "n_runs": 7,
+    "tied_lo": 3,
+    "tied_hi": 5,
+    "floor_F": "0 of 7",
+    "floor_M": "0 of 7"
    },
    "usoskin/mica": {
     "share_tied": 0.118,
@@ -2144,7 +2224,11 @@
     "ari_F": 0.818,
     "ari_M": 0.818,
     "true_k": 4,
-    "n_runs": 7
+    "n_runs": 7,
+    "tied_lo": 2,
+    "tied_hi": 3,
+    "floor_F": "0 of 7",
+    "floor_M": "1 of 7"
    },
    "yan/kmeans_pca": {
     "share_tied": 0.25,
@@ -2154,7 +2238,11 @@
     "ari_F": 0.764,
     "ari_M": 0.189,
     "true_k": 8,
-    "n_runs": 7
+    "n_runs": 7,
+    "tied_lo": 2,
+    "tied_hi": 5,
+    "floor_F": "0 of 7",
+    "floor_M": "6 of 7"
    },
    "yan/leiden_pca": {
     "share_tied": 0.133,
@@ -2164,7 +2252,11 @@
     "ari_F": 0.765,
     "ari_M": 0.496,
     "true_k": 8,
-    "n_runs": 7
+    "n_runs": 7,
+    "tied_lo": 3,
+    "tied_hi": 4,
+    "floor_F": "0 of 7",
+    "floor_M": "0 of 7"
    },
    "yan/mica": {
     "share_tied": 0.8,
@@ -2174,7 +2266,11 @@
     "ari_F": 0.496,
     "ari_M": 0.189,
     "true_k": 8,
-    "n_runs": 7
+    "n_runs": 7,
+    "tied_lo": 2,
+    "tied_hi": 19,
+    "floor_F": "0 of 7",
+    "floor_M": "5 of 7"
    },
    "zeisel/kmeans_pca": {
     "share_tied": 0.111,
@@ -2184,7 +2280,11 @@
     "ari_F": 0.495,
     "ari_M": 0.364,
     "true_k": 7,
-    "n_runs": 7
+    "n_runs": 7,
+    "tied_lo": 2,
+    "tied_hi": 3,
+    "floor_F": "2 of 7",
+    "floor_M": "5 of 7"
    },
    "zeisel/leiden_pca": {
     "share_tied": 0.111,
@@ -2194,7 +2294,11 @@
     "ari_F": 0.735,
     "ari_M": 0.37,
     "true_k": 7,
-    "n_runs": 7
+    "n_runs": 7,
+    "tied_lo": 2,
+    "tied_hi": 8,
+    "floor_F": "3 of 7",
+    "floor_M": "4 of 7"
    },
    "zeisel/mica": {
     "share_tied": 0.294,
@@ -2204,11 +2308,25 @@
     "ari_F": 0.518,
     "ari_M": 0.386,
     "true_k": 7,
-    "n_runs": 7
+    "n_runs": 7,
+    "tied_lo": 2,
+    "tied_hi": 7,
+    "floor_F": "2 of 7",
+    "floor_M": "6 of 7"
    }
   },
   "n_runs": 189,
   "gap": 5,
+  "own_grid_never_2": {
+   "kmeans_pca": 0,
+   "leiden_pca": 5,
+   "mica": 0
+  },
+  "moved_25_to_100": {
+   "kmeans_pca": "12 of 63",
+   "leiden_pca": "35 of 63",
+   "mica": "22 of 63"
+  },
   "disagree": {
    "n": 29,
    "n_mica": 23,
@@ -5387,6 +5505,10 @@
   "L.buettner.kmeans.ariF": "0.291",
   "L.buettner.kmeans.ariM": "0.291",
   "L.buettner.kmeans.truek": "3",
+  "L.buettner.kmeans.tiedlo": "2",
+  "L.buettner.kmeans.tiedhi": "2",
+  "L.buettner.kmeans.floorF": "7 of 7",
+  "L.buettner.kmeans.floorM": "7 of 7",
   "L.buettner.leiden.share": "6",
   "L.buettner.leiden.span": "0",
   "L.buettner.leiden.kF": "2\\textrm{-}3",
@@ -5394,6 +5516,10 @@
   "L.buettner.leiden.ariF": "0.204",
   "L.buettner.leiden.ariM": "0.134",
   "L.buettner.leiden.truek": "3",
+  "L.buettner.leiden.tiedlo": "2",
+  "L.buettner.leiden.tiedhi": "2",
+  "L.buettner.leiden.floorF": "3 of 7",
+  "L.buettner.leiden.floorM": "5 of 7",
   "L.buettner.mica.share": "12",
   "L.buettner.mica.span": "1",
   "L.buettner.mica.kF": "3\\textrm{-}4",
@@ -5401,6 +5527,10 @@
   "L.buettner.mica.ariF": "0.934",
   "L.buettner.mica.ariM": "0.474",
   "L.buettner.mica.truek": "3",
+  "L.buettner.mica.tiedlo": "2",
+  "L.buettner.mica.tiedhi": "3",
+  "L.buettner.mica.floorF": "0 of 7",
+  "L.buettner.mica.floorM": "4 of 7",
   "L.chung.kmeans.share": "6",
   "L.chung.kmeans.span": "0",
   "L.chung.kmeans.kF": "2\\textrm{-}5",
@@ -5408,6 +5538,10 @@
   "L.chung.kmeans.ariF": "0.119",
   "L.chung.kmeans.ariM": "0.119",
   "L.chung.kmeans.truek": "4",
+  "L.chung.kmeans.tiedlo": "3",
+  "L.chung.kmeans.tiedhi": "3",
+  "L.chung.kmeans.floorF": "1 of 7",
+  "L.chung.kmeans.floorM": "1 of 7",
   "L.chung.leiden.share": "27",
   "L.chung.leiden.span": "4",
   "L.chung.leiden.kF": "3\\textrm{-}7",
@@ -5415,6 +5549,10 @@
   "L.chung.leiden.ariF": "0.319",
   "L.chung.leiden.ariM": "0.129",
   "L.chung.leiden.truek": "4",
+  "L.chung.leiden.tiedlo": "3",
+  "L.chung.leiden.tiedhi": "7",
+  "L.chung.leiden.floorF": "0 of 7",
+  "L.chung.leiden.floorM": "0 of 7",
   "L.chung.mica.share": "50",
   "L.chung.mica.span": "10",
   "L.chung.mica.kF": "10\\textrm{-}12",
@@ -5422,6 +5560,10 @@
   "L.chung.mica.ariF": "0.480",
   "L.chung.mica.ariM": "0.100",
   "L.chung.mica.truek": "4",
+  "L.chung.mica.tiedlo": "2",
+  "L.chung.mica.tiedhi": "12",
+  "L.chung.mica.floorF": "0 of 7",
+  "L.chung.mica.floorM": "7 of 7",
   "L.goolam.kmeans.share": "7",
   "L.goolam.kmeans.span": "0",
   "L.goolam.kmeans.kF": "3",
@@ -5429,6 +5571,10 @@
   "L.goolam.kmeans.ariF": "0.883",
   "L.goolam.kmeans.ariM": "0.883",
   "L.goolam.kmeans.truek": "5",
+  "L.goolam.kmeans.tiedlo": "3",
+  "L.goolam.kmeans.tiedhi": "3",
+  "L.goolam.kmeans.floorF": "0 of 7",
+  "L.goolam.kmeans.floorM": "0 of 7",
   "L.goolam.leiden.share": "13",
   "L.goolam.leiden.span": "1",
   "L.goolam.leiden.kF": "2\\textrm{-}3",
@@ -5436,6 +5582,10 @@
   "L.goolam.leiden.ariF": "0.429",
   "L.goolam.leiden.ariM": "0.619",
   "L.goolam.leiden.truek": "5",
+  "L.goolam.leiden.tiedlo": "2",
+  "L.goolam.leiden.tiedhi": "3",
+  "L.goolam.leiden.floorF": "3 of 7",
+  "L.goolam.leiden.floorM": "5 of 7",
   "L.goolam.mica.share": "40",
   "L.goolam.mica.span": "5",
   "L.goolam.mica.kF": "6\\textrm{-}8",
@@ -5443,6 +5593,10 @@
   "L.goolam.mica.ariF": "0.447",
   "L.goolam.mica.ariM": "0.883",
   "L.goolam.mica.truek": "5",
+  "L.goolam.mica.tiedlo": "2",
+  "L.goolam.mica.tiedhi": "7",
+  "L.goolam.mica.floorF": "0 of 7",
+  "L.goolam.mica.floorM": "3 of 7",
   "L.klein.kmeans.share": "7",
   "L.klein.kmeans.span": "0",
   "L.klein.kmeans.kF": "2",
@@ -5450,6 +5604,10 @@
   "L.klein.kmeans.ariF": "0.413",
   "L.klein.kmeans.ariM": "0.413",
   "L.klein.kmeans.truek": "4",
+  "L.klein.kmeans.tiedlo": "2",
+  "L.klein.kmeans.tiedhi": "2",
+  "L.klein.kmeans.floorF": "7 of 7",
+  "L.klein.kmeans.floorM": "7 of 7",
   "L.klein.leiden.share": "6",
   "L.klein.leiden.span": "0",
   "L.klein.leiden.kF": "2",
@@ -5457,6 +5615,10 @@
   "L.klein.leiden.ariF": "0.501",
   "L.klein.leiden.ariM": "0.501",
   "L.klein.leiden.truek": "4",
+  "L.klein.leiden.tiedlo": "2",
+  "L.klein.leiden.tiedhi": "2",
+  "L.klein.leiden.floorF": "7 of 7",
+  "L.klein.leiden.floorM": "7 of 7",
   "L.klein.mica.share": "29",
   "L.klein.mica.span": "4",
   "L.klein.mica.kF": "2",
@@ -5464,6 +5626,10 @@
   "L.klein.mica.ariF": "0.501",
   "L.klein.mica.ariM": "0.501",
   "L.klein.mica.truek": "4",
+  "L.klein.mica.tiedlo": "2",
+  "L.klein.mica.tiedhi": "6",
+  "L.klein.mica.floorF": "7 of 7",
+  "L.klein.mica.floorM": "7 of 7",
   "L.kolodziejczyk.kmeans.share": "11",
   "L.kolodziejczyk.kmeans.span": "1",
   "L.kolodziejczyk.kmeans.kF": "3",
@@ -5471,6 +5637,10 @@
   "L.kolodziejczyk.kmeans.ariF": "0.716",
   "L.kolodziejczyk.kmeans.ariM": "0.716",
   "L.kolodziejczyk.kmeans.truek": "3",
+  "L.kolodziejczyk.kmeans.tiedlo": "2",
+  "L.kolodziejczyk.kmeans.tiedhi": "3",
+  "L.kolodziejczyk.kmeans.floorF": "0 of 7",
+  "L.kolodziejczyk.kmeans.floorM": "0 of 7",
   "L.kolodziejczyk.leiden.share": "24",
   "L.kolodziejczyk.leiden.span": "3",
   "L.kolodziejczyk.leiden.kF": "3\\textrm{-}4",
@@ -5478,6 +5648,10 @@
   "L.kolodziejczyk.leiden.ariF": "0.838",
   "L.kolodziejczyk.leiden.ariM": "0.630",
   "L.kolodziejczyk.leiden.truek": "3",
+  "L.kolodziejczyk.leiden.tiedlo": "2",
+  "L.kolodziejczyk.leiden.tiedhi": "5",
+  "L.kolodziejczyk.leiden.floorF": "0 of 7",
+  "L.kolodziejczyk.leiden.floorM": "5 of 7",
   "L.kolodziejczyk.mica.share": "22",
   "L.kolodziejczyk.mica.span": "3",
   "L.kolodziejczyk.mica.kF": "3\\textrm{-}5",
@@ -5485,6 +5659,10 @@
   "L.kolodziejczyk.mica.ariF": "0.722",
   "L.kolodziejczyk.mica.ariM": "0.630",
   "L.kolodziejczyk.mica.truek": "3",
+  "L.kolodziejczyk.mica.tiedlo": "2",
+  "L.kolodziejczyk.mica.tiedhi": "5",
+  "L.kolodziejczyk.mica.floorF": "0 of 7",
+  "L.kolodziejczyk.mica.floorM": "7 of 7",
   "L.pollen.kmeans.share": "12",
   "L.pollen.kmeans.span": "6",
   "L.pollen.kmeans.kF": "3\\textrm{-}9",
@@ -5492,6 +5670,10 @@
   "L.pollen.kmeans.ariF": "0.266",
   "L.pollen.kmeans.ariM": "0.266",
   "L.pollen.kmeans.truek": "11",
+  "L.pollen.kmeans.tiedlo": "3",
+  "L.pollen.kmeans.tiedhi": "9",
+  "L.pollen.kmeans.floorF": "0 of 7",
+  "L.pollen.kmeans.floorM": "0 of 7",
   "L.pollen.leiden.share": "22",
   "L.pollen.leiden.span": "5",
   "L.pollen.leiden.kF": "7\\textrm{-}10",
@@ -5499,6 +5681,10 @@
   "L.pollen.leiden.ariF": "0.828",
   "L.pollen.leiden.ariM": "0.509",
   "L.pollen.leiden.truek": "11",
+  "L.pollen.leiden.tiedlo": "5",
+  "L.pollen.leiden.tiedhi": "10",
+  "L.pollen.leiden.floorF": "0 of 7",
+  "L.pollen.leiden.floorM": "0 of 7",
   "L.pollen.mica.share": "72",
   "L.pollen.mica.span": "15",
   "L.pollen.mica.kF": "13\\textrm{-}18",
@@ -5506,6 +5692,10 @@
   "L.pollen.mica.ariF": "0.906",
   "L.pollen.mica.ariM": "0.087",
   "L.pollen.mica.truek": "11",
+  "L.pollen.mica.tiedlo": "2",
+  "L.pollen.mica.tiedhi": "17",
+  "L.pollen.mica.floorF": "0 of 7",
+  "L.pollen.mica.floorM": "7 of 7",
   "L.usoskin.kmeans.share": "6",
   "L.usoskin.kmeans.span": "0",
   "L.usoskin.kmeans.kF": "2",
@@ -5513,6 +5703,10 @@
   "L.usoskin.kmeans.ariF": "0.089",
   "L.usoskin.kmeans.ariM": "0.089",
   "L.usoskin.kmeans.truek": "4",
+  "L.usoskin.kmeans.tiedlo": "2",
+  "L.usoskin.kmeans.tiedhi": "2",
+  "L.usoskin.kmeans.floorF": "7 of 7",
+  "L.usoskin.kmeans.floorM": "7 of 7",
   "L.usoskin.leiden.share": "11",
   "L.usoskin.leiden.span": "1",
   "L.usoskin.leiden.kF": "3\\textrm{-}6",
@@ -5520,6 +5714,10 @@
   "L.usoskin.leiden.ariF": "0.696",
   "L.usoskin.leiden.ariM": "0.696",
   "L.usoskin.leiden.truek": "4",
+  "L.usoskin.leiden.tiedlo": "3",
+  "L.usoskin.leiden.tiedhi": "5",
+  "L.usoskin.leiden.floorF": "0 of 7",
+  "L.usoskin.leiden.floorM": "0 of 7",
   "L.usoskin.mica.share": "12",
   "L.usoskin.mica.span": "1",
   "L.usoskin.mica.kF": "3",
@@ -5527,6 +5725,10 @@
   "L.usoskin.mica.ariF": "0.818",
   "L.usoskin.mica.ariM": "0.818",
   "L.usoskin.mica.truek": "4",
+  "L.usoskin.mica.tiedlo": "2",
+  "L.usoskin.mica.tiedhi": "3",
+  "L.usoskin.mica.floorF": "0 of 7",
+  "L.usoskin.mica.floorM": "1 of 7",
   "L.yan.kmeans.share": "25",
   "L.yan.kmeans.span": "3",
   "L.yan.kmeans.kF": "5",
@@ -5534,6 +5736,10 @@
   "L.yan.kmeans.ariF": "0.764",
   "L.yan.kmeans.ariM": "0.189",
   "L.yan.kmeans.truek": "8",
+  "L.yan.kmeans.tiedlo": "2",
+  "L.yan.kmeans.tiedhi": "5",
+  "L.yan.kmeans.floorF": "0 of 7",
+  "L.yan.kmeans.floorM": "6 of 7",
   "L.yan.leiden.share": "13",
   "L.yan.leiden.span": "1",
   "L.yan.leiden.kF": "3\\textrm{-}7",
@@ -5541,6 +5747,10 @@
   "L.yan.leiden.ariF": "0.765",
   "L.yan.leiden.ariM": "0.496",
   "L.yan.leiden.truek": "8",
+  "L.yan.leiden.tiedlo": "3",
+  "L.yan.leiden.tiedhi": "4",
+  "L.yan.leiden.floorF": "0 of 7",
+  "L.yan.leiden.floorM": "0 of 7",
   "L.yan.mica.share": "80",
   "L.yan.mica.span": "17",
   "L.yan.mica.kF": "17\\textrm{-}19",
@@ -5548,6 +5758,10 @@
   "L.yan.mica.ariF": "0.496",
   "L.yan.mica.ariM": "0.189",
   "L.yan.mica.truek": "8",
+  "L.yan.mica.tiedlo": "2",
+  "L.yan.mica.tiedhi": "19",
+  "L.yan.mica.floorF": "0 of 7",
+  "L.yan.mica.floorM": "5 of 7",
   "L.zeisel.kmeans.share": "11",
   "L.zeisel.kmeans.span": "1",
   "L.zeisel.kmeans.kF": "2\\textrm{-}3",
@@ -5555,6 +5769,10 @@
   "L.zeisel.kmeans.ariF": "0.495",
   "L.zeisel.kmeans.ariM": "0.364",
   "L.zeisel.kmeans.truek": "7",
+  "L.zeisel.kmeans.tiedlo": "2",
+  "L.zeisel.kmeans.tiedhi": "3",
+  "L.zeisel.kmeans.floorF": "2 of 7",
+  "L.zeisel.kmeans.floorM": "5 of 7",
   "L.zeisel.leiden.share": "11",
   "L.zeisel.leiden.span": "2",
   "L.zeisel.leiden.kF": "2\\textrm{-}8",
@@ -5562,6 +5780,10 @@
   "L.zeisel.leiden.ariF": "0.735",
   "L.zeisel.leiden.ariM": "0.370",
   "L.zeisel.leiden.truek": "7",
+  "L.zeisel.leiden.tiedlo": "2",
+  "L.zeisel.leiden.tiedhi": "8",
+  "L.zeisel.leiden.floorF": "3 of 7",
+  "L.zeisel.leiden.floorM": "4 of 7",
   "L.zeisel.mica.share": "29",
   "L.zeisel.mica.span": "5",
   "L.zeisel.mica.kF": "2\\textrm{-}3",
@@ -5569,6 +5791,16 @@
   "L.zeisel.mica.ariF": "0.518",
   "L.zeisel.mica.ariM": "0.386",
   "L.zeisel.mica.truek": "7",
+  "L.zeisel.mica.tiedlo": "2",
+  "L.zeisel.mica.tiedhi": "7",
+  "L.zeisel.mica.floorF": "2 of 7",
+  "L.zeisel.mica.floorM": "6 of 7",
+  "L.ownnever2.kmeans": "0",
+  "L.ownnever2.leiden": "5",
+  "L.ownnever2.mica": "0",
+  "L.moved.kmeans": "12 of 63",
+  "L.moved.leiden": "35 of 63",
+  "L.moved.mica": "22 of 63",
   "L.runs": "189",
   "L.gap": "5",
   "L.disagree.n": "29",

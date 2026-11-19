@@ -154,7 +154,8 @@ def label_free_signals(p, c, seeds, design="mid", b=25, gap=5):
     for (ds, seed, m), g in cs.groupby(["ds", "seed", "method"]):
         t = g[g.stability >= g.stability.max() - 0.01]
         rows.append({"ds": ds, "seed": int(seed), "method": m, "share_tied": len(t) / len(g),
-                     "span": int(t.n_clusters.max() - t.n_clusters.min()), "k_floor": int(g.n_clusters.min())})
+                     "span": int(t.n_clusters.max() - t.n_clusters.min()), "k_floor": int(g.n_clusters.min()),
+                     "tied_lo": int(t.n_clusters.min()), "tied_hi": int(t.n_clusters.max())})
     R = pd.DataFrame(rows)
     pk = p[(p.S == "S0") & (p.design == design) & p.seed.isin(seeds) & p.ds.isin(SMALL)]
     w = pk.pivot_table(index=["ds", "seed", "method"], columns="reading", values=["n_clusters", "ari"])
@@ -168,9 +169,21 @@ def label_free_signals(p, c, seeds, design="mid", b=25, gap=5):
                             "k_F": kr(int(g.n_clusters_F.min()), int(g.n_clusters_F.max())),
                             "k_M": kr(int(g.n_clusters_M.min()), int(g.n_clusters_M.max())),
                             "ari_F": round(float(g.ari_F.median()), 3), "ari_M": round(float(g.ari_M.median()), 3),
-                            "true_k": TYPES[ds], "n_runs": int(len(g))}
+                            "true_k": TYPES[ds], "n_runs": int(len(g)),
+                            "tied_lo": int(g.tied_lo.median()), "tied_hi": int(g.tied_hi.median()),
+                            "floor_F": f"{int((g.n_clusters_F == g.k_floor).sum())} of {len(g)}",
+                            "floor_M": f"{int((g.n_clusters_M == g.k_floor).sum())} of {len(g)}"}
     dis = R[R.k_gap >= gap]
-    out = {"per_dataset": per, "n_runs": int(len(R)), "gap": gap,
+    # check 1 without labels: on how many datasets each method's own grid never reaches 2 clusters
+    og = c[(c.scorer == "ours") & (c.b == b) & c.in_original & c.seed.isin(seeds) & c.ds.isin(SMALL)]
+    no2 = {m: int((g.groupby("ds").n_clusters.min() > 2).sum()) for m, g in og.groupby("method")}
+    # check 6 without labels: does the pick move between 25 and 100 subsamples (our scorer, finest reading)
+    s0 = p[(p.S == "S0") & (p.design == design) & (p.reading == F) & p.seed.isin(seeds) & p.ds.isin(SMALL)]
+    s1 = p[(p.S == "S1") & (p.design == design) & (p.reading == F) & p.seed.isin(seeds) & p.ds.isin(SMALL)]
+    j = s0.merge(s1, on=["ds", "seed", "method"], suffixes=("_0", "_1"))
+    moved = {m: f"{int((g.n_clusters_0 != g.n_clusters_1).sum())} of {len(g)}" for m, g in j.groupby("method")}
+    out = {"per_dataset": per, "n_runs": int(len(R)), "gap": gap, "own_grid_never_2": no2,
+           "moved_25_to_100": moved,
            "disagree": {"n": int(len(dis)), "n_mica": int((dis.method == "mica").sum()),
                         "mean_ari_gap": round(float(dis.ari_gap.mean()), 3)},
            "agree": {"n": int(len(R) - len(dis)), "mean_ari_gap": round(float(R[R.k_gap < gap].ari_gap.mean()), 3)}}
@@ -508,6 +521,12 @@ def write_numbers(p, out, conf, pseeds, root):
             vals[f"{base}.kF"], vals[f"{base}.kM"] = v["k_F"], v["k_M"]
             vals[f"{base}.ariF"], vals[f"{base}.ariM"] = f"{v['ari_F']:.3f}", f"{v['ari_M']:.3f}"
             vals[f"{base}.truek"] = str(v["true_k"])
+            vals[f"{base}.tiedlo"], vals[f"{base}.tiedhi"] = str(v["tied_lo"]), str(v["tied_hi"])
+            vals[f"{base}.floorF"], vals[f"{base}.floorM"] = v["floor_F"], v["floor_M"]
+        for m, n in lf["own_grid_never_2"].items():
+            vals[f"L.ownnever2.{short_m[m]}"] = str(n)
+        for m, s in lf["moved_25_to_100"].items():
+            vals[f"L.moved.{short_m[m]}"] = s
         vals["L.runs"], vals["L.gap"] = str(lf["n_runs"]), str(lf["gap"])
         vals["L.disagree.n"], vals["L.disagree.mica"] = str(lf["disagree"]["n"]), str(lf["disagree"]["n_mica"])
         vals["L.disagree.arigap"] = f"{lf['disagree']['mean_ari_gap']:.3f}"

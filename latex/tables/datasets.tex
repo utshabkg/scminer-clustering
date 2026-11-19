@@ -3,13 +3,14 @@
 \begin{table}[t]
 \centering
 \caption{The datasets, with their dimensions after preprocessing, and which of the three kinds of data
-each one represents. Genes are the features MICA uses. The PCA pipelines use 2,000 of them, reduced to 50
-principal components. The other five benchmark datasets have 124 to 317 cells
-(Table~\ref{tab:data}).}
+each one represents. Genes are the features after preprocessing. On the benchmark datasets every method
+uses all of them, and the PCA pipelines reduce them to 50 principal components. On the Allen atlas the PCA
+pipelines use 2,000 of them, and MICA, run on a 100,000-cell sample, the 28,536 detected in that sample.
+The other five benchmark datasets have 124 to 317 cells (Table~\ref{tab:data}).}
 \label{tab:datasets}
 \footnotesize
 \setlength{\tabcolsep}{3pt}
-\begin{tabular}{>{\raggedright\arraybackslash}p{1.65cm}rrr>{\raggedright\arraybackslash}p{2.35cm}}
+\begin{tabular}{>{\raggedright\arraybackslash}p{1.85cm}rrr>{\raggedright\arraybackslash}p{2.2cm}}
 \toprule
 Dataset & Cells & Genes & Types & Kind of data \\
 \midrule

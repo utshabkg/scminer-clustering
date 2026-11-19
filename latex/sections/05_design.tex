@@ -50,7 +50,7 @@ median, which is our primary S3 reading, and dropping the setting.
 
 \textbf{Use of labels.}\label{sec:labeluse} Labels are used in four places, none of which feeds a
 label-free choice. They score the chosen partition, they fix the setting in the reproduction of the
-published protocol, and they pick the resolution in the graph comparison of
+published protocol and on the Allen atlas (Section~\ref{sec:large}), and they pick the resolution in the graph comparison of
 Appendix~\ref{app:graph} so that only the graph differs. The transfer comparison also uses them, so it
 is reported apart: each small dataset takes the setting with the best mean ARI over the other eight at
 the same seed, with ties going to the smaller setting.
@@ -70,12 +70,12 @@ the scoring, and is reported apart from the cost of clustering once.
 
 \textbf{Large scale.} On the Allen atlas we keep every cell the atlas annotates as 10x v3, which the
 atlas authors had already filtered, and the genes detected in at least 3 cells. Counts are normalised per
-cell to counts per million and $\log_2(x+1)$, as for the other datasets. The PCA pipelines use the 2,000
-genes Scanpy's \texttt{seurat\_v3} method selects, computed on all cells by streaming the 13 region
+cell to counts per million and $\log_2(x+1)$, as for the other datasets. Unlike on the benchmark datasets, where every
+method uses all genes, the PCA pipelines here use the 2,000 genes Scanpy's \texttt{seurat\_v3} method selects, computed on all cells by streaming the 13 region
 files, and 50 principal components. Each is set to the atlas's 34 classes, as in the label-fixed
 reproduction: $k$-means with $k = 34$ and 10 restarts, at seeds 0, 1 and 2, and Leiden on the 15 nearest
-neighbour graph at the resolution, from a few points of the published grid, whose cluster count is
-closest to 34. We also report Leiden at its default resolution of 1.0, which uses no labels. The
+neighbour graph at the resolution whose cluster count is closest to 34, from the scMINER authors' grid of
+0.01 to 2.0 in steps of 0.01, searched at \V{large.leiden.n_res} points around 34. We also report Leiden at its default resolution of 1.0, which uses no labels. The
 selection rule itself is not run at this size. MICA cannot run on every cell. On a uniform random
 sample of 100,000 cells (seed 0) it took \V{large.mica.hours} hours and \V{large.mica.peak_gb}~GB, which
 scales to about \V{large.mica.extrap_days} days and \V{large.mica.extrap_tb}~TB for the whole atlas
@@ -83,5 +83,5 @@ scales to about \V{large.mica.extrap_days} days and \V{large.mica.extrap_tb}~TB 
 with the resolution picked by the published rule, and give every other cell the majority cluster of its
 15 nearest sample cells in the full-data principal components. To check that step without labels, we
 assign each tenth of the sample from the other nine tenths and count how often a cell gets back its own
-cluster. The tables keep three kinds of result apart: full-data results, results on the sample, and
+cluster. Table~\ref{tab:large} keeps three kinds of result apart: full-data results, results on the sample, and
 results on the sample with the other cells assigned. Time and peak memory are measured for every stage.

@@ -1,11 +1,13 @@
 \section{Conclusion}\label{sec:conclusion}
 When one label-free rule chooses the setting for every method, the ranking it produces depends on more
-than the methods. On the scMINER benchmark the candidates offered to each method decided the
-plain-maximum ranking and reversed it on the nine small datasets, and the reading of the scores and the
-number of subsamples each moved it further, while the bootstrap interval moved individual choices. The
-effects of the candidates and of the reading held at seven new seeds against criteria fixed in advance.
-Between the methods, MICA's lead under chooseR's reading on matched candidates held at every seed, but the
-datasets split about evenly and with 25 subsamples the mean lead rests on one of them. PCA plus $k$-means,
+than the methods. On the nine small datasets of the scMINER benchmark the candidates decided the
+plain-maximum ranking: Leiden led on its own grid, and the two methods were level once offered the same
+counts. The reading of the scores and the number of subsamples also moved the ranking, and the bootstrap
+interval moved individual choices. The effects of the candidates and of the reading held at seven new seeds
+against criteria fixed in advance, while those of the number of subsamples and of the interval were
+measured without them. Between the methods, MICA's lead under chooseR's reading on matched candidates held
+at every seed, but MICA has the higher median on only \V{E5.S0.mid.F.micawins} of the nine datasets, and
+with 25 subsamples the mean lead rests on one of them. PCA plus $k$-means,
 the textbook baseline, scored lowest in every design on the nine small datasets. On PBMC14K, MICA and
 Leiden tie on matched candidates under the plain maximum at \V{C4.ties} seeds, but the tie depends on which
 setting stands for each count. On 2.3 million cells both PCA pipelines run on every cell, while MICA has
@@ -14,10 +16,10 @@ to be approximated from a sample.
 The answer to our question is therefore practical. A comparison of clustering methods under label-free
 selection should report the cluster counts each method can reach and match them, report the setting
 behind each count, and report the count each method chose. A user facing unlabeled data can check whether
-the scores are flat, whether the two readings agree, whether the pick sits at the edge of the range, and
+the scores are flat, whether the two readings agree, whether the pick sits at the smallest count offered, and
 whether the choice survives another draw and another implementation of the rule. Whoever builds a
 benchmark should also check, with the labels, that the ranking holds under both readings, across draws,
-across implementations and without each dataset. Where a check fails, the comparison shows at most a lead
+across implementations, with another setting standing for each count, and without each dataset. Where a check fails, the comparison shows at most a lead
 under that rule on those datasets.
 
 Three things remain open. Drawing pools of 150 and 300 cells from Zeisel and PBMC14K would test whether

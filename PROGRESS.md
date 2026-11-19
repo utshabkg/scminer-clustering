@@ -129,6 +129,52 @@ with the Allen numbers still undefined until the run lands.
   paper's new Section VI-H uses only those values, and `overleaf_package.py` now packs
   `numbers_large.tex`.
 
+**Review of the rewritten paper (Nov 19, afternoon).** Three read-only reviewers checked the framing
+sections, the design and results, and the appendix against the data and the course requirements. They
+recomputed each number from `results/`. Every finding was checked before it was applied. All were applied
+except renaming `notebooks/assignment3_results.ipynb`, which can wait. The main corrections:
+- **Abstract and conclusion.**
+  - The conclusion said matching "reversed" the ranking. With 25 subsamples it makes the methods level,
+    as the abstract and introduction say.
+  - The abstract lacked qualifiers: on the nine small datasets, on matched candidates, with 25
+    subsamples, and PBMC14K's five seeds, of which two are new.
+  - The abstract now says which effects met criteria fixed in advance and which were only measured.
+  - "The datasets split about evenly" became the per-dataset count: MICA has the higher median on 5,
+    Leiden on 3 (`E5.S0.mid.F.*`).
+- **The checks.**
+  - The matched finest-stable comparison fails check 6. Its pick moves between 25 and 100 subsamples in
+    35 of 63 Leiden and 22 of 63 MICA runs (`L.moved.*`, new in the generator).
+  - Leiden on Buettner trips check 4: its plain-maximum pick sits at the floor in 5 of 7 runs.
+  - Check 1's evidence is now label-free: Leiden's own grid never gives 2 clusters on 5 of the nine
+    datasets (`L.ownnever2.leiden`).
+  - Check 4 explains that a floor pick under the plain maximum may only be the tie-break.
+  - The scopes of the 106 of 190 and 84 of 95 counts are now stated.
+  - The checks table is now within the page width.
+- **The effects table.** C5 confirms only the own-grid half of the candidate effect, and the matched half
+  is measured. C1 under chooseR's reading is "confirmed, rests on one dataset", where it had said "mean
+  only".
+- **The Allen section.**
+  - Full-data scores are seed 0 of three: k-means ranges 0.590 to 0.674 and Leiden 0.719 to 0.753, from
+    the new `partition_scores.csv` written by the collect stage, which was rerun.
+  - The time split no longer counts the cached read twice: 12 minutes reading plus 8 for the rest, about
+    20 in all.
+  - The memory column now gives the largest single process (Leiden 14 GB, not the 59 GB summed over four
+    parallel runs).
+  - The table caption now says what each sample time includes.
+  - Comparing MICA and Leiden as "level" holds only through the same sample, since Leiden on every cell
+    reaches 0.748.
+  - The design names the resolution grid (0.01 to 2.0, searched at 10 points). The list of label uses
+    includes the Allen atlas. The datasets caption says the benchmark runs use all genes.
+- **Appendix.**
+  - The provenance table moves Figure 1 to the protocol v1 rows and gains rows for the label-free signs
+    and the Allen run. Rhea should mirror both in `docs/provenance.csv` (R-9).
+  - The generated caption of the all-rules table no longer says "Assignment 2" (`a3_report.py`).
+  - The undefined "first plan" and "first runs" are now named as the early October plan and graph builds.
+  - The Allen reproduction paragraph gives the validation's result and the data source.
+- Build: 23 pages, no undefined references or values, the only overfull boxes are two bibliography URLs.
+  Lint clean. 23 tests pass, the protocol guard still matches the tag, and every generator rebuilds with
+  only the intended changes.
+
 ---
 
 ## 2026-11-14, Utshab (title, and the repository made easy to read)

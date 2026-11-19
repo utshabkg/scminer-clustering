@@ -5,20 +5,24 @@ label-free rule that chooses among them affect the reliability of such a compari
 scMINER's mutual information clustering, MICA, against principal components followed by Leiden or by
 $k$-means on the ten scMINER benchmark datasets, with settings chosen by subsampling stability in the
 style of chooseR. After exploratory runs at three seeds, we fixed a protocol in advance and ran seven new
-seeds on the nine small datasets and five on PBMC14K, scoring every run with our implementation and with
-chooseR's own code. The candidates decide the plain-maximum ranking. On each method's own grid Leiden
-leads MICA at every new seed, \V{S0.original.M.leiden} against \V{S0.original.M.mica} in mean adjusted
-Rand index, and offered the same cluster counts the two are level. The reading of the scores and the
-number of subsamples move the ranking as well, and the bootstrap interval moves individual choices: when
-a coarse setting reproduces perfectly, chooseR's code cannot form its interval and makes no choice, which
-happens in most MICA runs. MICA's lead under chooseR's reading holds at every seed but rests on one dataset.
-We separate the checks these findings suggest into six that run on unlabeled data and ask whether a
-choice is determined by the data, and five that need labels and judge a benchmark's ranking. On Pollen,
-flat stability scores and disagreeing readings flag MICA's choice without labels, and the labels confirm
-it: the two picks score \V{L.pollen.mica.ariF} and \V{L.pollen.mica.ariM}. On all \V{large.n_cells} cells
-of the Allen mouse brain atlas, both PCA pipelines ran in about \V{large.full.minutes_cold} minutes from the
-raw files, with no process above \V{large.max_process_gb}~GB, while MICA, which would need about
-\V{large.mica.extrap_tb}~TB, ran on a 100,000-cell sample with the other cells assigned to its clusters.
+seeds on the nine small datasets and five seeds, two of them new, on PBMC14K, scoring every run with our
+implementation and with chooseR's own code. On the nine small datasets the candidates decide the
+plain-maximum ranking: on each method's own grid Leiden leads MICA at every new seed,
+\V{S0.original.M.leiden} against \V{S0.original.M.mica} in mean adjusted Rand index, and offered the same
+cluster counts the two are level. The reading of the scores and the number of subsamples move the ranking
+as well, and the bootstrap interval moves individual choices: when a coarse setting reproduces perfectly,
+chooseR's code cannot form its interval and makes no choice, which happens in most MICA runs. The effects
+of the candidates and of the reading met criteria fixed in advance, while those of the number of
+subsamples and of the interval were measured without them. On matched candidates, MICA's lead under
+chooseR's reading holds at every seed, but with 25 subsamples it rests on one dataset. We separate the
+checks these findings suggest into six that run on unlabeled data and ask whether the menu is fair and
+the choice determined by the data, and five that need labels and judge a benchmark's ranking. On Pollen,
+flat stability scores and disagreeing readings show without labels that the data do not determine
+MICA's count, and the labels confirm it: the two readings' picks score \V{L.pollen.mica.ariF} and
+\V{L.pollen.mica.ariM}. On all \V{large.n_cells} cells of the Allen mouse brain atlas, both PCA pipelines
+ran in about \V{large.full.minutes_cold} minutes from the raw files, with no process above
+\V{large.max_process_gb}~GB, while MICA, which would need about \V{large.mica.extrap_tb}~TB, ran on a
+100,000-cell sample with the other cells assigned to its clusters.
 \end{abstract}
 
 \begin{IEEEkeywords}

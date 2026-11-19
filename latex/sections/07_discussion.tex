@@ -2,15 +2,19 @@
 \input{tables/effects}
 
 \textbf{What the experiments support.} Table~\ref{tab:effects} sorts the effects by the strength of the
-evidence behind them. The effects on the rule held at seven new seeds against criteria fixed in advance.
-The candidates decide the plain-maximum ranking, and on the nine small datasets that reversal is our
-sturdiest result: it holds at every seed, without any one dataset and at either number of subsamples. On
+evidence behind them. The effects of the candidates and of the reading, and where MICA's flat scores sit,
+held at seven new seeds against criteria fixed in advance. The effects of the number of subsamples, the
+interval and the setting per count were measured on the same runs but not fixed in advance. Leiden's lead
+on its own grid under the plain maximum is our sturdiest result: on the nine small datasets it holds at
+every seed, without any one dataset and at either number of subsamples, and matching the counts removes
+it. On
 PBMC14K the original grids favour MICA instead, \V{pbmc.S0.original.M.mica} against
 \V{pbmc.S0.original.M.leiden}, because there it is MICA's own grid that cannot reach 4 clusters. The
 reading moved MICA more than the baselines, and MICA's flat scores stayed in the smallest datasets. The
 effects on the methods held only in part. MICA's lead on matched candidates under chooseR's reading held at
-every new seed, but dataset by dataset the methods split about evenly, and with 25 subsamples the mean lead
-rests on Buettner. Under the plain maximum there is no lead to report. So this benchmark says more about
+every new seed, but MICA has the higher median on only \V{E5.S0.mid.F.micawins} of the nine datasets and
+Leiden on \V{E5.S0.mid.F.leidenwins}, and with 25 subsamples the mean lead rests on Buettner. Under the
+plain maximum with 25 subsamples there is no lead to report. So this benchmark says more about
 how the evaluation shapes a ranking than about which method clusters better.
 
 \textbf{Why the rankings change.} Four mechanisms account for what we saw, and each was measured rather
@@ -20,8 +24,8 @@ this effect. It shares Leiden's representation, so the gap between those two ref
 clustering step, and under the plain maximum that gap shrinks from \V{E2.original.M.leidenminuskmeans} on
 the original grids to \V{E2.mid.M.leidenminuskmeans} once the counts are matched. It shares MICA's menu
 and clustering step, so the gap between those two reflects the representation, and that gap barely
-moves, \V{E2.original.M.micaminuskmeans} against \V{E2.mid.M.micaminuskmeans}. The candidates changed
-which method looked better, while the representation contributed about the same in both designs, though
+moves, \V{E2.original.M.micaminuskmeans} against \V{E2.mid.M.micaminuskmeans}. The candidates removed
+Leiden's lead, while the representation contributed about the same in both designs, though
 under the plain maximum that contribution rests on Usoskin. Haslbeck and Wulff found that a stability
 estimate depends on its candidate range in the same way \cite{Haslbeck2020Corrected}.
 
@@ -29,9 +33,11 @@ The second mechanism is ties. When many settings reproduce almost perfectly, sta
 separates them and the tie-break decides, toward fewer clusters under the plain maximum and toward more
 under chooseR's reading. Ben-David et al. showed that stability alone cannot tell such settings apart
 \cite{BenDavid2006Sober}, and here it is mostly MICA's problem. Its distance between two cells does not
-change when the sample does, and on a few hundred cells removing a fifth of them often leaves its
-partitions unchanged \cite{vonLuxburg2010Stability}, which may be why its scores are flat where Leiden's
-are not.
+change when the sample does, and on the five smallest datasets \V{C3.five_smallest.mica.atone} percent of its settings
+reproduce perfectly, against \V{C3.four_larger.mica.atone} percent on the four larger datasets and
+\V{C3.five_smallest.leiden.atone} percent of Leiden's. A perturbation too small to change the clustering makes
+stability trivial \cite{vonLuxburg2010Stability}, which may be why MICA's scores are flat where Leiden's are
+not.
 
 The third is the interval. The threshold is the highest lower bound among the candidates, so how the
 interval is computed decides which settings clear it. A coarse partition that reproduces perfectly is
@@ -43,45 +49,48 @@ are only a few clusters, and on PBMC14K that alone moved MICA's choice on its or
 \V{pbmc.S2.original.F.mica.k} clusters to \V{pbmc.S3G.original.F.mica.k}. The fourth mechanism is the
 number of subsamples, which left the matched finest-stable comparison unchanged in direction but turned
 the matched plain-maximum comparison from level into a MICA lead, and the original-grid finest-stable
-comparison from level into a MICA lead as well.
+comparison from level into a narrow MICA lead that rests on Buettner.
 
 \input{tables/checks}
 
 \textbf{What to check before trusting a comparison.} The mechanisms suggest checks, and they come in two
-kinds (Table~\ref{tab:checks}). Checks 1 to 6 need no labels. They ask whether the rule's choice is
-determined by the data, from things a user can see on new data: the counts each method can reach, the
+kinds (Table~\ref{tab:checks}). Checks 1 to 6 need no labels. They ask whether the menu is fair and the
+rule's choice is determined by the data, from things a user can see on new data: the counts each method can reach, the
 stability scores, the count each reading picks and how it moves across draws, settings and
 implementations. Checks 7 to 11 need reference labels. They ask whether a benchmark's ranking of methods
 holds up, and so they are for whoever builds or reads a benchmark, not for a user facing unlabeled data. A
 label-free check can only say that a choice is not determined, never that it is right, and a benchmark
 check can only show that a ranking is fragile. Within what we tested, no comparison passes all eleven, so
-we have not shown that passing them is enough. Our matched finest-stable comparison passes checks 1, 8, 9
-and 10. It passes check 6 only with the repair the protocol declared and check 11 only with 100
-subsamples, it fails check 2 on the five smallest datasets, and its lead disappears under the plain
-maximum with 25 subsamples (check 7). We therefore read it as a lead for MICA under chooseR's reading on
-these datasets, not as evidence that mutual information clusters better in general. A user should also report
-the chosen number of clusters beside any score, because a respectable ARI can come with a badly wrong
-count.
+we have not shown that passing them is enough. Our matched finest-stable comparison passes checks 1, 8 and
+10, and check 9 once chooseR's failed intervals are repaired. It passes check 11 only with 100 subsamples.
+It fails check 2 on the five smallest datasets and check 6, since chooseR's code as written makes no choice
+in most MICA runs and the chosen count moves with the number of subsamples in \V{L.moved.leiden} Leiden and
+\V{L.moved.mica} MICA runs. Its lead also disappears under the plain maximum with 25 subsamples (check 7). We therefore read it as a lead for MICA under chooseR's reading on
+these datasets, not as evidence that mutual information clusters better in general. A benchmark should also
+report the chosen number of clusters beside any score, because a respectable ARI can come with a badly
+wrong count.
 
-\textbf{Spotting an unreliable choice without labels.} Take MICA on Pollen in the confirmatory runs and
-suppose the labels were unknown. Two signs are visible before any comparison with labels. The stability
+\textbf{Spotting an unreliable choice without labels.} Take MICA on Pollen in the confirmatory runs on
+matched candidates and suppose the labels were unknown. Two signs are visible before any comparison with labels. The stability
 scores are flat at the top: \V{L.pollen.mica.share} percent of the settings lie within 0.01 of the best,
-across a span of \V{L.pollen.mica.span} cluster counts (Figure~\ref{fig:curve}, middle). And the two
+with the tied settings running from \V{L.pollen.mica.tiedlo} to \V{L.pollen.mica.tiedhi} clusters
+(Figure~\ref{fig:curve}, middle). And the two
 readings disagree: chooseR's reading picks \V{L.pollen.mica.kF} clusters and the plain maximum picks
-\V{L.pollen.mica.kM} (checks 2 and 3). Either sign says that the data do not determine the count, so the
+\V{L.pollen.mica.kM}, the smallest count offered (checks 2, 3 and 4). Either sign says that the data do not determine the count, so the
 tie-break does. The labels confirm the warning. Pollen has \V{L.pollen.mica.truek} cell types, and the two
 picks score an ARI of \V{L.pollen.mica.ariF} and \V{L.pollen.mica.ariM}. The same signs fire for MICA on
-Yan and on Chung, where both picks score below 0.5. Across all \V{L.runs} confirmatory runs on the small
+Yan and on Chung, where both picks score below 0.5. Across all \V{L.runs} confirmatory runs on matched candidates on the small
 datasets, the readings picked counts \V{L.gap} or more apart in \V{L.disagree.n} runs, and in those runs the
 two picks differed in ARI by \V{L.disagree.arigap} on average, against \V{L.agree.arigap} in the other
 runs. A pick at the smallest count offered is another sign (check 4). Such picks averaged an ARI of
 \V{L.floor.F.ari} under chooseR's reading, against \V{L.interior.F.ari} for picks inside the range. The
 signs are warnings, not guarantees. Leiden on Buettner shows no flat top and its readings agree, yet its
-picks score only \V{L.buettner.leiden.ariF} and \V{L.buettner.leiden.ariM}, so a choice that passes the
-label-free checks can still be poor.
+picks score only \V{L.buettner.leiden.ariF} and \V{L.buettner.leiden.ariM}. Only check 4 hints at trouble
+there, since its plain-maximum pick sits at the floor in \V{L.buettner.leiden.floorM} runs. Passing checks 2
+and 3 is not enough.
 
-\textbf{Limitations.} The rules all come from one family, subsampling stability, and the benchmark datasets
-from one source, nine of them small. Other label-free rules, such as significance tests, may rank the
+\textbf{Limitations.} The main rule and its two readings come from one family, subsampling stability, and
+the benchmark datasets from one source, nine of them small. Other label-free rules, such as significance tests, may rank the
 methods differently. The matched design was introduced after we had seen the exploratory results. Its
 conclusions are now tested at new seeds under a protocol tagged in advance, but the criteria were written
 knowing the results at seeds 0 to 2, and the per-dataset analysis and the label-free signs above were

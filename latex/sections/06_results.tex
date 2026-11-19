@@ -122,7 +122,7 @@ original grids Leiden still leads, \V{S1.original.M.leiden} against \V{S1.origin
 \includegraphics[width=\textwidth]{figures/a4_stability_curve.pdf}
 \caption{Stability and accuracy against the number of clusters, for MICA and Leiden on three datasets,
 from the confirmatory runs on matched candidates (medians over seeds 3 to 9, 25 subsamples). Solid lines
-are the stability score the rule maximises and need no labels. Dashed lines are the ARI against the
+are the stability score the rule reads, and need no labels. Dashed lines are the ARI against the
 reference labels. Triangles mark the counts the two readings picked, as a median over the seeds, and the
 dotted line the true number of types. Where the solid line is flat, the rule has no basis for preferring
 one setting over another, and its tie-break decides instead.}
@@ -132,8 +132,8 @@ one setting over another, and its tie-break decides instead.}
 \subsection{Where the choice is ambiguous}\label{sec:ambiguous}
 Figure~\ref{fig:curve} shows the three shapes a stability curve takes. On Buettner MICA's stability falls
 as clusters are added and the rule finds a clear maximum near the truth. On Pollen it stays at its
-maximum across most of the range, leaving the threshold nothing to act on. On Zeisel it has a clear maximum
-in the wrong place. The flat top is mostly MICA's and sits in the smallest datasets (C3). On the five
+maximum across most of the range, leaving the threshold nothing to act on. On Zeisel it is nearly flat from 2 to
+7 clusters, and its narrow intervals let the rule settle on 2 or 3, well below the truth. The flat top is mostly MICA's and sits in the smallest datasets (C3). On the five
 datasets of at most 317 cells, \V{C3.five_smallest.mica.share} of MICA's settings score within 0.01 of its
 best, against \V{C3.four_larger.mica.share} on the four larger ones and \V{C3.five_smallest.leiden.share}
 for Leiden. When scores tie, the reading decides, and it moves MICA more (C2): the finest and plain-maximum
@@ -198,34 +198,38 @@ So on the original grids MICA leads Leiden on PBMC14K under every scorer and at 
 \subsection{The Allen atlas at full scale}\label{sec:large}
 After preprocessing the atlas has \V{large.n_cells} cells by \V{large.n_genes} genes, and the PCA pipelines
 use \V{large.n_hvg} of those genes, reduced to \V{large.n_pcs} components (Table~\ref{tab:large}). Both
-pipelines ran on every cell. Reading the 13 raw files from disk took \V{large.read.minutes_cold} minutes,
-and the rest of the preprocessing and either clustering about \V{large.full.minutes} more, with no single
-process above \V{large.max_process_gb}~GB. Set to the 34 classes, $k$-means reaches an ARI of
-\V{large.kmeans.ari} on all cells. Leiden, at the resolution whose count is closest to 34, reaches
-\V{large.leiden.ari} with \V{large.leiden.k} clusters. No resolution on the grid gave exactly 34, since 0.05
-gave 31 and 0.06 gave 37, and the labels broke the tie. At Scanpy's default resolution, which needs no
-labels, Leiden gives \V{large.leiden.default.k} clusters and an ARI of \V{large.leiden.default.ari}.
+pipelines ran on every cell. The whole run took about \V{large.full.minutes_cold} minutes from the raw
+files, \V{large.read.minutes_cold} of them reading the 13 files from disk, and no single process used more
+than \V{large.max_process_gb}~GB. Set to the 34 classes, $k$-means reaches an ARI of \V{large.kmeans.ari} on
+all cells at seed 0, and \V{large.kmeans.ari_seeds} over three seeds. Leiden, at the resolution whose count
+is closest to 34, reaches \V{large.leiden.ari} with \V{large.leiden.k} clusters at seed 0, and
+\V{large.leiden.ari_seeds} over three seeds. At seed 0 no resolution we ran gave exactly 34:
+\V{large.leiden.res} gave \V{large.leiden.k} and \V{large.leiden.runnerup.res} gave
+\V{large.leiden.runnerup.k}, neighbours on the grid, and the ARI broke the tie, \V{large.leiden.ari} against
+\V{large.leiden.runnerup.ari}. At Scanpy's default resolution, which needs no labels, Leiden gives
+\V{large.leiden.default.k} clusters and an ARI of \V{large.leiden.default.ari}.
 
 The label-free checks are cheap at this size. Partitions from different seeds agree at an ARI of at least
 \V{large.kmeans.seed_ari_min} for $k$-means and \V{large.leiden.seed_ari_min} for Leiden at the chosen
 resolution, but at that resolution Leiden's count moved from \V{large.leiden.k_seeds} clusters across the
-three seeds (check 5). A setting also means something different at another size. Resolution
-\V{large.leiden.pilot_res}, the pick on the 100,000-cell sample, gives 35 clusters there and
-\V{large.leiden.k_at_pilot_res} on all cells, so a setting tuned on a sample does not carry over to the full
-data, and the full-data Leiden result and the sample's are not at the same setting.
+three seeds (check 5 in Table~\ref{tab:checks}). A setting also means something different at another size.
+Resolution \V{large.leiden.pilot_res}, the pick on the 100,000-cell sample, gives \V{large.sample.leiden.k}
+clusters there and \V{large.leiden.k_at_pilot_res} on all cells. A setting tuned on a sample does not carry
+over to the full data, and the full-data and sample results for Leiden are not at the same setting.
 
 MICA ran only on the sample. There it took \V{large.mica.hours} hours and \V{large.mica.peak_gb}~GB and
 reached \V{large.sample.mica.ari} with \V{large.sample.mica.k} clusters, level with Leiden's
 \V{large.sample.leiden.ari} on the same cells and ahead of $k$-means' \V{large.sample.kmeans.ari}. Giving
-the other \V{large.n_assigned} cells the cluster of their nearest sample cells took about a minute and
-scores \V{large.assigned.mica.ari} on all cells. Within the sample, the vote gave a held-out cell its own
-MICA cluster \V{large.holdout.mica.acc} percent of the time, which needs no labels and says the
-assignment step adds little error. The result is still an approximation. MICA never saw
-\V{large.unseen_pct} percent of the cells, and the assignment works in the principal components rather than
-MICA's own distance. Extended the same way, the baselines' sample partitions score
-\V{large.assigned.kmeans.ari} and \V{large.assigned.leiden.ari}, so on this atlas, at the label-fixed
-setting, MICA and Leiden are level and both are ahead of $k$-means, whether the sample or the assigned
-cells are scored.
+the other \V{large.n_assigned} cells the cluster of their nearest sample cells took about
+\V{large.assign.seconds} seconds and scores \V{large.assigned.mica.ari} on all cells. Within the sample, the
+vote gave a held-out cell its own MICA cluster \V{large.holdout.mica.acc} percent of the time, which needs
+no labels and says the assignment step adds little error. The result is still an approximation. MICA
+never saw \V{large.unseen_pct} percent of the cells, and the assignment works in the principal components
+rather than MICA's own distance. Extended the same way, the baselines' sample partitions score
+\V{large.assigned.kmeans.ari} and \V{large.assigned.leiden.ari} on all cells. Compared through the same
+sample, then, MICA and Leiden are level and both are ahead of $k$-means, whether the sample alone or all
+cells after assignment are scored. Leiden run on every cell, at its own setting, reaches
+\V{large.leiden.ari}.
 
 \subsection{Secondary rules, at the exploratory seeds}\label{sec:transfer}
 These ran at seeds 0 to 2 or at one seed and were not repeated (Appendices~\ref{app:rulesall},

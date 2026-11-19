@@ -166,7 +166,7 @@ def main():
         "three seeds, and a pair such as (15-18) gives the smallest and largest count over those "
         "seeds. The silhouette rule was run at one seed. The mean row covers the nine small-data "
         "datasets. On PBMC14K MICA runs in graph mode, so its default there is the graph-mode "
-        "resolution, 1.822 scored at 1.8, from one Assignment 2 run, and the silhouette rule was "
+        "resolution, 1.822 scored at 1.8, from one run made before the selection experiments, and the silhouette rule was "
         "not run. Table~\\ref{tab:common} gives the stability rule on the cluster counts the "
         "baseline produces.",
         star=True))

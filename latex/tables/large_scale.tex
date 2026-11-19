@@ -1,7 +1,7 @@
 % Written by scripts/large_scale/make_tables.py from results/large_scale/. Do not edit by hand.
 \begin{table*}[t]
 \centering
-\caption{The Allen whole mouse brain atlas, 2,341,350 cells by 30,520 genes after preprocessing. Full data: the method ran on every cell. Sample: a uniform random 100,000-cell sample, the only size at which MICA runs on our machine, scored on those cells. Sample and assigned: every other cell takes the majority cluster of its 15 nearest sample cells in the full-data principal components, scored on every cell. Each method is set to the 34 classes, except Leiden's default. Time is the clustering itself, after the shared preprocessing (6 min, at most 56~GB). Peak memory sums a stage's processes, an upper bound when forked workers share memory: no single process used more than 18~GB. Sample times and memory are from the whole-job pilot runs, where Leiden's time includes a sweep of 200 resolutions. The assignment rows add only the neighbour search and vote.}
+\caption{The Allen whole mouse brain atlas, 2,341,350 cells by 30,520 genes after preprocessing. Full data: the method ran on every cell. Sample: a uniform random 100,000-cell sample, the size at which we ran MICA, scored on those cells. Sample and assigned: every other cell takes the majority cluster of its 15 nearest sample cells in the full-data principal components, scored on every cell. Each method is set to the 34 classes, except Leiden's default, and full-data scores are for seed 0 of three. Time is the clustering itself, after the shared preprocessing (17 min from disk, 6 min with the raw files cached). Peak memory is the largest single process. The preprocessing ran four regions at a time and Leiden four resolutions at a time, and together their processes held up to 59~GB. Sample times are each method's share of the pilot job: $k$-means' includes gene selection and PCA, Leiden's the graph and a sweep of 200 resolutions, MICA's its whole run, with 40 resolutions and its plots. Sample memory is the pilot job's peak. The assignment rows add only the neighbour search and vote.}
 \label{tab:large}
 \footnotesize
 \setlength{\tabcolsep}{4pt}
@@ -11,8 +11,8 @@ Method & Setting & Clusters & ARI & AMI & Time & Peak memory \\
 \midrule
 \multicolumn{7}{l}{\textit{Full data, 2,341,350 cells}} \\
 PCA + $k$-means & $k = 34$ & 34 & 0.590 & 0.818 & 80 s & 2~GB \\
-PCA + Leiden & resolution 0.05 & 31 & 0.748 & 0.873 & 3 min & 59~GB \\
-PCA + Leiden & resolution 1.0 (default) & 93 & 0.522 & 0.830 & 3 min & 59~GB \\
+PCA + Leiden & resolution 0.05 & 31 & 0.748 & 0.873 & 3 min & 14~GB \\
+PCA + Leiden & resolution 1.0 (default) & 93 & 0.522 & 0.830 & 3 min & 14~GB \\
 \midrule
 \multicolumn{7}{l}{\textit{Sample, 100,000 cells}} \\
 PCA + $k$-means & $k = 34$ & 34 & 0.579 & 0.820 & 46 s & 27~GB \\

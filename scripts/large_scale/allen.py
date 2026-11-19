@@ -608,6 +608,16 @@ def stage_collect(scope, args):
                     agree.append({"method": "PCA + Leiden", "setting": f"resolution {r:.2f}", "seeds": f"{s}-{t}",
                                   "ari": float(adjusted_rand_score(np.load(fs), np.load(ft)))})
     pd.DataFrame(agree).to_csv(scope.results / "seed_agreement.csv", index=False)
+    # every saved full-data partition scored, so each seed and each resolution tried can be cited
+    scores = []
+    for f in sorted(part.glob("kmeans_k*_seed*.npy")) + sorted(part.glob("leiden_res*_seed*.npy")):
+        stem = f.stem
+        method = "PCA + k-means" if stem.startswith("kmeans") else "PCA + Leiden"
+        setting = f"k = {K}" if method == "PCA + k-means" else f"resolution {stem.split('_res')[1].split('_')[0]}"
+        s = metrics.score(truth, np.load(f))
+        scores.append({"method": method, "setting": setting, "seed": int(stem.rsplit("seed", 1)[1]),
+                       "n_clusters": s["n_clusters"], "ari": s["ari"], "ami": s["ami"]})
+    pd.DataFrame(scores).to_csv(scope.results / "partition_scores.csv", index=False)
     if km:
         metrics.per_type_recall(truth, km[0]).to_csv(scope.results / "per_type_recall_kmeans.csv", index=False)
     stages = [json.loads(l) for l in (scope.results / "stages.jsonl").read_text().splitlines()]

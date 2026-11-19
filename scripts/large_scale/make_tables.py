@@ -92,9 +92,10 @@ def main():
     le = row("PCA + Leiden", "full data", f"resolution {res:.2f}")
     ld = row("PCA + Leiden", "full data", "resolution 1.00")
     groups = {
-        "full": [("PCA + $k$-means", "$k = 34$", km, kseconds, costs.loc["kmeans", "peak_gb"]),
-                 ("PCA + Leiden", f"resolution {res:.2f}", le, graph_s + leiden_s, costs.loc["leiden", "peak_gb"]),
-                 ("PCA + Leiden", "resolution 1.0 (default)", ld, graph_s + default_s, costs.loc["leiden", "peak_gb"])],
+        "full": [("PCA + $k$-means", "$k = 34$", km, kseconds, costs.loc["kmeans", "peak_process_gb"]),
+                 ("PCA + Leiden", f"resolution {res:.2f}", le, graph_s + leiden_s, costs.loc["leiden", "peak_process_gb"]),
+                 ("PCA + Leiden", "resolution 1.0 (default)", ld, graph_s + default_s,
+                  costs.loc["leiden", "peak_process_gb"])],
         "sample": [], "assigned": []}
     for key, name in [("kmeans", "PCA + $k$-means"), ("leiden", "PCA + Leiden"), ("mica", "MICA, graph mode")]:
         setting = {"kmeans": "k = 34", "leiden": "pilot resolution", "mica": "paper rule"}[key]
@@ -103,22 +104,29 @@ def main():
         cost_gb = PILOT["mica_gb"] if key == "mica" else PILOT["baselines_gb"]
         groups["sample"].append((name, label_setting(key, assign, pilot), s, cost_s, cost_gb))
         groups["assigned"].append((name, label_setting(key, assign, pilot), a,
-                                   assign["knn_seconds"] + assign["vote_seconds"][key], costs.loc["assign", "peak_gb"]))
+                                   assign["knn_seconds"] + assign["vote_seconds"][key], costs.loc["assign", "peak_process_gb"]))
 
+    # The full run read the raw files after the 100,000-cell check had just read them, so they came from the
+    # page cache. Reading them from disk is the first pass of that check, which reads every block of every file.
+    cold_read = pd.read_csv(RESULTS / "large_scale_sample100k" / "stages.csv").set_index("stage").loc["scan", "wall_s"]
+    prep_cold = prep.wall_s.sum() - costs.loc["scan", "wall_s"] + cold_read
     n_s = assign["n_reference"]
     lines = [r"% Written by scripts/large_scale/make_tables.py from results/large_scale/. Do not edit by hand.",
              r"\begin{table*}[t]", r"\centering",
              r"\caption{The Allen whole mouse brain atlas, " + f"{dims['n_cells']:,}" + r" cells by "
              + f"{dims['n_genes_kept']:,}" + r" genes after preprocessing. Full data: the method ran on every cell. "
-             r"Sample: a uniform random " + f"{n_s:,}" + r"-cell sample, the only size at which MICA runs on our "
-             r"machine, scored on those cells. Sample and assigned: every other cell takes the majority cluster of "
-             r"its 15 nearest sample cells in the full-data principal components, scored on every cell. Each method "
-             r"is set to the 34 classes, except Leiden's default. Time is the clustering itself, after the shared "
-             r"preprocessing (" + fmt_time(prep.wall_s.sum()) + r", at most " + f"{prep.peak_gb.max():.0f}"
-             + r"~GB). Peak memory sums a stage's processes, an upper bound when forked workers share memory: no "
-             r"single process used more than " + f"{costs.peak_process_gb.max():.0f}" + r"~GB. Sample times and memory "
-             r"are from the whole-job pilot runs, where Leiden's time includes a sweep of 200 resolutions. The "
-             r"assignment rows add only the neighbour search and vote.}",
+             r"Sample: a uniform random " + f"{n_s:,}" + r"-cell sample, the size at which we ran MICA, scored on "
+             r"those cells. Sample and assigned: every other cell takes the majority cluster of its 15 nearest sample "
+             r"cells in the full-data principal components, scored on every cell. Each method is set to the 34 "
+             r"classes, except Leiden's default, and full-data scores are for seed 0 of three. Time is the "
+             r"clustering itself, after the shared preprocessing (" + fmt_time(prep_cold) + r" from disk, " +
+             fmt_time(prep.wall_s.sum()) + r" with the raw files cached). Peak memory is the largest single process. "
+             r"The preprocessing ran four regions at a time and Leiden four resolutions at a time, and together "
+             r"their processes held up to " + f"{max(prep.peak_gb.max(), costs.loc['leiden', 'peak_gb']):.0f}"
+             + r"~GB. Sample times are each method's share of the pilot job: $k$-means' includes gene selection "
+             r"and PCA, Leiden's the graph and a sweep of 200 resolutions, MICA's its whole run, with 40 "
+             r"resolutions and its plots. Sample memory is the pilot job's peak. The assignment rows add only "
+             r"the neighbour search and vote.}",
              r"\label{tab:large}", r"\footnotesize", r"\setlength{\tabcolsep}{4pt}",
              r"\begin{tabular}{llrrrrr}", r"\toprule",
              r"Method & Setting & Clusters & ARI & AMI & Time & Peak memory \\", r"\midrule"]
@@ -150,15 +158,22 @@ def main():
          "mica.hours": f"{PILOT['mica_s'] / 3600:.1f}", "mica.peak_gb": f"{PILOT['mica_gb']:.0f}",
          "mica.extrap_days": PILOT["mica_extrap_days"], "mica.extrap_tb": f"{PILOT['mica_extrap_tb']:.1f}",
          "assign.minutes": f"{assign['knn_seconds'] / 60:.0f}"}
-    # The full run read the raw files after the 100,000-cell check had just read them, so they came from the
-    # page cache. Reading them from disk is the first pass of that check, which reads every block of every file.
-    cold_read = \
-        pd.read_csv(RESULTS / "large_scale_sample100k" / "stages.csv").set_index("stage").loc["scan", "wall_s"]
-    full_s = prep.wall_s.sum() + max(kseconds, graph_s + leiden_s)
-    v["full.minutes"] = f"{full_s / 60:.0f}"
-    v["full.minutes_cold"] = f"{(full_s - costs.loc['scan', 'wall_s'] + cold_read) / 60:.0f}"
+    rest_s = prep.wall_s.sum() - costs.loc["scan", "wall_s"] + max(kseconds, graph_s + leiden_s)
+    v["rest.minutes"] = f"{rest_s / 60:.0f}"                       # everything after reading the files
+    v["full.minutes_cold"] = f"{(rest_s + cold_read) / 60:.0f}"
     v["read.minutes_cold"] = f"{cold_read / 60:.0f}"
-    v["max_process_gb"] = f"{costs.peak_process_gb.max():.0f}"
+    v["max_process_gb"] = f"{costs.peak_process_gb.max():.1f}"
+    v["assign.seconds"] = f"{assign['knn_seconds'] + assign['vote_seconds']['mica']:.0f}"
+    sc = pd.read_csv(OUT / "partition_scores.csv")
+    for meth, short, setting in (("PCA + k-means", "kmeans", "k = 34"), ("PCA + Leiden", "leiden", f"resolution {res:.2f}")):
+        s = sc[(sc.method == meth) & (sc.setting == setting)]
+        v[f"{short}.ari_seeds"] = f"{s.ari.min():.3f} to {s.ari.max():.3f}"
+    near = search[(search.seed == 0) & ((search.n_clusters - 34).abs() == abs(int(le.n_clusters) - 34))
+                  & ((search.resolution - res).abs() > 1e-9)]
+    if len(near):
+        r2 = float(near.resolution.iloc[0])
+        s2 = sc[(sc.method == "PCA + Leiden") & (sc.setting == f"resolution {r2:.2f}") & (sc.seed == 0)].iloc[0]
+        v["leiden.runnerup.res"], v["leiden.runnerup.k"], v["leiden.runnerup.ari"] = f"{r2:.2f}", str(int(s2.n_clusters)), f"{s2.ari:.3f}"
     v["full.max_gb"] = f"{max(prep.peak_gb.max(), costs.loc['kmeans', 'peak_gb'], costs.loc['leiden', 'peak_gb']):.0f}"
     for key in ("kmeans", "leiden", "mica"):
         setting = {"kmeans": "k = 34", "leiden": "pilot resolution", "mica": "paper rule"}[key]
