@@ -26,6 +26,24 @@ Next three things (Nov 19): the Allen run on all cells (U-46), the checks split 
 
 ---
 
+## 2026-11-23, Utshab (slides)
+
+- Utshab sent the teammate message and uploaded the new paper to Overleaf from `latex/` at 0ebed5a, with no
+  new export first. Six files were new: `numbers_large.tex` in the root, `tables/checks.tex`, `datasets.tex`,
+  `effects.tex`, `large_scale.tex` and `figures/a4_stability_curve.pdf`. Without `numbers_large.tex` the
+  paper still compiles but shows every Allen number as a bold ??large value.
+- Slides (U-49): a Claude Slides deck of 19 slides, private until shared from its Share menu.
+  - Speaker notes on every slide, and each footer names its presenter: Laraib 1 to 6 (motivation,
+    related work, data), Rhea 7 to 10 (methods, rule, designs, protocol), Utshab 11 to 19 (results,
+    checks, Pollen, Allen, conclusions).
+  - Every number is taken from `latex/numbers_a4.tex` and `latex/numbers_large.tex`.
+  - The Pollen figure is redrawn large by `scripts/tools/slide_figures.py` from the same runs as the
+    paper's Figure 1 (`docs/slides/pollen_curve.png`).
+  - Not previewed in a browser: the deck type's preview needs a local Playwright, and there is none on
+    this machine. A review workflow checked the numbers, the writing rules, the fit and the timing.
+
+---
+
 ## 2026-11-19, Utshab (Nov 17 feedback, and the plan for Nov 30)
 
 **What the instructor asked for.** His letter is kept in the gitignored `scratchpad/`. In summary:
