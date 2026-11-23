@@ -3,11 +3,11 @@ The code and the per-run results are at \url{https://github.com/utshabkg/scminer
 protocol is tagged \texttt{matched-protocol-v1}. The ten benchmark inputs are the scMINER authors'
 processed release, \url{https://doi.org/10.5281/zenodo.15040179}. The saved subsample partitions of
 protocol v1 take 11 GB, too large for GitHub, and we share them on request.
-\texttt{scripts/a4\_protocol\_v1.py} rebuilds the generated protocol v1 tables, both figures and the
-protocol v1 numbers in the text from the saved result files, and
+\texttt{scripts/a4\_protocol\_v1.py} rebuilds the generated protocol v1 tables, both figures and most of
+the protocol v1 numbers in the text from the saved result files, and
 \texttt{notebooks/assignment3\_results.ipynb} does the same for the exploratory runs' displays, so they
 can be checked without rerunning an experiment. \texttt{scripts/large\_scale/make\_tables.py} does the same
-for the Allen atlas. Appendix~\ref{app:repro} gives the layout of those files
+for the Allen atlas, taking the time and memory of the 100,000-cell pilot from \texttt{docs/allen\_pilot.md}. Appendix~\ref{app:repro} gives the layout of those files
 and the commands that produced them.
 
 \section{The datasets}\label{app:data}
@@ -204,7 +204,8 @@ package versions and checksums of its inputs. Every subsample partition is saved
 rerun without clustering again. \texttt{scripts/check\_v1\_regression.py} compares seeds 0 to 2 with
 the exploratory runs' folders, and \texttt{scripts/a4\_protocol\_v1.py} computes every criterion and writes
 \url{results/a4_protocol_v1_numbers.json} and \texttt{latex/numbers\_a4.tex}, from which the text
-prints each protocol v1 number.
+prints most protocol v1 numbers. The rest, such as values for one dataset or one seed quoted as
+examples, are typed from the per-run files.
 
 \textbf{The Allen atlas.} \texttt{scripts/large\_scale/run.sh} runs each stage of
 \texttt{scripts/large\_scale/allen.py} as its own process, so that its time and peak memory are measured

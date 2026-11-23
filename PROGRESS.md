@@ -39,8 +39,39 @@ Next three things (Nov 19): the Allen run on all cells (U-46), the checks split 
   - Every number is taken from `latex/numbers_a4.tex` and `latex/numbers_large.tex`.
   - The Pollen figure is redrawn large by `scripts/tools/slide_figures.py` from the same runs as the
     paper's Figure 1 (`docs/slides/pollen_curve.png`).
-  - Not previewed in a browser: the deck type's preview needs a local Playwright, and there is none on
-    this machine. A review workflow checked the numbers, the writing rules, the fit and the timing.
+  - Three review rounds. The first confirmed 72 problems (claims, scope, terms, timing), all fixed. A
+    second pass on the revised deck confirmed 19 more, and a check of those fixes confirmed 14 more,
+    all fixed. Deck version 17 holds them all. The main ones:
+    - The "about 20 minutes from the raw files" for Allen was never one run. It added the cold read of
+      the 100,000-cell check to parts of the full run. Now measured: the full run (3 k-means seeds,
+      14 Leiden runs) took 19 minutes elapsed with the files cached (`wall_s_outer`, manifest to Leiden,
+      `results/large_scale/stage_costs.csv`). From disk it would take about 29, adding the cold first
+      pass (713 s against 78 s cached). The 18.2 GB is the largest single process, and the processes
+      running side by side held up to 59 GB.
+    - The Buettner example said only check 4 flags Leiden there. Check 6 does too: chooseR's code picks
+      a different count from ours in 3 of 7 runs (new keys `L.<ds>.<m>.impl` and `.moved` from
+      `scripts/a4_protocol_v1.py`, matched, seeds 3 to 9). Fixed in the deck and in the Discussion.
+    - Scope fixes: the PBMC14K result is now on the conclusion slide (own grid MICA 0.624 against
+      0.397, matched plain maximum level at 4 of 5 seeds). The tag check covers protocol v1 runs only,
+      not the Allen run. The main score reads the first 25 subsamples. The reproduction is label-fixed.
+      The k-means control holds only where MICA also runs k-means.
+  - Paper changes from the same reviews: abstract and Section V-H give the measured time.
+    `make_tables.py` writes `large.full.minutes_cached` (19), `large.full.minutes_disk` (29),
+    `large.kmeans.n_seeds` and `large.leiden.n_runs`, and drops `full.minutes_cold` and `rest.minutes`.
+    The appendix now says most protocol v1 numbers in the text are generated, not all, and that the
+    pilot's time and memory come from `docs/allen_pilot.md`. The introduction's bullet says the rule's
+    details "matter" (the interval changes choices, not the ranking). No table or figure changed, and
+    `results/a4_protocol_v1_numbers.json` only gained keys.
+  - Previewed with the machine's own Chrome (headless, the viewer's base CSS, real fonts): every slide
+    fits, the lowest content edge is Pollen's at 912 of 920 px, and no text overflows its box.
+  - Speaker notes at 130 words a minute: Laraib 6.9 min, Rhea 7.2, Utshab 13.6, about 28 in all. The
+    Dec 1 rehearsal has to confirm it fits 30 with pauses. If it runs long, cut Utshab's notes first.
+  - Checks after the changes: 23 tests pass, `code_matches_tag: True`, the Times build has 23 pages
+    with no ?? and no undefined references, and the prose lint is clean on the deck text and every
+    section. Two overfull boxes (6.6 pt in `tables/a4_decomp.tex`, 1.3 pt in `tables/a3_datasets.tex`)
+    were already in the committed build.
+  - Overleaf needs these files again: `numbers_a4.tex`, `numbers_large.tex`, and in `sections/`
+    `00_abstract`, `02_introduction`, `06_results`, `07_discussion` and `09_appendix`.
 
 ---
 

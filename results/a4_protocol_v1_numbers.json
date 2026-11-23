@@ -1948,7 +1948,9 @@
     "tied_lo": 2,
     "tied_hi": 2,
     "floor_F": "7 of 7",
-    "floor_M": "7 of 7"
+    "floor_M": "7 of 7",
+    "moved": "0 of 7",
+    "impl_differs": "0 of 7"
    },
    "buettner/leiden_pca": {
     "share_tied": 0.059,
@@ -1962,7 +1964,9 @@
     "tied_lo": 2,
     "tied_hi": 2,
     "floor_F": "3 of 7",
-    "floor_M": "5 of 7"
+    "floor_M": "5 of 7",
+    "moved": "1 of 7",
+    "impl_differs": "3 of 7"
    },
    "buettner/mica": {
     "share_tied": 0.118,
@@ -1976,7 +1980,9 @@
     "tied_lo": 2,
     "tied_hi": 3,
     "floor_F": "0 of 7",
-    "floor_M": "4 of 7"
+    "floor_M": "4 of 7",
+    "moved": "0 of 7",
+    "impl_differs": "4 of 7"
    },
    "chung/kmeans_pca": {
     "share_tied": 0.062,
@@ -1990,7 +1996,9 @@
     "tied_lo": 3,
     "tied_hi": 3,
     "floor_F": "1 of 7",
-    "floor_M": "1 of 7"
+    "floor_M": "1 of 7",
+    "moved": "0 of 7",
+    "impl_differs": "6 of 7"
    },
    "chung/leiden_pca": {
     "share_tied": 0.267,
@@ -2004,7 +2012,9 @@
     "tied_lo": 3,
     "tied_hi": 7,
     "floor_F": "0 of 7",
-    "floor_M": "0 of 7"
+    "floor_M": "0 of 7",
+    "moved": "5 of 7",
+    "impl_differs": "0 of 7"
    },
    "chung/mica": {
     "share_tied": 0.5,
@@ -2018,7 +2028,9 @@
     "tied_lo": 2,
     "tied_hi": 12,
     "floor_F": "0 of 7",
-    "floor_M": "7 of 7"
+    "floor_M": "7 of 7",
+    "moved": "4 of 7",
+    "impl_differs": "0 of 7"
    },
    "goolam/kmeans_pca": {
     "share_tied": 0.067,
@@ -2032,7 +2044,9 @@
     "tied_lo": 3,
     "tied_hi": 3,
     "floor_F": "0 of 7",
-    "floor_M": "0 of 7"
+    "floor_M": "0 of 7",
+    "moved": "0 of 7",
+    "impl_differs": "0 of 7"
    },
    "goolam/leiden_pca": {
     "share_tied": 0.133,
@@ -2046,7 +2060,9 @@
     "tied_lo": 2,
     "tied_hi": 3,
     "floor_F": "3 of 7",
-    "floor_M": "5 of 7"
+    "floor_M": "5 of 7",
+    "moved": "4 of 7",
+    "impl_differs": "0 of 7"
    },
    "goolam/mica": {
     "share_tied": 0.4,
@@ -2060,7 +2076,9 @@
     "tied_lo": 2,
     "tied_hi": 7,
     "floor_F": "0 of 7",
-    "floor_M": "3 of 7"
+    "floor_M": "3 of 7",
+    "moved": "5 of 7",
+    "impl_differs": "0 of 7"
    },
    "klein/kmeans_pca": {
     "share_tied": 0.067,
@@ -2074,7 +2092,9 @@
     "tied_lo": 2,
     "tied_hi": 2,
     "floor_F": "7 of 7",
-    "floor_M": "7 of 7"
+    "floor_M": "7 of 7",
+    "moved": "0 of 7",
+    "impl_differs": "0 of 7"
    },
    "klein/leiden_pca": {
     "share_tied": 0.056,
@@ -2088,7 +2108,9 @@
     "tied_lo": 2,
     "tied_hi": 2,
     "floor_F": "7 of 7",
-    "floor_M": "7 of 7"
+    "floor_M": "7 of 7",
+    "moved": "0 of 7",
+    "impl_differs": "0 of 7"
    },
    "klein/mica": {
     "share_tied": 0.294,
@@ -2102,7 +2124,9 @@
     "tied_lo": 2,
     "tied_hi": 6,
     "floor_F": "7 of 7",
-    "floor_M": "7 of 7"
+    "floor_M": "7 of 7",
+    "moved": "0 of 7",
+    "impl_differs": "0 of 7"
    },
    "kolodziejczyk/kmeans_pca": {
     "share_tied": 0.111,
@@ -2116,7 +2140,9 @@
     "tied_lo": 2,
     "tied_hi": 3,
     "floor_F": "0 of 7",
-    "floor_M": "0 of 7"
+    "floor_M": "0 of 7",
+    "moved": "0 of 7",
+    "impl_differs": "0 of 7"
    },
    "kolodziejczyk/leiden_pca": {
     "share_tied": 0.235,
@@ -2130,7 +2156,9 @@
     "tied_lo": 2,
     "tied_hi": 5,
     "floor_F": "0 of 7",
-    "floor_M": "5 of 7"
+    "floor_M": "5 of 7",
+    "moved": "2 of 7",
+    "impl_differs": "1 of 7"
    },
    "kolodziejczyk/mica": {
     "share_tied": 0.222,
@@ -2144,7 +2172,9 @@
     "tied_lo": 2,
     "tied_hi": 5,
     "floor_F": "0 of 7",
-    "floor_M": "7 of 7"
+    "floor_M": "7 of 7",
+    "moved": "2 of 7",
+    "impl_differs": "0 of 7"
    },
    "pollen/kmeans_pca": {
     "share_tied": 0.118,
@@ -2158,7 +2188,9 @@
     "tied_lo": 3,
     "tied_hi": 9,
     "floor_F": "0 of 7",
-    "floor_M": "0 of 7"
+    "floor_M": "0 of 7",
+    "moved": "2 of 7",
+    "impl_differs": "2 of 7"
    },
    "pollen/leiden_pca": {
     "share_tied": 0.222,
@@ -2172,7 +2204,9 @@
     "tied_lo": 5,
     "tied_hi": 10,
     "floor_F": "0 of 7",
-    "floor_M": "0 of 7"
+    "floor_M": "0 of 7",
+    "moved": "5 of 7",
+    "impl_differs": "7 of 7"
    },
    "pollen/mica": {
     "share_tied": 0.722,
@@ -2186,7 +2220,9 @@
     "tied_lo": 2,
     "tied_hi": 17,
     "floor_F": "0 of 7",
-    "floor_M": "7 of 7"
+    "floor_M": "7 of 7",
+    "moved": "6 of 7",
+    "impl_differs": "0 of 7"
    },
    "usoskin/kmeans_pca": {
     "share_tied": 0.056,
@@ -2200,7 +2236,9 @@
     "tied_lo": 2,
     "tied_hi": 2,
     "floor_F": "7 of 7",
-    "floor_M": "7 of 7"
+    "floor_M": "7 of 7",
+    "moved": "0 of 7",
+    "impl_differs": "0 of 7"
    },
    "usoskin/leiden_pca": {
     "share_tied": 0.111,
@@ -2214,7 +2252,9 @@
     "tied_lo": 3,
     "tied_hi": 5,
     "floor_F": "0 of 7",
-    "floor_M": "0 of 7"
+    "floor_M": "0 of 7",
+    "moved": "5 of 7",
+    "impl_differs": "2 of 7"
    },
    "usoskin/mica": {
     "share_tied": 0.118,
@@ -2228,7 +2268,9 @@
     "tied_lo": 2,
     "tied_hi": 3,
     "floor_F": "0 of 7",
-    "floor_M": "1 of 7"
+    "floor_M": "1 of 7",
+    "moved": "0 of 7",
+    "impl_differs": "0 of 7"
    },
    "yan/kmeans_pca": {
     "share_tied": 0.25,
@@ -2242,7 +2284,9 @@
     "tied_lo": 2,
     "tied_hi": 5,
     "floor_F": "0 of 7",
-    "floor_M": "6 of 7"
+    "floor_M": "6 of 7",
+    "moved": "6 of 7",
+    "impl_differs": "0 of 7"
    },
    "yan/leiden_pca": {
     "share_tied": 0.133,
@@ -2256,7 +2300,9 @@
     "tied_lo": 3,
     "tied_hi": 4,
     "floor_F": "0 of 7",
-    "floor_M": "0 of 7"
+    "floor_M": "0 of 7",
+    "moved": "7 of 7",
+    "impl_differs": "2 of 7"
    },
    "yan/mica": {
     "share_tied": 0.8,
@@ -2270,7 +2316,9 @@
     "tied_lo": 2,
     "tied_hi": 19,
     "floor_F": "0 of 7",
-    "floor_M": "5 of 7"
+    "floor_M": "5 of 7",
+    "moved": "4 of 7",
+    "impl_differs": "2 of 7"
    },
    "zeisel/kmeans_pca": {
     "share_tied": 0.111,
@@ -2284,7 +2332,9 @@
     "tied_lo": 2,
     "tied_hi": 3,
     "floor_F": "2 of 7",
-    "floor_M": "5 of 7"
+    "floor_M": "5 of 7",
+    "moved": "4 of 7",
+    "impl_differs": "2 of 7"
    },
    "zeisel/leiden_pca": {
     "share_tied": 0.111,
@@ -2298,7 +2348,9 @@
     "tied_lo": 2,
     "tied_hi": 8,
     "floor_F": "3 of 7",
-    "floor_M": "4 of 7"
+    "floor_M": "4 of 7",
+    "moved": "6 of 7",
+    "impl_differs": "5 of 7"
    },
    "zeisel/mica": {
     "share_tied": 0.294,
@@ -2312,7 +2364,9 @@
     "tied_lo": 2,
     "tied_hi": 7,
     "floor_F": "2 of 7",
-    "floor_M": "6 of 7"
+    "floor_M": "6 of 7",
+    "moved": "1 of 7",
+    "impl_differs": "1 of 7"
    }
   },
   "n_runs": 189,
@@ -5509,6 +5563,8 @@
   "L.buettner.kmeans.tiedhi": "2",
   "L.buettner.kmeans.floorF": "7 of 7",
   "L.buettner.kmeans.floorM": "7 of 7",
+  "L.buettner.kmeans.moved": "0 of 7",
+  "L.buettner.kmeans.impl": "0 of 7",
   "L.buettner.leiden.share": "6",
   "L.buettner.leiden.span": "0",
   "L.buettner.leiden.kF": "2\\textrm{-}3",
@@ -5520,6 +5576,8 @@
   "L.buettner.leiden.tiedhi": "2",
   "L.buettner.leiden.floorF": "3 of 7",
   "L.buettner.leiden.floorM": "5 of 7",
+  "L.buettner.leiden.moved": "1 of 7",
+  "L.buettner.leiden.impl": "3 of 7",
   "L.buettner.mica.share": "12",
   "L.buettner.mica.span": "1",
   "L.buettner.mica.kF": "3\\textrm{-}4",
@@ -5531,6 +5589,8 @@
   "L.buettner.mica.tiedhi": "3",
   "L.buettner.mica.floorF": "0 of 7",
   "L.buettner.mica.floorM": "4 of 7",
+  "L.buettner.mica.moved": "0 of 7",
+  "L.buettner.mica.impl": "4 of 7",
   "L.chung.kmeans.share": "6",
   "L.chung.kmeans.span": "0",
   "L.chung.kmeans.kF": "2\\textrm{-}5",
@@ -5542,6 +5602,8 @@
   "L.chung.kmeans.tiedhi": "3",
   "L.chung.kmeans.floorF": "1 of 7",
   "L.chung.kmeans.floorM": "1 of 7",
+  "L.chung.kmeans.moved": "0 of 7",
+  "L.chung.kmeans.impl": "6 of 7",
   "L.chung.leiden.share": "27",
   "L.chung.leiden.span": "4",
   "L.chung.leiden.kF": "3\\textrm{-}7",
@@ -5553,6 +5615,8 @@
   "L.chung.leiden.tiedhi": "7",
   "L.chung.leiden.floorF": "0 of 7",
   "L.chung.leiden.floorM": "0 of 7",
+  "L.chung.leiden.moved": "5 of 7",
+  "L.chung.leiden.impl": "0 of 7",
   "L.chung.mica.share": "50",
   "L.chung.mica.span": "10",
   "L.chung.mica.kF": "10\\textrm{-}12",
@@ -5564,6 +5628,8 @@
   "L.chung.mica.tiedhi": "12",
   "L.chung.mica.floorF": "0 of 7",
   "L.chung.mica.floorM": "7 of 7",
+  "L.chung.mica.moved": "4 of 7",
+  "L.chung.mica.impl": "0 of 7",
   "L.goolam.kmeans.share": "7",
   "L.goolam.kmeans.span": "0",
   "L.goolam.kmeans.kF": "3",
@@ -5575,6 +5641,8 @@
   "L.goolam.kmeans.tiedhi": "3",
   "L.goolam.kmeans.floorF": "0 of 7",
   "L.goolam.kmeans.floorM": "0 of 7",
+  "L.goolam.kmeans.moved": "0 of 7",
+  "L.goolam.kmeans.impl": "0 of 7",
   "L.goolam.leiden.share": "13",
   "L.goolam.leiden.span": "1",
   "L.goolam.leiden.kF": "2\\textrm{-}3",
@@ -5586,6 +5654,8 @@
   "L.goolam.leiden.tiedhi": "3",
   "L.goolam.leiden.floorF": "3 of 7",
   "L.goolam.leiden.floorM": "5 of 7",
+  "L.goolam.leiden.moved": "4 of 7",
+  "L.goolam.leiden.impl": "0 of 7",
   "L.goolam.mica.share": "40",
   "L.goolam.mica.span": "5",
   "L.goolam.mica.kF": "6\\textrm{-}8",
@@ -5597,6 +5667,8 @@
   "L.goolam.mica.tiedhi": "7",
   "L.goolam.mica.floorF": "0 of 7",
   "L.goolam.mica.floorM": "3 of 7",
+  "L.goolam.mica.moved": "5 of 7",
+  "L.goolam.mica.impl": "0 of 7",
   "L.klein.kmeans.share": "7",
   "L.klein.kmeans.span": "0",
   "L.klein.kmeans.kF": "2",
@@ -5608,6 +5680,8 @@
   "L.klein.kmeans.tiedhi": "2",
   "L.klein.kmeans.floorF": "7 of 7",
   "L.klein.kmeans.floorM": "7 of 7",
+  "L.klein.kmeans.moved": "0 of 7",
+  "L.klein.kmeans.impl": "0 of 7",
   "L.klein.leiden.share": "6",
   "L.klein.leiden.span": "0",
   "L.klein.leiden.kF": "2",
@@ -5619,6 +5693,8 @@
   "L.klein.leiden.tiedhi": "2",
   "L.klein.leiden.floorF": "7 of 7",
   "L.klein.leiden.floorM": "7 of 7",
+  "L.klein.leiden.moved": "0 of 7",
+  "L.klein.leiden.impl": "0 of 7",
   "L.klein.mica.share": "29",
   "L.klein.mica.span": "4",
   "L.klein.mica.kF": "2",
@@ -5630,6 +5706,8 @@
   "L.klein.mica.tiedhi": "6",
   "L.klein.mica.floorF": "7 of 7",
   "L.klein.mica.floorM": "7 of 7",
+  "L.klein.mica.moved": "0 of 7",
+  "L.klein.mica.impl": "0 of 7",
   "L.kolodziejczyk.kmeans.share": "11",
   "L.kolodziejczyk.kmeans.span": "1",
   "L.kolodziejczyk.kmeans.kF": "3",
@@ -5641,6 +5719,8 @@
   "L.kolodziejczyk.kmeans.tiedhi": "3",
   "L.kolodziejczyk.kmeans.floorF": "0 of 7",
   "L.kolodziejczyk.kmeans.floorM": "0 of 7",
+  "L.kolodziejczyk.kmeans.moved": "0 of 7",
+  "L.kolodziejczyk.kmeans.impl": "0 of 7",
   "L.kolodziejczyk.leiden.share": "24",
   "L.kolodziejczyk.leiden.span": "3",
   "L.kolodziejczyk.leiden.kF": "3\\textrm{-}4",
@@ -5652,6 +5732,8 @@
   "L.kolodziejczyk.leiden.tiedhi": "5",
   "L.kolodziejczyk.leiden.floorF": "0 of 7",
   "L.kolodziejczyk.leiden.floorM": "5 of 7",
+  "L.kolodziejczyk.leiden.moved": "2 of 7",
+  "L.kolodziejczyk.leiden.impl": "1 of 7",
   "L.kolodziejczyk.mica.share": "22",
   "L.kolodziejczyk.mica.span": "3",
   "L.kolodziejczyk.mica.kF": "3\\textrm{-}5",
@@ -5663,6 +5745,8 @@
   "L.kolodziejczyk.mica.tiedhi": "5",
   "L.kolodziejczyk.mica.floorF": "0 of 7",
   "L.kolodziejczyk.mica.floorM": "7 of 7",
+  "L.kolodziejczyk.mica.moved": "2 of 7",
+  "L.kolodziejczyk.mica.impl": "0 of 7",
   "L.pollen.kmeans.share": "12",
   "L.pollen.kmeans.span": "6",
   "L.pollen.kmeans.kF": "3\\textrm{-}9",
@@ -5674,6 +5758,8 @@
   "L.pollen.kmeans.tiedhi": "9",
   "L.pollen.kmeans.floorF": "0 of 7",
   "L.pollen.kmeans.floorM": "0 of 7",
+  "L.pollen.kmeans.moved": "2 of 7",
+  "L.pollen.kmeans.impl": "2 of 7",
   "L.pollen.leiden.share": "22",
   "L.pollen.leiden.span": "5",
   "L.pollen.leiden.kF": "7\\textrm{-}10",
@@ -5685,6 +5771,8 @@
   "L.pollen.leiden.tiedhi": "10",
   "L.pollen.leiden.floorF": "0 of 7",
   "L.pollen.leiden.floorM": "0 of 7",
+  "L.pollen.leiden.moved": "5 of 7",
+  "L.pollen.leiden.impl": "7 of 7",
   "L.pollen.mica.share": "72",
   "L.pollen.mica.span": "15",
   "L.pollen.mica.kF": "13\\textrm{-}18",
@@ -5696,6 +5784,8 @@
   "L.pollen.mica.tiedhi": "17",
   "L.pollen.mica.floorF": "0 of 7",
   "L.pollen.mica.floorM": "7 of 7",
+  "L.pollen.mica.moved": "6 of 7",
+  "L.pollen.mica.impl": "0 of 7",
   "L.usoskin.kmeans.share": "6",
   "L.usoskin.kmeans.span": "0",
   "L.usoskin.kmeans.kF": "2",
@@ -5707,6 +5797,8 @@
   "L.usoskin.kmeans.tiedhi": "2",
   "L.usoskin.kmeans.floorF": "7 of 7",
   "L.usoskin.kmeans.floorM": "7 of 7",
+  "L.usoskin.kmeans.moved": "0 of 7",
+  "L.usoskin.kmeans.impl": "0 of 7",
   "L.usoskin.leiden.share": "11",
   "L.usoskin.leiden.span": "1",
   "L.usoskin.leiden.kF": "3\\textrm{-}6",
@@ -5718,6 +5810,8 @@
   "L.usoskin.leiden.tiedhi": "5",
   "L.usoskin.leiden.floorF": "0 of 7",
   "L.usoskin.leiden.floorM": "0 of 7",
+  "L.usoskin.leiden.moved": "5 of 7",
+  "L.usoskin.leiden.impl": "2 of 7",
   "L.usoskin.mica.share": "12",
   "L.usoskin.mica.span": "1",
   "L.usoskin.mica.kF": "3",
@@ -5729,6 +5823,8 @@
   "L.usoskin.mica.tiedhi": "3",
   "L.usoskin.mica.floorF": "0 of 7",
   "L.usoskin.mica.floorM": "1 of 7",
+  "L.usoskin.mica.moved": "0 of 7",
+  "L.usoskin.mica.impl": "0 of 7",
   "L.yan.kmeans.share": "25",
   "L.yan.kmeans.span": "3",
   "L.yan.kmeans.kF": "5",
@@ -5740,6 +5836,8 @@
   "L.yan.kmeans.tiedhi": "5",
   "L.yan.kmeans.floorF": "0 of 7",
   "L.yan.kmeans.floorM": "6 of 7",
+  "L.yan.kmeans.moved": "6 of 7",
+  "L.yan.kmeans.impl": "0 of 7",
   "L.yan.leiden.share": "13",
   "L.yan.leiden.span": "1",
   "L.yan.leiden.kF": "3\\textrm{-}7",
@@ -5751,6 +5849,8 @@
   "L.yan.leiden.tiedhi": "4",
   "L.yan.leiden.floorF": "0 of 7",
   "L.yan.leiden.floorM": "0 of 7",
+  "L.yan.leiden.moved": "7 of 7",
+  "L.yan.leiden.impl": "2 of 7",
   "L.yan.mica.share": "80",
   "L.yan.mica.span": "17",
   "L.yan.mica.kF": "17\\textrm{-}19",
@@ -5762,6 +5862,8 @@
   "L.yan.mica.tiedhi": "19",
   "L.yan.mica.floorF": "0 of 7",
   "L.yan.mica.floorM": "5 of 7",
+  "L.yan.mica.moved": "4 of 7",
+  "L.yan.mica.impl": "2 of 7",
   "L.zeisel.kmeans.share": "11",
   "L.zeisel.kmeans.span": "1",
   "L.zeisel.kmeans.kF": "2\\textrm{-}3",
@@ -5773,6 +5875,8 @@
   "L.zeisel.kmeans.tiedhi": "3",
   "L.zeisel.kmeans.floorF": "2 of 7",
   "L.zeisel.kmeans.floorM": "5 of 7",
+  "L.zeisel.kmeans.moved": "4 of 7",
+  "L.zeisel.kmeans.impl": "2 of 7",
   "L.zeisel.leiden.share": "11",
   "L.zeisel.leiden.span": "2",
   "L.zeisel.leiden.kF": "2\\textrm{-}8",
@@ -5784,6 +5888,8 @@
   "L.zeisel.leiden.tiedhi": "8",
   "L.zeisel.leiden.floorF": "3 of 7",
   "L.zeisel.leiden.floorM": "4 of 7",
+  "L.zeisel.leiden.moved": "6 of 7",
+  "L.zeisel.leiden.impl": "5 of 7",
   "L.zeisel.mica.share": "29",
   "L.zeisel.mica.span": "5",
   "L.zeisel.mica.kF": "2\\textrm{-}3",
@@ -5795,6 +5901,8 @@
   "L.zeisel.mica.tiedhi": "7",
   "L.zeisel.mica.floorF": "2 of 7",
   "L.zeisel.mica.floorM": "6 of 7",
+  "L.zeisel.mica.moved": "1 of 7",
+  "L.zeisel.mica.impl": "1 of 7",
   "L.ownnever2.kmeans": "0",
   "L.ownnever2.leiden": "5",
   "L.ownnever2.mica": "0",

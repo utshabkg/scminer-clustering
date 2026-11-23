@@ -158,10 +158,15 @@ def main():
          "mica.hours": f"{PILOT['mica_s'] / 3600:.1f}", "mica.peak_gb": f"{PILOT['mica_gb']:.0f}",
          "mica.extrap_days": PILOT["mica_extrap_days"], "mica.extrap_tb": f"{PILOT['mica_extrap_tb']:.1f}",
          "assign.minutes": f"{assign['knn_seconds'] / 60:.0f}"}
-    rest_s = prep.wall_s.sum() - costs.loc["scan", "wall_s"] + max(kseconds, graph_s + leiden_s)
-    v["rest.minutes"] = f"{rest_s / 60:.0f}"                       # everything after reading the files
-    v["full.minutes_cold"] = f"{(rest_s + cold_read) / 60:.0f}"
+    # The measured run on every cell, manifest to Leiden: both pipelines, three k-means seeds and every Leiden
+    # run, with the raw files cached. Elapsed time per stage, start-up included (wall_s_outer, from run.sh).
+    # From disk, add the extra time the cold first pass of the 100,000-cell check took over the cached one.
+    run_s = costs.loc[["manifest", "scan", "hvg", "normalize", "pca", "kmeans", "leiden"], "wall_s_outer"].sum()
+    v["full.minutes_cached"] = f"{run_s / 60:.0f}"
+    v["full.minutes_disk"] = f"{(run_s + cold_read - costs.loc['scan', 'wall_s']) / 60:.0f}"
     v["read.minutes_cold"] = f"{cold_read / 60:.0f}"
+    v["leiden.n_runs"] = str(len(search))
+    v["kmeans.n_seeds"] = str(sum(f"kmeans_seed{i}_s" in STAGE_RECORDS["kmeans"] for i in range(10)))
     v["max_process_gb"] = f"{costs.peak_process_gb.max():.1f}"
     v["assign.seconds"] = f"{assign['knn_seconds'] + assign['vote_seconds']['mica']:.0f}"
     sc = pd.read_csv(OUT / "partition_scores.csv")

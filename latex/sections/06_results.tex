@@ -198,9 +198,12 @@ So on the original grids MICA leads Leiden on PBMC14K under every scorer and at 
 \subsection{The Allen atlas at full scale}\label{sec:large}
 After preprocessing the atlas has \V{large.n_cells} cells by \V{large.n_genes} genes, and the PCA pipelines
 use \V{large.n_hvg} of those genes, reduced to \V{large.n_pcs} components (Table~\ref{tab:large}). Both
-pipelines ran on every cell. The whole run took about \V{large.full.minutes_cold} minutes from the raw
-files, \V{large.read.minutes_cold} of them reading the 13 files from disk, and no single process used more
-than \V{large.max_process_gb}~GB. Set to the 34 classes, $k$-means reaches an ARI of \V{large.kmeans.ari} on
+pipelines ran on every cell. The whole run, with \V{large.kmeans.n_seeds} $k$-means seeds and
+\V{large.leiden.n_runs} Leiden runs, took \V{large.full.minutes_cached} minutes. The raw files were already
+cached, because the check on the 100,000-cell sample had just read them. Reading the 13 files from disk took
+\V{large.read.minutes_cold} minutes in that check, so the same run from the disk takes about
+\V{large.full.minutes_disk}. No single process used more than \V{large.max_process_gb}~GB, though the
+processes running side by side held up to \V{large.full.max_gb}~GB together. Set to the 34 classes, $k$-means reaches an ARI of \V{large.kmeans.ari} on
 all cells at seed 0, and \V{large.kmeans.ari_seeds} over three seeds. Leiden, at the resolution whose count
 is closest to 34, reaches \V{large.leiden.ari} with \V{large.leiden.k} clusters at seed 0, and
 \V{large.leiden.ari_seeds} over three seeds. At seed 0 no resolution we ran gave exactly 34:

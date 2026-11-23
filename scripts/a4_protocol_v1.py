@@ -182,6 +182,15 @@ def label_free_signals(p, c, seeds, design="mid", b=25, gap=5):
     s1 = p[(p.S == "S1") & (p.design == design) & (p.reading == F) & p.seed.isin(seeds) & p.ds.isin(SMALL)]
     j = s0.merge(s1, on=["ds", "seed", "method"], suffixes=("_0", "_1"))
     moved = {m: f"{int((g.n_clusters_0 != g.n_clusters_1).sum())} of {len(g)}" for m, g in j.groupby("method")}
+    # and per dataset: the 25-to-100 move, and whether chooseR's code (S3-G) picks another count than ours (S1)
+    s3 = p[(p.S == "S3-G") & (p.design == design) & p.seed.isin(seeds) & p.ds.isin(SMALL)]
+    j3 = s1.merge(s3, on=["ds", "seed", "method"], suffixes=("_1", "_3"))
+    for (ds, m), g in j.groupby(["ds", "method"]):
+        if f"{ds}/{m}" in per:
+            per[f"{ds}/{m}"]["moved"] = f"{int((g.n_clusters_0 != g.n_clusters_1).sum())} of {len(g)}"
+    for (ds, m), g in j3.groupby(["ds", "method"]):
+        if f"{ds}/{m}" in per:
+            per[f"{ds}/{m}"]["impl_differs"] = f"{int((g.n_clusters_1 != g.n_clusters_3).sum())} of {len(g)}"
     out = {"per_dataset": per, "n_runs": int(len(R)), "gap": gap, "own_grid_never_2": no2,
            "moved_25_to_100": moved,
            "disagree": {"n": int(len(dis)), "n_mica": int((dis.method == "mica").sum()),
@@ -523,6 +532,10 @@ def write_numbers(p, out, conf, pseeds, root):
             vals[f"{base}.truek"] = str(v["true_k"])
             vals[f"{base}.tiedlo"], vals[f"{base}.tiedhi"] = str(v["tied_lo"]), str(v["tied_hi"])
             vals[f"{base}.floorF"], vals[f"{base}.floorM"] = v["floor_F"], v["floor_M"]
+            if "moved" in v:
+                vals[f"{base}.moved"] = v["moved"]
+            if "impl_differs" in v:
+                vals[f"{base}.impl"] = v["impl_differs"]
         for m, n in lf["own_grid_never_2"].items():
             vals[f"L.ownnever2.{short_m[m]}"] = str(n)
         for m, s in lf["moved_25_to_100"].items():
