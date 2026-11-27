@@ -60,7 +60,7 @@ Next three things (Nov 27): Laraib's proofread (L-8) by Nov 28, applied and uplo
 - Checks: 23 tests pass, `code_matches_tag: True`, Times build 23 pages with no ?? and no undefined
   references, prose lint clean. Overleaf needs: `numbers_a4.tex`, `sections/` 00, 02, 05, 06 and 07,
   `tables/` a4_confirm, a4_designs, checks, datasets and effects, and `figures/a4_seed_means.pdf`.
-- `latex/main.tex` has Utshab's uncommitted title and author block edit from Nov 24. Left as it is.
+- Utshab's Nov 24 edit of `latex/main.tex` (title on one line, no department lines) committed as `cb42111`.
 
 ---
 
