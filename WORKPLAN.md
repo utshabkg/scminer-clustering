@@ -3,7 +3,7 @@
 Project: clustering single-cell data with scMINER, extending it, and writing it up as a paper.
 Course: Clustering Algorithms, Missouri S&T, Fall 2026. Team: Utshab (lead), Laraib, Rhea.
 Final deliverable: **early December 2026**. Weekly meeting: **Wednesday 2pm**.
-Key dates from the instructor's Nov 11 feedback: Assignment 4, the revised Assignment 3, due Mon Nov 16 and **submitted Fri Nov 13** because Utshab is at a conference from Nov 14 to 19. Review Nov 17, class discussion Nov 18, **full research paper draft Nov 30**, final presentations **Dec 2 and Dec 9**. From the Nov 17 feedback: the Dec 2 talk is 30 minutes plus about 10 for questions with all three presenting, and the **final report is due Dec 11**.
+Key dates from the instructor's Nov 11 feedback: Assignment 4, the revised Assignment 3, due Mon Nov 16 and **submitted Fri Nov 13** because Utshab is at a conference from Nov 14 to 19. Review Nov 17, class discussion Nov 18, **full research paper draft Nov 30**, final presentations **Dec 2 and Dec 9**. From the Nov 17 feedback: the Dec 2 talk is 30 minutes plus about 10 for questions with all three presenting, and the **final report is due Dec 2**, with the talk (corrected Nov 27: Dec 11 is not a deadline).
 
 ## How to use this file
 
@@ -52,7 +52,6 @@ There are 68 tasks: 49 for Utshab, 9 for Laraib and 10 for Rhea. Three of them (
 | M7 | Nov 16, moved to Nov 13 | **Assignment 4 submitted** (the revised Assignment 3): the matched results confirmed at new seeds under protocol v1, tagged before those runs, PCA plus k-means under the same rule, chooseR's own code, and the post hoc origin of the matched design stated in the text |
 | M8 | Nov 30 | **Full research paper draft and slides**, with all figures and tables, the large-scale dataset, and the instructor's Nov 17 recommendations: the checks split into label-free ones and ones that need labels, the Allen run, and the paper organized around the reliability of comparisons |
 | M9 | Dec 2 and Dec 9 | Final presentations |
-| M10 | Dec 11 | **Final report submitted**, with the instructor's comments on the Nov 30 draft applied. No tasks yet: they are set once those comments arrive |
 
 ## Tasks: Utshab
 
