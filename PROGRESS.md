@@ -5,7 +5,7 @@ Utshab adds an entry at the end of each working session. Laraib and Rhea add a l
 
 ## Where we stand
 
-Updated: 2026-11-26 (Rhea). Counts follow the Milestone column in `WORKPLAN.md`.
+Updated: 2026-11-27 (Utshab). Counts follow the Milestone column in `WORKPLAN.md`.
 
 | Milestone | Due | Tasks done | Percent | State |
 |-----------|-----|------------|---------|-------|
@@ -16,27 +16,13 @@ Updated: 2026-11-26 (Rhea). Counts follow the Milestone column in `WORKPLAN.md`.
 | M5 main experiments complete | Nov 4 | 7 of 8 | 88% | Distance check (U-17), CPU fast neighbor search (U-19), mode against size (U-39), matched grids (U-40), transfer comparison (U-34, Allen part set aside), the final table (U-37) and Laraib's introduction rewrite (L-5) done. Left: the discussion check (L-9) |
 | M6 gated extras | Nov 11 | 0 of 9 | 0% | All nine deferred (U-18, U-20 to U-23, U-38, L-6, R-4, R-5). The instructor's Nov 11 letter says not to return to the set-aside extensions before the Nov 30 draft |
 | M7 Assignment 4 (revised Assignment 3) | Nov 16, moved to Nov 13 | 5 of 5 | 100% | Done. Submitted Nov 13 and tagged `a4-submitted` |
-| M8 full research paper draft | Nov 30 | 4 of 8 | 50% | The Allen run on every cell (U-46) and the checks split (U-47) done Nov 19. Paper rewrite (U-48) and final figures and cleanup (U-24) in progress, reviewed Nov 19 and Nov 23. Rhea's full number check (R-7) started Nov 26, with steps 1 to 3 passing. Left by Nov 28: the wording check (R-7), Laraib's proofread (L-8). The provenance and seed tables (R-9, R-10) done Nov 27 |
+| M8 full research paper draft | Nov 30 | 5 of 8 | 63% | The Allen run on every cell (U-46) and the checks split (U-47) done Nov 19. Rhea's full number check (R-7) done Nov 27, and its 17 wording flags applied the same day. The provenance and seed tables (R-9, R-10) done Nov 27. Paper rewrite (U-48) and final figures and cleanup (U-24) in progress. Left: Laraib's proofread (L-8) by Nov 28 |
 | M9 final presentations | Dec 2 and Dec 9 | 0 of 2 | 0% | 19-slide deck (U-49) drafted Nov 23, rehearsal Dec 1. Whether the slide outline (R-6) is still needed is for the next meeting |
 | Every week: notes, plan and progress updates | weekly | | | L-7, R-3 and R-8. No minutes are in `docs/minutes/` yet |
 
-Overall: 46 of 65 tasks finished, not counting the three that repeat every week (68 in all). The counts above are read off the status markers in `WORKPLAN.md`.
+Overall: 47 of 65 tasks finished, not counting the three that repeat every week (68 in all). The counts above are read off the status markers in `WORKPLAN.md`.
 
-Next three things (Nov 26): Rhea's wording check and flags to Utshab (R-7), then the provenance and seed rows (R-9, R-10), all by Nov 28. Laraib's proofread (L-8) by Nov 28. Utshab applies both and uploads to Overleaf for Nov 30.
-
----
-
-## 2026-11-26, Rhea (number check of the paper draft, steps 1 to 3)
-
-- R-7 on the paper at `a8d2e64`, on branch `rhea/r7-r9-r10-paper-draft`, run on macOS with `envs/scminer.yml`. Write-up in progress in `docs/r7_number_check_paper.md`.
-- **Source chain.** All five generators reran from the committed files. The JSONs, `numbers_a4.tex`, `numbers_large.tex` and every table came out byte for byte the same. Seven figure files differ only in rendering, from a newer matplotlib, with no visible pixel change. On a machine without the server logs, `make_tables.py` takes the Allen time and memory from the committed `stage_costs.csv`.
-- **Values.** The paper uses `\V{}` 288 times across 200 keys in the 29 files it inputs. All are defined. All 1,125 values in `numbers_a4.tex` and all 67 in `numbers_large.tex` equal their JSON. No `\ref` or `\cite` is undefined. The Overleaf PDF has no `??`, and its abstract gives the Nov 23 Allen time, so the Nov 23 upload reached Overleaf.
-- **Independent recomputation.** New `scripts/tools/r7_recompute.py` recomputes 75 numbers from the run files without the generators: 50 for the Allen atlas from `results/large_scale/`, and 25 label-free signs from `results/v1/curves`, rebuilding both readings with the definitions in Section IV. All 75 match. The rebuilt picks equal the runner's saved picks in 567 of 567 cases. Taken as given, since they are not in git: the 713 s cold read (entry of Nov 19) and the pilot's MICA cost (`docs/allen_pilot.md`).
-- For Utshab, not in the paper: in `results/large_scale/stage_costs.csv` the collect stage's `wall_s` (265 s) is larger than its `wall_s_outer` (121 s). It probably mixes in the Nov 19 rerun of that stage.
-- Plan and status table updated (R-3, R-8): U-45, U-46 and U-47 marked done, U-24 and U-48 in progress, and the Dec 2 talk added to the key dates. 44 of 65 tasks done. (Corrected Nov 27: the final report is due Dec 2, not Dec 11, so the M10 row was removed.)
-- **Wording, Nov 13 follow-up and citations (steps 4 to 6).** No claim is contradicted by the data. 17 flags, all about scope or phrasing (Allen time and memory wording, denominators, medians written as single runs, the check 9 example, two confirmed criteria missing from `tables/effects.tex`, a stale `latex/README.md`). All six Nov 13 flags are fixed. Every table and figure is cited. Draft flags in `docs/r7_number_check_paper.md`, for Rhea to confirm before they go to Utshab.
-- **R-9 and R-10.** `docs/provenance.csv` gains P-22 (label-free signs, checks split and Figure 1, chosen after the results) and P-23 (Allen: the pipeline commit is older than the run). P-05 is marked as replaced, and P-21 (size test) as not run. `docs/seed_coverage.csv` gains S-14 (Allen), and S-12 is marked dropped for Nov 30. The CSV now matches the appendix table, so Overleaf needs nothing new for R-9.
-- Next: Rhea confirms the flags and sends them to Utshab by Nov 28. Then her slides 7 to 10 move into the team deck.
+Next three things (Nov 27): Laraib's proofread (L-8) by Nov 28, applied and uploaded to Overleaf, then the paper and slides submitted Nov 30. Rehearsal Dec 1. The talk and the final report are both due Dec 2.
 
 ---
 
@@ -44,9 +30,8 @@ Next three things (Nov 26): Rhea's wording check and flags to Utshab (R-7), then
 
 - Utshab uploaded the Nov 23 files to Overleaf. Rhea's R-7 check of the paper at `a8d2e64` is on her
   branch `rhea/r7-r9-r10-paper-draft` (PR #6), with 17 wording and scope flags in
-  `docs/r7_number_check_paper.md`. Not merged yet: its last commit moves the final report deadline to
-  Dec 2, while the Nov 19 entry below records Dec 11 from the Nov 17 feedback. Utshab to confirm the
-  date with Rhea.
+  `docs/r7_number_check_paper.md`. Merged into main on Nov 27. Its last commit moves the final report
+  deadline to Dec 2, and Utshab confirmed that this is our team's date, so Dec 11 does not apply to us.
 - Every flag was checked against the data before it was applied (one verifier per group, then a second
   agent on each verifier's edits). 15 hold as she wrote them and 2 in part:
   - Flag 12: the check 9 cell now gives both cases (finest stable, including chooseR's code with the
@@ -76,6 +61,20 @@ Next three things (Nov 26): Rhea's wording check and flags to Utshab (R-7), then
   references, prose lint clean. Overleaf needs: `numbers_a4.tex`, `sections/` 00, 02, 05, 06 and 07,
   `tables/` a4_confirm, a4_designs, checks, datasets and effects, and `figures/a4_seed_means.pdf`.
 - `latex/main.tex` has Utshab's uncommitted title and author block edit from Nov 24. Left as it is.
+
+---
+
+## 2026-11-26, Rhea (number check of the paper draft, steps 1 to 3)
+
+- R-7 on the paper at `a8d2e64`, on branch `rhea/r7-r9-r10-paper-draft`, run on macOS with `envs/scminer.yml`. Write-up in progress in `docs/r7_number_check_paper.md`.
+- **Source chain.** All five generators reran from the committed files. The JSONs, `numbers_a4.tex`, `numbers_large.tex` and every table came out byte for byte the same. Seven figure files differ only in rendering, from a newer matplotlib, with no visible pixel change. On a machine without the server logs, `make_tables.py` takes the Allen time and memory from the committed `stage_costs.csv`.
+- **Values.** The paper uses `\V{}` 288 times across 200 keys in the 29 files it inputs. All are defined. All 1,125 values in `numbers_a4.tex` and all 67 in `numbers_large.tex` equal their JSON. No `\ref` or `\cite` is undefined. The Overleaf PDF has no `??`, and its abstract gives the Nov 23 Allen time, so the Nov 23 upload reached Overleaf.
+- **Independent recomputation.** New `scripts/tools/r7_recompute.py` recomputes 75 numbers from the run files without the generators: 50 for the Allen atlas from `results/large_scale/`, and 25 label-free signs from `results/v1/curves`, rebuilding both readings with the definitions in Section IV. All 75 match. The rebuilt picks equal the runner's saved picks in 567 of 567 cases. Taken as given, since they are not in git: the 713 s cold read (entry of Nov 19) and the pilot's MICA cost (`docs/allen_pilot.md`).
+- For Utshab, not in the paper: in `results/large_scale/stage_costs.csv` the collect stage's `wall_s` (265 s) is larger than its `wall_s_outer` (121 s). It probably mixes in the Nov 19 rerun of that stage.
+- Plan and status table updated (R-3, R-8): U-45, U-46 and U-47 marked done, U-24 and U-48 in progress, and the Dec 2 talk added to the key dates. 44 of 65 tasks done. (Corrected Nov 27: the final report is due Dec 2, not Dec 11, so the M10 row was removed.)
+- **Wording, Nov 13 follow-up and citations (steps 4 to 6).** No claim is contradicted by the data. 17 flags, all about scope or phrasing (Allen time and memory wording, denominators, medians written as single runs, the check 9 example, two confirmed criteria missing from `tables/effects.tex`, a stale `latex/README.md`). All six Nov 13 flags are fixed. Every table and figure is cited. Draft flags in `docs/r7_number_check_paper.md`, for Rhea to confirm before they go to Utshab.
+- **R-9 and R-10.** `docs/provenance.csv` gains P-22 (label-free signs, checks split and Figure 1, chosen after the results) and P-23 (Allen: the pipeline commit is older than the run). P-05 is marked as replaced, and P-21 (size test) as not run. `docs/seed_coverage.csv` gains S-14 (Allen), and S-12 is marked dropped for Nov 30. The CSV now matches the appendix table, so Overleaf needs nothing new for R-9.
+- Next: Rhea confirms the flags and sends them to Utshab by Nov 28. Then her slides 7 to 10 move into the team deck.
 
 ---
 
@@ -133,6 +132,7 @@ Next three things (Nov 26): Rhea's wording check and flags to Utshab (R-7), then
 **What the instructor asked for.** His letter is kept in the gitignored `scratchpad/`. In summary:
 - He accepted the Assignment 4 revision. Due Nov 30: the paper and the slides. The talk is on Dec 2
   (30 minutes plus about 10 for questions, all three presenting), and the final report is due Dec 11.
+  (Corrected Nov 27: for our team the final report is due Dec 2, with the talk.)
 - Split the six checks into ones that run on unlabeled data and ones that need labels, with a short
   table of what each needs, detects and means. Show with one existing experiment how an unreliable
   selection can be spotted without labels.
