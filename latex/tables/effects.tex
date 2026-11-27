@@ -2,7 +2,7 @@
 \begin{table}[t]
 \centering
 \caption{What the experiments support. Confirmed means the effect met its criterion at the seven new
-seeds under the protocol fixed in advance (Table~\ref{tab:criteria}). Exploratory and measured mean it was
+seeds under the protocol fixed in advance (Table~\ref{tab:criteria}). C4 is judged at PBMC14K seeds 0 to 4, and FC at every seed. Exploratory and measured mean it was
 measured on the same runs but given no criterion in advance.}
 \label{tab:effects}
 \footnotesize
@@ -12,10 +12,12 @@ measured on the same runs but given no criterion in advance.}
 Effect & Evidence & Status \\
 \midrule
 The candidates decide the plain-maximum ranking & Own grids: Leiden \V{S0.original.M.leiden}, MICA \V{S0.original.M.mica} (C5). Matched: level, \V{S0.mid.M.leiden} against \V{S0.mid.M.mica}, where C1 had predicted a MICA lead & Confirmed on own grids (C5), level measured \\
-The reading moves MICA most & Mean change between readings: MICA \V{C2.mica}, Leiden \V{C2.leiden}, $k$-means \V{C2.kmeans} & Confirmed (C2) \\
+The reading moves MICA most & Mean ARI change between readings: MICA \V{C2.mica}, Leiden \V{C2.leiden}, $k$-means \V{C2.kmeans} & Confirmed (C2) \\
 Flat scores sit with MICA on the smallest datasets & Share tied at the top: \V{C3.five_smallest.mica.share} against \V{C3.four_larger.mica.share} & Confirmed (C3) \\
-MICA ahead on matched candidates, chooseR's reading & \V{S0.mid.F.mica} against \V{S0.mid.F.leiden}, at \V{C1.F.leads} seeds, but \V{E5.S0.mid.F.loo} without Buettner & Confirmed (C1), rests on one dataset \\
-MICA ahead on matched candidates, plain maximum & \V{S0.mid.M.mica} against \V{S0.mid.M.leiden}, ahead at \V{C1.M.leads} seeds & Not supported (C1) \\
+MICA ahead on matched candidates, chooseR's reading & \V{S0.mid.F.mica} against \V{S0.mid.F.leiden}, at \V{C1.F.leads} new seeds, but \V{E5.S0.mid.F.loo} without Buettner & Confirmed (C1), rests on one dataset \\
+MICA ahead on matched candidates, chooseR's code & Point-interval repair, 100 subsamples: \V{S3G.mid.F.mica} against \V{S3G.mid.F.leiden}, at \V{E5.S3G.mid.F.seedleads} new seeds, but only \V{E5.S3G.mid.F.loo} without Buettner & Confirmed (F1) \\
+MICA and Leiden tie on PBMC14K, matched, plain maximum & Within 0.02 at \V{C4.ties} seeds, three of them seen before the protocol & Confirmed (C4), depends on the setting per count \\
+MICA ahead on matched candidates, plain maximum & \V{S0.mid.M.mica} against \V{S0.mid.M.leiden}, ahead at \V{C1.M.leads} new seeds & Not supported (C1) \\
 Our scorer computes chooseR's co-clustering & \V{FC.identical} of \V{FC.matrices} matrices identical & Confirmed (FC) \\
 The setting behind each count matters & Leiden, plain maximum: \V{variants.M.leiden.min} to \V{variants.M.leiden.max} across variants & Exploratory \\
 The number of subsamples matters & Plain maximum, matched: level at 25, \V{S1.mid.M.mica} against \V{S1.mid.M.leiden} at 100 & Exploratory \\

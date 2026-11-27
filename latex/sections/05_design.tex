@@ -59,7 +59,7 @@ the same seed, with ties going to the smaller setting.
 five on PBMC14K. A seed redraws the subsamples and reinitialises every seeded step. MICA's and
 $k$-means' 50 restarts are restarts within a run, not repeats. We report per-dataset medians over seeds
 with the full range of chosen counts, and a range is the observed minimum and maximum, not a confidence
-interval. In the text two methods are level when their mean or median scores differ by less than 0.02, the
+interval. In the text two methods are level when their mean, median or single-run scores differ by less than 0.02, the
 margin C4 uses for a tie. The word plays no part in the verdicts. Four secondary results keep the seeds they had: the mode-against-size test (three), the shipped defaults (three), the transfer comparison (three) and the silhouette rule (one, so it shows no variation). They are not the
 comparisons our conclusions rest on, and the computation went to the main comparison and the chooseR
 check instead. Agreement with the labels is the ARI, with the adjusted mutual information (AMI) as a

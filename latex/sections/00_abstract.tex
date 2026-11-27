@@ -19,9 +19,9 @@ checks these findings suggest into six that run on unlabeled data and ask whethe
 the choice determined by the data, and five that need labels and judge a benchmark's ranking. On Pollen,
 flat stability scores and disagreeing readings show without labels that the data do not determine
 MICA's count, and the labels confirm it: the two readings' picks score \V{L.pollen.mica.ariF} and
-\V{L.pollen.mica.ariM}. On all \V{large.n_cells} cells of the Allen mouse brain atlas, both PCA pipelines
-ran in \V{large.full.minutes_cached} minutes once the raw files were cached, and no single process used
-more than \V{large.max_process_gb}~GB. MICA would need about \V{large.mica.extrap_tb}~TB there, so it ran on a
+\V{L.pollen.mica.ariM} in median adjusted Rand index. On all \V{large.n_cells} cells of the Allen mouse brain atlas, both PCA pipelines
+ran in \V{large.full.minutes_cached} minutes once the raw files were cached. No single process used
+more than \V{large.max_process_gb}~GB, though the processes running side by side held up to \V{large.full.max_gb}~GB together. MICA would need about \V{large.mica.extrap_tb}~TB for the whole atlas, so it ran on a
 100,000-cell sample and the other cells were assigned to its clusters.
 \end{abstract}
 

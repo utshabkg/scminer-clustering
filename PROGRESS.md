@@ -26,6 +26,45 @@ Next three things (Nov 19): the Allen run on all cells (U-46), the checks split 
 
 ---
 
+## 2026-11-27, Utshab (Rhea's R-7 flags applied)
+
+- Utshab uploaded the Nov 23 files to Overleaf. Rhea's R-7 check of the paper at `a8d2e64` is on her
+  branch `rhea/r7-r9-r10-paper-draft` (PR #6), with 17 wording and scope flags in
+  `docs/r7_number_check_paper.md`. Not merged yet: its last commit moves the final report deadline to
+  Dec 2, while the Nov 19 entry below records Dec 11 from the Nov 17 feedback. Utshab to confirm the
+  date with Rhea.
+- Every flag was checked against the data before it was applied (one verifier per group, then a second
+  agent on each verifier's edits). 15 hold as she wrote them and 2 in part:
+  - Flag 12: the check 9 cell now gives both cases (finest stable, including chooseR's code with the
+    point repair, and the plain maximum, where check 9 fires). Its old example was about check 9, not 6.
+  - Flag 15: 0.197 in the text was right. The generator printed 0.198 because it rounded twice (to 4
+    decimals, then to 3). `scripts/a4_protocol_v1.py` now rounds once, when it prints. That moved
+    third decimals only: C2.kmeans 0.079 to 0.078, AMI.M.leiden 0.592 to 0.591,
+    E2.mid.F.micaminuskmeans 0.199 to 0.198, S3G2.mid.F.mica 0.695 to 0.694, Table III (k-means, all
+    ten seeds) 0.448 to 0.447, Table V (every setting, Leiden) 0.570 to 0.569, and five unprinted keys.
+    No verdict or lead count changed.
+- Other changes, by flag: the Allen time names its scope and the disk figure is an estimate (1). The
+  abstract gives 59 GB beside 18.2 (2). "Level" covers single runs (3). Leiden's 0.748 names its
+  resolution (4). New key `S3.nochoice.midconf.<m>` (MICA 38 of 63, matched, seeds 3 to 9) for the
+  Discussion, and the 106 of 190 says its scope (5). Denominators and readings named (6 to 9). Pollen
+  and Buettner values are medians over seven runs (10). The reading change is a mean of median ARI (11).
+  `tables/effects.tex` gains F1 and C4 rows (13). The k-means lead under the plain maximum rests on
+  Usoskin (14). PBMC14K cost is 74 to 90 s per subsample, a mean, not a median (16, from
+  `results/v1/provenance/paper_pbmc14k_seed*.json`). `latex/README.md` rewritten for the current files
+  (17).
+- Rhea's other note: in `results/large_scale/stage_costs.csv` the collect stage's `wall_s` (265 s) came
+  from a hand rerun at 12:12 on Nov 19, its log from the 10:24 run. `make_tables.py` now pairs each log
+  with the record of the same run, so collect reads 109.5 s against 121 s. No paper number used it.
+- Deck version 21: the same flags on the Allen, Pollen, checks, details and supported slides (two new
+  rows, F1 and C4). Every 3-decimal number in the deck matches a generated value. All slides fit
+  (supported is tightest, 915 of 920 px). Notes now read about 28.5 minutes, Utshab 14.4.
+- Checks: 23 tests pass, `code_matches_tag: True`, Times build 23 pages with no ?? and no undefined
+  references, prose lint clean. Overleaf needs: `numbers_a4.tex`, `sections/` 00, 02, 05, 06 and 07,
+  `tables/` a4_confirm, a4_designs, checks, datasets and effects, and `figures/a4_seed_means.pdf`.
+- `latex/main.tex` has Utshab's uncommitted title and author block edit from Nov 24. Left as it is.
+
+---
+
 ## 2026-11-23, Utshab (slides)
 
 - Utshab sent the teammate message and uploaded the new paper to Overleaf from `latex/` at 0ebed5a, with no

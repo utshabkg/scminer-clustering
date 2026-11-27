@@ -35,7 +35,7 @@ under chooseR's reading. Ben-David et al. showed that stability alone cannot tel
 \cite{BenDavid2006Sober}, and here it is mostly MICA's problem. Its distance between two cells does not
 change when the sample does, and on the five smallest datasets \V{C3.five_smallest.mica.atone} percent of its settings
 reproduce perfectly, against \V{C3.four_larger.mica.atone} percent on the four larger datasets and
-\V{C3.five_smallest.leiden.atone} percent of Leiden's. A perturbation too small to change the clustering makes
+\V{C3.five_smallest.leiden.atone} percent of Leiden's on the same five. A perturbation too small to change the clustering makes
 stability trivial \cite{vonLuxburg2010Stability}, which may be why MICA's scores are flat where Leiden's are
 not.
 
@@ -64,7 +64,7 @@ check can only show that a ranking is fragile. Within what we tested, no compari
 we have not shown that passing them is enough. Our matched finest-stable comparison passes checks 1, 8 and
 10, and check 9 once chooseR's failed intervals are repaired. It passes check 11 only with 100 subsamples.
 It fails check 2 on the five smallest datasets and check 6, since chooseR's code as written makes no choice
-in most MICA runs and the chosen count moves with the number of subsamples in \V{L.moved.leiden} Leiden and
+in \V{S3.nochoice.midconf.mica} MICA runs and the chosen count moves with the number of subsamples in \V{L.moved.leiden} Leiden and
 \V{L.moved.mica} MICA runs. Its lead also disappears under the plain maximum with 25 subsamples (check 7). We therefore read it as a lead for MICA under chooseR's reading on
 these datasets, not as evidence that mutual information clusters better in general. A benchmark should also
 report the chosen number of clusters beside any score, because a respectable ARI can come with a badly
@@ -72,20 +72,20 @@ wrong count.
 
 \textbf{Spotting an unreliable choice without labels.} Take MICA on Pollen in the confirmatory runs on
 matched candidates and suppose the labels were unknown. Two signs are visible before any comparison with labels. The stability
-scores are flat at the top: \V{L.pollen.mica.share} percent of the settings lie within 0.01 of the best,
-with the tied settings running from \V{L.pollen.mica.tiedlo} to \V{L.pollen.mica.tiedhi} clusters
+scores are flat at the top: across the seven runs, a median of \V{L.pollen.mica.share} percent of the settings
+lie within 0.01 of the best, and the tied settings run from \V{L.pollen.mica.tiedlo} to a median of \V{L.pollen.mica.tiedhi} clusters
 (Figure~\ref{fig:curve}, middle). And the two
 readings disagree: chooseR's reading picks \V{L.pollen.mica.kF} clusters and the plain maximum picks
 \V{L.pollen.mica.kM}, the smallest count offered (checks 2, 3 and 4). Either sign says that the data do not determine the count, so the
 tie-break does. The labels confirm the warning. Pollen has \V{L.pollen.mica.truek} cell types, and the two
-picks score an ARI of \V{L.pollen.mica.ariF} and \V{L.pollen.mica.ariM}. The same signs fire for MICA on
-Yan and on Chung, where both picks score below 0.5. Across all \V{L.runs} confirmatory runs on matched candidates on the small
+picks score a median ARI of \V{L.pollen.mica.ariF} and \V{L.pollen.mica.ariM}. The same signs fire for MICA on
+Yan and on Chung, where both picks have a median ARI below 0.5. Across all \V{L.runs} confirmatory runs on matched candidates on the small
 datasets, the readings picked counts \V{L.gap} or more apart in \V{L.disagree.n} runs, and in those runs the
 two picks differed in ARI by \V{L.disagree.arigap} on average, against \V{L.agree.arigap} in the other
 runs. A pick at the smallest count offered is another sign (check 4). Such picks averaged an ARI of
 \V{L.floor.F.ari} under chooseR's reading, against \V{L.interior.F.ari} for picks inside the range. The
 signs are warnings, not guarantees. Leiden on Buettner shows no flat top and its readings agree, yet its
-picks score only \V{L.buettner.leiden.ariF} and \V{L.buettner.leiden.ariM}. Other checks do hint at
+picks score a median ARI of only \V{L.buettner.leiden.ariF} and \V{L.buettner.leiden.ariM}. Other checks do hint at
 trouble there. Its plain-maximum pick sits at the floor in \V{L.buettner.leiden.floorM} runs (check 4), and
 chooseR's code picks a different count from ours in \V{L.buettner.leiden.impl} (check 6). Passing checks 2
 and 3 is not enough.

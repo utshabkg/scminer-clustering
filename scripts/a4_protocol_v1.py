@@ -69,10 +69,10 @@ def summary(p, S, design, reading, method, seeds, datasets=SMALL):
         return None
     per_seed = s.groupby("seed").agg(mean=("ari", "mean"), n=("ari", "size"))
     per_seed = per_seed[per_seed.n == len(datasets)]["mean"]
-    return {"mean": round(float(per_ds.mean()), 4), "n_datasets": int(per_ds.size),
+    return {"mean": float(per_ds.mean()), "n_datasets": int(per_ds.size),
             "n_runs": int(len(s)), "seeds": sorted(int(x) for x in s.seed.unique()),
-            "per_seed": {int(k): round(float(v), 4) for k, v in per_seed.items()},
-            "per_dataset": {k: round(float(v), 4) for k, v in per_ds.items()},
+            "per_seed": {int(k): float(v) for k, v in per_seed.items()},
+            "per_dataset": {k: float(v) for k, v in per_ds.items()},
             "k_median": {k: float(v) for k, v in s.groupby("ds").n_clusters.median().items()}}
 
 
@@ -82,7 +82,7 @@ def lead(p, S, design, reading, a, b, seeds):
         return None
     common = sorted(set(x["per_seed"]) & set(y["per_seed"]))
     leads = sum(x["per_seed"][s] > y["per_seed"][s] for s in common)
-    return {"a": a, "b": b, "mean_a": x["mean"], "mean_b": y["mean"], "gap": round(x["mean"] - y["mean"], 4),
+    return {"a": a, "b": b, "mean_a": x["mean"], "mean_b": y["mean"], "gap": x["mean"] - y["mean"],
             "a_leads_seeds": f"{leads} of {len(common)}", "leads": leads, "n_seeds": len(common)}
 
 
@@ -99,7 +99,7 @@ def reading_change(p, S, design, method, seeds):
     med = s.pivot_table(index="ds", columns="reading", values="ari", aggfunc="median")
     if F not in med or M not in med:
         return None
-    return round(float((med[F] - med[M]).abs().mean()), 4)
+    return float((med[F] - med[M]).abs().mean())
 
 
 def flat_top(c, seeds, design="mid", b=25):
@@ -291,7 +291,7 @@ def decomposition(c, seeds, b=25):
         return {}
     res = {}
     for (name, reading), g in D.groupby(["set", "reading"]):
-        res[f"{name}/{reading}"] = round(float(g.groupby("ds").ari.median().mean()), 4)
+        res[f"{name}/{reading}"] = float(g.groupby("ds").ari.median().mean())
     return res
 
 
@@ -303,7 +303,7 @@ def chooser_agreement(p, seeds, design="mid"):
     if not len(j):
         return {}
     return {m: {"runs": int(len(g)), "same_count": int((g.n_clusters_s1 == g.n_clusters_s3).sum()),
-                "mean_abs_ari_change": round(float((g.ari_s1 - g.ari_s3).abs().mean()), 4)}
+                "mean_abs_ari_change": float((g.ari_s1 - g.ari_s3).abs().mean())}
             for m, g in j.groupby("method")}
 
 
@@ -593,6 +593,8 @@ def write_numbers(p, out, conf, pseeds, root):
         vals["S3.settings"], vals["S3.failed"] = f"{f3['settings']:,}", f"{f3['failed']:,}"
         for m, x in f3["runs_without_choice_V"].items():
             vals[f"S3.nochoice.{short_m[m]}"] = x
+        for m, x in f3.get("runs_without_choice_V_mid_conf", {}).items():
+            vals[f"S3.nochoice.midconf.{short_m[m]}"] = x
         for ds, x in f3["by_dataset"].items():
             vals[f"S3.failed.{ds}"] = x
     for d, block in out.get("E4_chooser_agreement", {}).items():
@@ -756,15 +758,15 @@ def main(argv):
         g = {ds: x["per_dataset"][ds] - y["per_dataset"][ds] for ds in SMALL}
         loo = {ds: float(np.mean([g[o] for o in SMALL if o != ds])) for ds in SMALL}
         worst = min(loo, key=loo.get) if sum(g.values()) > 0 else max(loo, key=loo.get)
-        rob[f"{S}/{d}/{r}"] = {"gap": round(float(np.mean(list(g.values()))), 4),
+        rob[f"{S}/{d}/{r}"] = {"gap": float(np.mean(list(g.values()))),
                                "mica_leads_seeds": lead(p, S, d, r, "mica", "leiden_pca", conf)["a_leads_seeds"],
                                "mica_wins": int(sum(v > 0.01 for v in g.values())),
                                "leiden_wins": int(sum(v < -0.01 for v in g.values())),
                                "level": int(sum(abs(v) <= 0.01 for v in g.values())),
-                               "loo_gap_without": NAMES[worst], "loo_gap": round(loo[worst], 4),
+                               "loo_gap_without": NAMES[worst], "loo_gap": loo[worst],
                                "sign_flips_without_one": int(sum(np.sign(v) != np.sign(np.mean(list(g.values())))
                                                                  for v in loo.values())),
-                               "per_dataset_gap": {k: round(v, 4) for k, v in g.items()}}
+                               "per_dataset_gap": {k: v for k, v in g.items()}}
     out["E5_dataset_robustness"] = rob
     # The same check for MICA against PCA plus k-means, the representation comparison (E2)
     robk = {}
@@ -775,12 +777,12 @@ def main(argv):
         g = {ds: x["per_dataset"][ds] - y["per_dataset"][ds] for ds in SMALL}
         loo = {ds: float(np.mean([g[o] for o in SMALL if o != ds])) for ds in SMALL}
         worst = min(loo, key=loo.get)
-        robk[f"{S}/{d}/{r}"] = {"gap": round(float(np.mean(list(g.values()))), 4),
+        robk[f"{S}/{d}/{r}"] = {"gap": float(np.mean(list(g.values()))),
                                 "mica_wins": int(sum(v > 0.01 for v in g.values())),
                                 "kmeans_wins": int(sum(v < -0.01 for v in g.values())),
                                 "level": int(sum(abs(v) <= 0.01 for v in g.values())),
-                                "loo_gap_without": NAMES[worst], "loo_gap": round(loo[worst], 4),
-                                "per_dataset_gap": {k: round(v, 4) for k, v in g.items()}}
+                                "loo_gap_without": NAMES[worst], "loo_gap": loo[worst],
+                                "per_dataset_gap": {k: v for k, v in g.items()}}
     out["E5_mica_vs_kmeans"] = robk
     # which counts the matched design adds for Leiden, and whether the plain maximum takes them
     lc = c[(c.scorer == "ours") & (c.b == 25) & (c.method == "leiden_pca") & c.seed.isin(conf) & c.ds.isin(SMALL)]
@@ -812,10 +814,14 @@ def main(argv):
             "by_status": cr.status.value_counts().to_dict(),
             "by_dataset": {k: f"{int(g.failed.sum())} of {len(g)}" for k, g in cr.groupby("ds")},
             "runs_without_choice_V": {m: f"{int(g.chosen_setting.isna().sum())} of {len(g)}"
-                                      for m, g in p[p.S == "S3-V"].groupby("method")}}
+                                      for m, g in p[p.S == "S3-V"].groupby("method")},
+            # the same count on the confirmatory comparison alone: matched, seeds 3 to 9, nine small datasets
+            "runs_without_choice_V_mid_conf": {m: f"{int(g.chosen_setting.isna().sum())} of {len(g)}" for m, g in
+                                               p[(p.S == "S3-V") & (p.design == "mid") & p.seed.isin(conf)
+                                                 & p.ds.isin(SMALL)].groupby("method")}}
     sm = p[(p.S == "S0") & (p.design == "mid") & p.ds.isin(SMALL) & p.seed.isin(conf)]
     if len(sm):
-        out["ami_means"] = {f"{r}/{m}": round(float(g.groupby("ds").ami.median().mean()), 4)
+        out["ami_means"] = {f"{r}/{m}": float(g.groupby("ds").ami.median().mean())
                             for (r, m), g in sm.groupby(["reading", "method"])}
         rng_ = sm.groupby(["reading", "method", "ds"]).ari.agg(lambda x: x.max() - x.min())
         out["seed_range"] = {f"{r}/{m}": {"mean": round(float(g.mean()), 3), "max": round(float(g.max()), 3),

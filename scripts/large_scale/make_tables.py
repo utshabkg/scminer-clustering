@@ -9,6 +9,7 @@ assigned are kept in separate groups of the table.
 """
 import json
 import re
+from datetime import datetime, timedelta
 
 import pandas as pd
 
@@ -28,29 +29,36 @@ def stage_costs():
     """Wall time and peak memory per stage. peak_tree_gb is peak_mem.sh's sum over the process and its
     workers, sampled every 10 s, an upper bound when forked workers share pages. peak_process_gb is the
     largest single process, from the stage's own record."""
-    rec = {}
+    runs = {}
     for line in (OUT / "stages.jsonl").read_text().splitlines():
         d = json.loads(line)
-        rec[d["stage"]] = d  # the last run of a stage wins
+        runs.setdefault(d["stage"], []).append(d)
     kept = pd.read_csv(OUT / "stage_costs.csv").set_index("stage") if (OUT / "stage_costs.csv").exists() else None
-    rows = []
+    rows, rec = [], {}
     for s in STAGES:
-        if s not in rec:
+        if s not in runs:
             continue
-        r = {"stage": s, "wall_s": rec[s]["wall_s"],
-             "peak_process_gb": max(rec[s]["peak_rss_gb_self"], rec[s]["peak_rss_gb_child"])}
+        d = runs[s][-1]  # the last run of a stage, unless the log below belongs to an earlier run
+        outer = {}
         log = REPO / "logs" / f"large_scale_full_{s}.log"
         if log.exists():
             txt = log.read_text()
             peaks = re.findall(r"PEAK_RSS_GB ([\d.]+)", txt)
             walls = re.findall(r"WALL_SECONDS (\d+)", txt)
+            started = re.findall(r"started \w{3} (\w{3} +\d+ [\d:]+ [AP]M) \w+ (\d{4})", txt)
             if peaks:
-                r["peak_tree_gb"] = float(peaks[-1])
-                r["wall_s_outer"] = int(walls[-1])
+                outer = {"peak_tree_gb": float(peaks[-1]), "wall_s_outer": int(walls[-1])}
+            if peaks and started:
+                # A stage rerun by hand (collect, on Nov 19) has a record but no log: pair the log with
+                # the record of the run it timed, the one that finished when the logged run ended.
+                end = datetime.strptime(" ".join(started[-1]), "%b %d %I:%M:%S %p %Y") + timedelta(seconds=int(walls[-1]))
+                d = min(runs[s], key=lambda x: abs(datetime.strptime(x["finished"], "%Y-%m-%d %H:%M:%S") - end))
         elif kept is not None and s in kept.index:  # a fresh clone has no logs: keep what they recorded
-            r["peak_tree_gb"] = kept.loc[s, "peak_tree_gb"]
-            r["wall_s_outer"] = kept.loc[s, "wall_s_outer"]
-        rows.append(r)
+            outer = {"peak_tree_gb": kept.loc[s, "peak_tree_gb"], "wall_s_outer": kept.loc[s, "wall_s_outer"]}
+            d = min(runs[s], key=lambda x: abs(x["wall_s"] - kept.loc[s, "wall_s"]))
+        rec[s] = d
+        rows.append({"stage": s, "wall_s": d["wall_s"],
+                     "peak_process_gb": max(d["peak_rss_gb_self"], d["peak_rss_gb_child"]), **outer})
     STAGE_RECORDS.update(rec)
     df = pd.DataFrame(rows)
     if "peak_tree_gb" not in df:

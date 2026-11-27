@@ -75,7 +75,7 @@ MICA in small-data mode it shares the clustering step and the menu, $k$-means ov
 the representation, principal components against the multidimensional scaling of the mutual information
 distance. On matched candidates MICA leads $k$-means by \V{E2.mid.F.micaminuskmeans} under the finest
 reading and by \V{E2.mid.M.micaminuskmeans} under the plain maximum, and Leiden leads $k$-means by
-\V{E2.mid.F.leidenminuskmeans} and \V{E2.mid.M.leidenminuskmeans}. So with the menu and the clustering step held fixed, the mutual information representation gives the higher score under the finest reading, on \V{E5k.S0.mid.F.micawins} datasets against \V{E5k.S0.mid.F.kmeanswins}, and still by \V{E5k.S0.mid.F.loo} without \V{E5k.S0.mid.F.loods}. Under the plain maximum MICA is ahead on \V{E5k.S0.mid.M.micawins} datasets and $k$-means on \V{E5k.S0.mid.M.kmeanswins}, and without \V{E5k.S0.mid.M.loods} the gap is \V{E5k.S0.mid.M.loo}. This is the
+\V{E2.mid.F.leidenminuskmeans} and \V{E2.mid.M.leidenminuskmeans}. So with the menu and the clustering step held fixed, the mutual information representation gives the higher score under the finest reading, on \V{E5k.S0.mid.F.micawins} datasets against \V{E5k.S0.mid.F.kmeanswins}, and still by \V{E5k.S0.mid.F.loo} without \V{E5k.S0.mid.F.loods}. Under the plain maximum MICA is ahead on \V{E5k.S0.mid.M.micawins} datasets and $k$-means on \V{E5k.S0.mid.M.kmeanswins}, but without \V{E5k.S0.mid.M.loods} the gap falls to \V{E5k.S0.mid.M.loo}, so MICA's lead there rests on one dataset. This is the
 closest our design comes to isolating the representation, and it holds for one benchmark and one rule.
 
 \input{tables/a4_designs}
@@ -103,7 +103,7 @@ interval for \V{S3.failed} of the \V{S3.settings} scored settings, because those
 (\V{S3.failed.chung}) and Goolam (\V{S3.failed.goolam}), two of the smallest datasets. With the repair the
 protocol declared, a point interval at the median, MICA leads Leiden \V{S3G.mid.F.mica} against
 \V{S3G.mid.F.leiden} under the finest reading (F1), and dropping the failed settings instead gives
-\V{S3G2.mid.F.mica} against \V{S3G2.mid.F.leiden}. With the point-interval repair, chooseR's code and our scorer at the same 100 subsamples (S1) choose the same count in \V{E4.mid.mica.same} MICA runs and \V{E4.mid.leiden.same} Leiden runs. With
+\V{S3G2.mid.F.mica} against \V{S3G2.mid.F.leiden}. On matched candidates, with the point-interval repair, chooseR's code and our scorer at the same 100 subsamples (S1) choose the same count in \V{E4.mid.mica.same} MICA runs and \V{E4.mid.leiden.same} Leiden runs. With
 100 subsamples our own scorer widens MICA's finest-stable lead, \V{S1.mid.F.mica} against
 \V{S1.mid.F.leiden}. So on matched candidates the three differences from chooseR, the number of subsamples, the bootstrap
 and the resampling unit, change individual choices but not the direction of the finest-stable comparison.
@@ -136,8 +136,8 @@ maximum across most of the range, leaving the threshold nothing to act on. On Ze
 7 clusters, and its narrow intervals let the rule settle on 2 or 3, well below the truth. The flat top is mostly MICA's and sits in the smallest datasets (C3). On the five
 datasets of at most 317 cells, \V{C3.five_smallest.mica.share} of MICA's settings score within 0.01 of its
 best, against \V{C3.four_larger.mica.share} on the four larger ones and \V{C3.five_smallest.leiden.share}
-for Leiden. When scores tie, the reading decides, and it moves MICA more (C2): the finest and plain-maximum
-picks differ by \V{C2.mica} per dataset for MICA, \V{C2.leiden} for Leiden and \V{C2.kmeans} for $k$-means
+for Leiden on the five smallest. When scores tie, the reading decides, and it moves MICA more (C2): the finest and plain-maximum
+picks differ in median ARI by \V{C2.mica} per dataset on average for MICA, \V{C2.leiden} for Leiden and \V{C2.kmeans} for $k$-means
 (\V{A3.C2.mica} against \V{A3.C2.leiden} at seeds 0 to 2). A partition that reproduces perfectly need not be the right one, as
 Ben-David, von Luxburg and P\'al showed for stability in general \cite{BenDavid2006Sober}, and von
 Luxburg notes that stability becomes trivial when the perturbation is too small to change the clustering
@@ -198,10 +198,10 @@ So on the original grids MICA leads Leiden on PBMC14K under every scorer and at 
 \subsection{The Allen atlas at full scale}\label{sec:large}
 After preprocessing the atlas has \V{large.n_cells} cells by \V{large.n_genes} genes, and the PCA pipelines
 use \V{large.n_hvg} of those genes, reduced to \V{large.n_pcs} components (Table~\ref{tab:large}). Both
-pipelines ran on every cell. The whole run, with \V{large.kmeans.n_seeds} $k$-means seeds and
-\V{large.leiden.n_runs} Leiden runs, took \V{large.full.minutes_cached} minutes. The raw files were already
+pipelines ran on every cell, with \V{large.kmeans.n_seeds} $k$-means seeds and
+\V{large.leiden.n_runs} Leiden runs. From listing the cells to the last Leiden run, they took \V{large.full.minutes_cached} minutes. The raw files were already
 cached, because the check on the 100,000-cell sample had just read them. Reading the 13 files from disk took
-\V{large.read.minutes_cold} minutes in that check, so the same run from the disk takes about
+\V{large.read.minutes_cold} minutes in that check, so the same run from disk would take about
 \V{large.full.minutes_disk}. No single process used more than \V{large.max_process_gb}~GB, though the
 processes running side by side held up to \V{large.full.max_gb}~GB together. Set to the 34 classes, $k$-means reaches an ARI of \V{large.kmeans.ari} on
 all cells at seed 0, and \V{large.kmeans.ari_seeds} over three seeds. Leiden, at the resolution whose count
@@ -231,8 +231,8 @@ never saw \V{large.unseen_pct} percent of the cells, and the assignment works in
 rather than MICA's own distance. Extended the same way, the baselines' sample partitions score
 \V{large.assigned.kmeans.ari} and \V{large.assigned.leiden.ari} on all cells. Compared through the same
 sample, then, MICA and Leiden are level and both are ahead of $k$-means, whether the sample alone or all
-cells after assignment are scored. Leiden run on every cell, at its own setting, reaches
-\V{large.leiden.ari}.
+cells after assignment are scored. Leiden run on every cell reaches \V{large.leiden.ari}, but at
+resolution \V{large.leiden.res}, picked on all cells, not the \V{large.leiden.pilot_res} picked on the sample.
 
 \subsection{Secondary rules, at the exploratory seeds}\label{sec:transfer}
 These ran at seeds 0 to 2 or at one seed and were not repeated (Appendices~\ref{app:rulesall},
@@ -250,7 +250,7 @@ Choosing a setting costs far more than clustering at one, and a user pays both. 
 subsample of protocol v1 took a median of \V{cost.small.mica.median}~s for MICA's whole sweep of $k$,
 \V{cost.small.leiden.median}~s for Leiden's sweep and \V{cost.small.kmeans.median}~s for $k$-means, so a
 full run of 100 subsamples takes minutes per dataset, and cost is no reason to prefer a method there. On
-PBMC14K one MICA subsample takes a median of about five to six minutes, depending on the seed, almost all
-of it node2vec, against 75 to 90 seconds for Leiden and $k$-means together, so one run of 100 subsamples took 8 to 10 hours for MICA and 2 to 2.5 for the two baselines. That cost is why the selection rule's evidence on a large dataset rests on PBMC14K alone, and why the
+PBMC14K one MICA subsample takes about five to six minutes on average, depending on the seed, almost all
+of it node2vec, against 74 to 90 seconds for Leiden and $k$-means together, so one run of 100 subsamples took 8 to 10 hours for MICA and 2 to 2.5 for the two baselines. That cost is why the selection rule's evidence on a large dataset rests on PBMC14K alone, and why the
 Allen atlas compares the methods at a fixed number of clusters (Section~\ref{sec:large}). chooseR's own scoring adds under a minute per
 small dataset and seed.
