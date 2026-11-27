@@ -16,12 +16,12 @@ Updated: 2026-11-26 (Rhea). Counts follow the Milestone column in `WORKPLAN.md`.
 | M5 main experiments complete | Nov 4 | 7 of 8 | 88% | Distance check (U-17), CPU fast neighbor search (U-19), mode against size (U-39), matched grids (U-40), transfer comparison (U-34, Allen part set aside), the final table (U-37) and Laraib's introduction rewrite (L-5) done. Left: the discussion check (L-9) |
 | M6 gated extras | Nov 11 | 0 of 9 | 0% | All nine deferred (U-18, U-20 to U-23, U-38, L-6, R-4, R-5). The instructor's Nov 11 letter says not to return to the set-aside extensions before the Nov 30 draft |
 | M7 Assignment 4 (revised Assignment 3) | Nov 16, moved to Nov 13 | 5 of 5 | 100% | Done. Submitted Nov 13 and tagged `a4-submitted` |
-| M8 full research paper draft | Nov 30 | 2 of 8 | 25% | The Allen run on every cell (U-46) and the checks split (U-47) done Nov 19. Paper rewrite (U-48) and final figures and cleanup (U-24) in progress, reviewed Nov 19 and Nov 23. Rhea's full number check (R-7) started Nov 26, with steps 1 to 3 passing. Left by Nov 28: the wording check (R-7), Laraib's proofread (L-8), and the provenance and seed rows for the Allen run and the label-free signs (R-9, R-10) |
+| M8 full research paper draft | Nov 30 | 4 of 8 | 50% | The Allen run on every cell (U-46) and the checks split (U-47) done Nov 19. Paper rewrite (U-48) and final figures and cleanup (U-24) in progress, reviewed Nov 19 and Nov 23. Rhea's full number check (R-7) started Nov 26, with steps 1 to 3 passing. Left by Nov 28: the wording check (R-7), Laraib's proofread (L-8). The provenance and seed tables (R-9, R-10) done Nov 27 |
 | M9 final presentations | Dec 2 and Dec 9 | 0 of 2 | 0% | 19-slide deck (U-49) drafted Nov 23, rehearsal Dec 1. Whether the slide outline (R-6) is still needed is for the next meeting |
 | M10 final report | Dec 11 | | | Tasks set once the instructor's comments on the Nov 30 draft arrive |
 | Every week: notes, plan and progress updates | weekly | | | L-7, R-3 and R-8. No minutes are in `docs/minutes/` yet |
 
-Overall: 44 of 65 tasks finished, not counting the three that repeat every week (68 in all). The counts above are read off the status markers in `WORKPLAN.md`.
+Overall: 46 of 65 tasks finished, not counting the three that repeat every week (68 in all). The counts above are read off the status markers in `WORKPLAN.md`.
 
 Next three things (Nov 26): Rhea's wording check and flags to Utshab (R-7), then the provenance and seed rows (R-9, R-10), all by Nov 28. Laraib's proofread (L-8) by Nov 28. Utshab applies both and uploads to Overleaf for Nov 30.
 
